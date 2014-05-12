@@ -471,7 +471,7 @@
     </bc:replace>
   </rm:propertyElement>
   <rm:propertyElement key="diamond.releng.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+    <bc:constant value="${diamond.dascgit.url}/diamond"/>
   </rm:propertyElement>
   <rm:propertyElement key="diamond.releng.github.organization">
     <bc:constant value="DiamondLightSource"/>
