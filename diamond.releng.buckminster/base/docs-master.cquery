@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-latest.rmap" shortDesc="CQuery for the master version of documentation">
+    <cq:rootRequest name="${component}"/>
+    <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^diffcalc$" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diffcalc.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-doc.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^(documentation\.gda|example-config|uk\.ac\.(diamond\.scisoft\.gda\.feature|gda\.(analysis(\.test)?|api|browser|(client(\.(experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^((i02|i03|i04|i04-1|i23|i24|mx|all-mx)-config|uk\.ac\.(gda\.(beamline\.(i02|i03|i04|i04-1|i23|i24)(\..+)?|px(\..+)?|client\.mx(\..+)?|devices\.(insitu|irelec)(\..+)?)|diamond\.(dna|stac)))$" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mx.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.(analysis(\.(api|dataset|feature|osgi|plotserver|xmlrpc))?(\.test)?|core\.feature|deprecated|python)$" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.polling|analysis\.rcp(\.contributions|\.test)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(exporter(\.test)?|meta(\.extended)?|navigator(\.test)?|polling))$" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ui.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern=".*" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Specifies the branch of the subversion repository</cq:documentation>
+    </cq:advisorNode>
+</cq:componentQuery>

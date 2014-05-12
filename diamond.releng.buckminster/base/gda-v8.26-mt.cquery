@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-v5.3.rmap" shortDesc="CQuery for GDA 8.26">
+    <cq:rootRequest name="${component}"/>
+    <cq:property key="download.location" value="diamond"/>
+    <cq:property key="github.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required."/>
+    <cq:property key="skip_org.dawb..test" value="true"/>
+    <cq:property key="skip_uk.ac.diamond.scisoft..test" value="true"/>
+    <cq:property key="skip_uk.ac.diamond.sda..test" value="true"/>
+    <cq:property key="skip_uk.ac.gda..test" value="false"/>
+    <cq:property key="target.arch" value="*"/>
+    <cq:property key="target.os" value="*"/>
+    <cq:property key="target.ws" value="*"/>
+    <cq:property key="target_platform.custom.pydev.release" value="8.26"/>
+    <cq:advisorNode namePattern="^builder(s\.(|dawn|diamond))?$" filter="(download.location.common=public)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^builder(s\.(|dawn|diamond))?$" filter="(download.location=public)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^org\.dawb\.(.*\.)?test$" filter="(skip_org.dawb..test=true)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.(.*\.)?test$" filter="(skip_uk.ac.diamond.scisoft..test=true)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.sda\.(.*\.)?test$" filter="(skip_uk.ac.diamond.sda..test=true)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(.*\.)?test$" filter="(skip_uk.ac.gda..test=true)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^net\.bioclipse\..+$" branchTagPath="none">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">bioclipse repositories branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.openscience\.cdk\..+" branchTagPath="none">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">bioclipse repositories branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.dawb\.workbench\.build$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-build.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-build" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.dawb\.(common\.(gpu|python|services|ui|util)|(gda|pydev)\.extensions|hdf5(\.editor)?|workbench\.examples)$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-common.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.dawb\.(edna\..+|passerelle\.actors\.edna)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-edna.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-edna" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.acme\.actors\.(fridge(\.feature)?|test)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-examples.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-examples" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" branchTagPath="1.1">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-fable.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^com\.isencia\.passerelle\.(actor|commons(\.ume)?|engine)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isencia.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-isencia" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^com\.(isencia\.passerelle\.workbench\..+|teaminabox\.eclipse\.wiki)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isenciaui.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-isenciaui" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.dawnsci\.mx\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-mx.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-mx" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.(dawb\.(sda\.feature|workbench\.(application(\.feature)?|config\.feature))|dawnsci\.(base\..+|intro|product\.plugin))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-product.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-product" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-tango.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-tango" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.dawb\.test$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-test.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawn-test" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|org\.csstudio\.swt\.xygraph|wst\.feature)$" branchTagPath="1.1">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-third.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.(dawb\.(passerelle\.actors\.dawn|visualization\.feature|workbench\.(convert|plotting|ui(\.test)?))|dawnsci\.(rcp\.histogram|workbench\.plotting\.feature))$" branchTagPath="1.1">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-ui.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test)?|common)|workbench\.jmx|workflow\.feature))$" branchTagPath="1.1">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-workflow.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.embl\.cca\.utils(\..+)?$" branchTagPath="1.0">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">embl-cca.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^diffcalc$">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diffcalc.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.jacorb$">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-jacorb.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.springframework$">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-springframework.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.common$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common-rcp.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^example-config|uk\.ac\.(diamond\.scisoft\.gda\.feature|gda\.(analysis|api|browser|(client(\.(experimentdefinition|feature|test))?)|(common\.(client(\.test)?))|core|example(\..+)?|pydev\.extension|xmleditor\.feature|server))$" branchTagPath="8.26.mt">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\..+\.cirrus$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-cirrus.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\..+\.mythen(\.visualisation)?$" branchTagPath="1.0">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-mythen.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\..+\.pco$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-pco.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\..+\.peem$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-peem.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" branchTagPath="1.1">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-prosilica.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^i05-config|uk\.ac\.gda\.beamline\.i05(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i05.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^i06(_1)?-config|uk\.ac\.gda\.beamline\.i06(_1)?(\..+)?$">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i06x.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^i07-config|uk\.ac\.gda\.beamline\.i07(\..+)?$">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i07.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^i10-config|uk\.ac\.gda\.beamline\.i10(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i10.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^i11-config|uk\.ac\.gda\.beamline\.i11(\..+)?$">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i11.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^i12-config|uk\.ac\.gda\.beamline\.i12(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i12.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^i13(i|j)-config|uk\.ac\.gda\.beamline\.i13(i|j)(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i13x.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^i15-config|uk\.ac\.gda\.beamline\.i15(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i15.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^(b18|i18|i20|i20(-1)?)-config|uk\.ac\.gda\.beamline\.(b18|i18|i20|i20(_1)?)(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-xas.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-excalibur.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.epics(\.client|\.test)?$" branchTagPath="1.1.mt">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-epics.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(client\.)?hrpd$" branchTagPath="1.0">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-hrpd.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^(b16|i16|mt|all-mt)-config|uk\.ac\.gda\.beamline\.(b16|i16)(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^(i02|i03|i04|i04-1|i23|i24|mx|all-mx)-config|uk\.ac\.(gda\.(beamline\.(i02|i03|i04|i04-1|i23|i24)(\..+)?|px(\..+)?|client\.mx(\..+)?|devices\.irelec(\..+)?)|diamond.stac)$"  useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mx.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.gda-mx" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.nexus(\..+)?$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-nexus.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^((bm26a?|id18|lpd|b21|b22|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|org\.gda\.tango(\..+)?|uk\.ac\.gda\.(beamline\.(b21|b22|i22|lab11)(\..+)?|devices\.(bssc|lpd)|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-scm.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(client|server)\.(nano|sixd)(\..+)?$" branchTagPath="1.1">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-sixd.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.tomography\.(localtomo|reconstruction)(\..+)?|gda\.(client\.tomo(\.feature|\.test)?|tomography))$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-tomography.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(server|client)\.(exafs|microfocus)(\..+)?$" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-xas-core.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.arpes(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-arpes.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.scisoft-arpes" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.CBFlib$" componentType="osgi.bundle" branchTagPath="1.1">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-cbflib.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.(analysis|core\.feature|deprecated|python)$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^ncsa\.hdf$" componentType="osgi.bundle" branchTagPath="2.7">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-hdf.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.icat.*$" branchTagPath="1.3">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-icat.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" componentType="osgi.bundle" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-mx.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.scisoft-mx" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" branchTagPath="2.0">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ncd.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-peema.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.scisoft-peema" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.spectroscopy(\..+)?$" branchTagPath="1.1.9">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-spectroscopy.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.polling|analysis\.rcp(\.contributions|\.test)?|customprojects\..+|deprecated\.rcp|system\.info|ui\.feature))?|sda\.(exporter(\.test)?|meta(\.extended)?|navigator(\.test)?|polling))$" branchTagPath="1.2">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ui.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" componentType="osgi.bundle" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ws.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.scisoft-ws" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.dawnsci\.(product\.feature|site)|uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|scisoft\.intro|sda(\.bioclipse(\..+)?|\.complete(\..+)?|\.enthought(\..+)?|\.product\.feature|\.site)?)$" branchTagPath="1.0">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">sda.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" branchTagPath="2.19">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">wychwood.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern=".*" branchTagPath="8.26">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">subversion repository branch</cq:documentation>
+    </cq:advisorNode>
+</cq:componentQuery>

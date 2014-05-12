@@ -1,0 +1,162 @@
+First install OS of choice to make the clean snapshot
+ * This snapshot makes it a little easier than reinstalling the OS from scratch,
+   it is particularly useful for Windows where starting from this point for future
+   work is less likely to cause Activation issues.
+- You can use VMWare quick install where it is helpful
+- Set user name to tester
+  * Note on some of the older existing installs, the clean snapshots may
+    have a user name of "Diamond Tester" on Windows
+- Set password to kesd-2ls-3s=Qq
+- Set/check keyboard layout (especially needed if using quick install in VMWare)
+  * Make sure to apply change system wide if appropriate
+- Set networking to anything needed, the "base" snapshot locks
+  it down to host only
+- Activate Windows if needed
+- Install VMWare tools
+- Shutdown the VM
+- Snapshot it as "clean_shutdown"
+
+- set a fixed ip address 172.16.66.xx
+- fixed DNS server 172.16.77.2
+
+Create the "base" and "base_shutdown" snapshots.
+ * The "base" snapshot is used to run the tests. At the high level it needs
+   to have the OS fully installed, with sudo (or equivalent) permission to
+   the tester user and have an SSH server installed to receive connections.
+- Set/check keyboard layout (especially needed if using quick install in VMWare)
+  * Make sure to apply change system wide if appropriate
+- Give admin's on the machine unprompted root access
+  * Linux: Add NOPASSWD to admin group in sudoers
+    - sudo -E visudo
+    - change line to have NOPASSWD, e.g.:
+      = %admin ALL=(ALL) NOPASSWD: ALL
+      = %sudo ALL=(ALL) NOPASSWD: ALL
+  * Windows 7: Change UAC to none 
+    - Press Start | type UAC
+    - Click "Change User Account Control settings"
+    - Drag slider to the bottom "Never Notify"
+    
+- Install all desired updates and turn off update manager (to avoid unnecessary pop-ups)
+  * Remember to check for new updates, may require a reload of the databases
+  * Make sure to turn all updates off, including upgrades
+- Turn off screensavers/powersave/autolock and anything else that pops up etc
+  * On ubuntu 12.04 it appears to only be possible to turn off screensaver/lock at command line:
+    - gsettings set org.gnome.desktop.screensaver idle-activation-enabled false
+    - gsettings set org.gnome.desktop.screensaver lock-enabled false
+    - see http://www.liberiangeek.net/2012/04/disable-screensaver-black-screen-in-ubuntu-12-04-precise-pangolin/ and
+      http://www.liberiangeek.net/2012/04/disable-screensaver-lock-in-ubuntu-12-04-precise-pangolin/
+  * Ubunutu 12.04 also nags about backup, turn that off too
+    - You should be prompted about it shortly after logging on
+- Install SSH Server
+  * Test SSH installation with this command line:
+    ssh -i utils/id_rsa -F /dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null tester@"ip address of guest"
+  Linux: 
+    * Ubuntu: sudo apt-get install openssh-server
+      - Turn off reverse DNS on login by adding "UseDNS no"
+        to the end of /etc/ssh/sshd_config
+        Without this change each ssh connection takes many seconds
+        and it is not useful on a host only network
+      - Restart ssh server: sudo ssh restart
+    * Copy utils/id_rsa.pub to ~/.ssh/authorized_keys (with perm 600)
+  Windows: 
+    * Install freeSSHd http://www.freesshd.com/
+    * Don't us the service to start freesshd. Add it to the Startup programs group
+      This is so the server runs as the interactive user under the tester account
+    * Turn off updates in freeSSHd
+    * Create a "tester" ssh account (Users tab)
+      Give the tester Public key authorization and allow shell, sftp and tunneling
+    * Copy utils/id_rsa.pub to C:\Program Files\freeSSHd\tester
+      NOTE1 the tester file must not have an extension
+      NOTE2 the exact location is set by Public key folder 
+            location in freesshd Authentication tab
+    * Set SFTP home path (SFTP tab) to C:\ to allow access to entire drive
+- Enable VNC Server in VMWare
+  * set the password to squish
+  * Use a free port between 5901 and 5999 (inclusive)
+  * To determine what ports are in use, try "grep vnc.port */*.vmx"
+  * This port is also used for IP address assignment in the scripts
+    See vmoptions.sh:vm_setup_ip() where the lowest to characters of the port 
+    are used as the last byte of the guest IP address.
+- Linux only: install subversion:
+  * sudo apt-get install subversion
+
+  * svn up # create default ~/.subversion/
+  * add to ~/.subversion/config [auth] section:
+    # Eclipse SVN plugin (subclipse) generates a big
+    # warning about password stores unless this
+    # line is in the config
+    password-stores = 
+  * NOTE that since updates to svn this may not be necessary.
+- Windows Only items:
+  * Turn off Network Location Wizard
+    - Apply the reg file (utils/network_location_wizard_off.reg)
+    - see http://technet.microsoft.com/en-us/library/gg252535, the instructions
+      apply equally to Windows 7. 
+  * Copy 7-Zip command line to c:\scratch
+    - 7z.exe is expected to be C:\scratch\7z.exe (with 7z.dll too)
+    - Get 7-zip from http://www.7-zip.org/
+    - Run installer on any windows machine
+    - Copy 7z.exe and 7z.dll to C:\scratch
+  * turn off the Windows firewall
+  * turn off action centre notifications for everything
+  * set problem reporting settings to never check for solutions
+    - On Windows 7 this is next to other action centre items
+    - On Windows XP this is in System properties, Advanced Tab, 
+      Error Reporting button
+  * also set date/time/region, and make sure daylight saving change not notified
+  * turn off auto-defragment
+  
+- Make scratch location
+  * Linux: sudo mkdir /scratch ; sudo chown tester:tester /scratch
+  * Windows: Make C:\scratch and ensure readable/writable by tester
+  
+- turn on Host only network in VMWare
+- Reinstall VMWare tools 
+  * This may be optional under some conditions, but especially needed
+    if linux kernel got upgraded
+
+- How to make configuration changes made to base_shutdown after it was originally created
+  * rename base_shutdown to base_shutdown_original
+  * select base_shutdown_original, "go to snapshot", 
+  * edit the VM settings
+    - memory to 4GB
+    - delete CD/DVD 2 if it exists
+    - turn OFF "connect at power on" for Floppy, and Printer (very important)
+      (if the printer is connected, we get repeated "CUPS interface problem, adaptor daemon restart..." messages)
+    - turn ON "accelerate 3D graphics"
+    - turn OFF USB Controller "Automatically connect" and "share Bluetooth"
+  * update the VM
+     - in VM settings, temporarily change network adapter to "NAT"
+     - boot machine, log in as "tester"
+     - set proxy (you can leave this setting permanently)
+     - change desktop to solid colour
+     - run update manager
+     - apply fix for Ubunutu 10.04
+       grep 'trough-under-steppers' /usr/share/themes/Ambiance/gtk-2.0/gtkrc
+       sudo sed --in-place 's/GtkRange::trough-under-steppers = 0/GtkRange::trough-under-steppers = 1/' /usr/share/themes/Ambiance/gtk-2.0/gtkrc
+     - turn off unnecessary stuff in Startup Programs
+     - reinstall VM tools (say NO to shared folders; all other defaults ok); reboot
+     - run disk cleanup; empty the rubbish bin
+     - sudo apt-get autoremove
+     - power down VM
+     - change network adapter to "Host-only"
+     - power on the VM to make sure it's ok (no need to log in), then power off
+  * Take a snapshot as base_shutdown
+  * proceed as below
+
+- Shutdown machine
+- snapshot the shutdown machine as "base_shutdown"
+  * Startup the VM and logon
+  * Ensure the window/screen size is sufficient before snapshotting
+  * (Optional, linux) run some commands so if you VNC in you can get indication of 
+    what is happening. On linux machine you can open two terminals with 
+    the following commands
+    - watch "ls -l --si -S /scratch"
+    - tail --retry --follow=name /scratch/log
+    
+  * (Optional, Windows 7) open Windows Explorer looking at C:\scratch
+  * On Windows you may need to reboot if the hardware has changed
+  * On Windows after logging in, wait a little while (minute or two) before
+    snapshotting so that all startup has completed
+  * Create the running snapshot, called "base"
+
