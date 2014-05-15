@@ -2049,7 +2049,7 @@
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
   <rm:locator pattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(xmap|xspress2|xspress3)(\..+)?|exafs\.datawriter(\..+)?|server\.exafs(\..+)?)$" searchPathRef="gda_xas_core"/>
   <!-- ** gphl *** -->
-  <rm:locator pattern="^com\.globalphasing\.astra(\..+)?$" searchPathRef="gphl_astra"/>
+  <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
   <!-- ** py4j *** -->
   <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j"/>
   <!-- ** scisoft- *** -->

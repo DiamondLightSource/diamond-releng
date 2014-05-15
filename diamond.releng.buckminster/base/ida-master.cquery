@@ -213,7 +213,7 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-xas-core.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-xas-core" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^com\.globalphasing\.astra(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-astra.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gphl-astra" value="true"/>
     </cq:advisorNode>
