@@ -5,6 +5,7 @@
 ###
 
 import datetime
+import fnmatch
 import logging
 import optparse
 import os
@@ -128,56 +129,67 @@ class DawnManager(object):
         self.isLinux = self.system == 'Linux'
         self.isWindows = self.system == 'Windows'
         self.java_version_reported = False
-        self.buckminster_location_reported = False
+        self.executable_locations_reported = []
 
         self.valid_actions_with_help = (
-            ('setup',
+            # 1st item in tuple is the action verb
+            # 2nd item in tuple is the action special handler (either "ant" or None)
+            # 3rd item in tuple is a tuple of help text lines
+            ('setup', None,
                 ('setup [ <template_workspace_version> ]',
                  'Set up a new workspace, with the target platform defined, but otherwise empty',
                  'Template can be one of "%s" (defaults to newest)' % '/'.join(TEMPLATES_AVAILABLE),
                  )),
-            ('materialize',
+            ('materialize', None,
                 ('materialize <component> [<category> [<version>] | <cquery>]',
                  'Materialize a component and its dependencies into a new or existing workspace',
                  'Component can be abbreviated in many cases (eg just the beamline name is sufficient)',
                  'Category can be one of "%s"' % '/'.join(CATEGORIES_AVAILABLE),
-                 'Version defaults to trunk',
+                 'Version defaults to master',
                  'CQuery is only required if you need to override the computed value',
                  )),
-            ('svn', ('svn <command>', 'Issue "svn <command>" for all top-level subversion checkouts',)),
-            ('git', ('git <command>', 'Issue "git <command>" for all git clones',)),
-            ('clean', ('clean', 'Clean the workspace',)),
-            ('bmclean', ('bmclean <site>', 'Clean previous buckminster output',)),
-            ('build', ('build', '[alias for buildthorough]',)),
-            ('buildthorough', ('buildthorough', 'Build the workspace (do full build if first incremental build fails)',)),
-            ('buildinc', ('buildinc', 'Build the workspace (incremental build)',)),
-            ('target',('target', 'List target definitions known in the workspace',)),
-            ('target',('target path/to/name.target', 'Set the target platform for the workspace',)),
-            ('maketp', ('maketp', 'Create template tp/ in an existing workspace (you then need to import the project)',)),
-            ('sites', ('sites', 'List the available site projects in the workspace',)),
-            ('site.p2',
+            ('svn', None, ('svn <command>', 'Issue "svn <command>" for all top-level subversion checkouts',)),
+            ('git', None, ('git <command>', 'Issue "git <command>" for all git clones',)),
+            ('clean', None, ('clean', 'Clean the workspace',)),
+            ('bmclean', None, ('bmclean <site>', 'Clean previous buckminster output',)),
+            ('build', None, ('build', '[alias for buildthorough]',)),
+            ('buildthorough', None, ('buildthorough', 'Build the workspace (do full build if first incremental build fails)',)),
+            ('buildinc', None, ('buildinc', 'Build the workspace (incremental build)',)),
+            ('target', None, ('target', 'List target definitions known in the workspace',)),
+            ('target', None, ('target path/to/name.target', 'Set the target platform for the workspace',)),
+            ('maketp', None, ('maketp', 'Create template tp/ in an existing workspace (you then need to import the project)',)),
+            ('sites', None, ('sites', 'List the available site projects in the workspace',)),
+            ('site.p2', None,
                 ('site.p2 <site>',
                  'Build the workspace and an Eclipse p2 site',
                  'Site can be omitted if there is just one site project, and abbreviated in most other cases',
                 )),
-            ('site.p2.zip',
+            ('site.p2.zip', None,
                 ('site.p2.zip <site>',
                  'Build the workspace and an Eclipse p2 site, then zip the p2 site',
                  'Site can be omitted if there is just one site project, and abbreviated in most other cases',
                 )),
-            ('product',
+            ('product', None,
                 ('product <site> [ <platform> ... ]',
                  'Build the workspace and an Eclipse product',
                  'Site can be omitted if there is just one site project, and abbreviated in most other cases',
                  'Platform can be something like linux32/linux64/win32/all (defaults to current platform)',
                 )),
-            ('product.zip',
+            ('product.zip', None,
                 ('product.zip <site> [ <platform> ... ]',
                  'Build the workspace and an Eclipse product, then zip the product',
                 )),
+            ('tests-clean', self._iterate_ant, ('tests-clean', 'Delete test output and results files from JUnit/JyUnit tests',)),
+            ('junit-tests', self._iterate_ant, ('junit-tests', 'Run Java JUnit tests for all (or selected) projects',)),
+            ('jyunit-tests', self._iterate_ant, ('jyunit-tests', 'Runs JyUnit tests for all (or selected) projects',)),
+            ('all-tests', self._iterate_ant, ('all-tests', 'Runs both Java and JyUnit tests for all (or selected) projects',)),
+            ('corba-make-jar', self._iterate_ant, ('corba-make-jar', '(Re)generate the corba .jar(s) in all or selected projects',)),
+            ('corba-validate-jar', self._iterate_ant, ('corba-validate-jar', 'Check that the corba .jar(s) in all or selected plugins match the source',)),
+            ('corba-clean', self._iterate_ant, ('corba-clean', 'Remove temporary files from workspace left over from corba-make-jar',)),
+            ('dummy', self._iterate_ant, ()),
             )
 
-        self.valid_actions = [action for (action, help) in self.valid_actions_with_help]
+        self.valid_actions = dict((action, handler) for (action, handler, help) in self.valid_actions_with_help)
 
         # if the current directory, or any or its parents, is a workspace, make that the default workspace
         # otherwise, if the directory the script is being run from is within a workspace, make that the default workspace
@@ -232,6 +244,18 @@ class DawnManager(object):
                          help='Properties file, relative to site project if not absolute (default: filenames looked for in order: buckminster.properties, buckminster.beamline.properties)')
         group.add_option('--buckminster.root.prefix', dest='buckminster_root_prefix', type='string', metavar='<path>',
                          help='Prefix for buckminster.output.root and buckminster.temp.root properties')
+        self.parser.add_option_group(group)
+
+        group = optparse.OptionGroup(self.parser, "Test/Corba options")
+        group.add_option('--include', dest='plugin_includes', type='string', metavar='<pattern>,<pattern>,...', default="",
+                               help='Only process plugin names matching one or more of the glob patterns')
+        group.add_option('--exclude', dest='plugin_excludes', type='string', metavar='<pattern>,<pattern>,...', default="",
+                               help='Do not process plugin names matching any of the glob patterns')
+        default_GDALargeTestFilesLocation = '/dls_sw/dasc/GDALargeTestFiles/'  # location at Diamond
+        if not os.path.isdir(default_GDALargeTestFilesLocation):
+            default_GDALargeTestFilesLocation=""
+        group.add_option("--GDALargeTestFilesLocation", dest="GDALargeTestFilesLocation", type="string", metavar=" ", default=default_GDALargeTestFilesLocation,
+                         help="Default: %default")
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "General options")
@@ -362,6 +386,7 @@ class DawnManager(object):
                                         sites[level3] = level3_dir
         self.available_sites = sites
 
+
     def set_all_matching_sites(self, site_name_part=None):
         """ Sets self.all_matching_sites, a sorted list of site names,
             for all .site projects that have site_name_part as a substring
@@ -378,6 +403,7 @@ class DawnManager(object):
             all_matching_sites = sorted(self.available_sites)
         self.all_matching_sites_name_part = site_name_part
         self.all_matching_sites = all_matching_sites
+
 
     def set_site_name(self, site_name_part=None, must_exist=True):
         """ Sets self.site_name, a single site name that has site_name_part as a substring
@@ -402,6 +428,82 @@ class DawnManager(object):
                 raise DawnException('ERROR: No .site project matching substring "%s" found in %s' % (site_name_part, self.all_matching_sites))
             else:
                 raise DawnException('ERROR: No .site project in workspace')
+
+
+    def validate_plugin_patterns(self):
+        for glob_patterns in (self.options.plugin_includes, self.options.plugin_excludes):
+            if glob_patterns:
+                for pattern in glob_patterns.split(","):
+                    if not pattern:
+                        raise DawnException("ERROR: --include or --exclude contains an empty plugin pattern")
+                    if pattern.startswith("-") or ("=" in pattern):
+                        # catch a possible error in command line construction
+                        raise DawnException("ERROR: --include or --exclude contains an invalid plugin pattern \"%s\"" % (p,))
+
+
+    def set_all_plugins_with_releng_ant(self):
+        """ Finds all the plugins in the self.workspace_git_loc directory, provided they contain a releng.ant file plus compiled code.
+            Result is a dictionary of {plugin-name: relative/path/to/plugin} (the path is relative to self.workspace_git_loc)
+        """
+
+        plugin_names_paths = {}
+        for root, dirs, files in os.walk(self.workspace_git_loc):
+            for d in dirs[:]:
+                if d.startswith('.') or d.endswith(('.feature', '.site')):
+                    dirs.remove(d)
+            if 'releng.ant' in files:
+                dirs = []  # plugins are never nested inside plugins, so no need to look beneath this directory
+                bin_dir_path = os.path.join(root, 'classes' if os.path.basename(root) == 'uk.ac.gda.core' else 'bin')
+                if os.path.isdir(bin_dir_path):
+                    # only include this plugin if it contains compiled code (in case the filesystem contains a repo, but the workspace did not import all the projects)
+                    for proot, pdirs, pfiles in os.walk(bin_dir_path):
+                        for d in pdirs[:]:
+                            if d.startswith('.'):
+                                pdirs.remove(d)
+                        if [f for f in pfiles if not f.startswith('.')]:  # if any non-hidden file in the bin_dir_path directory
+                            # return plugin path relative to the parent directory, and plugin name (these will be the same for the subversion plugins)
+                            assert os.path.basename(root) not in plugin_names_paths
+                            plugin_names_paths[os.path.basename(root)] = os.path.relpath(root, self.workspace_git_loc)
+                            break
+        self.all_plugins_with_releng_ant = plugin_names_paths
+
+
+    def get_matching_plugins_with_releng_ant(self, glob_patterns):
+        """ Finds all the plugin names that match the specified glob patterns (either --include or --exclude).
+        """
+        matching_paths_names = []
+
+        for p in glob_patterns.split(","):
+            matching_paths_names.extend(fnmatch.filter(self.all_plugins_with_releng_ant.keys(), p))
+        return sorted( set(matching_paths_names) )
+
+
+    def get_selected_plugins_with_releng_ant(self):
+        """ Finds all the plugin names that match the specified glob patterns (combination of --include and --exclude).
+            If neither --include nor --exclude specified, return the empty string
+        """
+
+        if self.options.plugin_includes or self.options.plugin_excludes:
+            self.set_all_plugins_with_releng_ant()
+
+            if self.options.plugin_includes:
+                included_plugins = self.get_matching_plugins_with_releng_ant(self.options.plugin_includes)
+            else:
+                included_plugins = self.all_plugins_with_releng_ant
+
+            if self.options.plugin_excludes:
+                excluded_plugins = self.get_matching_plugins_with_releng_ant(self.options.plugin_excludes)
+            else:
+                excluded_plugins = []
+
+            selected_plugins = sorted(set(included_plugins) - set(excluded_plugins))
+
+            if not selected_plugins:
+                raise DawnException("ERROR: no compiled plugins matching --include=%s --exclude=%s found" % (self.options.plugin_includes, self.options.plugin_excludes))
+            return "-Dplugin_list=\"%s\"" % '|'.join([self.all_plugins_with_releng_ant[pname] for pname in selected_plugins])
+
+        return ""
+
 
     def set_buckminster_properties_path(self, site_name=None):
         """ Sets self.buckminster_properties_path, the absolute path to the buckminster properties file in the specified site
@@ -967,29 +1069,37 @@ class DawnManager(object):
 
         self.logger.info('%stp/ set up - now import the project into your workspace, set the target platform, and restart Eclipse' % (self.log_prefix,))
 
+    def _iterate_ant(self, target):
+        """ Processes using an ant target
+        """
+
+        selected_plugins = self.get_selected_plugins_with_releng_ant()  # might be an empty string to indicate all
+        self.run_ant_in_subprocess((selected_plugins, target))
+
+
 ###############################################################################
 #  Run Buckminster                                                            #
 ###############################################################################
 
-    def report_buckminster_location(self):
-        """ Logs the path to Buckminster (an actual version number is not available)
+    def report_executable_location(self, executable_name):
+        """ Logs the path to an executable (an actual version number is not available)
         """
 
-        if self.buckminster_location_reported or (not self.isLinux):
+        if (executable_name in self.executable_locations_reported) or (not self.isLinux):
             return
-        bucky_loc = None
+        loc = None
         try:
-            buckyrun = subprocess.Popen(('which', '--all', 'buckminster'), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            (stdout, stderr) = buckyrun.communicate(None)
-            if not buckyrun.returncode:
-                bucky_loc = stdout.strip()
+            whichrun = subprocess.Popen(('which', '--all', executable_name), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            (stdout, stderr) = whichrun.communicate(None)
+            if not whichrun.returncode:
+                loc = stdout.strip()
         except:
             pass
-        if bucky_loc:
-            self.logger.info('%sBuckminster install that will be used: %s' % (self.log_prefix, bucky_loc))
+        if loc:
+            self.logger.info('%s%s install that will be used: %s' % (self.log_prefix, executable_name, loc))
         else:
-            self.logger.warn('%sBuckminster install to be used could not be determined' % (self.log_prefix,))
-        self.buckminster_location_reported = True
+            self.logger.warn('%s%s install to be used could not be determined' % (self.log_prefix, executable_name))
+        self.executable_locations_reported.append(executable_name)
 
     def report_java_version(self):
         """ Logs the Java version number, something like 1.7.0_17
@@ -1016,7 +1126,7 @@ class DawnManager(object):
         """ Generates and runs the buckminster command
         """
 
-        self.report_buckminster_location()
+        self.report_executable_location('buckminster')
         self.report_java_version()
 
         buckminster_command = ['buckminster']
@@ -1071,6 +1181,54 @@ class DawnManager(object):
                 self.logger.debug('Return Code: %s' % (retcode,))
             return retcode
 
+    def run_ant_in_subprocess(self, ant_args):
+        """ Generates and runs the ant command
+        """
+
+        self.report_executable_location('ant')
+        self.report_java_version()
+
+        ant_command = ['ant']
+        ant_command.extend(("-logger", "org.apache.tools.ant.NoBannerLogger"))
+        ant_command.extend(('-buildfile', os.path.join(self.workspace_git_loc, 'diamond-releng.git/diamond.releng.tools/ant-headless/ant-driver.ant')))
+
+        # pass through GDALargeTestFilesLocation
+        loc = self.options.GDALargeTestFilesLocation and self.options.GDALargeTestFilesLocation.strip()
+        if loc:
+            loc = os.path.expanduser(loc)
+            if os.path.isdir(loc):
+                if self.options.GDALargeTestFilesLocation.strip().endswith(os.sep):
+                    ant_command.extend(("-DGDALargeTestFilesLocation=%s" % (loc,),))
+                else:
+                    ant_command.extend(("-DGDALargeTestFilesLocation=%s%s" % (loc, os.sep),))
+            else:
+                raise DawnException('ERROR: --GDALargeTestFilesLocation=%s does not exist. If any tests require this, they will fail.\n' % (loc,))
+
+        ant_command.extend(ant_args)
+
+        ant_command = ' '.join(ant_command)
+        self.logger.info('%sRunning: %s' % (self.log_prefix, ant_command))
+
+        if not self.options.dry_run:
+            sys.stdout.flush()
+            sys.stderr.flush()
+            try:
+                process = subprocess.Popen(ant_command, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+                for line in iter(process.stdout.readline, b''):
+                    print line,  # trailing comma so we don't add an extra newline
+                process.communicate() # close p.stdout, wait for the subprocess to exit                
+                retcode = process.returncode
+            except OSError:
+                raise DawnException('ERROR: Ant failed: %s' % (sys.exc_value,))
+            sys.stdout.flush()
+            sys.stderr.flush()
+            if retcode:
+                self.logger.error('Return Code: %s' % (retcode,))
+            else:
+                self.logger.debug('Return Code: %s' % (retcode,))
+            return retcode
+
+
 ###############################################################################
 #  Main driver                                                                #
 ###############################################################################
@@ -1098,10 +1256,11 @@ class DawnManager(object):
         if self.options.help or not positional_arguments:
             self.parser.print_help()
             print '\nActions and Arguments:'
-            for (action, help) in self.valid_actions_with_help:
-                 print '    %s' % (help[0])
-                 for line in help[1:]:
-                    print '      %s' % (line,)
+            for (_, _, help) in self.valid_actions_with_help:
+                if help:
+                     print '    %s' % (help[0])
+                     for line in help[1:]:
+                        print '      %s' % (line,)
             return
 
         self.action = positional_arguments[0]
@@ -1112,9 +1271,10 @@ class DawnManager(object):
         self.logging_console_handler.setLevel( logging._levelNames[self.options.log_level.upper()] )
 
         # validation of options and action
+        self.validate_plugin_patterns()
         if self.options.delete and self.options.unlink:
             raise DawnException('ERROR: you can specify at most one of --delete and --unlink')
-        if self.action not in self.valid_actions:
+        if (self.action not in self.valid_actions.keys()):
             raise DawnException('ERROR: action "%s" unrecognised (try --help)' % (self.action,))
         if self.options.keyring:
             self.options.keyring = os.path.realpath(os.path.abspath(os.path.expanduser(self.options.keyring)))
@@ -1208,7 +1368,11 @@ class DawnManager(object):
            self.materialize_properties_path = os.path.abspath(os.path.join(self.workspace_loc, self.materialize_properties_path))
 
         # invoke funtion to perform the requested action
-        exit_code = getattr(self, 'action_'+self.action.replace('.','_'))()
+        action_handler = self.valid_actions[self.action]
+        if action_handler:
+            exit_code = action_handler(target=self.action)
+        else:
+            exit_code = getattr(self, 'action_'+self.action.replace('.','_').replace('-','_'))()
 
         end_time = datetime.datetime.now()
         run_time = end_time - start_time

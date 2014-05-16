@@ -264,7 +264,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		</sequential>
 	</macrodef>
 
-	<target name="tests-clean_impl" extensionOf="tests-clean" description="Delete test output and results files for plugins/ tests">
+	<target name="tests-clean_impl" extensionOf="tests-clean">
 		<delete dir="${plugin.basedir}/test-reports/" includeemptydirs="true" quiet="true" verbose="${gdaVerboseSetting}" />
 		<delete dir="${plugin.basedir}/test-scratch/" includeemptydirs="true" quiet="true" verbose="${gdaVerboseSetting}" />
 		<echo-time message="tests-clean completed in ${ant.project.name}" />
