@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="headless-test-common" basedir=".">
+	<description>
+Common tasks used in headless testing. Must be imported in all ant test scripts.
+	</description>
+
+	<property name="test-common-included" value="true" />
+
+	<property environment="env" />
+
+	<!-- Convert the Java system properties to the equivalent Eclipse conventions -->
+	<!-- see org.eclipse.osgi.service.environment.Constants for known values -->
+	<condition property="eclipse.os" value="linux">
+		<os family="unix" />
+	</condition>
+	<condition property="eclipse.os" value="win32">  <!-- note that win32 includes both 32- and 64-bit windows -->
+		<os family="windows" />
+	</condition>
+	<condition property="eclipse.os" value="macosx">
+		<os family="mac" />
+	</condition>
+	<fail unless="eclipse.os" message="eclipse.os could not be set, since os family not recognised" />
+
+	<condition property="eclipse.arch" value="x86">
+		<equals arg1="${os.arch}" arg2="i386" />
+	</condition>
+	<condition property="eclipse.arch" value="x86">
+		<equals arg1="${os.arch}" arg2="x86" />
+	</condition>
+	<condition property="eclipse.arch" value="x86_64">
+		<equals arg1="${os.arch}" arg2="amd64" />
+	</condition>
+	<fail unless="eclipse.arch" message="eclipse.arch could not be set, since os.arch=${os.arch} not recognised" />
+
+	<!-- Under Windows, we will need to pass SystemRoot=C:\WINDOWS or similar to any subtasks  -->
+	<condition property="SystemRootLiteral" value="SystemRoot" else="dummy.for.SystemRootLiteral">
+		<isset property="env.SystemRoot" />
+	</condition>
+	<condition property="SystemRoot" value="${env.SystemRoot}" else="dummy.for.SystemRoot">
+		<isset property="env.SystemRoot" />
+	</condition>
+
+	<!-- Location of jython .jar -->
+	<path id="jythonjar.loc.id">
+		<first count="1"><sort>
+			<fileset dir="${workspace.git.loc}/diamond-jython.git/uk.ac.diamond.jython" includes="jython*/jython.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
+	</path>
+	<property name="jythonjar.loc" refid="jythonjar.loc.id" />  <!-- turn the path into a property -->
+
+	<!-- Location of junit .jar -->
+	<path id="junitjar.loc.id">
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="org.junit4_*/junit.jar org.junit_4*/junit.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
+	</path>
+	<property name="junitjar.loc" refid="junitjar.loc.id" />  <!-- turn the path into a property -->
+
+	<!-- Paths useful for compiling javadocs, running tests etc. -->
+	<path id="libs.jars.path">
+		<fileset dir="${workspace.git.loc}/gda-common.git/uk.ac.gda.libs" >
+			<include name="*.jar" />
+			<exclude name="*-sources-*" />
+			<exclude name="**/com.springsource.org.apache.tools.ant*.jar" />  <!-- prefer the one in thirdparty/eclipse -->
+		</fileset>
+	</path>
+
+	<path id="tp.slf4j.path">
+		<fileset dir="${workspace.loc}/tp/plugins">
+			<include name="slf4j.api_1.7.6.jar" />
+		</fileset>
+	</path>
+
+	<path id="tp.jcl-over-slf4j.path">
+		<fileset dir="${workspace.loc}/tp/plugins">
+			<include name="jcl.over.slf4j_1.7.6.jar" />
+		</fileset>
+	</path>
+
+	<!-- ======================================================================
+	       Testing
+	     ====================================================================== -->
+
+	<!-- set path for platform- and OS-dependent libraries -->
+	<target name="set-library-PATH-NAME" unless="java.library.path.name">
+		<condition property="java.library.path.name" value="LD_LIBRARY_PATH">
+			<equals arg1="${eclipse.os}" arg2="linux" />
+		</condition>
+		<condition property="java.library.path.name" value="Path">
+			<equals arg1="${eclipse.os}" arg2="win32" />
+		</condition>
+	</target>
+
+	<target name="_set-library-PATH-VALUE-GDA" unless="java.library.path.value">
+		<pathconvert property="java.library.path.value" setonempty="no">
+			<dirset dir="${workspace.git.loc}">
+				<include name="gda-common*/uk.ac.gda.common/lib/${eclipse.os}-${eclipse.arch}" />
+				<include name="gda-core*/uk.ac.gda.core/lib/${eclipse.os}-${eclipse.arch}" />
+				<include name="gda-nexus*/uk.ac.gda.nexus/lib/${eclipse.os}-${eclipse.arch}" />
+				<include name="dawn-third*/ncsa.hdf/lib/${eclipse.os}-${eclipse.arch}" />
+				<include name="scisoft-cbflib*/uk.ac.diamond.CBFlib/lib/${eclipse.os}-${eclipse.arch}" />
+				<include name="gda-diamond*/uk.ac.gda.dls/lib/${eclipse.os}-${eclipse.arch}" />
+			</dirset>
+		</pathconvert>
+	</target>
+
+	<target name="_set-library-PATH-VALUE-DAWN" unless="java.library.path.value">
+		<pathconvert property="java.library.path.value" setonempty="no">
+			<dirset dir="${workspace.git.loc}">
+				<include name="dawn-third*/ncsa.hdf/lib/${eclipse.os}-${eclipse.arch}" />
+				<include name="scisoft-cbflib*/uk.ac.diamond.CBFlib/lib/${eclipse.os}-${eclipse.arch}" />
+			</dirset>
+		</pathconvert>
+	</target>
+
+	<target name="set-test-base-GDA" depends="set-library-PATH-NAME, _set-library-PATH-VALUE-GDA" unless="set-library-path.done">
+		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
+		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
+		<echo>set ${java.library.path.name}=${java.library.path.value}</echo>
+		<property name="set-library-path.done" value="true"/>
+	</target>
+
+	<target name="set-test-base-DAWN" depends="set-library-PATH-NAME, _set-library-PATH-VALUE-DAWN" unless="set-library-path.done">
+		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
+		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
+		<echo>set ${java.library.path.name}=${java.library.path.value}</echo>
+		<property name="set-library-path.done" value="true"/>
+	</target>
+
+	<!-- dummy X-server when running headless under Linux -->
+	<target name="Xvfb_check" unless="Xvfb_check_done">
+		<exec executable="which" osfamily="unix" resultproperty="which_Xvfb_result" inputstring="">
+			<arg value="Xvfb" />
+		</exec>
+		<condition property="Xvfb_available">
+			<and>
+				<os family="unix" />
+				<equals arg1="${which_Xvfb_result}" arg2="0" />
+			</and>
+		</condition>
+		<property name="Xvfb_check_done" value="true" />
+	</target>
+
+	<target name="Xvfb_start" depends="Xvfb_check" if="Xvfb_available">
+		<!-- If invoked from gda-build.py, Xvfb-display-number has already been set.
+		     This allows tests to be run in parallel without using the same Xvfb-display-number -->
+		<property name="Xvfb-display-number" value="6123" />
+		<property name="Xvfb-display-name" value="DISPLAY" />
+		<echo>Starting Xvfb with DISPLAY :${Xvfb-display-number} to act as dummy XServer</echo>
+		<exec executable="Xvfb" spawn="true" os="Linux">
+			<arg value=":${Xvfb-display-number}" />
+			<arg value="-ac" />
+			<arg value="-nolisten" />
+			<arg value="tcp" />
+		</exec>
+		<sleep seconds="1" />  <!-- allow time to initialize -->
+	</target>
+
+	<target name="Xvfb_stop" if="Xvfb_available">
+		<echo>Stopping Xvfb with DISPLAY :${Xvfb-display-number} used as a dummy XServer</echo>
+		<exec executable="pkill" os="Linux" inputstring="">
+			<arg value="-f" />
+			<arg value="Xvfb :${Xvfb-display-number}" />
+		</exec>
+		<sleep seconds="2" />  <!-- allow time to fully stop, otherwise if the next plugin uses Xvfb as well, tests may fail with weird X11 errors -->
+	</target>
+
+	<!-- Java JUnit testing -->
+	<macrodef name="junit-call" description="Invokes JUnit">
+		<attribute name="description" default="" />
+		<attribute name="dir" default="${plugin.basedir}" />
+		<attribute name="report.dir" default="${plugin.basedir}/test-reports" />
+		<attribute name="scratch.dir" default="${plugin.basedir}/test-scratch" />
+		<attribute name="Xvfb-display-name" default="dummy.for.Xvfb-display-name" />
+		<attribute name="Xvfb-display-number" default="dummy.for.Xvfb-display-number" />
+		<attribute name="fork" default="on" />
+		<attribute name="forkmode" default="perBatch" />
+		<attribute name="maxmemory" default="512m" />
+		<attribute name="timeout" default="1800000" />
+		<attribute name="printSummary" default="on" />
+		<attribute name="showoutput" default="true" />
+		<attribute name="newenvironment" default="true" />
+		<element name="junit-elements" implicit="yes" />
+		<sequential>
+			<echo-time message="Starting @{description} --->" />
+			<echo>env ${java.library.path.name}=${java.library.path.value}</echo>
+			<delete dir="@{report.dir}" includeemptydirs="true" quiet="true" verbose="${gdaVerboseSetting}" />
+			<delete dir="@{scratch.dir}" includeemptydirs="true" quiet="true" verbose="${gdaVerboseSetting}" />
+			<mkdir dir="@{report.dir}" />
+			<mkdir dir="@{scratch.dir}" />
+			<junit dir="@{dir}"
+				fork="@{fork}" forkmode="@{forkmode}" maxmemory="@{maxmemory}" timeout="@{timeout}" newenvironment="@{newenvironment}"
+				printSummary="@{printSummary}" showoutput="@{showoutput}">
+				<env key="${java.library.path.name}" value="${java.library.path.value}" />
+				<!-- (effective on some Linux only) control memory alloction on RedHat 6 (See Jira DATAACQTEAM-50) -->
+				<env key="MALLOC_ARENA_MAX" value="4" />
+				<!-- (effective on some Linux only) set DISPLAY=:<value>, for tests which require an X-server -->
+				<env key="@{Xvfb-display-name}" value=":@{Xvfb-display-number}" />
+				<!-- (effective on Windows only) set SystemRoot=C:\Windows or similar, to avoid "Unrecognized Windows Sockets error: 10106: create" -->
+				<env key="${SystemRootLiteral}" value="${SystemRoot}" />
+				<!-- GDA assumes that the default encoding is UTF-8. Note that this is not usually the default under Windows.
+				     If not running with UTF-8, then at a minimum some Nexus tests will fail (others might also). -->
+				<env key="LANG" value="en_GB.UTF-8" />
+				<jvmarg value="-Dfile.encoding=UTF-8" />
+				<jvmarg value="-Dsun.jnu.encoding=UTF-8" />
+				<syspropertyset>
+					<propertyref name="GDALargeTestFilesLocation" />
+					<propertyref name="uk.ac.diamond.jython.location" />
+				</syspropertyset>
+				<junit-elements />
+			</junit>
+			<echo message="&lt;--- Finished @{description}" />
+		</sequential>
+	</macrodef>
+
+	<!-- Jython testing -->
+	<macrodef name="jython-call" description="Invokes Jython">
+		<attribute name="description" default="" />
+		<attribute name="dir" default="${plugin.basedir}" />
+		<attribute name="report.dir" default="${plugin.basedir}/test-reports" />
+		<attribute name="scratch.dir" default="${plugin.basedir}/test-scratch" />
+		<attribute name="jython.file" />
+		<attribute name="python.path" />
+		<attribute name="fork" default="on" />
+		<attribute name="maxmemory" default="1024m" />
+		<attribute name="timeout" default="900000" />
+		<attribute name="newenvironment" default="true" />
+		<attribute name="resultproperty.name" default="jython_return_code_@{jython.file}" />  <!-- build property name dynamically so that we get a new name for each iteration -->
+		<element name="jython-elements" implicit="yes" />
+		<sequential>
+			<echo-time message="Starting @{description} --->" />
+			<echo>env ${java.library.path.name}=${java.library.path.value}</echo>
+			<mkdir dir="@{report.dir}" />
+			<mkdir dir="@{scratch.dir}" />
+			<java dir="@{dir}" fork="@{fork}" maxmemory="@{maxmemory}" timeout="@{timeout}" newenvironment="@{newenvironment}"
+				classname="org.python.util.jython" failonerror="false" resultproperty="@{resultproperty.name}">
+				<!-- Note that setting LD_LIBRARY_PATH seems to be ignored, or ineffective.
+				     It works for the junit task (see above), but not for the java task, nor for the exec task.
+				     Numerous experiments have established this. -->
+				<env key="${java.library.path.name}" value="${java.library.path.value}"/>
+				<!-- (effective on some Linux only) control memory alloction on RedHat 6 (See Jira DATAACQTEAM-50) -->
+				<env key="MALLOC_ARENA_MAX" value="4" />
+				<!-- GDA assumes that the default encoding is UTF-8. Note that this is not usually the default under Windows.
+				     If not running with UTF-8, then at a minimum some Nexus tests will fail (others might also). -->
+				<env key="LANG" value="en_GB.UTF-8" />
+				<jvmarg value="-Dfile.encoding=UTF-8" />
+				<jvmarg value="-Dsun.jnu.encoding=UTF-8" />
+				<arg line=" @{jython.file}" />
+				<jvmarg value="-Dpython.path=@{python.path}" />
+				<jython-elements />
+			</java>
+			<echo message="&lt;--- Finished @{description} (rc=${@{resultproperty.name}})" />
+			<fail message="Jython invokation failed.">  <!-- if test harness failed (but not if individual tests failed) -->
+				<condition>
+					<equals arg1="${@{resultproperty.name}}" arg2="255" />
+				</condition>
+			</fail>
+		</sequential>
+	</macrodef>
+
+	<target name="tests-clean_impl" extensionOf="tests-clean" description="Delete test output and results files for plugins/ tests">
+		<delete dir="${plugin.basedir}/test-reports/" includeemptydirs="true" quiet="true" verbose="${gdaVerboseSetting}" />
+		<delete dir="${plugin.basedir}/test-scratch/" includeemptydirs="true" quiet="true" verbose="${gdaVerboseSetting}" />
+		<echo-time message="tests-clean completed in ${ant.project.name}" />
+	</target>
+
+</project>
