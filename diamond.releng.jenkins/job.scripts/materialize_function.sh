@@ -117,8 +117,6 @@ materialize_function () {
 
     set -x  # Turn on xtrace
 
-    rm -f ${WORKSPACE}/head_commits.txt
-
     if [[ ( "${materialize_type}" == "fresh" ) || ( "${materialize_type}" == "redo" ) ]]; then
         # delete any existing workspace, and initialize a new workspace
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas
@@ -132,7 +130,7 @@ materialize_function () {
         # update whatever is in the existing workspace
         ${dawn_py} ${log_level_option} -w ${materialize_workspace_path} git pull
     fi
-    if [[ "${materialize_type}" != *skip* ]]; then
+    if [[ ( "${materialize_type}" != *skip* ) && ( "${materialize_type}" == "redo" ) ]]; then
       ${dawn_py} -w ${materialize_workspace_path} git log -1
     fi
 

@@ -52,25 +52,20 @@ junit_function () {
     # This scenario, though very unusual, can happen (and has occurred previously in testing), and results in the build being incorrectly marked as SUCCESS.
     #
     echo "$`date +"%a %d/%b/%Y %H:%M:%S"` (start of job) MARK_BUILD_AS_UNSTABLE (this text will be cleared if no problems found)" > post_build_status_marker.txt
-    # mimic old directory structure
-    cd ${materialize_workspace_path}
-    if [ -h thirdparty ]; then
-      rm -fv thirdparty
-    fi
-    ln -s ../thirdparty thirdparty
-    if [ -d "${GDALargeTestFiles}" ]; then
-      GDALargeTestFiles_option="--GDALargeTestFilesLocation=${GDALargeTestFiles}"
-    fi
+
+    export materialize_type=redo
+    export materialize_component=diamond.releng.tools
+    materialize_function
 
     # Run JUnit tests
-    ${python} builder/gda-build.py ${junit_tests_extra_parameters:-} ${GDALargeTestFiles_option:-} all-tests
+    ${dawn_py} ${junit_tests_extra_parameters:-} all-tests
 
     # If we get this far, clear the signal that tells Jenkins that this build is to be marked UNSTABLE
     echo "`date +"%a %d/%b/%Y %H:%M:%S"` (after build and tests) no need for Jenkins Text-finder plugin to override the build status" > post_build_status_marker.txt
 
     # If any JVM abended, write text to console log (for reporting) and create the status file (so that Jenkins will mark the build as unstable)
     set +e  # Turn off errexit
-    python builder/hudson/job_scripts/check_if_JVM_abend.py ${materialize_workspace_path} ${materialize_workspace_path}_git
+    python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/check_if_JVM_abend.py ${materialize_workspace_path} ${materialize_workspace_path}_git
     RETVAL=$?
     if [ "${RETVAL}" != "0" ]; then
       echo -e "`date +"%a %d/%b/%Y %H:%M:%S"` (after build and tests) MARK_BUILD_AS_UNSTABLE (set by check_if_JVM_abend.py)" > post_build_status_marker.txt
