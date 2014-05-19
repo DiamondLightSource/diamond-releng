@@ -130,7 +130,7 @@ materialize_function () {
         # update whatever is in the existing workspace
         ${dawn_py} ${log_level_option} -w ${materialize_workspace_path} git pull
     fi
-    if [[ ( "${materialize_type}" != *skip* ) && ( "${materialize_type}" == "redo" ) ]]; then
+    if [[ ( "${materialize_type}" != *skip* ) && ( "${materialize_type}" != "redo" ) ]]; then
       ${dawn_py} -w ${materialize_workspace_path} git log -1
     fi
 
