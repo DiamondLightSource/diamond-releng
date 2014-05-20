@@ -92,17 +92,16 @@ set_environment_step () {
             return 100
         fi
 
-        # note that the command line subversion (svn) should match the subversion version that is written by buckminster 
-        if [[ "${module_load_subversion_version}" == "none" || -z "${module_load_subversion_version-arbitrary}" ]]; then
-            echo 'skipping "module load subversion"'
-        elif [[ "${module_load_subversion_version}" == "default" || -z "${module_load_subversion_version+arbitrary}" ]]; then
-            echo "issuing \"module load subversion\""
-            module load subversion
-        elif [[ "${module_load_subversion_version+arbitrary}" ]]; then
-            echo "issuing \"module load subversion/${module_load_subversion_version}\""
-            module load subversion/${module_load_subversion_version}
+        if [[ "${module_load_python_version}" == "none" || -z "${module_load_python_version-arbitrary}" ]]; then
+            echo 'skipping "module load python"'
+        elif [[ "${module_load_python_version}" == "default" || -z "${module_load_python_version+arbitrary}" ]]; then
+            echo "issuing \"module load python\""
+            module load python
+        elif [[ "${module_load_python_version+arbitrary}" ]]; then
+            echo "issuing \"module load python/${module_load_python_version}\""
+            module load python/${module_load_python_version}
         else
-            echo 'Error in logic determining "module load subversion"'
+            echo 'Error in logic determining "module load python"'
             return 100
         fi
 
@@ -205,7 +204,6 @@ set_environment_step () {
     echo -e "\nRunning with java=$(which java) $""JAVA_HOME=${JAVA_HOME}";java -version
     echo -e "Running with python=$(which python)";python -V
     echo -e "Running with git=$(which git)";git --version
-    echo -e "Running with svn=$(which svn)";svn --version | grep " version "
     echo -e "Running with buckminster=$(which buckminster)\n"
 
 }
