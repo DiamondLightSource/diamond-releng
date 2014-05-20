@@ -117,8 +117,8 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<property name="system.path.value" value="dummy.for.system.path.value" />
 	</target>
 
-	<target name="_set-library-PATH-VALUE-GDA" unless="java.library.path.value">
-		<pathconvert property="java.library.path.value" setonempty="no">
+	<target name="_set-library-PATH-VALUE-GDA">
+		<path id="java.library.path.value">
 			<dirset dir="${workspace.git.loc}">
 				<include name="gda-common*/uk.ac.gda.common/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="gda-core*/uk.ac.gda.core/lib/${eclipse.os}-${eclipse.arch}" />
@@ -127,18 +127,20 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 				<include name="scisoft-cbflib*/uk.ac.diamond.CBFlib/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="gda-diamond*/uk.ac.gda.dls/lib/${eclipse.os}-${eclipse.arch}" />
 			</dirset>
-			<pathelement path="${previous.path.value}" />
-		</pathconvert>
+			<pathelement path="${previous.java.library.path.value}" />
+		</path>
+		<pathconvert property="java.library.path.value" refid="java.library.path.value" setonempty="no" />
 	</target>
 
-	<target name="_set-library-PATH-VALUE-DAWN" unless="java.library.path.value">
-		<pathconvert property="java.library.path.value" setonempty="no">
+	<target name="_set-library-PATH-VALUE-DAWN">
+		<path id="java.library.path.value">
 			<dirset dir="${workspace.git.loc}">
 				<include name="dawn-third*/ncsa.hdf/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="scisoft-cbflib*/uk.ac.diamond.CBFlib/lib/${eclipse.os}-${eclipse.arch}" />
 			</dirset>
-			<pathelement path="${previous.path.value}" />
-		</pathconvert>
+			<pathelement path="${previous.java.library.path.value}" />
+		</path>
+		<pathconvert property="java.library.path.value" refid="java.library.path.value" setonempty="no" />
 	</target>
 
 	<target name="set-test-base-GDA" depends="set-context, _set-library-PATH-VALUE-GDA" unless="set-library-path.done">
