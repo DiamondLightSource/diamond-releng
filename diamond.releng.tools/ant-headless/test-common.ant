@@ -13,9 +13,17 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	<condition property="eclipse.os" value="linux">
 		<os family="unix" />
 	</condition>
+	<condition property="os.isLinux">
+		<os family="unix" />
+	</condition>
+
 	<condition property="eclipse.os" value="win32">  <!-- note that win32 includes both 32- and 64-bit windows -->
 		<os family="windows" />
 	</condition>
+	<condition property="os.isWindows">
+		<os family="windows" />
+	</condition>
+
 	<condition property="eclipse.os" value="macosx">
 		<os family="mac" />
 	</condition>
@@ -88,13 +96,25 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	     ====================================================================== -->
 
 	<!-- set path for platform- and OS-dependent libraries -->
-	<target name="set-library-PATH-NAME" unless="java.library.path.name">
-		<condition property="java.library.path.name" value="LD_LIBRARY_PATH">
-			<equals arg1="${eclipse.os}" arg2="linux" />
+	<target name="set-context" depends="_set-context-Linux, _set-context-Windows">
+	</target>
+	<target name="_set-context-Linux" if="os.isLinux">
+		<property name="java.library.path.name" value="LD_LIBRARY_PATH" />
+		<condition property="previous.java.library.path.value" value="${env.LD_LIBRARY_PATH}" else="">
+			<isset property="env.LD_LIBRARY_PATH" />
 		</condition>
-		<condition property="java.library.path.name" value="Path">
-			<equals arg1="${eclipse.os}" arg2="win32" />
+		<property name="system.path.name" value="PATH" />
+		<condition property="system.path.value" value="${env.PATH}" else="">
+			<isset property="env.PATH" />
 		</condition>
+	</target>
+	<target name="_set-context-Windows" if="os.isWindows">
+		<property name="java.library.path.name" value="Path" />
+		<condition property="previous.java.library.path.value" value="${env.Path}" else="">
+			<isset property="env.Path" />
+		</condition>
+		<property name="system.path.name" value="dummy.for.system.path.name" />  <!-- On Windows, system and Java path are the same -->
+		<property name="system.path.value" value="dummy.for.system.path.value" />
 	</target>
 
 	<target name="_set-library-PATH-VALUE-GDA" unless="java.library.path.value">
@@ -107,6 +127,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 				<include name="scisoft-cbflib*/uk.ac.diamond.CBFlib/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="gda-diamond*/uk.ac.gda.dls/lib/${eclipse.os}-${eclipse.arch}" />
 			</dirset>
+			<pathelement path="${previous.path.value}" />
 		</pathconvert>
 	</target>
 
@@ -116,17 +137,18 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 				<include name="dawn-third*/ncsa.hdf/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="scisoft-cbflib*/uk.ac.diamond.CBFlib/lib/${eclipse.os}-${eclipse.arch}" />
 			</dirset>
+			<pathelement path="${previous.path.value}" />
 		</pathconvert>
 	</target>
 
-	<target name="set-test-base-GDA" depends="set-library-PATH-NAME, _set-library-PATH-VALUE-GDA" unless="set-library-path.done">
+	<target name="set-test-base-GDA" depends="set-context, _set-library-PATH-VALUE-GDA" unless="set-library-path.done">
 		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
 		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
 		<echo>set ${java.library.path.name}=${java.library.path.value}</echo>
 		<property name="set-library-path.done" value="true"/>
 	</target>
 
-	<target name="set-test-base-DAWN" depends="set-library-PATH-NAME, _set-library-PATH-VALUE-DAWN" unless="set-library-path.done">
+	<target name="set-test-base-DAWN" depends="set-context, _set-library-PATH-VALUE-DAWN" unless="set-library-path.done">
 		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
 		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
 		<echo>set ${java.library.path.name}=${java.library.path.value}</echo>
@@ -197,6 +219,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<junit dir="@{dir}"
 				fork="@{fork}" forkmode="@{forkmode}" maxmemory="@{maxmemory}" timeout="@{timeout}" newenvironment="@{newenvironment}"
 				printSummary="@{printSummary}" showoutput="@{showoutput}">
+				<env key="${system.path.name}" value="${system.path.value}" />
 				<env key="${java.library.path.name}" value="${java.library.path.value}" />
 				<!-- (effective on some Linux only) control memory alloction on RedHat 6 (See Jira DATAACQTEAM-50) -->
 				<env key="MALLOC_ARENA_MAX" value="4" />
@@ -236,10 +259,12 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<sequential>
 			<echo-time message="Starting @{description} --->" />
 			<echo>env ${java.library.path.name}=${java.library.path.value}</echo>
+			<echo>env ${system.path.name}=${system.path.value}</echo>
 			<mkdir dir="@{report.dir}" />
 			<mkdir dir="@{scratch.dir}" />
 			<java dir="@{dir}" fork="@{fork}" maxmemory="@{maxmemory}" timeout="@{timeout}" newenvironment="@{newenvironment}"
 				classname="org.python.util.jython" failonerror="false" resultproperty="@{resultproperty.name}">
+				<env key="${system.path.name}" value="${system.path.value}" />
 				<!-- Note that setting LD_LIBRARY_PATH seems to be ignored, or ineffective.
 				     It works for the junit task (see above), but not for the java task, nor for the exec task.
 				     Numerous experiments have established this. -->
