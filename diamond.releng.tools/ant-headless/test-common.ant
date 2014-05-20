@@ -146,14 +146,12 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	<target name="set-test-base-GDA" depends="set-context, _set-library-PATH-VALUE-GDA" unless="set-library-path.done">
 		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
 		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
-		<echo>set ${java.library.path.name}=${java.library.path.value}</echo>
 		<property name="set-library-path.done" value="true"/>
 	</target>
 
 	<target name="set-test-base-DAWN" depends="set-context, _set-library-PATH-VALUE-DAWN" unless="set-library-path.done">
 		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
 		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
-		<echo>set ${java.library.path.name}=${java.library.path.value}</echo>
 		<property name="set-library-path.done" value="true"/>
 	</target>
 
@@ -214,6 +212,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<sequential>
 			<echo-time message="Starting @{description} --->" />
 			<echo>env ${java.library.path.name}=${java.library.path.value}</echo>
+			<echo>env ${system.path.name}=${system.path.value}</echo>
 			<delete dir="@{report.dir}" includeemptydirs="true" quiet="true" verbose="${gdaVerboseSetting}" />
 			<delete dir="@{scratch.dir}" includeemptydirs="true" quiet="true" verbose="${gdaVerboseSetting}" />
 			<mkdir dir="@{report.dir}" />
