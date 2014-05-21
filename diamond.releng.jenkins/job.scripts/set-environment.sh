@@ -62,13 +62,13 @@ set_environment_step () {
     
     if [[ "${MODULEPATH}" == */dls_sw/apps/Modules/modulefiles* ]]; then
 
-        # do not issue "module load xxx" if module_load_xxx_version is "none" or is set to null
-        # issue "module load xxx" if module_load_xxx_version is set to "default", or is not set
+        # do not issue "module load xxx" if module_load_xxx_version is not set, or is set to null, or is set to "none"
+        # issue "module load xxx" if module_load_xxx_version is set to "default"
         # issue "module load xxx/version" if module_load_xxx_version is set
 
-        if [[ "${module_load_java_version}" == "none" || -z "${module_load_java_version-arbitrary}" ]]; then
+        if [[ "${module_load_java_version}" == "none" || -z "${module_load_java_version-arbitrary}" || -z "${module_load_java_version+arbitrary}" ]]; then
             echo 'skipping "module load java"'
-        elif [[ "${module_load_java_version}" == "default" || -z "${module_load_java_version+arbitrary}" ]]; then
+        elif [[ "${module_load_java_version}" == "default" ]]; then
             echo "issuing \"module load java\""
             module load java
         elif [[ "${module_load_java_version+arbitrary}" ]]; then
@@ -79,9 +79,9 @@ set_environment_step () {
             return 100
         fi
 
-        if [[ "${module_load_buckminster_version}" == "none" || -z "${module_load_buckminster_version-arbitrary}" ]]; then
+        if [[ "${module_load_buckminster_version}" == "none" || -z "${module_load_buckminster_version-arbitrary}" || -z "${module_load_buckminster_version+arbitrary}" ]]; then
             echo 'skipping "module load buckminster"'
-        elif [[ "${module_load_buckminster_version}" == "default" || -z "${module_load_buckminster_version+arbitrary}" ]]; then
+        elif [[ "${module_load_buckminster_version}" == "default" ]]; then
             echo "issuing \"module load buckminster\""
             module load buckminster
         elif [[ "${module_load_buckminster_version+arbitrary}" ]]; then
@@ -92,9 +92,9 @@ set_environment_step () {
             return 100
         fi
 
-        if [[ "${module_load_python_version}" == "none" || -z "${module_load_python_version-arbitrary}" ]]; then
+        if [[ "${module_load_python_version}" == "none" || -z "${module_load_python_version-arbitrary}" || -z "${module_load_python_version+arbitrary}" ]]; then
             echo 'skipping "module load python"'
-        elif [[ "${module_load_python_version}" == "default" || -z "${module_load_python_version+arbitrary}" ]]; then
+        elif [[ "${module_load_python_version}" == "default" ]]; then
             echo "issuing \"module load python\""
             module load python
         elif [[ "${module_load_python_version+arbitrary}" ]]; then
