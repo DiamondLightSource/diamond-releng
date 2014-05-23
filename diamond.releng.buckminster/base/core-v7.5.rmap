@@ -3279,7 +3279,7 @@
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
-  </rm:searchPath>  
+  </rm:searchPath>
   <!-- -->
   <rm:searchPath name="gda_xas_core">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-xas-core=true))" readerType="git">
@@ -3903,19 +3903,19 @@
       <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_3.7_platform"> 
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=3.7)" readerType="p2" source="false" mutable="false"> 
-      <rm:property key="buckminster.source" value="false"/> 
-      <rm:property key="buckminster.mutable" value="false"/> 
-      <rm:uri format="${eclipse.download.url}/eclipse/updates/3.7"/> 
-    </rm:provider> 
-  </rm:searchPath> 
-  <rm:searchPath name="eclipse_3.7_release"> 
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=3.7)" readerType="p2" source="false" mutable="false"> 
-      <rm:property key="buckminster.source" value="false"/> 
-      <rm:property key="buckminster.mutable" value="false"/> 
-      <rm:uri format="${eclipse.download.url}/releases/indigo"/> 
-    </rm:provider> 
+  <rm:searchPath name="eclipse_3.7_platform">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=3.7)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${eclipse.download.url}/eclipse/updates/3.7"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_3.7_release">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=3.7)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${eclipse.download.url}/releases/indigo"/>
+    </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_3.8_platform">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=3.8)" readerType="p2" source="false" mutable="false">
