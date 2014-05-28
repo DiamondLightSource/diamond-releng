@@ -12,7 +12,7 @@ materialize_function
 record_head_commits_function > ${WORKSPACE}/head_commits.txt
 # also record the current head in repos that might not have been materialized, but we still need to branch when making a release
 for extra_repo in "dawn-test.git"; do
-    if ! grep -q "${extra_repo}" head_commits.txt; then
+    if ! grep -q "${extra_repo}" ${WORKSPACE}/head_commits.txt; then
         echo -n "repository=${extra_repo}***URL=git://github.com/DawnScience/${extra_repo}***" >> ${WORKSPACE}/head_commits.txt
         echo -n "HEAD=$(git ls-remote git@github.com:DawnScience/${extra_repo} refs/heads/master | cut -f 1)***" >> ${WORKSPACE}/head_commits.txt
         echo "BRANCH=master***" >> ${WORKSPACE}/head_commits.txt
