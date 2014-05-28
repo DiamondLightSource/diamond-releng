@@ -152,6 +152,8 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	<target name="set-test-base-DAWN" depends="set-context, _set-library-PATH-VALUE-DAWN" unless="set-library-path.done">
 		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
 		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
+		<property name="org.dawnsci.python.test" value="true"/>
+		<property name="org.dawnsci.python.path" value="${workspace.git.loc}/scisoft-core.git/uk.ac.diamond.scisoft.python/src"/>
 		<property name="set-library-path.done" value="true"/>
 	</target>
 
@@ -207,6 +209,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<attribute name="timeout" default="1800000" />
 		<attribute name="printSummary" default="on" />
 		<attribute name="showoutput" default="true" />
+		<attribute name="logfailedtests" default="true" />
 		<attribute name="newenvironment" default="true" />
 		<element name="junit-elements" implicit="yes" />
 		<sequential>
@@ -219,7 +222,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<mkdir dir="@{scratch.dir}" />
 			<junit dir="@{dir}"
 				fork="@{fork}" forkmode="@{forkmode}" maxmemory="@{maxmemory}" timeout="@{timeout}" newenvironment="@{newenvironment}"
-				printSummary="@{printSummary}" showoutput="@{showoutput}">
+				printSummary="@{printSummary}" showoutput="@{showoutput}" logfailedtests="@{logfailedtests}">
 				<env key="${system.path.name}" value="${system.path.value}" />
 				<env key="${java.library.path.name}" value="${java.library.path.value}" />
 				<!-- (effective on some Linux only) control memory alloction on RedHat 6 (See Jira DATAACQTEAM-50) -->
