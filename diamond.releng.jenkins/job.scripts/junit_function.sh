@@ -58,7 +58,7 @@ junit_function () {
     materialize_function
 
     # Run JUnit tests
-    ${dawn_py} ${junit_tests_extra_parameters:-} all-tests
+    ${dawn_py} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} all-tests
 
     # If we get this far, clear the signal that tells Jenkins that this build is to be marked UNSTABLE
     echo "`date +"%a %d/%b/%Y %H:%M:%S"` (after build and tests) no need for Jenkins Text-finder plugin to override the build status" > ${WORKSPACE}/post_build_status_marker.txt
