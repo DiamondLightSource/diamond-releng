@@ -259,8 +259,8 @@ class DawnManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "General options")
-        group.add_option('-D', dest='buckminster_property', action='append', metavar='key=value',
-                               help='Pass an additional property to Buckminster')
+        group.add_option('-D', dest='system_property', action='append', metavar='key=value',
+                               help='Pass a system property to Buckminster or Ant')
         group.add_option('-J', dest='jvmargs', action='append', metavar='key=value',
                                help='Pass an additional JVM argument')
         group.add_option('-h', '--help', dest='help', action='store_true', default=False, help='Show help information and exit')
@@ -633,7 +633,7 @@ class DawnManager(object):
 
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
         properties_text = '-P%s ' % (self.materialize_properties_path.replace('\\','/'),)  # convert \ to / in path on Windows (avoiding \ as escape character)
-        for keyval in self.options.buckminster_property:
+        for keyval in self.options.system_property:
             properties_text += '-D%s ' % (keyval,)
         with open(self.script_file_path, 'w') as script_file:
             # set preferences
@@ -801,7 +801,7 @@ class DawnManager(object):
 
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
         properties_text = '-P%s ' % (self.buckminster_properties_path,)
-        for keyval in self.options.buckminster_property:
+        for keyval in self.options.system_property:
             properties_text += '-D%s ' % (keyval,)
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
@@ -891,7 +891,7 @@ class DawnManager(object):
 
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
         properties_text = '-P%s ' % (self.buckminster_properties_path,)
-        for keyval in self.options.buckminster_property:
+        for keyval in self.options.system_property:
             properties_text += '-D%s ' % (keyval,)
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
@@ -969,7 +969,7 @@ class DawnManager(object):
         self.set_buckminster_properties_path(self.site_name)
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
         properties_text = '-P%s ' % (self.buckminster_properties_path,)
-        for keyval in self.options.buckminster_property:
+        for keyval in self.options.system_property:
             properties_text += '-D%s ' % (keyval,)
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
@@ -1203,6 +1203,8 @@ class DawnManager(object):
                     ant_command.extend(("-DGDALargeTestFilesLocation=%s%s" % (loc, os.sep),))
             else:
                 raise DawnException('ERROR: --GDALargeTestFilesLocation=%s does not exist. If any tests require this, they will fail.\n' % (loc,))
+        for keyval in self.options.system_property:
+            ant_command.extend(("-D%s " % (keyval,),))
 
         ant_command.extend(ant_args)
 
@@ -1294,11 +1296,11 @@ class DawnManager(object):
                     raise DawnException('ERROR: current user does not have read access to --keyring "%s"' % (self.options.keyring,))
         if self.options.delete and self.action not in ('setup', 'materialize'):
             raise DawnException('ERROR: the --delete option cannot be specified with action "%s"' % (self.action))
-        if self.options.buckminster_property:
-            if any((keyval.find('=') == -1) for keyval in self.options.buckminster_property):
+        if self.options.system_property:
+            if any((keyval.find('=') == -1) for keyval in self.options.system_property):
                 raise DawnException('ERROR: the -D option must specify a property and value as "key=value"')
         else:
-            self.options.buckminster_property = []  # use [] rather than None so we can iterate over it
+            self.options.system_property = []  # use [] rather than None so we can iterate over it
         if not self.options.jvmargs:
             self.options.jvmargs = []  # use [] rather than None so we can iterate over it
 
