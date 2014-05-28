@@ -152,8 +152,9 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	<target name="set-test-base-DAWN" depends="set-context, _set-library-PATH-VALUE-DAWN" unless="set-library-path.done">
 		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
 		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
-		<property name="org.dawnsci.python.test" value="true"/>
+		<property name="org.dawnsci.python.test" value="${env.org_dawnsci_python_test}"/>
 		<property name="org.dawnsci.python.path" value="${workspace.git.loc}/scisoft-core.git/uk.ac.diamond.scisoft.python/src"/>
+		<property name="org.dawnsci.python.executable" value="${env.org_dawnsci_python_executable}"/>
 		<property name="set-library-path.done" value="true"/>
 	</target>
 
