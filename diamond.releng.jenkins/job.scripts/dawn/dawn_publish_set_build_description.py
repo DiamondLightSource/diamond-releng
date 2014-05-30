@@ -8,6 +8,7 @@ try:
         ('DawnDiamond.gda834--publish', 'DawnDiamond.gda834-create.product', 'gda834-create.product', 'COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_GDA_CREATE_PRODUCT'),
         ('DawnDiamond.gda836--publish', 'DawnDiamond.gda836-create.product', 'gda836-create.product', 'COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_GDA_CREATE_PRODUCT'),
         ('DawnDiamond.gda838--publish', 'DawnDiamond.gda838-create.product', 'gda838-create.product', 'COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_GDA_CREATE_PRODUCT'),
+        ('DawnDiamond.gda840--publish', 'DawnDiamond.gda840-create.product', 'gda840-create.product', 'COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_GDA_CREATE_PRODUCT'),
         ('DawnDiamond.1.4.1--publish', 'DawnDiamond.1.4.1-create.product', '1.4.1-create.product', 'COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_CREATE_PRODUCT'),
         ('DawnDiamond.master--publish', 'DawnDiamond.master-create.product', 'DawnDiamond-create.product', 'COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_MASTER_CREATE_PRODUCT'),
         ('DawnVanilla.master--publish', 'DawnVanilla.master-create.product-download.public', 'DawnVanilla-create.product', 'COPYARTIFACT_BUILD_NUMBER_DAWNVANILLA_MASTER_CREATE_PRODUCT_DOWNLOAD_PUBLIC'),
