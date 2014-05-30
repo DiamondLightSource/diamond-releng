@@ -104,9 +104,6 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diffcalc.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.diffcalc" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(jenkins\.control|squish\.control)$">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-testing.git repository branch</cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.embl\.cca\..+$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">embl-cca.git repository branch</cq:documentation>
     </cq:advisorNode>

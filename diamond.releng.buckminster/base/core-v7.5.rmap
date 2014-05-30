@@ -511,10 +511,6 @@
   <rm:propertyElement key="diamond.springframework.git.url">
     <bc:constant value="${diamond.springframework.${diamond.springframework.git.location.translated}.url}/diamond-springframework.git"/>
   </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="diamond.testing.git.url">
-    <bc:constant value="${diamond.dascgit.url}/diamond/diamond-testing.git"/>
-  </rm:propertyElement>
   <!-- ** diffcalc *** -->
   <rm:propertyElement key="diffcalc.github.organization">
     <bc:constant value="DiamondLightSource"/>
@@ -2011,7 +2007,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.jython$" searchPathRef="diamond_jython"/>
   <rm:locator pattern="^diamond\.releng\..+$" searchPathRef="diamond_releng"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="diamond_springframework"/>
-  <rm:locator pattern="^(jenkins\.control|squish\.control)$" searchPathRef="diamond_testing"/>
   <!-- ** diffcalc *** -->
   <rm:locator pattern="^diffcalc$" searchPathRef="diffcalc"/>
   <!-- ** embl- *** -->
@@ -2666,21 +2661,6 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="diamond_testing">
-    <rm:provider componentTypes="buckminster" resolutionFilter="(!(disallow.repo.diamond-testing=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${diamond.testing.git.url}"/>
-      <rm:uri format="{0}/diamond-testing.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.diamond-testing=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from diamond-testing.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
   <!--
        DIFFCALC repository
   -->
