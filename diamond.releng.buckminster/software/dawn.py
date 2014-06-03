@@ -48,6 +48,7 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template_version, version_synonyms
     ('gda', 'master', 'gda-master.cquery', 'v2.6', ('master', 'trunk')),
+    ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840')),
     ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839')),
     ('gda', 'v8.38', 'gda-v8.38.cquery', 'v2.6', ('v8.38', '8.38', '838')),
     ('gda', 'v8.36', 'gda-v8.36.cquery', 'v2.5', ('v8.36', '8.36', '836')),
@@ -70,6 +71,7 @@ COMPONENT_CATEGORIES = (
     ('dawn', '1.5', 'dawn-v1.5.cquery', 'v2.6', ('v1.5', '1.5')),
     ('dawn', '1.4.1', 'dawn-v1.4.1.cquery', 'v2.5', ('v1.4.1', '1.4.1')),
     ('dawn', '1.4', 'dawn-v1.4.cquery', 'v2.5', ('v1.4', '1.4')),
+    ('dawn', 'gda-8.40', 'dawn-gda-8.40.cquery', 'v2.6', ('gda-8.40', 'gda840')),
     ('dawn', 'gda-8.38', 'dawn-gda-8.38.cquery', 'v2.6', ('gda-8.38', 'gda838')),
     ('dawn', 'gda-8.36', 'dawn-gda-8.36.cquery', 'v2.5', ('gda-8.36', 'gda836')),
     ('dawn', 'gda-8.34', 'dawn-gda-8.34.cquery', 'v2.4', ('gda-8.34', 'gda834')),
