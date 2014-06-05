@@ -50,7 +50,7 @@ product_site=${product_site:-internal_error}
 product_options_extra=--suppress-compile-warnings
 EOF
 
-# the example beamline .properties filenames are different from the standard names defined in GDA-<version>-environment-variables.properties
+# the example beamline .properties filenames are different from the standard names defined in GDA.<release>-environment-variables.properties
 if [[ "${GDA_group}" == "GDA" && "${GDA_beamline}" == "example" ]]; then
     if [[ "${download_public:false}" == "true" ]]; then
         cat << EOF >> ${properties_filename}
