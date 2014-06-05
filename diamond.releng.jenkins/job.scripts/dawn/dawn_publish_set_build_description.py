@@ -25,7 +25,6 @@ try:
     else:
         print 'set-build-description: %s (not published anywhere)' % (build_description_line_1,)
     set_build_description_done = True
-    break
 
 except Exception as fault:
     print os.path.basename(__file__), 'got exception:', fault
