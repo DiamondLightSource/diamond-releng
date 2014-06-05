@@ -1,5 +1,7 @@
-if [ -n "${COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_MASTER_CREATE_PRODUCT}" ]; then
-    echo "set-build-description: testing <a href=\"/job/DawnDiamond.master-create.product/\">create-product</a> build <a href=\"/job/DawnDiamond.master-create.product/${COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_MASTER_CREATE_PRODUCT}/\">${COPYARTIFACT_BUILD_NUMBER_DAWNDIAMOND_MASTER_CREATE_PRODUCT}</a>"
-elif [ -n "${COPYARTIFACT_BUILD_NUMBER_DAWNVANILLA_MASTER_CREATE_PRODUCT_DOWNLOAD_PUBLIC_}" ]; then
-    echo "set-build-description: testing <a href=\"/job/DawnVanilla.master-create.product-download.public/\">create-product-download.public</a> build <a href=\"/job/DawnVanilla.master-create.product/${COPYARTIFACT_BUILD_NUMBER_DAWNVANILLA_MASTER_CREATE_PRODUCT_DOWNLOAD_PUBLIC}/\">${COPYARTIFACT_BUILD_NUMBER_DAWNVANILLA_MASTER_CREATE_PRODUCT_DOWNLOAD_PUBLIC}</a>"
+# specify the environment
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/set-environment.sh
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/copyartifact_get_build_number.sh
+
+if [ -n "${copyartifact_build_number}" ]; then
+    echo "set-build-description: testing <a href=\"/job/Dawn${Dawn_flavour}.${Dawn_release}-create.product/\">create-product</a> build <a href=\"/job/Dawn${Dawn_flavour}.${Dawn_release}-create.product/${copyartifact_build_number}/\">${copyartifact_build_number}</a> for ${platform_count} platforms"
 fi

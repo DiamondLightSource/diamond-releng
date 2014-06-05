@@ -23,12 +23,18 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
         download_public=false
     fi
 
+    if [[ "${JOB_NAME:-noname}" =~ Dawn.+--publish-([a-z0-9]+) ]]; then
+        publishtype=${BASH_REMATCH[1]}
+    fi
+
 fi
 
 echo "Dawn_flavour=${flavour:Error}" >> ${properties_filename}
 echo "Dawn_release=${release:Error}" >> ${properties_filename}
 echo "download_public=${download_public:Error}" >> ${properties_filename}
-
+if [[ -n "${publishtype}" ]]; then
+    echo "publishtype=${publishtype}" >> ${properties_filename}
+fi
 if [[ "${result:bad}" != "good" ]]; then
     echo "Error parsing \${JOB_NAME}=${JOB_NAME}"
     exit 2
