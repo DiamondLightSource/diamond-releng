@@ -755,6 +755,10 @@ class DawnManager(object):
             sys.stdout.flush()
             sys.stderr.flush()
             try:
+                # set environment variables to pass to git command extensions 
+                os.environ['DAWN_PY_WORKSPACE_GIT_LOC'] = self.workspace_git_loc
+                os.environ['DAWN_PY_COMMAND'] = str(command)
+                os.environ['DAWN_PY_DIRECTORY'] = str(directory)
                 process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, cwd=directory)
                 out,err = process.communicate()
                 out,err = out.rstrip(),err.rstrip()
