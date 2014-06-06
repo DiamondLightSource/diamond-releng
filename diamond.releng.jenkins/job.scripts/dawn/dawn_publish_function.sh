@@ -25,7 +25,7 @@ dawn_publish_function () {
     ### Determine options
     ###
 
-    export publish_type=$(echo ${publish_type:-snapshot} | tr '[:upper:]' '[:lower:]')
+    export publish_type=$(echo ${publish_type:-notset} | tr '[:upper:]' '[:lower:]')
 
     # translate the long publish_type text to something shorter, for display
     if [[ "${publish_type}" == *snapshot* ]]; then

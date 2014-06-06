@@ -25,7 +25,7 @@ dawn_cleanup_moduleload_function () {
     ### Determine options
     ###
 
-    export cleanup_type=$(echo ${cleanup_type:-snapshot} | tr '[:upper:]' '[:lower:]')
+    export cleanup_type=$(echo ${cleanup_type:-notset} | tr '[:upper:]' '[:lower:]')
 
     # translate the long cleanup_type text to something shorter, for display
     if [[ "${cleanup_type}" == *snapshot* ]]; then
