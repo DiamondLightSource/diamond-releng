@@ -257,8 +257,7 @@ class SquishTestManager():
         ### generate the scripts to run on the Squish host
         with open(os.path.join(jenkins_squish_framework_abspath, 'squishhostsetup.sh'), 'w') as script:
             for part in (self.squish_host_initialize_script,
-                         self.squish_host_unzip_script,
-                         self.squish_host_setup_java,):
+                         self.squish_host_unzip_script,):
                 for line in part():
                     print(line, file=script)
         with open(os.path.join(jenkins_squish_framework_abspath, 'squishhostrun.sh'), 'w') as script:
@@ -441,7 +440,7 @@ else
     export JRE_DIR=${JAVA_HOME}
 fi
 
-'''.splitlines()
+'''
         elif self.squish_isWin:
             raise NotImplementedError
         else:
@@ -456,7 +455,7 @@ fi
         '''
 
         if self.squish_isLinux:
-            return '''
+            return self.squish_host_setup_java + '''
 # Initialize application and then make application directory read-only
 {guidir}/{aut_name} -initialize
 chmod -R a-w {guidir}/
