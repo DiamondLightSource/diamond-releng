@@ -455,7 +455,7 @@ fi
         '''
 
         if self.squish_isLinux:
-            return self.squish_host_setup_java + '''
+            return self.squish_host_setup_java() + '''
 # Initialize application and then make application directory read-only
 {guidir}/{aut_name} -initialize
 chmod -R a-w {guidir}/
