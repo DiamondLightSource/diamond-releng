@@ -201,10 +201,10 @@ set_environment_step () {
     ### Report environment
     ###
 
-    echo -e "\nRunning with java=$(which java) $""JAVA_HOME=${JAVA_HOME}";java -version
-    echo -e "Running with python=$(which python)";python -V
-    echo -e "Running with git=$(which git)";git --version
-    echo -e "Running with buckminster=$(which buckminster)\n"
+    echo -e "\nRunning with java=$(which java 2> /dev/null) $""JAVA_HOME=${JAVA_HOME}";java -version
+    echo -e "Running with python=$(which python 2> /dev/null)";python -V
+    echo -e "Running with git=$(which git 2> /dev/null)";git --version
+    echo -e "Running with buckminster=$(which buckminster 2> /dev/null)\n"
 
 }
 
