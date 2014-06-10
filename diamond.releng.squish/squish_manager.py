@@ -272,8 +272,7 @@ class SquishTestManager():
 
         ### generate the script to run on the Jenkins slave, after the Squish host has completed
         with open(os.path.join(jenkins_squish_framework_abspath, 'jenkinswrapup.sh'), 'w') as script:
-            for line in self.jenkins_post_processing_script():
-                print(line, file=script)
+            print(self.jenkins_post_processing_script(), file=script)
             if self.squish_VMname:
                 print('vmrun -T ws suspend ' + self.squish_VMname, file=script)
                 print('vmrun -T ws list', file=script)
