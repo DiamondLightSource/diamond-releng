@@ -534,7 +534,7 @@ squish_server_pid=$!
                     if run_suite:
                         if self.squish_isLinux:
                             if collection != current_collection:
-                                script.append('export SQUISH_SCRIPT_DIR={squish_tmp}/squish_tests/{collection}/global_scripts'.format(squish_tmp=self.squish_tmp_abspath, collection=collection))
+                                script += 'export SQUISH_SCRIPT_DIR={squish_tmp}/squish_tests/{collection}/global_scripts\n'.format(squish_tmp=self.squish_tmp_abspath, collection=collection)
                                 current_collection == collection 
                             script += '''
 echo "$(date +"%a %d/%b/%Y %H:%M:%S") running {collection}/{suite}"
