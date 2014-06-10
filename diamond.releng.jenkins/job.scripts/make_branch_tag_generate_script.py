@@ -12,7 +12,7 @@ import time
 
 def generate_make_branch_tag_script():
 
-    REPOSITORIES_TO_ALWAYS_IGNORE = ('diffcalc.git',)
+    REPOSITORIES_TO_ALWAYS_IGNORE = ()  # tuple of repositories to always ignore
 
     # set up environment
     if not len(sys.argv) == 2:
