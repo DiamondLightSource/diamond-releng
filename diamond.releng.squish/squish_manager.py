@@ -258,14 +258,12 @@ class SquishTestManager():
         with open(os.path.join(jenkins_squish_framework_abspath, 'squishhostsetup.sh'), 'w') as script:
             for part in (self.squish_host_initialize_script,
                          self.squish_host_unzip_script,):
-                for line in part():
-                    print(line, file=script)
+                print(part(), file=script)
         with open(os.path.join(jenkins_squish_framework_abspath, 'squishhostrun.sh'), 'w') as script:
             for part in (self.squish_host_setup_display,
                          self.squish_host_setup_squish,
                          self.squish_host_runtests_script,):
-                for line in part():
-                    print(line, file=script)
+                print(part(), file=script)
         if self.squish_isWin:
             os.rename( os.path.join(jenkins_squish_framework_abspath, 'squishhostsetup.sh'),
                        os.path.join(jenkins_squish_framework_abspath, 'squishhostsetup.bat') )
@@ -350,7 +348,7 @@ done
                      self.squish_results_abspath,
                      self.squish_workspaces_abspath,
                      self.squish_path.join(self.squish_scratch, 'workspace'),
-                     ])).splitlines()
+                     ]))
         elif self.squish_isWin:
             raise NotImplementedError
         else:
@@ -373,7 +371,13 @@ done
 unzip -q -d {squish_tmp}/squish/ {squish_framework}/squish-*-java-*.zip
 unzip -q -d {squish_tmp}/squish_control/ {squish_framework}/squish_control.zip
 unzip -q -d {squish_tmp}/squish_tests/ {artifacts_to_test}/squish_tests.zip
-'''.format(aut=self.aut_abspath, aut_other=self.aut_other_abspath, artifacts_to_test=self.artifacts_to_test_abspath, aut_zip_name=self.aut_zip_name, aut_other_zip_names=''.join(self.aut_other_zip_names), squish_tmp=self.squish_tmp_abspath, squish_framework=self.squish_framework_abspath).splitlines()
+'''.format(aut=self.aut_abspath,
+           aut_other=self.aut_other_abspath,
+           artifacts_to_test=self.artifacts_to_test_abspath,
+           aut_zip_name=self.aut_zip_name,
+           aut_other_zip_names=''.join(self.aut_other_zip_names),
+           squish_tmp=self.squish_tmp_abspath,
+           squish_framework=self.squish_framework_abspath)
         elif self.squish_isWin:
             raise NotImplementedError
         else:
@@ -409,7 +413,7 @@ export DISPLAY
 export UBUNTU_MENUPROXY=0
 '''
 
-        return script.splitlines()
+        return script
 
 #=====================================================================================================================#
 
@@ -427,7 +431,7 @@ export java={jredir}/bin/java
 export JRE_DIR={jredir}
 export PATH={jredir}/bin:${{PATH:-}}
 
-'''.format(jredir=self.jredir_abspath).splitlines()
+'''.format(jredir=self.jredir_abspath)
             else:
                 # just use the native java, or whatever has been set up by diamond-releng.git/diamond.releng.jenkins/job.scripts/set-environment.sh
                 return '''
@@ -455,7 +459,7 @@ fi
         '''
 
         if self.squish_isLinux:
-            return self.squish_host_setup_java().splitlines() + '''
+            return self.squish_host_setup_java() + '''
 # Initialize application and then make application directory read-only
 {guidir}/{aut_name} -initialize
 chmod -R a-w {guidir}/
@@ -476,7 +480,10 @@ cp -pv "{squish_tmp}/squish_control/.squish-3-license" ~/.squish-3-license
 # Some tests (namely those using P2, such as the P2 update tests), need the configuration writeable,
 # therefore export AUT_DIR so that configuration and p2 directories can be copied out
 export AUT_DIR={guidir}
-'''.format(squish_tmp=self.squish_tmp_abspath, squish=self.squish_abspath, aut_name=self.aut_name, guidir=self.guidir_abspath).splitlines()
+'''.format(squish_tmp=self.squish_tmp_abspath,
+           squish=self.squish_abspath,
+           aut_name=self.aut_name,
+           guidir=self.guidir_abspath)
         elif self.squish_isWin:
             raise NotImplementedError
         else:
@@ -496,7 +503,7 @@ echo "$(date +"%a %d/%b/%Y %H:%M:%S") start squish server"
 ({squish}/bin/squishserver > {results}/squish_server.log 2>&1) &
 squish_server_pid=$!
 
-'''.format(squish=self.squish_abspath, results=self.squish_results_abspath).splitlines()
+'''.format(squish=self.squish_abspath, results=self.squish_results_abspath)
         elif self.squish_isWin:
             raise NotImplementedError
 
@@ -529,7 +536,7 @@ squish_server_pid=$!
                             if collection != current_collection:
                                 script.append('export SQUISH_SCRIPT_DIR={squish_tmp}/squish_tests/{collection}/global_scripts'.format(squish_tmp=self.squish_tmp_abspath, collection=collection))
                                 current_collection == collection 
-                            script.extend('''
+                            script += '''
 echo "$(date +"%a %d/%b/%Y %H:%M:%S") running {collection}/{suite}"
 START_TIME=$(date +%s)
 ({squish}/bin/squishrunner \
@@ -543,7 +550,11 @@ END_TIME=$(date +%s)
 RUN_TIME=$((${{END_TIME}}-${{START_TIME}}))
 printf "Elapsed run time was %d:%02d ({suite})" $((${{RUN_TIME}} / 60)) $((${{RUN_TIME}} % 60))
 
-'''.format(squish=self.squish_abspath, squish_tmp=self.squish_tmp_abspath, collection=collection, suite=suite, results=self.squish_results_abspath).splitlines())
+'''.format(squish=self.squish_abspath,
+           squish_tmp=self.squish_tmp_abspath,
+           collection=collection,
+           suite=suite,
+           results=self.squish_results_abspath)
 
                         elif self.squish_isWin:
                             raise NotImplementedError
@@ -552,21 +563,24 @@ printf "Elapsed run time was %d:%02d ({suite})" $((${{RUN_TIME}} / 60)) $((${{RU
 
         # commands to stop the squish server
         if self.squish_isLinux:
-            script.extend('''
+            script += '''
 echo "$(date +"%a %d/%b/%Y %H:%M:%S") stop squish server"
 {squish}/bin/squishserver --stop
 wait $squish_server_pid
-'''.format(squish=self.squish_abspath, squish_tmp=self.squish_tmp_abspath, results=self.squish_results_abspath).splitlines())
+'''.format(squish=self.squish_abspath,
+           squish_tmp=self.squish_tmp_abspath,
+           results=self.squish_results_abspath)
         elif self.squish_isWin:
             raise NotImplementedError
 
         # zip up result ready to copy back, if necessary
         if not self.squishHostIsJenkins:
             if self.squish_isLinux:
-                script.extend('''
+                script += '''
 # zip up result ready to copy back
 (cd {results} && zip -r {squish_tmp}/squish_results.zip .)
-'''.format(results=self.squish_results_abspath, squish_tmp=self.squish_tmp_abspath).splitlines())
+'''.format(results=self.squish_results_abspath,
+           squish_tmp=self.squish_tmp_abspath)
             elif self.squish_isWin:
                 raise NotImplementedError
 
@@ -579,28 +593,33 @@ wait $squish_server_pid
         returns a script to run on Jenkins, to run after tests have been un on the Squish host
         '''
 
-        post_processing_script = []
+        post_processing_script = ''
 
         # copy squish_results into Jenkins workspace
         if self.squishHostIsJenkins:
             assert self.squish_isLinux
-            post_processing_script.extend('''
+            post_processing_script += '''
 cp -pr {results} {jenkins_workspace}/squish_results/
-'''.format(results=self.squish_results_abspath, jenkins_workspace=self.jenkins_workspace).splitlines())
+'''.format(results=self.squish_results_abspath,
+           jenkins_workspace=self.jenkins_workspace)
         else:
-            post_processing_script.extend('''
+            post_processing_script += '''
 rsync -e "ssh {ssh_options}" -irtv {squish_hostname}:{tmp}/squish_results.zip {jenkins_workspace}/squish_results.zip
 unzip -q -d {jenkins_workspace}/squish_results {jenkins_workspace}/squish_results.zip
-'''.format(ssh_options=self.ssh_options, squish_hostname=self.squish_hostname, tmp=self.squish_tmp_abspath, jenkins_workspace=self.jenkins_workspace).splitlines())
+'''.format(ssh_options=self.ssh_options,
+           squish_hostname=self.squish_hostname,
+           tmp=self.squish_tmp_abspath,
+           jenkins_workspace=self.jenkins_workspace)
 
         # create HTML versions of result files. Note that the results files were in a different directory name when generated on the Squish host (hence --prefix)
-        post_processing_script.extend('''
+        post_processing_script += '''
 # create HTML versions of result files
 cd {jenkins_workspace}/squish_results/
 xml21files=$(find -name '*_xml2.1.xml' | cut -c 3- | sort)
 python {jenkins_workspace}/diamond-releng.git/diamond.releng.squish/squishxml2html.py -v --dir {jenkins_workspace}/squish_results/ -i --prefix {results}/ ${{xml21files}}
 
-'''.format(jenkins_workspace=self.jenkins_workspace, results=self.squish_results_abspath).splitlines())
+'''.format(jenkins_workspace=self.jenkins_workspace,
+           results=self.squish_results_abspath)
 
         return post_processing_script
 
