@@ -169,6 +169,9 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(i13(i|j)-config|uk\.ac\.gda\.beamline\.i13(i|j)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i13x.git repository branch</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^(i19-.+|uk\.ac\.gda\.beamline\.i19(\..+)?)$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i19.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^((b18|i08|i18|i20|i20(-1)?)-config|uk\.ac\.gda\.beamline\.(b18|i08|i18|i20|i20(_1)?)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-xas.git repository branch</cq:documentation>
     </cq:advisorNode>
