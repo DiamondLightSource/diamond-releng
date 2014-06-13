@@ -3012,14 +3012,36 @@
   </rm:searchPath>
   <!-- -->
   <rm:searchPath name="gda_dls_beamlines_i19">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i19=true))" readerType="git">
+    <rm:provider componentTypes="buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i19=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i19.git.url}"/>
-      <rm:uri format="{0}/gda-dls-beamlines-i19.git,{1}">
+      <rm:uri format="{0}/gda-dls-beamlines-i19.git,configurations/{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:replace pattern="^(.+)-config$" replacement="$1">
-          <bc:propertyRef key="buckminster.component"/>
-        </bc:replace>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i19=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i19.git.url}"/>
+      <rm:uri format="{0}/gda-dls-beamlines-i19.git,features/{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i19=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i19.git.url}"/>
+      <rm:uri format="{0}/gda-dls-beamlines-i19.git,sites/{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i19=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i19.git.url}"/>
+      <rm:uri format="{0}/gda-dls-beamlines-i19.git,plugins/{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dls-beamlines-i19=true)" readerType="local">
