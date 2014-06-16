@@ -7,7 +7,9 @@ properties_filename=${WORKSPACE}/parsed-jobname.properties
 rm -f ${properties_filename}
 
 # The jobname must start with "GDA.", followed by the release (e.g. master, 8.38), followed by a dash (-)
-# IF the jobname contains ".beamline-GROUP-", it must be followed by <beamline name> (which may contain a -), optionally followed by -download.public
+# IF the jobname contains ".beamline-GROUP-", it must be followed by <beamline name> (which may contain a -)
+#    optionally followed by .<endstation name>
+#    optionally followed by -download.public
 # OTHERWISE group and beamline do not apply
 
 if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
@@ -22,8 +24,16 @@ if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
             dash=$(expr index ${groupbeamlinesuffix} '-') || true
             if [[ "${dash}" != "0" ]]; then
                 group=${groupbeamlinesuffix:0:${dash}-1}
-                beamlinesuffix=${groupbeamlinesuffix:${dash}}
-                beamline=${beamlinesuffix%%-download.public}
+                beamlineendstationsuffix=${groupbeamlinesuffix:${dash}}
+                beamlineendstation=${beamlineendstationsuffix%%-download.public}
+                dot=$(expr index "${beamlineendstation}" '.') || true
+                if [[ "${dot}" != "0" ]]; then
+                    beamline=${beamlineendstation:0:${dot}-1}
+                    endstation=${beamlineendstation:${dot}}
+                else
+                    beamline=${beamlineendstation}
+                    endstation=
+                fi
                 if [[ "${JOB_NAME:-noname}" == *create.product.beamline* ]]; then
                     squish_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/create.product.beamline/squish.beamline/')
                 fi
@@ -48,6 +58,14 @@ if [[ -n "${group}" ]]; then
 fi
 if [[ -n "${beamline}" ]]; then
     echo "GDA_beamline=${beamline}" >> ${properties_filename}
+    if [[ -z "${endstation}" ]]; then
+        echo "GDA_beamline_dash_endstation=${beamline}" >> ${properties_filename}
+        echo "GDA_beamline_dot_endstation=${beamline}" >> ${properties_filename}
+    else
+        echo "GDA_endstation=${endstation}" >> ${properties_filename}
+        echo "GDA_beamline_dash_endstation=${beamline}-${endstation}" >> ${properties_filename}
+        echo "GDA_beamline_dot_endstation=${beamline}.${endstation}" >> ${properties_filename}
+    fi
 fi
 if [[ -n "${squish_job_to_trigger}" ]]; then
     echo "GDA_squish_job_to_trigger=${squish_job_to_trigger}" >> ${properties_filename}

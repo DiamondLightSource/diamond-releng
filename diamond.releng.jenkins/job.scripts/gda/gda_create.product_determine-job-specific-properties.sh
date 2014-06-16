@@ -6,7 +6,7 @@ properties_filename=${WORKSPACE}/job-specific-environment-variables.properties
 if [[ "${GDA_beamline}" == "logpanel" || "${GDA_beamline}" == "synoptic" ]]; then
     materialize_component=uk.ac.gda.client.${GDA_beamline}.site
 else
-    materialize_component=${GDA_beamline:-internal_error}-config
+    materialize_component=${GDA_beamline_dash_endstation:-internal_error}-config
 fi
 
 if [[ "${GDA_group}" == "DLS" ]]; then
@@ -15,7 +15,7 @@ if [[ "${GDA_group}" == "DLS" ]]; then
     elif [[ "${GDA_beamline}" == "i20-1" ]]; then
         product_site=uk.ac.gda.beamline.i20_1.site
     else
-        product_site=uk.ac.gda.beamline.${GDA_beamline}.site
+        product_site=uk.ac.gda.beamline.${GDA_beamline_dot_endstation}.site
     fi
 elif [[ "${GDA_group}" == "GDA" ]]; then
     if [[ "${GDA_beamline}" == "logpanel" ]]; then
