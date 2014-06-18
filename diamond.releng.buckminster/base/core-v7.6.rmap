@@ -2158,6 +2158,7 @@
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javassist$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^Java7RefreshProvider$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^xstream$" searchPathRef="GDA_tp_bundles"/>
   <!--
        Target Platform components (PyDev)
   -->
