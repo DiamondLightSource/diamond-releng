@@ -196,6 +196,30 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<sleep seconds="2" />  <!-- allow time to fully stop, otherwise if the next plugin uses Xvfb as well, tests may fail with weird X11 errors -->
 	</target>
 
+	<!-- use netstat to report on open ports when running under Linux -->
+	<target name="_netstat_check" unless="netstat_check_done">
+		<exec executable="which" osfamily="unix" resultproperty="which_netstat_result" inputstring="">
+			<arg value="netstat" />
+		</exec>
+		<condition property="netstat_available">
+			<and>
+				<os family="unix" />
+				<equals arg1="${which_netstat_result}" arg2="0" />
+			</and>
+		</condition>
+		<property name="netstat_check_done" value="true" />
+	</target>
+	<target name="netstat_report" depends="_netstat_check" if="netstat_available">
+		<exec executable="netstat" os="Linux" inputstring="">
+			<arg value="-tlnp" />
+		</exec>
+	</target>
+	<target name="netstat_report_again" depends="_netstat_check" if="netstat_available">
+		<exec executable="netstat" os="Linux" inputstring="">
+			<arg value="-tlnp" />
+		</exec>
+	</target>
+
 	<!-- Java JUnit testing -->
 	<macrodef name="junit-call" description="Invokes JUnit">
 		<attribute name="description" default="" />
