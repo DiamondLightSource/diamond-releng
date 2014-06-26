@@ -6,11 +6,11 @@
 make_branch_tag_action_perform_function () {
 
     if [[ -n "${tag_name}" && -z "${branch_name}" ]]; then
-        action_text="<span style="font-family: monospace">${tag_name}</span>"
+        action_text="<span style=\"font-family: monospace\">${tag_name}</span>"
     elif [[ -z "${tag_name}" && -n "${branch_name}" ]]; then
-        action_text="<span style="font-family: monospace">${branch_name}</span>"
+        action_text="<span style=\"font-family: monospace\">${branch_name}</span>"
     elif [[ -n "${tag_name}" && -n "${branch_name}" ]]; then
-        action_text="<span style="font-family: monospace">${branch_name}/${tag_name}</span>"
+        action_text="<span style=\"font-family: monospace\">${branch_name}/${tag_name}</span>"
     else
         echo "internal error, impossible missing tag_name=*${tag_name}* branch_name=*${branch_name}*"
         return 100
