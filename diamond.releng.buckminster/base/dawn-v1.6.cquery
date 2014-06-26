@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-latest.rmap" properties="file:${user.home}/.dawn-master.cquery.properties" shortDesc="CQuery for Dawn master">
+    <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-v7.6.rmap" properties="file:${user.home}/.dawn-1.6.cquery.properties" shortDesc="CQuery for DAWN 1.6">
     <cq:rootRequest name="${component}"/>
     <cq:property key="dascgerrit.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
@@ -35,86 +35,86 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^org\.openscience\.cdk\..+" branchTagPath="sda-master">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">bioclipse repositories branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawnsci\.commandserver(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.dawnsci\.commandserver(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-commandserver.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|hdf5(\..+)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(common\.services|conversion|doe|io|jexl|persistence|python.rpc)(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|hdf5(\..+)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(common\.services|conversion|doe|io|jexl|persistence|python.rpc)(\..+)?)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-common.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-doc.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-fable.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-hpc.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|runtime|project\.repository\..+)|org\.dawnsci\.passerelle\.parallel\.actor(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|runtime|project\.repository\..+)|org\.dawnsci\.passerelle\.parallel\.actor(\..+)?)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isencia.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isenciaui.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawnsci\.mx\..+$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.dawnsci\.mx\..+$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-mx.git repository branch</cq:documentation>
-    </cq:advisorNode>    
-    <cq:advisorNode namePattern="^org\.(dawb\.(sda\.feature|workbench\.(application(\.feature)?|config\.feature))|dawnsci\.(base\..+|intro(\..+)?|product\.plugin))$" useTargetPlatform="false">
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.(dawb\.(sda\.feature|workbench\.(application(\.feature)?|config\.feature))|dawnsci\.(base\..+|intro(\..+)?|product\.plugin))$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-product.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawnsci\.rap\..+$" filter="(use.eclipse.rap=yes)" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.dawnsci\.rap\..+$" filter="(use.eclipse.rap=yes)" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-rap.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawnsci\.rap\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-rap.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-rap" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-tango.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-test.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(com\.amd\.aparapi|ncsa\.hdf|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(com\.amd\.aparapi|ncsa\.hdf|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-third.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|plotting(\..+)?|slicing(\..+)?|spectrum\.ui))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|plotting(\..+)?|slicing(\..+)?|spectrum\.ui))$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-workflow.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.sda\.enthought(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.sda\.enthought(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-enthought.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.jacorb$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-jacorb.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.diamond-jacorb" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.jython$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.jython$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-jython.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^diamond\.releng\..+$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^diamond\.releng\..+$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-releng.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-springframework.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^diffcalc$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diffcalc.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.diffcalc" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.embl\.cca\..+$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.embl\.cca\..+$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">embl-cca.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.epp\.usagedata\..+$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.eclipse\.epp\.usagedata\..+$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">epp-usagedata.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.bimorph(\..+)?" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-bimorph.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-bimorph" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -217,7 +217,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-scm.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-scm" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-tomography.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.video(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -232,58 +232,58 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-astra.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gphl-astra" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^net\.sf\.py4j(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^net\.sf\.py4j(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">py4j.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-2ddpr.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.arpes(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.arpes(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-arpes.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.CBFlib$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.CBFlib$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-cbflib.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(api|dataset|feature|osgi|plotserver|xmlrpc))?(\.test)?|core\.feature|deprecated|python))$" allowCircularDependency="true" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(api|dataset|feature|osgi|plotserver|xmlrpc))?(\.test)?|core\.feature|deprecated|python))$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch
 (2014/02/11) "Allow circular dependency" is because otherwise you get the following:
 Circular component dependency detected. Chain is uk.ac.diamond.dawn.site -&gt; uk.ac.diamond.dawn.product.feature -&gt; uk.ac.diamond.dawn.base.product.feature -&gt; uk.ac.diamond.sda.mxlive -&gt; uk.ac.diamond.scisoft.analysis.rcp -&gt; org.dawb.common.ui -&gt; uk.ac.diamond.scisoft.analysis -&gt; uk.ac.diamond.scisoft.analysis.test -&gt; uk.ac.diamond.scisoft.analysis.osgi -&gt; uk.ac.diamond.scisoft.analysis</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.icat.*$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.icat.*$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-icat.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ispyb.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-mx.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ncd.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-peema.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.spectroscopy(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.spectroscopy(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-spectroscopy.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.polling|analysis\.rcp(\.contributions|\.test)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(exporter(\.test)?|meta(\.extended)?|navigator(\.test)?|polling))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.polling|analysis\.rcp(\.contributions|\.test)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(exporter(\.test)?|meta(\.extended)?|navigator(\.test)?|polling))$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ws.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|sda(\.bioclipse\.jmol\.feature)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|sda(\.bioclipse\.jmol\.feature)?)$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">sda.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^com\.globalphasing\.sdcp(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">sdcp-public.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.sdcp-public" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">swt-xy-graph.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.training\.gerrit(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.training\.gerrit(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.6">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training-gerrit.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
