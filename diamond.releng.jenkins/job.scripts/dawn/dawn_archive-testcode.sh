@@ -9,4 +9,6 @@
 # zip squish tests, and move to the single directory that we will archive
 materialize_squish_tests_function
 zip_squish_tests_function
-mv -v ${WORKSPACE}/squish_tests.zip ${buckminster_root_prefix}/products/squish_tests.zip
+if [[ "${zip_squish_tests}" == "true" ]]; then
+  mv -v ${WORKSPACE}/squish_tests.zip ${buckminster_root_prefix}/products/squish_tests.zip
+fi
