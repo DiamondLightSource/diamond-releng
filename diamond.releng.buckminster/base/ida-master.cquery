@@ -257,7 +257,7 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-spectroscopy.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-spectroscopy" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.polling|analysis\.rcp(\.contributions|\.test)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(exporter(\.test)?|meta(\.extended)?|navigator(\.test)?|polling))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(polling|rcp)(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(exporter|meta(\.extended)?|navigator(\.test)?|polling))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ui.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-ui" value="true"/>
     </cq:advisorNode>
