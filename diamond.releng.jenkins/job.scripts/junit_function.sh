@@ -28,6 +28,16 @@ junit_function () {
     run_junit_tests=$(echo ${run_junit_tests:-true} | tr '[:upper:]' '[:lower:]')
     halt_on_failed_junit_tests=$(echo ${halt_on_failed_junit_tests:-false} | tr '[:upper:]' '[:lower:]')
 
+    # GDALargeTestFilesLocation specifies the (optional) directory holding large test files that are not held in any repository
+    # It's not set in any properties file, since the location can be different on each Jenkins slave
+    # Instead, it's set in the slave "Node Properties" (exposed as an environment variable)
+    # If GDALargeTestFilesLocation is not passed to dawn.py, then dawn.py will look for it in a standard location
+    if [[ "${GDALargeTestFilesLocation}" == "none" || -z "${GDALargeTestFilesLocation-arbitrary}" ]]; then
+        GDALargeTestFilesLocation_param=
+    else
+        GDALargeTestFilesLocation_param=--GDALargeTestFilesLocation=${GDALargeTestFilesLocation}
+    fi
+
     ###
     ### Run Junit tests
     ###
@@ -54,7 +64,7 @@ junit_function () {
     echo "$`date +"%a %d/%b/%Y %H:%M:%S"` (start of job) MARK_BUILD_AS_UNSTABLE (this text will be cleared if no problems found)" > ${WORKSPACE}/post_build_status_marker.txt
 
     # Run JUnit tests
-    ${dawn_py} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} all-tests
+    ${dawn_py} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} ${GDALargeTestFilesLocation_param:-} all-tests
 
     # If we get this far, clear the signal that tells Jenkins that this build is to be marked UNSTABLE
     echo "`date +"%a %d/%b/%Y %H:%M:%S"` (after build and tests) no need for Jenkins Text-finder plugin to override the build status" > ${WORKSPACE}/post_build_status_marker.txt
