@@ -53,10 +53,6 @@ junit_function () {
     #
     echo "$`date +"%a %d/%b/%Y %H:%M:%S"` (start of job) MARK_BUILD_AS_UNSTABLE (this text will be cleared if no problems found)" > ${WORKSPACE}/post_build_status_marker.txt
 
-    export materialize_type=redo
-    export materialize_component=diamond.releng.tools
-    materialize_function
-
     # Run JUnit tests
     ${dawn_py} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} all-tests
 
