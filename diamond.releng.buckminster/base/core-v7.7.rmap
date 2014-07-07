@@ -3895,11 +3895,11 @@
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nattable">
-    <!-- provider for version 1.0.1 -->
+    <!-- provider for version 1.1.0 -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${nattable.download.url}/nattable/releases/1.0.1/repository"/>
+      <rm:uri format="${nattable.download.url}/nattable/releases/1.1.0/repository"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nebula">
