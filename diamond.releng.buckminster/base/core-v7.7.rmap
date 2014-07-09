@@ -2007,7 +2007,7 @@
   <rm:locator pattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|runtime|project\.repository\..+)|org\.dawnsci\.passerelle\.parallel\.actor(\..+)?)$" searchPathRef="dawn_isencia"/>
   <rm:locator pattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" searchPathRef="dawn_isenciaui"/>
   <rm:locator pattern="^org\.dawnsci\.mx\..+$" searchPathRef="dawn_mx"/>
-  <rm:locator pattern="^org\.(dawb\.(sda\.feature|workbench\.(application(\.feature)?|config\.feature))|dawnsci\.(base\..+|intro(\..+)?|product\.plugin))$" searchPathRef="dawn_product"/>
+  <rm:locator pattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|product\.(logging|plugin)))$" searchPathRef="dawn_product"/>
   <rm:locator pattern="^org\.dawnsci\.rap\..+$" searchPathRef="dawn_rap"/>
   <rm:locator pattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" searchPathRef="dawn_tango"/>
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
