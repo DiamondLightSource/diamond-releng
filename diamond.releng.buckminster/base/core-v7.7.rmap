@@ -2193,8 +2193,6 @@
   <!-- patterns for eclipse repositories are there to speed up failure if we fall through (in case of error, or when looking for source bundles) -->
   <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.8_platform" failOnError="false"/>
   <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.8_release" failOnError="false"/>
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.7_platform" failOnError="false"/>
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.7_release" failOnError="false"/>
   <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.2_platform" failOnError="false"/>
   <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.2_release" failOnError="false"/>
   <!--                                                                      -->
@@ -3876,7 +3874,7 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${emf.emf.download.url}/modeling/emf/emf/updates/releases"/>
+      <rm:uri format="${emf.emf.download.url}/modeling/emf/emf/updates/releases_20140212"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_gef">
@@ -3938,20 +3936,6 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_3.7_platform">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=3.7)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.download.url}/eclipse/updates/3.7"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_3.7_release">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=3.7)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.download.url}/releases/indigo"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_3.8_platform">
