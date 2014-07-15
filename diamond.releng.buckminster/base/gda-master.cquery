@@ -33,9 +33,6 @@ As e4 is not required at runtime, we don't need to materialize it.</cq:documenta
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">This is to avoid what appear to be a Buckminster bug (noticed 2014/02/06 using Eclipse 4.3.1).
 If you materialize, and then materialize again, the second materialize can fail. See DASCTEST-211.</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^javax\.xml$" componentType="osgi.bundle" skipComponent="true">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">javax.xml now comes from the JRE, but skip since it's still in some launchers </cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^net\.bioclipse\..+$" branchTagPath="none">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">bioclipse repositories branch</cq:documentation>
     </cq:advisorNode>
