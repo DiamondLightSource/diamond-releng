@@ -42,12 +42,15 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^org\.dawnsci\.commandserver(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-commandserver.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|hdf5(\..+)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(common\.services|conversion|doe|io|jexl|persistence|python.rpc)(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(common\.services|conversion|io|jexl|persistence|python.rpc)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-common.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-doc.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-doc" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci\..+$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-fable.git repository branch</cq:documentation>
