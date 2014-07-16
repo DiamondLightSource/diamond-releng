@@ -247,7 +247,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.CBFlib$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-cbflib.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(api|dataset|feature|osgi|plotserver|xmlrpc))?(\.test)?|core\.feature|deprecated|python))$" allowCircularDependency="true" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(api|dataset|feature|osgi|plotserver|processing|xmlrpc))?(\.test)?|core\.feature|deprecated|python))$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch
 (2014/02/11) "Allow circular dependency" is because otherwise you get the following:
 Circular component dependency detected. Chain is uk.ac.diamond.dawn.site -&gt; uk.ac.diamond.dawn.product.feature -&gt; uk.ac.diamond.dawn.base.product.feature -&gt; uk.ac.diamond.sda.mxlive -&gt; uk.ac.diamond.scisoft.analysis.rcp -&gt; org.dawb.common.ui -&gt; uk.ac.diamond.scisoft.analysis -&gt; uk.ac.diamond.scisoft.analysis.test -&gt; uk.ac.diamond.scisoft.analysis.osgi -&gt; uk.ac.diamond.scisoft.analysis</cq:documentation>
