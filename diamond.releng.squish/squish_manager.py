@@ -513,6 +513,12 @@ squish_server_pid=$!
         squish_suite_names_to_exclude = os.environ.get('squish_suite_names_to_exclude', '').strip()
         if squish_suite_names_to_exclude:
             squish_suite_names_to_exclude = map(str.strip, squish_suite_names_to_exclude.split(','))
+            script += '''
+# selecting suites to run based on:
+#    squish_suite_names_to_include = {include}
+#    squish_suite_names_to_exclude = {exclude}
+'''.format(include=squish_suite_names_to_include,
+           exclude=squish_suite_names_to_exclude)
         # commands to run the tests
         current_collection = None
         with zipfile.ZipFile(os.path.abspath(os.path.join(self.jenkins_workspace, 'artifacts_to_test', 'squish_tests.zip')), 'r') as testszip:
@@ -523,11 +529,11 @@ squish_server_pid=$!
                     # got a suite, see if we want to run it
                     run_suite = not bool(squish_suite_names_to_include)  # if no include list, then run everything
                     for pattern in squish_suite_names_to_include:
-                        if re.match(pattern, suite):
+                        if re.match('^'+pattern+'$', suite):
                             run_suite = True
                             break
                     for pattern in squish_suite_names_to_exclude:  # if no exclude list, then run everything previously included
-                        if re.match(pattern, suite):
+                        if re.match('^'+pattern+'$', suite):
                             run_suite = False
                             break
                     if run_suite:
