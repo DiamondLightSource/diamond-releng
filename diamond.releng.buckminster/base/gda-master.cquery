@@ -163,7 +163,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(i09-config|uk\.ac\.gda\.(beamline\.i09(\..+)?|sisa\.client))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i09.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.i11(-1)?(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i11.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(i12-config|uk\.ac\.gda\.(beamline\.i12(\..+)?|edxd\..+|epics\.dxp\.client))$" useTargetPlatform="false">

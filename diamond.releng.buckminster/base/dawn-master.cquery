@@ -164,7 +164,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i09.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-dls-beamlines-i09" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.i11(-1)?(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i11.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-dls-beamlines-i11" value="true"/>
     </cq:advisorNode>
