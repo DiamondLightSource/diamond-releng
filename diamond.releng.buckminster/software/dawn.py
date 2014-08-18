@@ -298,7 +298,7 @@ class DawnManager(object):
             self.logger.info('%sCreating workspace directory "%s"' % (self.log_prefix, self.workspace_loc,))
             if not self.options.dry_run:
                 os.makedirs(self.workspace_loc)
-        if self.workspace_git_loc:
+        if self.workspace_git_loc and os.path.isdir(self.workspace_git_loc):
             self.logger.info('Using any existing .git repositories (which will not be updated) found in "%s"' % (self.workspace_git_loc,))
 
         if (not os.path.exists( os.path.join(self.workspace_loc, '.metadata'))) or (not os.listdir( os.path.join(self.workspace_loc, '.metadata'))):
