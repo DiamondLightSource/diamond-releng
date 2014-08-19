@@ -468,7 +468,15 @@ java_version=`"${{java}}" -version 2>&1 | grep 'java version' | sed '-es,[^"]*"\
 "${{java}}" -classpath "{squish}/lib/squishjava.jar:{squish}/lib/bcel.jar" com.froglogic.squish.awt.FixMethod \
   "${{JRE_DIR}}/lib/rt.jar:{squish}/lib/squishjava.jar" "{squish}/lib/squishrt.jar"
 
-cp -pv "{squish_tmp}/squish_control/.squish-3-license" ~/.squish-3-license
+# Copy the Squish license file
+if [[ -f "${{SQUISH_LICENSE_FILE}}" ]]; then
+  squish_license_filename=$(basename ${{SQUISH_LICENSE_FILE}})
+  if [[ ! -f "~/${{squish_license_filename}}" ]]; then
+    if [[ -f "{squish_tmp}/squish_control//${{squish_license_filename}}" ]]; then
+      cp -pv "{squish_tmp}/squish_control/${{squish_license_filename}}" ~/${{squish_license_filename}}
+    fi
+  fi
+fi
 {squish}/bin/squishserver --config setJavaVM "$java" 
 {squish}/bin/squishserver --config setJavaVersion "$java_version"
 {squish}/bin/squishserver --config setJavaHookMethod "jvm"
