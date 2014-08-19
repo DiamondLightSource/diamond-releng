@@ -463,20 +463,21 @@ fi
 {guidir}/{aut_name} -initialize
 chmod -R a-w {guidir}/
 
+# Copy the Squish license file
+if [[ -f "${{SQUISH_LICENSE_FILE}}" ]]; then
+  squish_license_filename=$(basename ${{SQUISH_LICENSE_FILE}})
+  if [[ ! -f ~/${{squish_license_filename}} ]]; then
+    if [[ -f "{squish_tmp}/squish_control/${{squish_license_filename}}" ]]; then
+      cp -pv "{squish_tmp}/squish_control/${{squish_license_filename}}" ~/${{squish_license_filename}}
+    fi
+  fi
+fi
+
 # This is essentially the command that is run by the UI setup in Squish to create the magic squishrt.jar
 java_version=`"${{java}}" -version 2>&1 | grep 'java version' | sed '-es,[^"]*"\\([^"]*\)",\\1,'`
 "${{java}}" -classpath "{squish}/lib/squishjava.jar:{squish}/lib/bcel.jar" com.froglogic.squish.awt.FixMethod \
   "${{JRE_DIR}}/lib/rt.jar:{squish}/lib/squishjava.jar" "{squish}/lib/squishrt.jar"
 
-# Copy the Squish license file
-if [[ -f "${{SQUISH_LICENSE_FILE}}" ]]; then
-  squish_license_filename=$(basename ${{SQUISH_LICENSE_FILE}})
-  if [[ ! -f "~/${{squish_license_filename}}" ]]; then
-    if [[ -f "{squish_tmp}/squish_control//${{squish_license_filename}}" ]]; then
-      cp -pv "{squish_tmp}/squish_control/${{squish_license_filename}}" ~/${{squish_license_filename}}
-    fi
-  fi
-fi
 {squish}/bin/squishserver --config setJavaVM "$java" 
 {squish}/bin/squishserver --config setJavaVersion "$java_version"
 {squish}/bin/squishserver --config setJavaHookMethod "jvm"
