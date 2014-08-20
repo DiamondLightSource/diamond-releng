@@ -1147,7 +1147,7 @@ class DawnManager(object):
         buckminster_command.extend(('-data', self.workspace_loc))  # do not quote the workspace name (it should not contain blanks)
         buckminster_command.extend(buckminster_args)
         # if debugging memory allocation, add this parameter: '-XX:+PrintFlagsFinal'
-        if not self.isWindows:  # these extra options neeed to be removed on my Windows XP 32-bit / Java 1.7.0_25 machine
+        if not self.isWindows:  # these extra options need to be removed on my Windows XP 32-bit / Java 1.7.0_25 machine
             buckminster_command.extend(('-vmargs', '-Xms768m', '-Xmx1536m', '-XX:MaxPermSize=128m', '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=1000'))
         for keyval in self.options.jvmargs:
             buckminster_command.extend(('-D%s ' % (keyval,),))
