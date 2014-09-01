@@ -277,8 +277,8 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">swt-xy-graph.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.swt-xy-graph" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.training\.gerrit(\..+)?$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training-gerrit.git repository branch</cq:documentation>
+    <cq:advisorNode namePattern="^training\.gerrit\.(feature|plugin1|plugin2)$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training_gerrit_1.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">wychwood.git repository branch</cq:documentation>

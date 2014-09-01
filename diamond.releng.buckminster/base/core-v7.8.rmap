@@ -34,7 +34,7 @@
     <bc:constant value="${download.location.from.cquery.translated}"/>
   </rm:propertyElement>
   <!-- ***** -->
-  <rm:propertyElement key="training.repository.user">
+  <rm:propertyElement key="training.repository.user">  <!-- used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide) -->
     <bc:constant value="template"/>
   </rm:propertyElement>
   <!--                                                                -->
@@ -174,12 +174,12 @@
        Training URLs
   -->
   <rm:propertyElement key="training.download.url">
-    <bc:constant value="${repository.git.download.url.diamond}"/>
+    <bc:constant value="${repository.git.download.url.diamond}"/>  <!-- used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide) -->
   </rm:propertyElement>
   <!--                                                                      -->
-  <!--######################################################################-->
-  <!--# Git Repository URLs (keep in sorted order of repository name)      #-->
-  <!--######################################################################-->
+  <!--#######################################################################################-->
+  <!--# Git (Gitolite and Gerrit) Repository URLs (keep in sorted order of repository name) #-->
+  <!--#######################################################################################-->
   <!--
        Authentication Schemes for GitHub organisations
   -->
@@ -1799,8 +1799,8 @@
     <bc:constant value="${github.${swt.xy.graph.github.authentication}.url}${swt.xy.graph.github.organization}/swt-xy-graph.git"/>
   </rm:propertyElement>
   <!-- ** training *** -->
-  <rm:propertyElement key="training.gerrit.git.url">
-    <bc:constant value="${diamond.dascgerrit.url}/training/training-gerrit.git"/>
+  <rm:propertyElement key="training.gerrit.1.git.url">
+    <bc:constant value="${diamond.dascgerrit.url}/training/training-gerrit-1.git"/>
   </rm:propertyElement>
   <!-- ** wychwood *** -->
   <rm:propertyElement key="wychwood.git.location">
@@ -2022,7 +2022,7 @@
    -->
   <rm:locator pattern="^(net\.sourceforge\.nattable\.core)$" searchPathRef="fail_old_component"/>  <!-- superceded by org.eclipse.nebula.widgets.nattable.core -->
   <!--
-       Training repository components
+       Training repository components used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide)
    -->
   <rm:locator pattern="^workflow\.small$" searchPathRef="training_small"/>
   <rm:locator pattern="^workflow\.a\..+$" searchPathRef="training_a"/>
@@ -2117,7 +2117,7 @@
   <!-- ** swt-xy-graph *** -->
   <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="swt_xy_graph" failOnError="false"/>
   <!-- ** training *** -->
-  <rm:locator pattern="^uk\.ac\.diamond\.training\.gerrit(\..+)?$" searchPathRef="training_gerrit"/>
+  <rm:locator pattern="^training\.gerrit\.(feature|plugin1|plugin2)$" searchPathRef="training_gerrit_1"/>
   <!-- ** wychwood *** -->
   <rm:locator pattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" searchPathRef="wychwood"/>
   <!--
@@ -2269,7 +2269,7 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       Training components
+       Training components used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide)
   -->
   <rm:searchPath name="training_small">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="git">
@@ -3661,17 +3661,17 @@
   <!--
        Training repositories
   -->
-  <rm:searchPath name="training_gerrit">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.training-gerrit=true))" readerType="git">
+  <rm:searchPath name="training_gerrit_1">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.training-gerrit-1=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${training.gerrit.git.url}"/>
-      <rm:uri format="{0}/training-gerrit.git,{1}">
+      <rm:property key="git.remote.uri" value="${training.gerrit.1.git.url}"/>
+      <rm:uri format="{0}/training-gerrit-1.git,{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.training-gerrit=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from training-gerrit.git, but the CQuery specified that this repository should not be used ***">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.training-gerrit-1=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from training-gerrit-1.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
