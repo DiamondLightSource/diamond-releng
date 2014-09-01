@@ -17,7 +17,7 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-commandserver.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-commandserver" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(common\.services|conversion|io|jexl|persistence|python.rpc)(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boof\.cv|common\.services|conversion|io|jexl|persistence|python.rpc)(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-common.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-common" value="true"/>
     </cq:advisorNode>
@@ -278,7 +278,7 @@
         <cq:property key="disallow.repo.swt-xy-graph" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^training\.gerrit\.(feature|plugin1|plugin2)$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training_gerrit_1.git repository branch</cq:documentation>
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training-gerrit-1.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">wychwood.git repository branch</cq:documentation>

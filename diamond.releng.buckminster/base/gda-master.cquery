@@ -42,7 +42,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^org\.dawnsci\.commandserver(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-commandserver.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(common\.services|conversion|io|jexl|persistence|python.rpc)(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boof\.cv|common\.services|conversion|io|jexl|persistence|python.rpc)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-common.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -274,7 +274,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">swt-xy-graph.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^training\.gerrit\.(feature|plugin1|plugin2)$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training_gerrit_1.git repository branch</cq:documentation>
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training-gerrit-1.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">wychwood.git repository branch</cq:documentation>
