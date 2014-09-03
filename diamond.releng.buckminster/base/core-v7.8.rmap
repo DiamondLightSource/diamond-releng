@@ -2164,7 +2164,6 @@
   -->
   <rm:locator pattern="^tp\..+\.site$" searchPathRef="sites"/>
   <rm:locator pattern="^tp\..+\.feature$" searchPathRef="core_svn"/>
-  <rm:locator pattern="^thirdparty-.+$" searchPathRef="thirdparty_subdir"/>
   <!--
        Target Platform components (published from thirdparty/)
   -->
@@ -3820,22 +3819,6 @@
     <rm:provider componentTypes="buckminster" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
       <rm:uri format="${repository.subversion.diamond.download.url}/{0}">
         <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- ***** -->
-  <rm:searchPath name="thirdparty_subdir">
-    <rm:provider componentTypes="buckminster" readerType="local">
-      <rm:uri format="file://{0}/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="buckminster" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
-      <rm:uri format="${repository.subversion.diamond.download.url}/thirdparty/{0}">
-        <bc:replace pattern="^thirdparty-(.+)$" replacement="$1">
-          <bc:propertyRef key="buckminster.component"/>
-        </bc:replace>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
