@@ -153,7 +153,6 @@ class DawnManager(object):
                  'Version defaults to master',
                  'CQuery is only required if you need to override the computed value',
                  )),
-            ('svn', None, ('svn <command>', 'Issue "svn <command>" for all top-level subversion checkouts',)),
             ('git', None, ('git <command>', 'Issue "git <command>" for all git clones',)),
             ('clean', None, ('clean', 'Clean the workspace',)),
             ('bmclean', None, ('bmclean <site>', 'Clean previous buckminster output',)),
@@ -282,7 +281,7 @@ class DawnManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Git/Svn options")
-        group.add_option('-p', '--prefix', dest='repo_prefix', action='store_true', default=False, help='Prefix first line of a git/svn command output with the repo/svn dir name.')
+        group.add_option('-p', '--prefix', dest='repo_prefix', action='store_true', default=False, help='Prefix first line of git command output with the repo directory name.')
         self.parser.add_option_group(group)
 
     def setup_workspace(self):
@@ -655,47 +654,6 @@ class DawnManager(object):
             script_file_path_to_pass = self.script_file_path
         return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
 
-    def action_svn(self):
-        """ Processes command: svn <command>
-        """
-
-        if len(self.arguments) < 1:
-            raise DawnException('ERROR: svn command has too few arguments')
-
-        svn_directories = []
-        for root, dirs, files in os.walk(self.workspace_loc):
-            root_basename = os.path.basename(root)
-            if root_basename == '.svn':
-                raise DawnException('ERROR: action_svn attempted to recurse into a .svn directory: %s' % (root,))
-            if root_basename.startswith('.') or (root_basename == 'tp'):
-                # don't recurse into hidden directories
-                self.logger.debug('%sSkipping: %s' % (self.log_prefix, root))
-                dirs[:] = []
-                continue
-            if '.svn' in dirs:
-                # if this directory is the top level of a subversion checkout, remember it
-                if os.path.isdir(os.path.normpath(os.path.join(root, '..', '.svn'))):
-                    raise DawnException('ERROR: action_svn attempted to recurse into a subdirectory of a checkout: %s' % (root,))
-                svn_directories.append(os.path.join(self.workspace_loc, root))
-                dirs[:] = []  # do not recurse into this directory
-            else:
-                self.logger.debug('%sChecking: %s' % (self.log_prefix, root))
-        assert len(svn_directories) == len(set(svn_directories))  # should be no duplicates
-
-        if len(svn_directories) == 0:
-            return
-
-        prefix= "%%%is: " % max([len(os.path.basename(x)) for x in svn_directories]) if self.options.repo_prefix else ""
-
-        max_retcode = 0
-        for svn_dir in sorted(svn_directories):
-            svn_command = 'svn %s %s' % (' '.join(self.arguments), svn_dir)
-
-            retcode = self.action_one_git_svn_repo(svn_command, svn_dir, prefix)
-            max_retcode = max(max_retcode, retcode)
-
-        return max_retcode
-
     def action_git(self):
         """ Processes command: git <command>
         """
@@ -746,12 +704,12 @@ class DawnManager(object):
                     self.logger.info('%sSkipped: %s in %s (NO REMOTE DEFINED)' % (self.log_prefix, git_command, git_dir))
                     continue
 
-            retcode = self.action_one_git_svn_repo(git_command, git_dir, prefix)
+            retcode = self.action_one_git_repo(git_command, git_dir, prefix)
             max_retcode = max(max_retcode, retcode)
 
         return max_retcode
 
-    def action_one_git_svn_repo(self, command, directory, prefix):
+    def action_one_git_repo(self, command, directory, prefix):
         self.logger.info('%sRunning: %s in %s' % (self.log_prefix, command, directory))
 
         if not self.options.dry_run:
