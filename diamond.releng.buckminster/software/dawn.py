@@ -652,7 +652,52 @@ class DawnManager(object):
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
+
+        rc = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
+
+        # remember the CQuery used, for future "File --> Open a Component Query" in the IDE
+        org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
+        cquery_to_add = 'http\://www.opengda.org/buckminster/base/%s' % (cquery_to_use,)  # note the escaped : as per Eclipse's file format
+        log_message = None
+        if not os.path.exists(org_eclipse_buckminster_ui_prefs_loc):
+            # create a new org.eclipse.buckminster.ui.prefs file with the CQuery history
+            with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
+                oebup_file.write('eclipse.preferences.version=1\n')
+                oebup_file.write('lastCQueryURLs=%s\n' % (cquery_to_add,))
+                log_message = 'Added CQuery history to org.eclipse.buckminster.ui.prefs'
+        else:
+            # update the existing org.eclipse.buckminster.ui.prefs file with the CQuery history
+            replacement_lines = []
+            lastCQueryURLs_found = False
+            file_rewrite_required = False
+            with open(org_eclipse_buckminster_ui_prefs_loc, 'r') as oebup_file:
+                for line in oebup_file.readlines():
+                    if not line.startswith('lastCQueryURLs='):
+                        replacement_lines += line
+                    else:
+                        lastCQueryURLs_found = True
+                        if line.startswith('lastCQueryURLs=' + cquery_to_add):
+                            # the current CQuery is the same as the previous most-recent, so the CQuery history remains unchanged 
+                            replacement_lines += line
+                        else:
+                            # the current CQuery is different from the previous most-recent, so update the CQuery history
+                            replacement = line.replace(';' + cquery_to_add, '')
+                            replacement = 'lastCQueryURLs=%s' % (cquery_to_add,) + ';' + replacement[len('lastCQueryURLs='):]
+                            replacement_lines += replacement
+                            log_message = 'Updated CQuery history in org.eclipse.buckminster.ui.prefs'
+                            file_rewrite_required = True
+            if not lastCQueryURLs_found:
+                replacement_contents += 'lastCQueryURLs=%s\n' % (cquery_to_add,)
+                log_message = 'Added CQuery history to org.eclipse.buckminster.ui.prefs'
+                file_rewrite_required = True
+            if file_rewrite_required:
+                with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
+                    for line in replacement_lines:
+                        oebup_file.write(line)
+        if log_message:
+            self.logger.info('%s%s' % (self.log_prefix, log_message))
+
+        return rc
 
     def action_git(self):
         """ Processes command: git <command>
