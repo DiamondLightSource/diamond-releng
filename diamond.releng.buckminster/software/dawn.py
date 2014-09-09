@@ -46,7 +46,7 @@ COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'dawn', 'uk.ac.diamond.dawn.site'
 COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 
 COMPONENT_CATEGORIES = (
-    # category, version, CQuery, template_version, version_synonyms
+    # category, version, CQuery, template, version_synonyms
     ('gda', 'master', 'gda-master.cquery', 'v2.7', ('master', 'trunk')),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842')),
     ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840')),
@@ -93,7 +93,7 @@ for c in COMPONENT_CATEGORIES:
     if c[0] not in CATEGORIES_AVAILABLE:
         CATEGORIES_AVAILABLE.append(c[0])
 TEMPLATES_AVAILABLE = sorted(set(c[3] for c in COMPONENT_CATEGORIES))
-DEFAULT_TEMPLATE_VERSION = TEMPLATES_AVAILABLE[-1]  # the most recent
+DEFAULT_TEMPLATE = TEMPLATES_AVAILABLE[-1]  # the most recent
 
 PLATFORMS_AVAILABLE =  (
     # os/ws/arch, acceptable abbreviations
@@ -291,40 +291,35 @@ class DawnManager(object):
     def setup_workspace(self):
         # create the workspace if it doesn't exist, initialise the workspace if it is not set up
 
+        expand_template_required = True
         if os.path.isdir(self.workspace_loc):
-            if ((os.path.exists( os.path.join(self.workspace_loc, '.metadata'))) and
-             (os.listdir( os.path.join(self.workspace_loc, '.metadata')))):
+            metadata_exists = os.path.exists( os.path.join(self.workspace_loc, '.metadata'))
+            if metadata_exists and not os.path.isdir(os.path.join(self.workspace_loc, '.metadata', '.plugins')):
+                raise DawnException('Workspace already exists but is corrupt (invalid .metadata/), please delete: "%s"' % (self.workspace_loc,))
+            tp_exists = os.path.exists( os.path.join(self.workspace_loc, 'tp'))
+            if tp_exists and not os.path.isfile(os.path.join(self.workspace_loc, 'tp', '.project')):
+                raise DawnException('Workspace already exists but is corrupt (invalid tp/), please delete: "%s"' % (self.workspace_loc,))
+            if metadata_exists != tp_exists:
+                raise DawnException('Workspace already exists but is corrupt (only one of .metadata/ and tp/ exist), please delete: "%s"' % (self.workspace_loc,))
+            if metadata_exists and tp_exists:
                 self.logger.info('Workspace already exists "%s"' % (self.workspace_loc,))
-            else:
-                self.logger.debug('Workspace directory already exists "%s", but is missing .metadata' % (self.workspace_loc,))
+                expand_template_required = False
         else:
             self.logger.info('%sCreating workspace directory "%s"' % (self.log_prefix, self.workspace_loc,))
             if not self.options.dry_run:
                 os.makedirs(self.workspace_loc)
+
         if self.workspace_git_loc and os.path.isdir(self.workspace_git_loc):
             self.logger.info('Using any existing .git repositories (which will not be updated) found in "%s"' % (self.workspace_git_loc,))
 
-        if (not os.path.exists( os.path.join(self.workspace_loc, '.metadata'))) or (not os.listdir( os.path.join(self.workspace_loc, '.metadata'))):
-            if (not os.path.exists( os.path.join( self.workspace_loc, 'tp'))) or (not os.listdir( os.path.join(self.workspace_loc, 'tp'))):
-                # Case 1. Workspace does not have .metadata/, and does not have tp/.
-                # Use the template workspace versions of .metadata/ and tp/.
-                template_zip = os.path.join( self.workspace_loc, self.template_name )
-                self.download_workspace_template(TEMPLATE_URI_PARENT + self.template_name, template_zip)
-                self.unzip_workspace_template(template_zip, None, self.workspace_loc)
-                self.logger.info('%sDeleting "%s"' % (self.log_prefix, template_zip,))
-                if not self.options.dry_run:
-                    os.remove(template_zip)
-                return self.run_buckminster_in_subprocess(('clean',))  # for some reason this must be done
-            else:
-                # Case 2. Workspace does not have .metadata/, but does have tp/.
-                # Use the template workspace version of .metadata/, and the existing tp/.
-                template_zip = os.path.join( self.workspace_loc, self.template_name )
-                self.download_workspace_template(TEMPLATE_URI_PARENT + self.template_name, template_zip)
-                self.unzip_workspace_template(template_zip, '.metadata/', self.workspace_loc)
-                self.logger.info('%sDeleting "%s"' % (self.log_prefix, template_zip,))
-                if not self.options.dry_run:
-                    os.remove(template_zip)
-                return self.run_buckminster_in_subprocess(('clean',))  # for some reason this must be done
+        if expand_template_required:
+            template_zip = os.path.join( self.workspace_loc, self.template_name )
+            self.download_workspace_template(TEMPLATE_URI_PARENT + self.template_name, template_zip)
+            self.unzip_workspace_template(template_zip, None, self.workspace_loc)
+            self.logger.info('%sDeleting "%s"' % (self.log_prefix, template_zip,))
+            if not self.options.dry_run:
+                os.remove(template_zip)
+            return self.run_buckminster_in_subprocess(('clean',))  # for some reason this must be done
 
 
     def add_cquery_to_history(self, cquery_to_use):
@@ -333,13 +328,11 @@ class DawnManager(object):
 
         org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
         cquery_to_add = CQUERY_URI_PARENT.replace(':','\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
-        log_message = None
         if not os.path.exists(org_eclipse_buckminster_ui_prefs_loc):
             # create a new org.eclipse.buckminster.ui.prefs file with the CQuery history
             with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
                 oebup_file.write('eclipse.preferences.version=1\n')
                 oebup_file.write('lastCQueryURLs=%s\n' % (cquery_to_add,))
-                log_message = 'Added CQuery history to org.eclipse.buckminster.ui.prefs'
         else:
             # update the existing org.eclipse.buckminster.ui.prefs file with the CQuery history
             replacement_lines = []
@@ -359,18 +352,14 @@ class DawnManager(object):
                             replacement = line.replace(';' + cquery_to_add, '')
                             replacement = 'lastCQueryURLs=%s' % (cquery_to_add,) + ';' + replacement[len('lastCQueryURLs='):]
                             replacement_lines += replacement
-                            log_message = 'Updated CQuery history in org.eclipse.buckminster.ui.prefs'
                             file_rewrite_required = True
             if not lastCQueryURLs_found:
                 replacement_contents += 'lastCQueryURLs=%s\n' % (cquery_to_add,)
-                log_message = 'Added CQuery history to org.eclipse.buckminster.ui.prefs'
                 file_rewrite_required = True
             if file_rewrite_required:
                 with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
                     for line in replacement_lines:
                         oebup_file.write(line)
-        if log_message:
-            self.logger.info('%s%s' % (self.log_prefix, log_message))
 
 
     def delete_directory(self, directory, description):
@@ -591,13 +580,19 @@ class DawnManager(object):
         if len(self.arguments) > 2:
             raise DawnException('ERROR: setup command has too many arguments')
 
-        (category_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments)
-        self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
+        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments)
+
+        if category_to_use and version_to_use:
+            cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
+            template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
+        if template_to_use:
+            self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
 
         self.setup_workspace()
 
         if cquery_to_use:
             self.add_cquery_to_history(cquery_to_use)
+
         return
 
 
@@ -610,24 +605,31 @@ class DawnManager(object):
         if len(self.arguments) > 3:
             raise DawnException('ERROR: materialize command has too many arguments')
 
-        # interpret any (category / category version / cquery) arguments
-        (category_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments[1:])
-
         # translate an abbreviated component name to the real component name
         component_to_use = self.arguments[0]
         for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
             if component_to_use == abbrev:
                 component_to_use = actual
-                if category_to_use:
-                    if category_to_use != cat:
-                        raise DawnException('ERROR: component "%s" is not consistent with category "%s"' % (component_to_use, category_to_use,))
-                else:
-                    category_to_use = cat
+                category_implied = cat
+                break
         else:
-            pass  # assume component name is specified verbatim and does not need to be interpreted
+            category_implied = None  # component name is specified verbatim
+
+        # interpret any (category / category version / cquery) arguments
+        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments[1:])
+
+        if not category_to_use:
+            category_to_use = category_implied
+        elif category_implied and (category_implied != category_to_use):
+            # if a component abbreviation was provided, it implies a category. If a category was also specified, it must match the implied category 
+            raise DawnException('ERROR: component "%s" is not consistent with category "%s"' % (component_to_use, category_to_use,))
 
         if not (category_to_use or cquery_to_use):
             raise DawnException('ERROR: the category for component "%s" is missing (can be one of %s)' % (component_to_use, '/'.join(CATEGORIES_AVAILABLE)))
+
+        if category_to_use and version_to_use:
+            cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
+            template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
 
         assert template_to_use and cquery_to_use
 
@@ -675,9 +677,9 @@ class DawnManager(object):
         """
 
         category_to_use = None
-        normalized_version_name = 'master'
+        version_to_use = 'master'
         cquery_to_use = None
-        template_to_use = DEFAULT_TEMPLATE_VERSION
+        template_to_use = DEFAULT_TEMPLATE
 
         # interpret any (category / category version / cquery) arguments
         if arguments_part:
@@ -689,37 +691,42 @@ class DawnManager(object):
                 for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
                     template_to_use = t
                     break
-                else:
-                    template_to_use = DEFAULT_TEMPLATE_VERSION
             elif category_or_cquery in CATEGORIES_AVAILABLE:
                 category_to_use = category_or_cquery
                 if len(arguments_part) > 1:
                     version = arguments_part[1]
                     for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
                         if version in s:
-                            normalized_version_name = v
+                            version_to_use = v
                             break
                     else:
                         raise DawnException('ERROR: category "%s" is not consistent with version "%s"' % (category_to_use, version))
             else:
                 raise DawnException('ERROR: "%s" is neither a category nor a CQuery' % (category_or_cquery,))
 
-            # at this point, we have determined either:
-            # category_to_use, normalized_version_name
-            # cquery_to_use, template_to_use
+        return (category_to_use, version_to_use, cquery_to_use, template_to_use)
 
-            if not cquery_to_use:
-                # determine the template workspace to use, should one be required
-                assert category_to_use
-                template_to_use_list = [cc[3] for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use and cc[1] == normalized_version_name]
-                assert len(template_to_use_list) == 1
-                template_to_use = template_to_use_list[0]
-                # determine the CQuery to use (if not explicitly requested)
-                cquery_to_use_list = [cc[2] for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use and cc[1] == normalized_version_name]
-                assert len(cquery_to_use_list) == 1
-                cquery_to_use = cquery_to_use_list[0]
 
-        return (category_to_use, cquery_to_use, template_to_use)
+    def _get_cquery_for_category_version(self, category, version):
+        """ Given a category and version, determine the CQuery that should be used
+            (on behalf of "setup" and "materialize" commands)
+        """
+
+        assert category and version
+        cquery_to_use_list = [cc[2] for cc in COMPONENT_CATEGORIES if cc[0] == category and cc[1] == version]
+        assert len(cquery_to_use_list) == 1
+        return cquery_to_use_list[0]
+
+
+    def _get_template_for_category_version(self, category, version):
+        """ Given a category and version, determine the template that should be used
+            (on behalf of "setup" and "materialize" commands)
+        """
+
+        assert category and version
+        template_to_use_list = [cc[3] for cc in COMPONENT_CATEGORIES if cc[0] == category and cc[1] == version]
+        assert len(template_to_use_list) == 1
+        return template_to_use_list[0]
 
 
     def action_git(self):
