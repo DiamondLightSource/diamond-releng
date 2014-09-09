@@ -226,9 +226,9 @@ class DawnManager(object):
         group.add_option('-w', '--workspace', dest='workspace', type='string', metavar='<dir>', default=self.workspace_loc or "(None)",
                                help='Workspace location (default: %default)')
         group.add_option('--delete', dest='delete', action='store_true', default=False,
-                               help='First completely delete current workspace and workspace_git')
-        group.add_option('--unlink', dest='unlink', action='store_true', default=False,
-                               help='First delete current workspace\'s .metadata/ and tp/')
+                               help='First completely delete current workspace/ and workspace_git/')
+        group.add_option('--recreate', dest='recreate', action='store_true', default=False,
+                               help='First completely delete current workspace/, but keep any workspace_git/')
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Materialize options")
@@ -284,7 +284,7 @@ class DawnManager(object):
         group.add_option('--keep-proxy', dest='keep_proxy', action='store_true', default=False, help='Never set the http_proxy[s] and no_proxy environment variables')
         self.parser.add_option_group(group)
 
-        group = optparse.OptionGroup(self.parser, "Git/Svn options")
+        group = optparse.OptionGroup(self.parser, "Git options")
         group.add_option('-p', '--prefix', dest='repo_prefix', action='store_true', default=False, help='Prefix first line of git command output with the repo directory name.')
         self.parser.add_option_group(group)
 
@@ -385,11 +385,6 @@ class DawnManager(object):
                     retcode = subprocess.call(('rmdir', '/s', '/q', directory), shell=True)
                 else:
                     self.logger.error('Could not delete directory: platform "%s" not recognised' % (self.system,))
-
-
-    def unlink_workspace(self):
-        self.delete_directory(os.path.join(self.workspace_loc, '.metadata'), 'workspace .metadata/ directory')
-        self.delete_directory(os.path.join(self.workspace_loc, 'tp'), 'workspace tp/ directory')
 
 
     def download_workspace_template(self, source, destination):
@@ -1322,8 +1317,8 @@ class DawnManager(object):
 
         # validation of options and action
         self.validate_plugin_patterns()
-        if self.options.delete and self.options.unlink:
-            raise DawnException('ERROR: you can specify at most one of --delete and --unlink')
+        if self.options.delete and self.options.recreate:
+            raise DawnException('ERROR: you can specify at most one of --delete and --recreate')
         if (self.action not in self.valid_actions.keys()):
             raise DawnException('ERROR: action "%s" unrecognised (try --help)' % (self.action,))
         if self.options.keyring:
@@ -1362,11 +1357,10 @@ class DawnManager(object):
         self.workspace_git_loc = (self.workspace_loc and os.path.isdir( self.workspace_loc + '_git' ) and (self.workspace_loc + '_git')) or None
 
         # delete previous workspace as required
-        if self.options.delete:
+        if self.options.delete or self.options.recreate:
             self.delete_directory(self.workspace_loc, "workspace directory")
-            self.delete_directory(self.workspace_git_loc, "workspace_git directory")
-        elif self.options.unlink:
-            self.unlink_workspace()
+            if self.options.delete:
+                self.delete_directory(self.workspace_git_loc, "workspace_git directory")
 
         # define proxy if not already defined  (proxy_name not in os.environ) or (not os.environ[proxy_name].strip())
         if self.options.keep_proxy:
