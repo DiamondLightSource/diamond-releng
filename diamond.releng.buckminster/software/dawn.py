@@ -164,7 +164,6 @@ class DawnManager(object):
             ('buildinc', None, ('buildinc', 'Build the workspace (incremental build)',)),
             ('target', None, ('target', 'List target definitions known in the workspace',)),
             ('target', None, ('target path/to/name.target', 'Set the target platform for the workspace',)),
-            ('maketp', None, ('maketp', 'Create template tp/ in an existing workspace (you then need to import the project)',)),
             ('sites', None, ('sites', 'List the available site projects in the workspace',)),
             ('site.p2', None,
                 ('site.p2 <site>',
@@ -1035,78 +1034,6 @@ class DawnManager(object):
         else:
             script_file_path_to_pass = self.script_file_path
         return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
-
-
-    def action_maketp(self):
-        """ Processes command: maketp
-            Creates a tp/ directory and project. User should them import it into the workspace, and set it as the target platform.
-            Since the template workspace contains tp/, this is only needed for non-standard setups.
-        """
-
-        project_file_text = r'''<?xml version="1.0" encoding="UTF-8"?>
-<projectDescription>
-        <name>tp</name>
-        <comment></comment>
-        <projects>
-        </projects>
-        <buildSpec>
-        </buildSpec>
-        <natures>
-        </natures>
-</projectDescription>
-'''
-        pydevproject_file_text = r'''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?eclipse-pydev version="1.0"?>
-
-<pydev_project>
-<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
-<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">jython 2.5</pydev_property>
-<pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
-<path>/tp/plugins/org.apache.commons.math_2.2.0.jar</path>
-<path>/tp/plugins/uk.ac.diamond.jama_1.0.1.jar</path>
-<path>/tp/plugins/uk.ac.diamond.org.apache.xmlrpc.client_3.1.3.jar</path>
-<path>/tp/plugins/uk.ac.diamond.org.apache.xmlrpc.common_3.1.3.jar</path>
-<path>/tp/plugins/uk.ac.diamond.org.apache.xmlrpc.server_3.1.3.jar</path>
-</pydev_pathproperty>
-</pydev_project>
-'''
-        target_file_text = r'''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
-<target name="Dynamic Target">
-<locations>
-<location path="${workspace_loc}/tp" type="Directory"/>
-</locations>
-</target>
-'''
-
-        project_dir = os.path.join(self.workspace_loc, 'tp')
-        if not os.path.isdir(project_dir):
-            self.logger.info('%sCreating project directory %s' % (self.log_prefix, project_dir,))
-            if not self.options.dry_run:
-                os.mkdir(project_dir)
-
-        project = os.path.join(project_dir, '.project')
-        if not os.path.isfile(project):
-            self.logger.info('%sCreating project file %s' % (self.log_prefix, project,))
-            if not self.options.dry_run:
-                with open(project, 'w') as project_file:
-                    project_file.write(project_file_text)
-
-        project = os.path.join(project_dir, '.pydevproject')
-        if not os.path.isfile(project):
-            self.logger.info('%sCreating PyDev project file %s' % (self.log_prefix, project,))
-            if not self.options.dry_run:
-                with open(project, 'w') as pydevproject_file:
-                    pydevproject_file.write(pydevproject_file_text)
-
-        target = os.path.join(project_dir, 'dynamic.target')
-        if not os.path.isfile(target):
-            self.logger.info('%sCreating target definition file %s' % (self.log_prefix, target,))
-            if not self.options.dry_run:
-                with open(target, 'w') as target_file:
-                    target_file.write(target_file_text)
-
-        self.logger.info('%stp/ set up - now import the project into your workspace, set the target platform, and restart Eclipse' % (self.log_prefix,))
 
 
     def _iterate_ant(self, target):
