@@ -105,6 +105,8 @@ PLATFORMS_AVAILABLE =  (
     ('macosx,cocoa,x86_64', ('macosx,cocoa,x86_64', 'macosx64', 'mac64',)),
     )
 
+TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
+CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
 
 class DawnException(Exception):
     """ Exception class to handle case when the setup does not support the requested operation. """
@@ -141,9 +143,9 @@ class DawnManager(object):
             # 2nd item in tuple is the action special handler (either "ant" or None)
             # 3rd item in tuple is a tuple of help text lines
             ('setup', None,
-                ('setup [ <template_workspace_version> ]',
+                ('setup [<category> [<version>] | <cquery>]',
                  'Set up a new workspace, with the target platform defined, but otherwise empty',
-                 'Template can be one of "%s" (defaults to newest)' % '/'.join(TEMPLATES_AVAILABLE),
+                 '(parameters are the same as for the "materialize" action)',
                  )),
             ('materialize', None,
                 ('materialize <component> [<category> [<version>] | <cquery>]',
@@ -153,6 +155,7 @@ class DawnManager(object):
                  'Version defaults to master',
                  'CQuery is only required if you need to override the computed value',
                  )),
+            ('gerrit-config', None, ('gerrit-config', 'Configure all DLS Gerrit repositories',)),
             ('git', None, ('git <command>', 'Issue "git <command>" for all git clones',)),
             ('clean', None, ('clean', 'Clean the workspace',)),
             ('bmclean', None, ('bmclean <site>', 'Clean previous buckminster output',)),
@@ -207,6 +210,7 @@ class DawnManager(object):
             if self.workspace_loc:
                 break
             candidate = os.path.dirname(candidate)
+
 
     def define_parser(self):
         """ Define all the command line options and how they are handled. """
@@ -284,6 +288,7 @@ class DawnManager(object):
         group.add_option('-p', '--prefix', dest='repo_prefix', action='store_true', default=False, help='Prefix first line of git command output with the repo directory name.')
         self.parser.add_option_group(group)
 
+
     def setup_workspace(self):
         # create the workspace if it doesn't exist, initialise the workspace if it is not set up
 
@@ -305,7 +310,7 @@ class DawnManager(object):
                 # Case 1. Workspace does not have .metadata/, and does not have tp/.
                 # Use the template workspace versions of .metadata/ and tp/.
                 template_zip = os.path.join( self.workspace_loc, self.template_name )
-                self.download_workspace_template( 'http://www.opengda.org/buckminster/templates/' + self.template_name, template_zip)
+                self.download_workspace_template(TEMPLATE_URI_PARENT + self.template_name, template_zip)
                 self.unzip_workspace_template(template_zip, None, self.workspace_loc)
                 self.logger.info('%sDeleting "%s"' % (self.log_prefix, template_zip,))
                 if not self.options.dry_run:
@@ -315,12 +320,59 @@ class DawnManager(object):
                 # Case 2. Workspace does not have .metadata/, but does have tp/.
                 # Use the template workspace version of .metadata/, and the existing tp/.
                 template_zip = os.path.join( self.workspace_loc, self.template_name )
-                self.download_workspace_template( 'http://www.opengda.org/buckminster/templates/' + self.template_name, template_zip)
+                self.download_workspace_template(TEMPLATE_URI_PARENT + self.template_name, template_zip)
                 self.unzip_workspace_template(template_zip, '.metadata/', self.workspace_loc)
                 self.logger.info('%sDeleting "%s"' % (self.log_prefix, template_zip,))
                 if not self.options.dry_run:
                     os.remove(template_zip)
                 return self.run_buckminster_in_subprocess(('clean',))  # for some reason this must be done
+
+
+    def add_cquery_to_history(self, cquery_to_use):
+        ''' remember the CQuery used, for future "File --> Open a Component Query" in the IDE
+        '''
+
+        org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
+        cquery_to_add = CQUERY_URI_PARENT.replace(':','\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
+        log_message = None
+        if not os.path.exists(org_eclipse_buckminster_ui_prefs_loc):
+            # create a new org.eclipse.buckminster.ui.prefs file with the CQuery history
+            with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
+                oebup_file.write('eclipse.preferences.version=1\n')
+                oebup_file.write('lastCQueryURLs=%s\n' % (cquery_to_add,))
+                log_message = 'Added CQuery history to org.eclipse.buckminster.ui.prefs'
+        else:
+            # update the existing org.eclipse.buckminster.ui.prefs file with the CQuery history
+            replacement_lines = []
+            lastCQueryURLs_found = False
+            file_rewrite_required = False
+            with open(org_eclipse_buckminster_ui_prefs_loc, 'r') as oebup_file:
+                for line in oebup_file.readlines():
+                    if not line.startswith('lastCQueryURLs='):
+                        replacement_lines += line
+                    else:
+                        lastCQueryURLs_found = True
+                        if line.startswith('lastCQueryURLs=' + cquery_to_add):
+                            # the current CQuery is the same as the previous most-recent, so the CQuery history remains unchanged 
+                            replacement_lines += line
+                        else:
+                            # the current CQuery is different from the previous most-recent, so update the CQuery history
+                            replacement = line.replace(';' + cquery_to_add, '')
+                            replacement = 'lastCQueryURLs=%s' % (cquery_to_add,) + ';' + replacement[len('lastCQueryURLs='):]
+                            replacement_lines += replacement
+                            log_message = 'Updated CQuery history in org.eclipse.buckminster.ui.prefs'
+                            file_rewrite_required = True
+            if not lastCQueryURLs_found:
+                replacement_contents += 'lastCQueryURLs=%s\n' % (cquery_to_add,)
+                log_message = 'Added CQuery history to org.eclipse.buckminster.ui.prefs'
+                file_rewrite_required = True
+            if file_rewrite_required:
+                with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
+                    for line in replacement_lines:
+                        oebup_file.write(line)
+        if log_message:
+            self.logger.info('%s%s' % (self.log_prefix, log_message))
+
 
     def delete_directory(self, directory, description):
         if directory and os.path.isdir(directory):
@@ -334,14 +386,17 @@ class DawnManager(object):
                 else:
                     self.logger.error('Could not delete directory: platform "%s" not recognised' % (self.system,))
 
+
     def unlink_workspace(self):
         self.delete_directory(os.path.join(self.workspace_loc, '.metadata'), 'workspace metadata directory')
+
 
     def download_workspace_template(self, source, destination):
         self.logger.info('%sDownloading "%s" to "%s"' % (self.log_prefix, source, destination))
         if self.options.dry_run:
             return
         urllib.urlretrieve(source, destination)
+
 
     def unzip_workspace_template(self, template_zip, member, unzipdir):
         self.logger.info('%sUnzipping "%s%s" to "%s"' % (self.log_prefix, template_zip, '/' +
@@ -535,19 +590,19 @@ class DawnManager(object):
 ###############################################################################
 
     def action_setup(self):
-        """ Processes command: setup [ <template_workspace_version> ]
+        """ Processes command: setup [<category> [<version>] | <cquery>]
         """
 
-        if len(self.arguments) > 1:
+        if len(self.arguments) > 2:
             raise DawnException('ERROR: setup command has too many arguments')
-        if self.arguments:
-            template = self.arguments[0]
-            if template not in TEMPLATES_AVAILABLE:
-                raise DawnException('ERROR: template "%s" not recognised (must be one of "%s")' % (template, '/'.join(TEMPLATES_AVAILABLE)))
-        else:
-            template = DEFAULT_TEMPLATE_VERSION
-        self.template_name = 'template_workspace_%s.zip' % (template,)
+
+        (category_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments)
+        self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
+
         self.setup_workspace()
+
+        if cquery_to_use:
+            self.add_cquery_to_history(cquery_to_use)
         return
 
 
@@ -560,37 +615,8 @@ class DawnManager(object):
         if len(self.arguments) > 3:
             raise DawnException('ERROR: materialize command has too many arguments')
 
-        category_to_use = normalized_version_name = cquery_to_use = template_to_use = None
-
         # interpret any (category / category version / cquery) arguments
-        if len(self.arguments) > 1:
-            category_or_cquery = self.arguments[1]
-            if category_or_cquery.endswith('.cquery'):
-                cquery_to_use = category_or_cquery
-                if len(self.arguments) > 2:
-                    raise DawnException('ERROR: No other options can follow the CQuery')
-                for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
-                    template_to_use = t
-                    break
-                else:
-                    template_to_use = DEFAULT_TEMPLATE_VERSION
-            elif category_or_cquery in CATEGORIES_AVAILABLE:
-                category_to_use = category_or_cquery
-                if len(self.arguments) > 2:
-                    version = self.arguments[2]
-                    for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
-                        if version in s:
-                            normalized_version_name = v
-                            break
-                    else:
-                        raise DawnException('ERROR: category "%s" is not consistent with version "%s"' % (category_to_use, version))
-            else:
-                raise DawnException('ERROR: "%s" is neither a category nor a CQuery' % (category_or_cquery,))
-            # at this point, if more than a single argument (component), we have determined either:
-            # category_to_use
-            # category_to_use, normalized_version_name
-            # cquery_to_use
-            # cquery_to_use, template_to_use
+        (category_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments[1:])
 
         # translate an abbreviated component name to the real component name
         component_to_use = self.arguments[0]
@@ -603,23 +629,11 @@ class DawnManager(object):
                 else:
                     category_to_use = cat
         else:
-            pass  # assume component is exactly specified and does not need to be interpreted
+            pass  # assume component name is specified verbatim and does not need to be interpreted
+
         if not (category_to_use or cquery_to_use):
             raise DawnException('ERROR: the category for component "%s" is missing (can be one of %s)' % (component_to_use, '/'.join(CATEGORIES_AVAILABLE)))
 
-
-        if not cquery_to_use:
-            # determine the template workspace to use if one is required
-            assert category_to_use
-            if not normalized_version_name:
-                normalized_version_name = 'master'
-            template_to_use_list = [cc[3] for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use and cc[1] == normalized_version_name]
-            assert len(template_to_use_list) == 1
-            template_to_use = template_to_use_list[0]
-            # determine the CQuery to use (if not explicitly requested)
-            cquery_to_use_list = [cc[2] for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use and cc[1] == normalized_version_name]
-            assert len(cquery_to_use_list) == 1
-            cquery_to_use = cquery_to_use_list[0]
         assert template_to_use and cquery_to_use
 
         # create the workspace if required
@@ -646,7 +660,7 @@ class DawnManager(object):
             if self.options.maxParallelResolutions:
                 script_file.write('setpref maxParallelResolutions=%s\n' % (self.options.maxParallelResolutions,))
             script_file.write('import ' + properties_text)
-            script_file.write('http://www.opengda.org/buckminster/base/%s\n' % (cquery_to_use,))
+            script_file.write(CQUERY_URI_PARENT + cquery_to_use + '\n')
 
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
@@ -655,49 +669,63 @@ class DawnManager(object):
 
         rc = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
 
-        # remember the CQuery used, for future "File --> Open a Component Query" in the IDE
-        org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
-        cquery_to_add = 'http\://www.opengda.org/buckminster/base/%s' % (cquery_to_use,)  # note the escaped : as per Eclipse's file format
-        log_message = None
-        if not os.path.exists(org_eclipse_buckminster_ui_prefs_loc):
-            # create a new org.eclipse.buckminster.ui.prefs file with the CQuery history
-            with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
-                oebup_file.write('eclipse.preferences.version=1\n')
-                oebup_file.write('lastCQueryURLs=%s\n' % (cquery_to_add,))
-                log_message = 'Added CQuery history to org.eclipse.buckminster.ui.prefs'
-        else:
-            # update the existing org.eclipse.buckminster.ui.prefs file with the CQuery history
-            replacement_lines = []
-            lastCQueryURLs_found = False
-            file_rewrite_required = False
-            with open(org_eclipse_buckminster_ui_prefs_loc, 'r') as oebup_file:
-                for line in oebup_file.readlines():
-                    if not line.startswith('lastCQueryURLs='):
-                        replacement_lines += line
-                    else:
-                        lastCQueryURLs_found = True
-                        if line.startswith('lastCQueryURLs=' + cquery_to_add):
-                            # the current CQuery is the same as the previous most-recent, so the CQuery history remains unchanged 
-                            replacement_lines += line
-                        else:
-                            # the current CQuery is different from the previous most-recent, so update the CQuery history
-                            replacement = line.replace(';' + cquery_to_add, '')
-                            replacement = 'lastCQueryURLs=%s' % (cquery_to_add,) + ';' + replacement[len('lastCQueryURLs='):]
-                            replacement_lines += replacement
-                            log_message = 'Updated CQuery history in org.eclipse.buckminster.ui.prefs'
-                            file_rewrite_required = True
-            if not lastCQueryURLs_found:
-                replacement_contents += 'lastCQueryURLs=%s\n' % (cquery_to_add,)
-                log_message = 'Added CQuery history to org.eclipse.buckminster.ui.prefs'
-                file_rewrite_required = True
-            if file_rewrite_required:
-                with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
-                    for line in replacement_lines:
-                        oebup_file.write(line)
-        if log_message:
-            self.logger.info('%s%s' % (self.log_prefix, log_message))
+        self.add_cquery_to_history(cquery_to_use)
 
         return rc
+
+
+    def _interpret_context(self, arguments_part):
+        """ Processes this part of the arguments: [<category> [<version>] | <cquery>]
+            (on behalf of "setup" and "materialize" commands)
+        """
+
+        category_to_use = None
+        normalized_version_name = 'master'
+        cquery_to_use = None
+        template_to_use = DEFAULT_TEMPLATE_VERSION
+
+        # interpret any (category / category version / cquery) arguments
+        if arguments_part:
+            category_or_cquery = arguments_part[0]
+            if category_or_cquery.endswith('.cquery'):
+                cquery_to_use = category_or_cquery
+                if len(arguments_part) > 1:
+                    raise DawnException('ERROR: No other options can follow the CQuery')
+                for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
+                    template_to_use = t
+                    break
+                else:
+                    template_to_use = DEFAULT_TEMPLATE_VERSION
+            elif category_or_cquery in CATEGORIES_AVAILABLE:
+                category_to_use = category_or_cquery
+                if len(arguments_part) > 1:
+                    version = arguments_part[1]
+                    for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
+                        if version in s:
+                            normalized_version_name = v
+                            break
+                    else:
+                        raise DawnException('ERROR: category "%s" is not consistent with version "%s"' % (category_to_use, version))
+            else:
+                raise DawnException('ERROR: "%s" is neither a category nor a CQuery' % (category_or_cquery,))
+
+            # at this point, we have determined either:
+            # category_to_use, normalized_version_name
+            # cquery_to_use, template_to_use
+
+            if not cquery_to_use:
+                # determine the template workspace to use, should one be required
+                assert category_to_use
+                template_to_use_list = [cc[3] for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use and cc[1] == normalized_version_name]
+                assert len(template_to_use_list) == 1
+                template_to_use = template_to_use_list[0]
+                # determine the CQuery to use (if not explicitly requested)
+                cquery_to_use_list = [cc[2] for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use and cc[1] == normalized_version_name]
+                assert len(cquery_to_use_list) == 1
+                cquery_to_use = cquery_to_use_list[0]
+
+        return (category_to_use, cquery_to_use, template_to_use)
+
 
     def action_git(self):
         """ Processes command: git <command>
@@ -754,6 +782,7 @@ class DawnManager(object):
 
         return max_retcode
 
+
     def action_one_git_repo(self, command, directory, prefix):
         self.logger.info('%sRunning: %s in %s' % (self.log_prefix, command, directory))
 
@@ -793,6 +822,7 @@ class DawnManager(object):
             else:
                 self.logger.debug('Return Code: %s' % (retcode,))
             return retcode
+
 
     def action_clean(self):
         """ Processes command: clean
@@ -852,6 +882,7 @@ class DawnManager(object):
         else:
             script_file_path_to_pass = self.script_file_path
         return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
+
 
     def action_target(self):
         """ Processes command: target [ path/to/name.target ]
@@ -1081,6 +1112,7 @@ class DawnManager(object):
 
         self.logger.info('%stp/ set up - now import the project into your workspace, set the target platform, and restart Eclipse' % (self.log_prefix,))
 
+
     def _iterate_ant(self, target):
         """ Processes using an ant target
         """
@@ -1113,6 +1145,7 @@ class DawnManager(object):
             self.logger.warn('%s%s install to be used could not be determined' % (self.log_prefix, executable_name))
         self.executable_locations_reported.append(executable_name)
 
+
     def report_java_version(self):
         """ Logs the Java version number, something like 1.7.0_17
         """
@@ -1133,6 +1166,7 @@ class DawnManager(object):
         else:
             self.logger.warn('%sJava version to use could not be determined' % (self.log_prefix,))
         self.java_version_reported = True
+
 
     def run_buckminster_in_subprocess(self, buckminster_args):
         """ Generates and runs the buckminster command
@@ -1192,6 +1226,7 @@ class DawnManager(object):
             else:
                 self.logger.debug('Return Code: %s' % (retcode,))
             return retcode
+
 
     def run_ant_in_subprocess(self, ant_args):
         """ Generates and runs the ant command
