@@ -33,7 +33,7 @@ dawn_videos_publish_function () {
 
     # publish_webserver_opengda
     echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` rsync-ing with opengda webserver ***\n"
-    ${rsync} -e "${webserver_opengda_rsync_options}" --cvs-exclude --delete --omit-dir-times -irtv ${publish_videos_origin} ${webserver_opengda_name}:${publish_webserver_opengda_videos_dir}
+    ${rsync} -e "${webserver_opengda_rsync_options}" --cvs-exclude --delete --omit-dir-times -irtv --chmod=ug=rw,o=r ${publish_videos_origin} ${webserver_opengda_name}:${publish_webserver_opengda_videos_dir}
 
     $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
     $([ "$olderrexit" == "1" ]) && set +e || true  # Turn errexit off if it was off at the top of this script
