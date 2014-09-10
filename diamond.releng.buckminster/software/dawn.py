@@ -4,6 +4,7 @@
 ### platform-independent script to manage development of Dawn (GDA, SciSoft, IDA)
 ###
 
+import ConfigParser
 import datetime
 import fnmatch
 import logging
@@ -11,7 +12,9 @@ import optparse
 import os
 import platform
 import re
+import shlex
 import socket
+import StringIO
 import subprocess
 import sys
 import time
@@ -107,6 +110,13 @@ PLATFORMS_AVAILABLE =  (
 
 TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
 CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
+
+class GitConfigParser(ConfigParser.SafeConfigParser):
+    """ Subclass of the regular SafeConfigParser that handles the tab characters in .git/config files """
+    def readgit(self, filename):
+        with open(filename, 'r') as config_file:
+            text = config_file.read()
+        self.readfp(StringIO.StringIO(text.replace('\t','')), filename)
 
 class DawnException(Exception):
     """ Exception class to handle case when the setup does not support the requested operation. """
@@ -729,21 +739,17 @@ class DawnManager(object):
         return template_to_use_list[0]
 
 
-    def action_git(self):
-        """ Processes command: git <command>
+    def _get_git_directories(self):
+        """ Returns a list of the absolute path to all Git repositories
         """
 
-        if len(self.arguments) < 1:
-            raise DawnException('ERROR: git command has too few arguments')
-
-        if not self.workspace_git_loc:
-            self.logger.info('%sSkipped: %s' % (self.log_prefix, self.workspace_loc + '_git does not exist'))
-            return
+        if (not self.workspace_git_loc) or (not os.path.isdir(self.workspace_git_loc)):
+            return []
 
         git_directories = []
         for root, dirs, files in os.walk(self.workspace_git_loc):
             if os.path.basename(root) == '.git':
-                raise DawnException('ERROR: action_git attempted to recurse into a .git directory: %s' % (root,))
+                raise DawnException('ERROR: _get_git_directories attempted to recurse into a .git directory: %s' % (root,))
             if os.path.basename(root).startswith('.'):
                 # don't recurse into hidden directories
                 self.logger.debug('%sSkipping: %s' % (self.log_prefix, root))
@@ -753,11 +759,95 @@ class DawnManager(object):
                 # if this directory is the top level of a git checkout, remember it
                 git_directories.append(os.path.join(self.workspace_git_loc, root))
                 dirs[:] = []  # do not recurse into this directory
-            else:
-                self.logger.debug('%sChecking: %s' % (self.log_prefix, root))
         assert len(git_directories) == len(set(git_directories))  # should be no duplicates
 
-        if len(git_directories) == 0:
+        return git_directories
+
+
+    def action_gerrit_config(self):
+        """ Processes command: gerrit_config
+        """
+
+        if self.arguments:
+            raise DawnException('ERROR: gerrit_config command does not take any arguments')
+
+        git_directories = self._get_git_directories()
+
+        if not git_directories:
+            self.logger.info('%sSkipped: %s' % (self.log_prefix, self.workspace_loc + '_git (does not contain any repositories)'))
+            return
+
+        prefix= "%%%is: " % max([len(os.path.basename(x)) for x in git_directories]) if self.options.repo_prefix else ""
+
+        for git_dir in sorted(git_directories):
+            config_file_loc = os.path.join(git_dir, '.git', 'config')
+            if not os.path.isfile(config_file_loc):
+                self.logger.error('%sSkipped: %s should exist, but does not' % (self.log_prefix, config_file_loc))
+                continue
+
+            # parse and potentially update the .git/config file
+            config = GitConfigParser()
+            config.readgit(config_file_loc)
+            # we only need to process repositories that are Gerrit repos
+            try:
+                origin_url = config.get('remote "origin"', 'url')
+            except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+                self.logger.warn('%sSkipped: no [remote "origin"]: %s' % (self.log_prefix, config_file_loc))
+                continue
+            else:
+                if 'ssh://gerrit.diamond.ac.uk:29418' not in origin_url:
+                    self.logger.debug('%sSkipped: not a DLS Gerrit repository: %s' % (self.log_prefix, git_dir))
+                    continue
+
+            config_changes = (  # section, option, name, required_value, use_replace
+                ('gerrit',          'createchangeid', 'gerrit.createchangeid', 'true', True),
+                ('remote "origin"', 'fetch',          'remote.origin.fetch',   'refs/notes/*:refs/notes/*', False),
+                ('remote "origin"', 'pushurl',        'remote.origin.pushurl', origin_url, False),
+                ('remote "origin"', 'push',           'remote.origin.push',    'HEAD:refs/for/master', False))
+
+            git_config_commands = []
+            for (section, option, name, required_value, use_replace) in config_changes:
+                try:
+                    option_value = config.get(section, option)
+                except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+                    git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
+                else:
+                    if option_value != required_value:
+                        if use_replace:
+                            self.logger.warn('%sSkipped: expected %s=%s, actual=%s in: %s' % (self.log_prefix, name, required_value, option_value, git_dir))
+                        else:
+                            git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
+                    else:
+                        self.logger.debug('%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
+
+            if not git_config_commands:
+                self.logger.info('%sSkipped: already configured for Gerrit: %s' % (self.log_prefix, git_dir))
+            else:
+                max_retcode = 0
+                for command in git_config_commands:
+                    self.logger.debug('%sRunning: %s' % (self.log_prefix, command))
+                    if not self.options.dry_run:
+                        retcode = subprocess.call(shlex.split(command), shell=False)
+                        if retcode:
+                            self.logger.error('%sFAILED: rc=%s' % (self.log_prefix, retcode))
+                            max_retcode = max(max_retcode, retcode)
+                if not max_retcode:
+                    self.logger.info('%sComplete: configured for Gerrit: %s' % (self.log_prefix, git_dir))
+                else:
+                    self.logger.error('%sFAILED: could not configure for Gerrit: %s' % (self.log_prefix, git_dir))
+
+
+    def action_git(self):
+        """ Processes command: git <command>
+        """
+
+        if len(self.arguments) < 1:
+            raise DawnException('ERROR: git command has too few arguments')
+
+        git_directories = self._get_git_directories()
+
+        if not git_directories:
+            self.logger.info('%sSkipped: %s' % (self.log_prefix, self.workspace_loc + '_git (does not contain any repositories)'))
             return
 
         prefix= "%%%is: " % max([len(os.path.basename(x)) for x in git_directories]) if self.options.repo_prefix else ""
