@@ -111,6 +111,12 @@ PLATFORMS_AVAILABLE =  (
 TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
 CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
 
+JGIT_ERROR_PATTERNS = map(re.compile,
+    (  # tuple of JGit error messages that identify an intermittent checkout problem with a particular repository
+    'org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): verify: false',)
+    )
+
+
 class GitConfigParser(ConfigParser.SafeConfigParser):
     """ Subclass of the regular SafeConfigParser that handles the tab characters in .git/config files """
     def readgit(self, filename):
@@ -697,7 +703,13 @@ class DawnManager(object):
         else:
             script_file_path_to_pass = self.script_file_path
 
-        rc = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
+        # get buckminster to run the materialize
+        (rc, jgit_errors) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_JGit_errors=True)
+        # sometimes JGit gets intermittent failures (network?) when cloning a repository
+        if jgit_errors:
+            rc = max(int(rc), 2)
+            for repo in jgit_errors:
+                self.logger.error('Failure cloning ' + repo + ' (possibly an intermittent network issue): you MUST delete the partial clone before retrying')
 
         self.add_cquery_to_history(cquery_to_use)
 
@@ -1211,8 +1223,9 @@ class DawnManager(object):
         self.java_version_reported = True
 
 
-    def run_buckminster_in_subprocess(self, buckminster_args):
+    def run_buckminster_in_subprocess(self, buckminster_args, return_JGit_errors=False):
         """ Generates and runs the buckminster command
+            If return_JGit_errors, then returns a list of repositories that had errors when attempting to clone (for materialize)
         """
 
         self.report_executable_location('buckminster')
@@ -1250,12 +1263,18 @@ class DawnManager(object):
                 for line in script_file.readlines():
                     self.logger.debug('%s(script file): %s' % (self.log_prefix, line))
 
+        jgit_errors = []
         if not self.options.dry_run:
             sys.stdout.flush()
             sys.stderr.flush()
             try:
                 process = subprocess.Popen(buckminster_command, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
                 for line in iter(process.stdout.readline, b''):
+                    if return_JGit_errors:
+                        for error_pattern in JGIT_ERROR_PATTERNS:
+                            repository_with_jgit_error = error_pattern.search(line)
+                            if repository_with_jgit_error:
+                                jgit_errors.append(os.path.basename(repository_with_jgit_error.group(1)))
                     if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
                         print line,  # trailing comma so we don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
@@ -1265,9 +1284,15 @@ class DawnManager(object):
             sys.stdout.flush()
             sys.stderr.flush()
             if retcode:
-                self.logger.error('Return Code: %s' % (retcode,))
+                self.logger.error('Buckminster return Code: %s' % (retcode,))
             else:
-                self.logger.debug('Return Code: %s' % (retcode,))
+                self.logger.debug('Buckminster return Code: %s' % (retcode,))
+        else:
+            retcode = 0
+
+        if return_JGit_errors:
+            return (retcode, jgit_errors)
+        else:
             return retcode
 
 
