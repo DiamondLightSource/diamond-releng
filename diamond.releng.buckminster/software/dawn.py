@@ -18,7 +18,7 @@ import StringIO
 import subprocess
 import sys
 import time
-import urllib
+import urllib2
 import zipfile
 
 COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, category, actual component name to use)
@@ -386,10 +386,33 @@ class DawnManager(object):
 
 
     def download_workspace_template(self, source, destination):
-        self.logger.info('%sDownloading "%s" to "%s"' % (self.log_prefix, source, destination))
         if self.options.dry_run:
+            self.logger.info('%sDownloading "%s" to "%s"' % (self.log_prefix, source, destination))
             return
-        urllib.urlretrieve(source, destination)
+
+        # open the URL
+        try:
+            resp = urllib2.urlopen(source, timeout=15)
+        except (urllib2.URLError, urllib2.HTTPError) as e:
+            self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
+            raise DawnException('The download failed (network error, proxy failure, or proxy not set): please retry')
+
+        # read the data (small enough to do in one chunk)
+        self.logger.info('Downloading %s bytes from "%s" to "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl(), destination))
+        try:
+            templatedata = resp.read()
+        except Exception as e:
+            self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
+            raise DawnException('The download failed (network error or proxy failure): please retry')
+        finally:
+            try:
+                resp.close()
+            except:
+                pass
+
+        # write the data
+        with open(destination, "wb") as template:
+            template.write(templatedata)
 
 
     def unzip_workspace_template(self, template_zip, member, unzipdir):
