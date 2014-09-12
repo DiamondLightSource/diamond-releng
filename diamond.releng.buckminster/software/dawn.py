@@ -258,6 +258,8 @@ class DawnManager(object):
                          help='Override Buckminster default')
         group.add_option('--maxParallelResolutions', dest='maxParallelResolutions', type='int', metavar='<value>',
                          help='Override Buckminster default')
+        group.add_option('--prepare-jenkins-build-description-on-materialize-error', dest='prepare_jenkins_build_description_on_materialize_error', action='store_true', default=False,
+                 help=optparse.SUPPRESS_HELP)
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Build/Product options")
@@ -710,6 +712,13 @@ class DawnManager(object):
             rc = max(int(rc), 2)
             for repo in jgit_errors:
                 self.logger.error('Failure cloning ' + repo + ' (possibly an intermittent network issue): you MUST delete the partial clone before retrying')
+            if self.options.prepare_jenkins_build_description_on_materialize_error:
+                text = 'set-build-description: Failure cloning '
+                if len(jgit_errors) == 1:
+                    text += jgit_errors[0] + ' (network issue?)'
+                else:
+                    text += len(jgit_errors) + ' repositories (network issue?)'
+                print text
 
         self.add_cquery_to_history(cquery_to_use)
 
