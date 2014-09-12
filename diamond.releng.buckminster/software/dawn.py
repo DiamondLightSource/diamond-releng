@@ -238,8 +238,8 @@ class DawnManager(object):
             self.parser.formatter.width = 120  # so avoid the default of 80 and assume a wider terminal (improve look of help)
 
         group = optparse.OptionGroup(self.parser, "Workspace options")
-        group.add_option('-w', '--workspace', dest='workspace', type='string', metavar='<dir>', default=self.workspace_loc or "(None)",
-                               help='Workspace location (default: %default)')
+        group.add_option('-w', '--workspace', dest='workspace', type='string', metavar='<dir>', default=self.workspace_loc,
+                               help='Workspace location (default: ' + (self.workspace_loc or "(None)") + ')')
         group.add_option('--delete', dest='delete', action='store_true', default=False,
                                help='First completely delete current workspace/ and workspace_git/')
         group.add_option('--recreate', dest='recreate', action='store_true', default=False,
