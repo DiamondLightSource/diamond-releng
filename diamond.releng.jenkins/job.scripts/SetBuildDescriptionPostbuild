@@ -27,7 +27,7 @@ for (line in log) {
 
 if (founddesc) {
    currentBuild.setDescription(match[0][1])
-   manager.listener.logger.println "[set-build-description_postbuild.groovy] Build description was set to: " + match[0][1]
+   manager.listener.logger.println "[SetBuildDescriptionPostbuild] Build description was set to: " + match[0][1]
 } else {
-   manager.listener.logger.println "[set-build-description_postbuild.groovy] No build description found to set"
+   manager.listener.logger.println "[SetBuildDescriptionPostbuild] No build description found to set"
 }

@@ -27,7 +27,7 @@ for (line in log) {
 
 if (founddesc) {
    currentBuild.setDescription(match[0][1])
-   out.println "[set-build-description_buildstep.groovy] Build description was set to: " + match[0][1]
+   out.println "[SetBuildDescriptionBuildstep] Build description was set to: " + match[0][1]
 } else {
-   out.println "[set-build-description_buildstep.groovy] No build description found to set"
+   out.println "[SetBuildDescriptionBuildstep] No build description found to set"
 }
