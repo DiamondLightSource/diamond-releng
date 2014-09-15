@@ -9,6 +9,9 @@
 
 // If you change one of the two scripts, you might need to make a matching change to the other also.
 
+// ** NOTE ** A Groovy Postbuild step runs on the master, and hence cannot access the workspace on a slave.
+// So the contents of SetBuildDescriptionPostbuild.groovy are for reference only, and are duplicated in each Jenkins job
+
 // context when running as a system Groovy script
 def currentBuild = Thread.currentThread().executable
 
