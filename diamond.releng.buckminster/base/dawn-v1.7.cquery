@@ -94,13 +94,13 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-jacorb.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.diamond-jacorb" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.jython$" useTargetPlatform="false" branchTagPath="dawn-1.7">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.jython$" useTargetPlatform="false" branchTagPath="gda-8.42">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-jython.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^diamond\.releng\..+$" useTargetPlatform="false" branchTagPath="dawn-1.7">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-releng.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" useTargetPlatform="false" branchTagPath="dawn-1.7">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" useTargetPlatform="false" branchTagPath="gda-8.42">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-springframework.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^diffcalc$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -117,7 +117,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-bimorph.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-bimorph" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" useTargetPlatform="false" branchTagPath="dawn-1.7">
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" useTargetPlatform="false" branchTagPath="gda-8.42">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -220,7 +220,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-scm.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-scm" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" useTargetPlatform="false" branchTagPath="dawn-1.7">
+    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" useTargetPlatform="false" branchTagPath="gda-8.42">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-tomography.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.video(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
