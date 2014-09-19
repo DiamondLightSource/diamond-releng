@@ -1183,7 +1183,7 @@ class DawnManager(object):
         """
 
         selected_plugins = self.get_selected_plugins_with_releng_ant()  # might be an empty string to indicate all
-        self.run_ant_in_subprocess((selected_plugins, target))
+        return self.run_ant_in_subprocess((selected_plugins, target))
 
 
 ###############################################################################
