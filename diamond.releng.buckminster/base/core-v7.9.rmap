@@ -234,6 +234,10 @@
   <rm:propertyElement key="bioclipse.cheminformatics.git.url">
     <bc:constant value="${github.${bioclipse.cheminformatics.github.authentication}.url}${bioclipse.cheminformatics.github.organization}/bioclipse.cheminformatics.git"/>
   </rm:propertyElement>
+  <!-- ** beamlines *** -->
+  <rm:propertyElement key="beamlines.b22.rsync.git.url">
+    <bc:constant value="${diamond.dascgit.url}/beamlines/b22-rsync.git"/>
+  </rm:propertyElement>
   <!-- ** dawn- *** -->
   <rm:propertyElement key="dawn.commandserver.github.organization">
     <bc:constant value="DawnScience"/>
@@ -2032,6 +2036,8 @@
         Components in Git repositories (note: patterns should match those in the CQuery advisor nodes)
         Please keep locators in sorted order of repository name
   -->
+  <!-- ** beamlines *** -->
+  <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- ** dawn- *** -->
   <rm:locator pattern="^org\.dawnsci\.commandserver(\..+)?$" searchPathRef="dawn_commandserver"/>
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|persistence|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
@@ -2367,6 +2373,23 @@
       <rm:uri format="{0}/bioclipse.cheminformatics.git,plugins/{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!--
+       Beamline repositories
+  -->
+  <rm:searchPath name="b22_rsync">
+    <rm:provider componentTypes="buckminster" resolutionFilter="(!(disallow.repo.b22-rsync=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${beamlines.b22.rsync.git.url}"/>
+      <rm:uri format="{0}/b22-rsync.git">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.b22-rsync=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from b22-rsync.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
