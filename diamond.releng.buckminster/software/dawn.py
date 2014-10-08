@@ -411,7 +411,10 @@ class DawnManager(object):
             resp = urllib2.urlopen(source, timeout=15)
         except (urllib2.URLError, urllib2.HTTPError) as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
-            raise DawnException('The download failed (network error, proxy failure, or proxy not set): please retry')
+            if self.options.prepare_jenkins_build_description_on_materialize_error:
+                text = 'set-build-description: Failure downloading template workspace (network issue?)'
+                print text
+            raise DawnException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (small enough to do in one chunk)
         self.logger.info('Downloading %s bytes from "%s" to "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl(), destination))
@@ -419,7 +422,10 @@ class DawnManager(object):
             templatedata = resp.read()
         except Exception as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
-            raise DawnException('The download failed (network error or proxy failure): please retry')
+            if self.options.prepare_jenkins_build_description_on_materialize_error:
+                text = 'set-build-description: Failure downloading template workspace (network issue?)'
+                print text
+            raise DawnException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
                 resp.close()
