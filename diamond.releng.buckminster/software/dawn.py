@@ -19,6 +19,7 @@ import subprocess
 import sys
 import time
 import urllib2
+import urlparse
 import zipfile
 
 COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, category, actual component name to use)
@@ -117,6 +118,11 @@ JGIT_ERROR_PATTERNS = map(re.compile,
     'org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): verify: false',)
     )
 
+GERRIT_REPOSITORIES = (
+    # repositories whose origin can be switched to Gerrit when the gerrit-switch is run 
+    'training-gerrit-1.git',)
+GERRIT_SCHEME = 'ssh'
+GERRIT_NETLOC = 'gerrit.diamond.ac.uk:29418'
 
 class GitConfigParser(ConfigParser.SafeConfigParser):
     """ Subclass of the regular SafeConfigParser that handles the tab characters in .git/config files """
@@ -172,7 +178,8 @@ class DawnManager(object):
                  'Version defaults to master',
                  'CQuery is only required if you need to override the computed value',
                  )),
-            ('gerrit-config', None, ('gerrit-config', 'Configure all DLS Gerrit repositories',)),
+            ('gerrit-switch', None, ('gerrit-switch', 'Switch repositories to origin Gerrit (if applicable)',)),
+            ('gerrit-config', None, ('gerrit-config', 'Configure all Gerrit repositories for Eclipse',)),
             ('git', None, ('git <command>', 'Issue "git <command>" for all git clones',)),
             ('clean', None, ('clean', 'Clean the workspace',)),
             ('bmclean', None, ('bmclean <site>', 'Clean previous buckminster output',)),
@@ -809,6 +816,84 @@ class DawnManager(object):
         return git_directories
 
 
+    def action_gerrit_switch(self):
+        """ Processes command: gerrit_switch
+        """
+
+        if self.arguments:
+            raise DawnException('ERROR: gerrit_switch command does not take any arguments')
+
+        git_directories = self._get_git_directories()
+
+        if not git_directories:
+            self.logger.info('%sSkipped: %s' % (self.log_prefix, self.workspace_loc + '_git (does not contain any repositories)'))
+            return
+
+        prefix= "%%%is: " % max([len(os.path.basename(x)) for x in git_directories]) if self.options.repo_prefix else ""
+
+        switched_count = 0
+        for git_dir in sorted(git_directories):
+            if os.path.basename(git_dir) not in GERRIT_REPOSITORIES:
+                self.logger.debug('%sSkipped: not in Gerrit: %s' % (self.log_prefix, git_dir))
+                continue
+            config_file_loc = os.path.join(git_dir, '.git', 'config')
+            if not os.path.isfile(config_file_loc):
+                self.logger.error('%sSkipped: %s should exist, but does not' % (self.log_prefix, config_file_loc))
+                continue
+
+            # parse and potentially update the .git/config file
+            config = GitConfigParser()
+            config.readgit(config_file_loc)
+            # we only need to process repositories that are Gerrit repos
+            try:
+                origin_url = config.get('remote "origin"', 'url')
+            except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+                self.logger.warn('%sSkipped: no [remote "origin"]: %s' % (self.log_prefix, config_file_loc))
+                continue
+            else:
+                if urlparse.urlunsplit((GERRIT_SCHEME, GERRIT_NETLOC, '', '', '')) in origin_url:
+                    self.logger.info('%sSkipped: already switched to Gerrit: %s' % (self.log_prefix, git_dir))
+                    continue
+
+            new_url = urlparse.urlunsplit((GERRIT_SCHEME, GERRIT_NETLOC) + urlparse.urlsplit(origin_url)[2:])
+            config_changes = (  # section, option, name, required_value, use_replace
+                ('remote "origin"', 'url', 'remote.origin.url', new_url, True),)
+
+            git_config_commands = []
+            for (section, option, name, required_value, use_replace) in config_changes:
+                try:
+                    option_value = config.get(section, option)
+                except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+                    git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
+                else:
+                    if option_value != required_value:
+                        if use_replace:
+                            git_config_commands.append('git config -f %s --replace %s %s' % (config_file_loc, name, required_value))
+                        else:
+                            git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
+                    else:
+                        self.logger.debug('%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
+
+            if not git_config_commands:
+                self.logger.info('%sSkipped: already switched to Gerrit: %s' % (self.log_prefix, git_dir))
+            else:
+                max_retcode = 0
+                for command in git_config_commands:
+                    self.logger.debug('%sRunning: %s' % (self.log_prefix, command))
+                    if not self.options.dry_run:
+                        retcode = subprocess.call(shlex.split(command), shell=False)
+                        if retcode:
+                            self.logger.error('%sFAILED: rc=%s' % (self.log_prefix, retcode))
+                            max_retcode = max(max_retcode, retcode)
+                if not max_retcode:
+                    self.logger.info('%sComplete: switched to Gerrit: %s' % (self.log_prefix, git_dir))
+                    switched_count += 1
+                else:
+                    self.logger.error('%sFAILED: could not switch to Gerrit: %s' % (self.log_prefix, git_dir))
+
+        self.logger.info('%sFinished: repositories switched to Gerrit: %s' % (self.log_prefix, switched_count))
+
+
     def action_gerrit_config(self):
         """ Processes command: gerrit_config
         """
@@ -824,6 +909,7 @@ class DawnManager(object):
 
         prefix= "%%%is: " % max([len(os.path.basename(x)) for x in git_directories]) if self.options.repo_prefix else ""
 
+        configured_count = 0
         for git_dir in sorted(git_directories):
             config_file_loc = os.path.join(git_dir, '.git', 'config')
             if not os.path.isfile(config_file_loc):
@@ -840,7 +926,7 @@ class DawnManager(object):
                 self.logger.warn('%sSkipped: no [remote "origin"]: %s' % (self.log_prefix, config_file_loc))
                 continue
             else:
-                if 'ssh://gerrit.diamond.ac.uk:29418' not in origin_url:
+                if urlparse.urlunsplit((GERRIT_SCHEME, GERRIT_NETLOC, '', '', '')) not in origin_url:
                     self.logger.debug('%sSkipped: not a DLS Gerrit repository: %s' % (self.log_prefix, git_dir))
                     continue
 
@@ -877,10 +963,12 @@ class DawnManager(object):
                             self.logger.error('%sFAILED: rc=%s' % (self.log_prefix, retcode))
                             max_retcode = max(max_retcode, retcode)
                 if not max_retcode:
+                    configured_count += 1
                     self.logger.info('%sComplete: configured for Gerrit: %s' % (self.log_prefix, git_dir))
                 else:
                     self.logger.error('%sFAILED: could not configure for Gerrit: %s' % (self.log_prefix, git_dir))
 
+        self.logger.info('%sFinished: repositories configured for Gerrit: %s' % (self.log_prefix, configured_count))
 
     def action_git(self):
         """ Processes command: git <command>
