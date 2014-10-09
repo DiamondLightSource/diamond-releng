@@ -412,7 +412,7 @@ class DawnManager(object):
         except (urllib2.URLError, urllib2.HTTPError) as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure downloading template workspace (network issue?)'
+                text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print text
             raise DawnException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
 
@@ -423,7 +423,7 @@ class DawnManager(object):
         except Exception as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure downloading template workspace (network issue?)'
+                text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print text
             raise DawnException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
@@ -725,7 +725,7 @@ class DawnManager(object):
         if jgit_errors_general or jgit_errors_repos:
             rc = max(int(rc), 2)
             for repo in jgit_errors_repos:
-                self.logger.error('Failure cloning ' + repo + ' (possibly an intermittent network issue): you MUST delete the partial clone before retrying')
+                self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 if jgit_errors_general == 1:
                     text = 'set-build-description: Failure (probable network issue)'
