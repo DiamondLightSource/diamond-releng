@@ -720,22 +720,22 @@ class DawnManager(object):
             script_file_path_to_pass = self.script_file_path
 
         # get buckminster to run the materialize
-        (rc, jgit_errors_general, jgit_errors_repos) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_JGit_errors=True)
+        (rc, jgit_errors_repos, jgit_errors_general) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_JGit_errors=True)
         # sometimes JGit gets intermittent failures (network?) when cloning a repository
-        if jgit_errors_general or jgit_errors_repos:
+        if jgit_errors_repos or jgit_errors_general:
             rc = max(int(rc), 2)
             for repo in jgit_errors_repos:
                 self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                if jgit_errors_general == 1:
-                    text = 'set-build-description: Failure (probable network issue)'
-                else:
+                if jgit_errors_repos:
                     text = 'set-build-description: Failure cloning '
-                    if len(jgit_errors) == 1:
+                    if len(jgit_errors_repos) == 1:
                         text += jgit_errors[0]
                     else:
                         text += len(jgit_errors) + ' repositories'
                     test += ' (probable network issue)'
+                else:
+                    text = 'set-build-description: Failure (probable network issue)'
                 print text
 
         self.add_cquery_to_history(cquery_to_use)
@@ -1371,8 +1371,8 @@ class DawnManager(object):
                 for line in script_file.readlines():
                     self.logger.debug('%s(script file): %s' % (self.log_prefix, line))
 
-        jgit_errors_general = []
         jgit_errors_repos = []
+        jgit_errors_general = []
         if not self.options.dry_run:
             sys.stdout.flush()
             sys.stderr.flush()
@@ -1384,7 +1384,7 @@ class DawnManager(object):
                             jgit_error = re.search(error_pattern, line)
                             if jgit_error:
                                 if isinstance(error_summary, int):
-                                    jgit_errors_repos.append(os.path.basename(repository_with_jgit_error.group(error_summary)))
+                                    jgit_errors_repos.append(os.path.basename(jgit_error.group(error_summary)))
                                 else:
                                     jgit_errors_general.append(error_summary)
                     if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
@@ -1403,7 +1403,7 @@ class DawnManager(object):
             retcode = 0
 
         if return_JGit_errors:
-            return (retcode, jgit_errors_general, jgit_errors_repos)
+            return (retcode, jgit_errors_repos, jgit_errors_general)
         else:
             return retcode
 
