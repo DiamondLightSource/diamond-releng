@@ -113,9 +113,9 @@ PLATFORMS_AVAILABLE =  (
 TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
 CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
 
-JGIT_ERROR_PATTERNS = map(re.compile,
-    (  # tuple of JGit error messages that identify an intermittent checkout problem with a particular repository
-    'org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): verify: false',)
+JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent checkout problem (network) with a particular repository
+    ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): verify: false', 1),  # 1 = first match group is the repository
+    ('org\.apache\.http\.conn\.HttpHostConnectException: Connection to .+ refused', 'Connection refused'),  # text = no specifc repository identified
     )
 
 GERRIT_REPOSITORIES = (
@@ -720,18 +720,22 @@ class DawnManager(object):
             script_file_path_to_pass = self.script_file_path
 
         # get buckminster to run the materialize
-        (rc, jgit_errors) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_JGit_errors=True)
+        (rc, jgit_errors_general, jgit_errors_repos) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_JGit_errors=True)
         # sometimes JGit gets intermittent failures (network?) when cloning a repository
-        if jgit_errors:
+        if jgit_errors_general or jgit_errors_repos:
             rc = max(int(rc), 2)
-            for repo in jgit_errors:
+            for repo in jgit_errors_repos:
                 self.logger.error('Failure cloning ' + repo + ' (possibly an intermittent network issue): you MUST delete the partial clone before retrying')
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure cloning '
-                if len(jgit_errors) == 1:
-                    text += jgit_errors[0] + ' (network issue?)'
+                if jgit_errors_general == 1:
+                    text = 'set-build-description: Failure (probable network issue)'
                 else:
-                    text += len(jgit_errors) + ' repositories (network issue?)'
+                    text = 'set-build-description: Failure cloning '
+                    if len(jgit_errors) == 1:
+                        text += jgit_errors[0]
+                    else:
+                        text += len(jgit_errors) + ' repositories'
+                    test += ' (probable network issue)'
                 print text
 
         self.add_cquery_to_history(cquery_to_use)
@@ -1367,7 +1371,8 @@ class DawnManager(object):
                 for line in script_file.readlines():
                     self.logger.debug('%s(script file): %s' % (self.log_prefix, line))
 
-        jgit_errors = []
+        jgit_errors_general = []
+        jgit_errors_repos = []
         if not self.options.dry_run:
             sys.stdout.flush()
             sys.stderr.flush()
@@ -1375,10 +1380,13 @@ class DawnManager(object):
                 process = subprocess.Popen(buckminster_command, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
                 for line in iter(process.stdout.readline, b''):
                     if return_JGit_errors:
-                        for error_pattern in JGIT_ERROR_PATTERNS:
-                            repository_with_jgit_error = error_pattern.search(line)
-                            if repository_with_jgit_error:
-                                jgit_errors.append(os.path.basename(repository_with_jgit_error.group(1)))
+                        for (error_pattern, error_summary) in JGIT_ERROR_PATTERNS:
+                            jgit_error = re.search(error_pattern, line)
+                            if jgit_error:
+                                if isinstance(error_summary, int):
+                                    jgit_errors_repos.append(os.path.basename(repository_with_jgit_error.group(error_summary)))
+                                else:
+                                    jgit_errors_general.append(error_summary)
                     if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
                         print line,  # trailing comma so we don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
@@ -1395,7 +1403,7 @@ class DawnManager(object):
             retcode = 0
 
         if return_JGit_errors:
-            return (retcode, jgit_errors)
+            return (retcode, jgit_errors_general, jgit_errors_repos)
         else:
             return retcode
 
