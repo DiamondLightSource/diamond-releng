@@ -116,6 +116,7 @@ CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
 JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent checkout problem (network) with a particular repository
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): verify: false', 1),  # 1 = first match group is the repository
     ('org\.apache\.http\.conn\.HttpHostConnectException: Connection to .+ refused', 'Connection refused'),  # text = no specifc repository identified
+    ('HttpComponents connection error response code 500', 'Server error'),  # text = no specifc repository identified
     )
 
 GERRIT_REPOSITORIES = (
