@@ -730,9 +730,9 @@ class DawnManager(object):
                 if jgit_errors_repos:
                     text = 'set-build-description: Failure cloning '
                     if len(jgit_errors_repos) == 1:
-                        text += jgit_errors[0]
+                        text += jgit_errors_repos[0]
                     else:
-                        text += len(jgit_errors) + ' repositories'
+                        text += len(jgit_errors_repos) + ' repositories'
                     test += ' (probable network issue)'
                 else:
                     text = 'set-build-description: Failure (probable network issue)'
