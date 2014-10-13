@@ -734,7 +734,7 @@ class DawnManager(object):
                         text += jgit_errors_repos[0]
                     else:
                         text += len(jgit_errors_repos) + ' repositories'
-                    test += ' (probable network issue)'
+                    text += ' (probable network issue)'
                 else:
                     text = 'set-build-description: Failure (probable network issue)'
                 print text
