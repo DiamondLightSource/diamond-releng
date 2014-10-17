@@ -2088,7 +2088,7 @@
   <rm:locator pattern="^((i02|i03|i04|i04-1|i23|i24|mx|all-mx)-config|uk\.ac\.(gda\.(beamline\.(i02|i03|i04|i04-1|i23|i24)(\..+)?|px(\..+)?|client\.mx(\..+)?|devices\.(insitu|irelec)(\..+)?)|diamond\.(dna|stac)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
   <rm:locator pattern="^(i05-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.gda\.(arpes|beamline\.i05|devices\.vgscienta)(\..+)?)$" searchPathRef="gda_pes"/>
-  <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|org\.gda\.tango(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
+  <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|org\.gda\.tango(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
   <rm:locator pattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(xmap|xspress2|xspress3)(\..+)?|exafs\.datawriter(\..+)?|server\.exafs(\..+)?)$" searchPathRef="gda_xas_core"/>
