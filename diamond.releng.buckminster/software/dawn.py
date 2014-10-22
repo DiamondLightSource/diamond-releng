@@ -52,6 +52,7 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms
     ('gda', 'master', 'gda-master.cquery', 'v2.7', ('master', 'trunk')),
+    ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.7', ('masterhplc', 'hplc')),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842')),
     ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840')),
     ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839')),
@@ -117,6 +118,7 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent chec
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): verify: false', 1),  # 1 = first match group is the repository
     ('org\.apache\.http\.conn\.HttpHostConnectException: Connection to .+ refused', 'Connection refused'),  # text = no specifc repository identified
     ('HttpComponents connection error response code 500', 'Server error'),  # text = no specifc repository identified
+    ('ERROR +No repository found at http://www\.opengda\.org/' 'Server error'),  # text = no specifc repository identified
     )
 
 GERRIT_REPOSITORIES = (
