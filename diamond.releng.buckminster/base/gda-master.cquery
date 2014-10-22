@@ -66,7 +66,6 @@ If you materialize, and then materialize again, the second materialize can fail.
     </cq:advisorNode>
     <cq:advisorNode namePattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isenciaui.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.dawn-isenciaui" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawnsci\.mx\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-mx.git repository branch</cq:documentation>
