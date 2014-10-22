@@ -2137,10 +2137,6 @@
   <rm:locator pattern="^org\.openscience\.cdk\.swt\..+" searchPathRef="bioclipse_cheminformatics_plugins"/>
   <rm:locator pattern="^org\.openscience\.cdk\..+" searchPathRef="bioclipse_core_externals"/>
   <!--
-       GDA site components
-  -->
-  <rm:locator pattern="^.*\.site$" searchPathRef="sites"/>
-  <!--
        GDA components for specific beamlines
   -->
   <!-- ** Example ** -->
