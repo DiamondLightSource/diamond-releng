@@ -1297,7 +1297,7 @@ class DawnManager(object):
             return
         loc = None
         try:
-            whichrun = subprocess.Popen(('which', '--all', executable_name), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            whichrun = subprocess.Popen(('which', '-a', executable_name), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             (stdout, stderr) = whichrun.communicate(None)
             if not whichrun.returncode:
                 loc = stdout.strip()
