@@ -2171,6 +2171,7 @@
   -->
   <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api)$" searchPathRef="GDA_tp_logging"/>
   <rm:locator pattern="^com\.google\.(gson|guava)$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.camel\..+$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.servicemix\..+$" searchPathRef="tp_noneclipse"/>
@@ -2184,6 +2185,7 @@
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="DAWB_p2" failOnError="false"/>
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="tp_bioclipse" failOnError="false"/>
   <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.springframework\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
   <rm:locator pattern="^org\.springframework\..+" searchPathRef="tp_bioclipse" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.commons\.(math|configuration)" searchPathRef="GDA_tp_bundles"/>
