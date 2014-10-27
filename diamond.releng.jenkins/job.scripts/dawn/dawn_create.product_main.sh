@@ -7,11 +7,11 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/create_p2_site_product_function.sh
 
-if type pre_materialize_function | grep -i function > /dev/null; then
+if [[ "$(type -t pre_materialize_function)" == "function" ]]; then
     pre_materialize_function
 fi
 materialize_function
-if type post_materialize_function | grep -i function > /dev/null; then
+if [[ "$(type -t post_materialize_function)" == "function" ]]; then
     post_materialize_function
 fi
 
@@ -26,11 +26,11 @@ for extra_repo in "dawn-test.git"; do
     fi
 done
 
-if type pre_build_function | grep -i function > /dev/null; then
+if [[ "$(type -t pre_build_function)" == "function" ]]; then
     pre_build_function
 fi
 build_function
-if type post_build_function | grep -i function > /dev/null; then
+if [[ "$(type -t post_build_function)" == "function" ]]; then
     post_build_function
 fi
 
