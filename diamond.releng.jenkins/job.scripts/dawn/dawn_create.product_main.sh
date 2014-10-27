@@ -8,6 +8,9 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/create_p2_site_product_function.sh
 
 materialize_function
+if type post_materialize_function | grep -i function > /dev/null; then
+    post_materialize_function
+fi
 
 record_head_commits_function > ${WORKSPACE}/head_commits.txt
 # also record the current head in repos that might not have been materialized, but we still need to branch when making a release
@@ -21,6 +24,10 @@ for extra_repo in "dawn-test.git"; do
 done
 
 build_function
+if type post_build_function | grep -i function > /dev/null; then
+    post_build_function
+fi
+
 create_p2_site_product_function
 
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/dawn/dawn_create.product_save-product-version-number.sh
