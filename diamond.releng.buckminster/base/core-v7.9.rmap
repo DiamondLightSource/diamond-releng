@@ -157,6 +157,9 @@
   <rm:propertyElement key="diamond.p2.url">
     <bc:constant value="http://${diamond.p2.host.port}"/>
   </rm:propertyElement>
+  <rm:propertyElement key="eclipse.orbit.p2.url">
+    <bc:constant value="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository"/>
+  </rm:propertyElement>
   <!--                                                                      -->
   <!--######################################################################-->
   <!--# Source Repository URLs (properties may be overridden)              #-->
@@ -2193,7 +2196,8 @@
   <rm:locator pattern="^org\.eclipse\.gemini\.blueprint\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^net\.sf\.cglib$" searchPathRef="tp_bioclipse"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^org\.mockito(\..+)?$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies --> 
+  <rm:locator pattern="^org\.mockito\..+$" searchPathRef="GDA_tp_bundles"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javassist$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^Java7RefreshProvider$" searchPathRef="GDA_tp_bundles"/>
@@ -3910,6 +3914,13 @@
   <!--
        Target Platform (Eclipse)
   -->
+  <rm:searchPath name="eclipse_orbit">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${eclipse.orbit.p2.url}/"/>
+    </rm:provider>
+  </rm:searchPath>
   <rm:searchPath name="eclipse_emf_emf">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
