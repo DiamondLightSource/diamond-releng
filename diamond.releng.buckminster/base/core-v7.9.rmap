@@ -1998,6 +1998,26 @@
   <rm:propertyElement key="dawb.p2.download.url">
     <bc:constant value="${dawb.p2.download.url.${dawb.p2.download.location}}"/>
   </rm:propertyElement>
+  <!--
+       Target Platform (Logback) URL
+       Note: the only component that should be materialized from the Logback p2 site is Beagle
+  -->
+  <rm:propertyElement key="logback.p2.download.location">
+    <bc:replace>
+      <bc:constant value="${download.location.common}"/>
+      <bc:match pattern="^ *diamond *$" replacement="diamond"/>
+      <bc:match pattern="^(?! *diamond *$).*$" replacement="opengda"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="logback.p2.download.url.diamond">
+    <bc:constant value="${diamond.p2.url}/mirrors/logback/p2"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="logback.p2.download.url.opengda">
+    <bc:constant value="http://www.opengda.org/mirrors/logback/p2"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="logback.p2.download.url">
+    <bc:constant value="${logback.p2.download.url.${logback.p2.download.location}}"/>
+  </rm:propertyElement>
   <!--                                                                      -->
   <!--######################################################################-->
   <!--# Locators                                                           #-->
@@ -2186,6 +2206,11 @@
        Target Platform components (PyDev)
   -->
   <rm:locator pattern="^(com|org)\.python\.pydev(\..+)?" searchPathRef="tp_pydev"/>
+  <!--
+       Logback components
+       Note: the only component that should be materialized from the Logback p2 site is Beagle
+  -->
+  <rm:locator pattern="^ch\.qos\.logback\.beagle$" searchPathRef="logback_p2"/>
   <!--
        DAWB components
   -->
@@ -4012,6 +4037,16 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${dawb.p2.download.url}"/>
+    </rm:provider>
+  </rm:searchPath>
+  <!--
+       Logback
+  -->
+  <rm:searchPath name="logback_p2">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${logback.p2.download.url}"/>
     </rm:provider>
   </rm:searchPath>
 </rm:rmap>
