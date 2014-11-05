@@ -2145,6 +2145,7 @@
   <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api)$" searchPathRef="GDA_tp_logging"/>
   <rm:locator pattern="^com\.google\.(gson|guava)$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
+  <rm:locator pattern="^org\.apache\.camel\..+$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.servicemix\..+$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
