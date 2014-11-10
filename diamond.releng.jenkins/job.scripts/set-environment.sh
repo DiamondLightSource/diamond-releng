@@ -202,7 +202,7 @@ set_environment_step () {
     ###
 
     echo -e "\nRunning with java=$(which java 2> /dev/null) $""{JAVA_HOME}=${JAVA_HOME}";java -version
-    echo -e "Running with python=$(which python 2> /dev/null)";python -V;echo "$""{PYTHONHOME}=${PYTHONHOME}";echo "$""{PYTHONPATH}=${PYTHONPATH}"
+    echo -e "Running with python=$(which python 2> /dev/null)";python -V;printenv | grep PYTHON | sort
     echo -e "Running with git=$(which git 2> /dev/null)";git --version
     echo -e "Running with buckminster=$(which buckminster 2> /dev/null)\n"
 
