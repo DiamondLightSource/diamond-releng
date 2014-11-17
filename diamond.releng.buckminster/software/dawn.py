@@ -74,6 +74,7 @@ COMPONENT_CATEGORIES = (
     ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218')),
     ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217')),
     ('dawn', 'master', 'dawn-master.cquery', 'v2.7', ('master', 'trunk')),
+    ('dawn', '1.7.1', 'dawn-v1.7.1.cquery', 'v2.7', ('v1.7.1', '1.7.1', '171')),
     ('dawn', '1.7', 'dawn-v1.7.cquery', 'v2.7', ('v1.7', '1.7')),
     ('dawn', '1.6', 'dawn-v1.6.cquery', 'v2.6', ('v1.6', '1.6')),
     ('dawn', '1.5', 'dawn-v1.5.cquery', 'v2.6', ('v1.5', '1.5')),
