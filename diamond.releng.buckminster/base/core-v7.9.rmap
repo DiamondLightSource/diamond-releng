@@ -1395,7 +1395,33 @@
   <rm:propertyElement key="gda.xas.core.git.url">
     <bc:constant value="${gda.xas.core.${gda.xas.core.git.location.translated}.url}/gda-xas-core.git"/>
   </rm:propertyElement>
-  <!-- ** gphl- *** (one of two Global Phasing repositories, gphl-astra and sdcp-public) -->
+  <!-- ** gphl- *** (there are two Global Phasing repositories, gphl-abstract-beamline and gphl-astra) -->
+  <rm:propertyElement key="gphl.abstract.beamline.git.location">
+    <bc:constant value="${githubgphl.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gphl.abstract.beamline.git.location.translated">
+    <bc:replace>
+      <bc:constant value="${gphl.abstract.beamline.git.location}"/>
+      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^public$" replacement="github"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="gphl.abstract.beamline.dascgit.url">
+    <bc:constant value="${diamond.dascgit.url}/gphl"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gphl.abstract.beamline.github.organization">
+    <bc:constant value="githubgphl"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gphl.abstract.beamline.github.authentication">
+    <bc:constant value="${${gphl.abstract.beamline.github.organization}.github.authentication}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gphl.abstract.beamline.github.url">
+    <bc:constant value="${github.${gphl.abstract.beamline.github.authentication}.url}${gphl.abstract.beamline.github.organization}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gphl.abstract.beamline.git.url">
+    <bc:constant value="${gphl.abstract.beamline.${gphl.abstract.beamline.git.location.translated}.url}/gphl-abstract-beamline.git"/>
+  </rm:propertyElement>
+  <!-- -->
   <rm:propertyElement key="gphl.astra.git.location">
     <bc:constant value="${githubgphl.git.location}"/>
   </rm:propertyElement>
@@ -1769,32 +1795,6 @@
   <rm:propertyElement key="sda.git.url">
     <bc:constant value="${sda.${sda.git.location.translated}.url}/sda.git"/>
   </rm:propertyElement>
-  <!-- ** sdcp- *** (one of two Global Phasing repositories, gphl-astra and sdcp-public) -->
-  <rm:propertyElement key="sdcp.public.git.location">
-    <bc:constant value="${githubgphl.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="sdcp.public.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${sdcp.public.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="sdcp.public.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gphl"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="sdcp.public.github.organization">
-    <bc:constant value="githubgphl"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="sdcp.public.github.authentication">
-    <bc:constant value="${${sdcp.public.github.organization}.github.authentication}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="sdcp.public.github.url">
-    <bc:constant value="${github.${sdcp.public.github.authentication}.url}${sdcp.public.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="sdcp.public.git.url">
-    <bc:constant value="${sdcp.public.${sdcp.public.git.location.translated}.url}/sdcp-public.git"/>
-  </rm:propertyElement>
   <!-- ** swt-xy-graph *** -->
   <rm:propertyElement key="swt.xy.graph.github.organization">
     <bc:constant value="DawnScience"/>
@@ -2102,6 +2102,7 @@
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
   <rm:locator pattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(xmap|xspress2|xspress3)(\..+)?|exafs\.datawriter(\..+)?|server\.exafs(\..+)?)$" searchPathRef="gda_xas_core"/>
   <!-- ** gphl *** -->
+  <rm:locator pattern="^com\.globalphasing\.sdcp(\..+)?$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
   <!-- ** py4j *** -->
   <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j"/>
@@ -2121,8 +2122,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
   <!-- ** sda *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|sda(\.bioclipse\.jmol\.feature)?)$" searchPathRef="sda"/>
-  <!-- ** sdcp *** -->
-  <rm:locator pattern="^com\.globalphasing\.sdcp(\..+)?$" searchPathRef="sdcp_public"/>
   <!-- ** swt-xy-graph *** -->
   <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="swt_xy_graph" failOnError="false"/>
   <!-- ** training *** -->
@@ -3394,6 +3393,22 @@
   <!--
        gphl- repository
   -->
+  <rm:searchPath name="gphl_abstract_beamline">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(!(disallow.repo.gphl-abstract-beamline=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gphl.abstract.beamline.git.url}"/>
+      <rm:uri format="{0}/gphl-abstract-beamline.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(disallow.repo.gphl-abstract-beamline=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from gphl-abstract-beamline.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
   <rm:searchPath name="gphl_astra">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(!(disallow.repo.gphl-astra=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
@@ -3635,24 +3650,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.sda=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from sda.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       sdcp- repository
-  -->
-  <rm:searchPath name="sdcp_public">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(!(disallow.repo.sdcp-public=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${sdcp.public.git.url}"/>
-      <rm:uri format="{0}/sdcp-public.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(disallow.repo.sdcp-public=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from sdcp-public.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
