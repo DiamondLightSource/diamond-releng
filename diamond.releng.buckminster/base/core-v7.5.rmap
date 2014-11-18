@@ -202,7 +202,7 @@
     <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
   <rm:propertyElement key="xas.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
-    <bc:constant value="${gda.git.location}"/>
+    <bc:constant value="dascgerrit"/>
   </rm:propertyElement>
   <rm:propertyElement key="githubgphl.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="diamond"/>  <!-- always materialize from DLS unless specifically overridden -->

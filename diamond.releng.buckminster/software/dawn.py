@@ -124,8 +124,11 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent chec
     )
 
 GERRIT_REPOSITORIES = (
-    # repositories whose origin can be switched to Gerrit when the gerrit-switch is run 
-    'training-gerrit-1.git',)
+    # repositories whose origin can be switched to Gerrit when the gerrit-switch is run
+    'gda-dls-beamlines-xas.git',
+    'gda-xas-core.git',
+    'training-gerrit-1.git',
+    )
 GERRIT_SCHEME = 'ssh'
 GERRIT_NETLOC = 'gerrit.diamond.ac.uk:29418'
 

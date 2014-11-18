@@ -1017,7 +1017,7 @@
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="gda.dls.beamlines.xas.git.location">
-    <bc:constant value="${gda.git.location}"/>
+    <bc:constant value="dascgerrit"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.dls.beamlines.xas.git.location.translated">
     <bc:replace>

@@ -99,7 +99,7 @@
     </bc:replace>
   </rm:propertyElement>
   <rm:propertyElement key="diamond.dascgerrit.http.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
-    <bc:constant value="gerrit.diamond.ac.uk:8081"/>
+    <bc:constant value="gerrit.diamond.ac.uk:8080"/>
   </rm:propertyElement>
   <rm:propertyElement key="diamond.dascgerrit.ssh.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
     <bc:constant value="gerrit.diamond.ac.uk:29418"/>
@@ -200,6 +200,9 @@
   </rm:propertyElement>
   <rm:propertyElement key="gda.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="${download.location.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="xas.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
+    <bc:constant value="dascgerrit"/>
   </rm:propertyElement>
   <rm:propertyElement key="githubgphl.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="diamond"/>  <!-- always materialize from DLS unless specifically overridden -->
@@ -972,7 +975,7 @@
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="gda.dls.beamlines.xas.git.location">
-    <bc:constant value="${gda.git.location}"/>
+    <bc:constant value="${xas.git.location}"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.dls.beamlines.xas.git.location.translated">
     <bc:replace>
@@ -983,6 +986,9 @@
   </rm:propertyElement>
   <rm:propertyElement key="gda.dls.beamlines.xas.dascgit.url">
     <bc:constant value="${diamond.dascgit.url}/gda"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.dls.beamlines.xas.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.dls.beamlines.xas.github.organization">
     <bc:constant value="openGDA"/>
@@ -1284,7 +1290,7 @@
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="gda.xas.core.git.location">
-    <bc:constant value="${gda.git.location}"/>
+    <bc:constant value="${xas.git.location}"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.xas.core.git.location.translated">
     <bc:replace>
@@ -1295,6 +1301,9 @@
   </rm:propertyElement>
   <rm:propertyElement key="gda.xas.core.dascgit.url">
     <bc:constant value="${diamond.dascgit.url}/gda"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.xas.core.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.xas.core.github.organization">
     <bc:constant value="openGDA"/>
