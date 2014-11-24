@@ -2175,9 +2175,7 @@
   <rm:locator pattern="^com\.google\.(gson|guava)$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.camel\..+$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.apache\.servicemix\..+$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^org\.apache\.(camel|httpcomponents|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <rm:locator pattern="^org\.eclipse\.nebula\..+$" searchPathRef="eclipse_nebula"/>
   <!-- -->
