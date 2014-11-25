@@ -257,6 +257,10 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-peema.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-peema" value="true"/>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ptychography(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ptychography.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.scisoft-ptychography" value="true"/>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.spectroscopy(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-spectroscopy.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-spectroscopy" value="true"/>

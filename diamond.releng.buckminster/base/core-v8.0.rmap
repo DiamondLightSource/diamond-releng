@@ -1692,6 +1692,32 @@
     <bc:constant value="${scisoft.peema.${scisoft.peema.git.location.translated}.url}/scisoft-peema.git"/>
   </rm:propertyElement>
   <!-- -->
+  <rm:propertyElement key="scisoft.ptychography.git.location">
+    <bc:constant value="${scisoft.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="scisoft.ptychography.git.location.translated">
+    <bc:replace>
+      <bc:constant value="${scisoft.ptychography.git.location}"/>
+      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^public$" replacement="github"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="scisoft.ptychography.dascgit.url">
+    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="scisoft.ptychography.github.organization">
+    <bc:constant value="DawnScience"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="scisoft.ptychography.github.authentication">
+    <bc:constant value="${DawnScience.github.authentication}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="scisoft.ptychography.github.url">
+    <bc:constant value="${github.${scisoft.ptychography.github.authentication}.url}${scisoft.ptychography.github.organization}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="scisoft.ptychography.git.url">
+    <bc:constant value="${scisoft.ptychography.${scisoft.ptychography.git.location.translated}.url}/scisoft-ptychography.git"/>
+  </rm:propertyElement>
+  <!-- -->
   <rm:propertyElement key="scisoft.spectroscopy.git.location">
     <bc:constant value="${scisoft.git.location}"/>
   </rm:propertyElement>
@@ -2117,6 +2143,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" searchPathRef="scisoft_mx"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" searchPathRef="scisoft_ncd"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" searchPathRef="scisoft_peema"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ptychography(\..+)?$" searchPathRef="scisoft_ptychography"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.spectroscopy(\..+)?$" searchPathRef="scisoft_spectroscopy"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(exporter|meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
@@ -3582,6 +3609,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-peema=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from scisoft-peema.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="scisoft_ptychography">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.scisoft-ptychography=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${scisoft.ptychography.git.url}"/>
+      <rm:uri format="{0}/scisoft-ptychography.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-ptychography=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from scisoft-ptychography.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
