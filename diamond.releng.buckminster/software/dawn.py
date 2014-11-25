@@ -417,7 +417,7 @@ class DawnManager(object):
         # open the URL
         try:
             resp = urllib2.urlopen(source, timeout=30)
-        except (urllib2.URLError, urllib2.HTTPError) as e:
+        except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
