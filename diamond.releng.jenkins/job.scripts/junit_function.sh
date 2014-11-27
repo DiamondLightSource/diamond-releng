@@ -64,7 +64,7 @@ junit_function () {
     echo "$`date +"%a %d/%b/%Y %H:%M:%S"` (start of job) MARK_BUILD_AS_UNSTABLE (this text will be cleared if no problems found)" > ${WORKSPACE}/post_build_status_marker.txt
 
     # Run JUnit tests
-    ${dawn_py} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} ${GDALargeTestFilesLocation_param:-} all-tests
+    ${dawn_py} -w ${materialize_workspace_path} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} ${GDALargeTestFilesLocation_param:-} all-tests
 
     # If we get this far, clear the signal that tells Jenkins that this build is to be marked UNSTABLE
     echo "`date +"%a %d/%b/%Y %H:%M:%S"` (after build and tests) no need for Jenkins Text-finder plugin to override the build status" > ${WORKSPACE}/post_build_status_marker.txt

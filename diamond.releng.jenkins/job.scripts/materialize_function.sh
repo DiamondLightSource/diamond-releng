@@ -121,9 +121,9 @@ materialize_function () {
         # delete any existing workspace, and initialize a new workspace
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas
         if [[ -z "${materialize_cquery}" ]]; then
-            ${dawn_py} ${log_level_option} ${workspace_delete_option} --workspace ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
+            ${dawn_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
         else
-            ${dawn_py} ${log_level_option} ${workspace_delete_option} --workspace ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
+            ${dawn_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
         fi
 
     elif [[ "${materialize_type}" == "update" ]]; then
