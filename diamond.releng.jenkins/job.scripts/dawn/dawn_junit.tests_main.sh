@@ -8,7 +8,10 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/junit_function.sh
 
-junit_tests_clean_function
+# no need to clean if we are going to do a fresh materialize
+if [[ "${materialize_type:-unknown}" == *fresh* ]]; then
+    junit_tests_clean_function
+fi
 
 if [[ "$(type -t pre_materialize_function)" == "function" ]]; then
     pre_materialize_function
