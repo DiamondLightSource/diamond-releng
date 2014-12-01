@@ -2109,7 +2109,7 @@
   <rm:locator pattern="^uk\.ac\.gda\..+\.pixium$" searchPathRef="gda_devices_pixium"/>
   <rm:locator pattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" searchPathRef="gda_devices_prosilica"/>
   <rm:locator pattern="^((all-)?dls-config|uk\.ac\.gda\.(beamline\.all-dls|diamond|dls)(\..+)?)$" searchPathRef="gda_diamond"/>
-  <rm:locator pattern="^(i09-config|uk\.ac\.gda\.(beamline\.i09(\..+)?|sisa\.client))$" searchPathRef="gda_dls_beamlines_i09"/>
+  <rm:locator pattern="^(i09(-1)?-config|uk\.ac\.gda\.(beamline\.i09(-1)?(\..+)?|sisa\.client))$" searchPathRef="gda_dls_beamlines_i09"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
   <rm:locator pattern="^(i12-config|uk\.ac\.gda\.(beamline\.i12(\..+)?|edxd\..+|epics\.dxp\.client))$" searchPathRef="gda_dls_beamlines_i12"/>
   <rm:locator pattern="^(i13(i|j)-config|uk\.ac\.gda\.beamline\.i13(i|j)(\..+)?)$" searchPathRef="gda_dls_beamlines_i13x"/>
