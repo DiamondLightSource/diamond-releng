@@ -214,8 +214,14 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(xmap|xspress2|xspress3)(\..+)?|exafs\.datawriter(\..+)?|server\.exafs(\..+)?)$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-xas-core.git repository branch</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^com\.globalphasing\.sdcp\.abstract_beamline$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-abstract-beamline.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-astra.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-sdcp-common.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^net\.sf\.py4j(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">py4j.git repository branch</cq:documentation>
@@ -266,9 +272,6 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|sda(\.bioclipse\.jmol\.feature)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">sda.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.sda" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^com\.globalphasing\.sdcp(\..+)?$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-abstract-beamline.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">swt-xy-graph.git repository branch</cq:documentation>

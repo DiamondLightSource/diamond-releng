@@ -231,9 +231,17 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-xas-core.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-xas-core" value="true"/>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^com\.globalphasing\.sdcp\.abstract_beamline$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-abstract-beamline.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.gphl-abstract-beamline" value="true"/>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-astra.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gphl-astra" value="true"/>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-sdcp-common.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.gphl-sdcp-common" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^net\.sf\.py4j(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">py4j.git repository branch</cq:documentation>
@@ -281,10 +289,6 @@ Circular component dependency detected. Chain is uk.ac.diamond.dawn.site -&gt; u
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|sda(\.bioclipse\.jmol\.feature)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">sda.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^com\.globalphasing\.sdcp(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-abstract-beamline.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.gphl-abstract-beamline" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">swt-xy-graph.git repository branch</cq:documentation>
