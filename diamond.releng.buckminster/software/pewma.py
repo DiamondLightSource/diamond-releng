@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 ###
-### platform-independent script to manage development of Dawn (GDA, SciSoft, IDA)
+### Python Eclipse Workspace MAnager
+### platform-independent script to manage development of Eclipse-based products such as GDA and Dawn
 ###
 
 import ConfigParser
@@ -139,7 +140,7 @@ class GitConfigParser(ConfigParser.SafeConfigParser):
             text = config_file.read()
         self.readfp(StringIO.StringIO(text.replace('\t','')), filename)
 
-class DawnException(Exception):
+class PewmaException(Exception):
     """ Exception class to handle case when the setup does not support the requested operation. """
     def __init__(self, value):
         self.value = value
@@ -150,11 +151,11 @@ class DawnException(Exception):
 #  Main class                                                                 #
 ###############################################################################
 
-class DawnManager(object):
+class PewmaManager(object):
 
     def __init__(self):
         # Set up logger
-        self.logger = logging.getLogger("Dawn")
+        self.logger = logging.getLogger("Pewma")
         self.logger.setLevel(1)
 
         formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
@@ -309,7 +310,7 @@ class DawnManager(object):
                                help='Log the actions to be done, but don\'t actually do them')
         group.add_option('--assume-build', dest='assume_build', action='store_true', default=False, help='Skip explicit build when running "site.p2" or "product" actions')
         group.add_option('-s', '--script-file', dest='script_file', type='string', metavar='<path>',
-                               default='dawn-script.txt',
+                               default='pewma-script.txt',
                                help='Script file, relative to workspace if not absolute (default: %default)')
         group.add_option('-q', '--quiet', dest='log_level', action='store_const', const='WARNING', help='Shortcut for --log-level=WARNING')
         group.add_option('--log-level', dest='log_level', type='choice', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], metavar='<level>',
@@ -329,12 +330,12 @@ class DawnManager(object):
         if os.path.isdir(self.workspace_loc):
             metadata_exists = os.path.exists( os.path.join(self.workspace_loc, '.metadata'))
             if metadata_exists and not os.path.isdir(os.path.join(self.workspace_loc, '.metadata', '.plugins')):
-                raise DawnException('Workspace already exists but is corrupt (invalid .metadata/), please delete: "%s"' % (self.workspace_loc,))
+                raise PewmaException('Workspace already exists but is corrupt (invalid .metadata/), please delete: "%s"' % (self.workspace_loc,))
             tp_exists = os.path.exists( os.path.join(self.workspace_loc, 'tp'))
             if tp_exists and not os.path.isfile(os.path.join(self.workspace_loc, 'tp', '.project')):
-                raise DawnException('Workspace already exists but is corrupt (invalid tp/), please delete: "%s"' % (self.workspace_loc,))
+                raise PewmaException('Workspace already exists but is corrupt (invalid tp/), please delete: "%s"' % (self.workspace_loc,))
             if metadata_exists != tp_exists:
-                raise DawnException('Workspace already exists but is corrupt (only one of .metadata/ and tp/ exist), please delete: "%s"' % (self.workspace_loc,))
+                raise PewmaException('Workspace already exists but is corrupt (only one of .metadata/ and tp/ exist), please delete: "%s"' % (self.workspace_loc,))
             if metadata_exists and tp_exists:
                 self.logger.info('Workspace already exists "%s"' % (self.workspace_loc,))
                 expand_template_required = False
@@ -422,7 +423,7 @@ class DawnManager(object):
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print text
-            raise DawnException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
+            raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (small enough to do in one chunk)
         self.logger.info('Downloading %s bytes from "%s" to "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl(), destination))
@@ -433,7 +434,7 @@ class DawnManager(object):
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print text
-            raise DawnException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
+            raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
                 resp.close()
@@ -526,14 +527,14 @@ class DawnManager(object):
             return
         if self.all_matching_sites:
             if site_name_part:
-                raise DawnException('ERROR: More than 1 .site project matches substring "%s" %s, try a longer substring' % (site_name_part, tuple(self.all_matching_sites)))
+                raise PewmaException('ERROR: More than 1 .site project matches substring "%s" %s, try a longer substring' % (site_name_part, tuple(self.all_matching_sites)))
             else:
-                raise DawnException('ERROR: More than 1 .site project available, you must specify which is required, from: %s' % (tuple(self.all_matching_sites),))
+                raise PewmaException('ERROR: More than 1 .site project available, you must specify which is required, from: %s' % (tuple(self.all_matching_sites),))
         elif must_exist:
             if site_name_part:
-                raise DawnException('ERROR: No .site project matching substring "%s" found in %s' % (site_name_part, self.all_matching_sites))
+                raise PewmaException('ERROR: No .site project matching substring "%s" found in %s' % (site_name_part, self.all_matching_sites))
             else:
-                raise DawnException('ERROR: No .site project in workspace')
+                raise PewmaException('ERROR: No .site project in workspace')
 
 
     def validate_plugin_patterns(self):
@@ -541,10 +542,10 @@ class DawnManager(object):
             if glob_patterns:
                 for pattern in glob_patterns.split(","):
                     if not pattern:
-                        raise DawnException("ERROR: --include or --exclude contains an empty plugin pattern")
+                        raise PewmaException("ERROR: --include or --exclude contains an empty plugin pattern")
                     if pattern.startswith("-") or ("=" in pattern):
                         # catch a possible error in command line construction
-                        raise DawnException("ERROR: --include or --exclude contains an invalid plugin pattern \"%s\"" % (p,))
+                        raise PewmaException("ERROR: --include or --exclude contains an invalid plugin pattern \"%s\"" % (p,))
 
 
     def set_all_plugins_with_releng_ant(self):
@@ -605,7 +606,7 @@ class DawnManager(object):
             selected_plugins = sorted(set(included_plugins) - set(excluded_plugins))
 
             if not selected_plugins:
-                raise DawnException("ERROR: no compiled plugins matching --include=%s --exclude=%s found" % (self.options.plugin_includes, self.options.plugin_excludes))
+                raise PewmaException("ERROR: no compiled plugins matching --include=%s --exclude=%s found" % (self.options.plugin_includes, self.options.plugin_excludes))
             return "-Dplugin_list=\"%s\"" % '|'.join([self.all_plugins_with_releng_ant[pname] for pname in selected_plugins])
 
         return ""
@@ -620,7 +621,7 @@ class DawnManager(object):
             if not os.path.isabs(buckminster_properties_path):
                 buckminster_properties_path = os.path.abspath(os.path.join(self.available_sites[site_name], self.options.buckminster_properties_file))
             if not os.path.isfile(buckminster_properties_path):
-                raise DawnException('ERROR: Properties file "%s" does not exist' % (buckminster_properties_path,))
+                raise PewmaException('ERROR: Properties file "%s" does not exist' % (buckminster_properties_path,))
             self.buckminster_properties_path = buckminster_properties_path
         else:
             buckminster_properties_paths = [os.path.abspath(os.path.join(self.available_sites[site_name], buckminster_properties_file))
@@ -630,7 +631,7 @@ class DawnManager(object):
                         self.buckminster_properties_path = buckminster_properties_path
                         break
             else:
-                raise DawnException('ERROR: Neither properties file "%s" exists' % (buckminster_properties_paths,))
+                raise PewmaException('ERROR: Neither properties file "%s" exists' % (buckminster_properties_paths,))
 
 ###############################################################################
 #  Actions                                                                    #
@@ -641,7 +642,7 @@ class DawnManager(object):
         """
 
         if len(self.arguments) > 2:
-            raise DawnException('ERROR: setup command has too many arguments')
+            raise PewmaException('ERROR: setup command has too many arguments')
 
         (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments)
 
@@ -664,9 +665,9 @@ class DawnManager(object):
         """
 
         if len(self.arguments) < 1:
-            raise DawnException('ERROR: materialize command has too few arguments')
+            raise PewmaException('ERROR: materialize command has too few arguments')
         if len(self.arguments) > 3:
-            raise DawnException('ERROR: materialize command has too many arguments')
+            raise PewmaException('ERROR: materialize command has too many arguments')
 
         # translate an abbreviated component name to the real component name
         component_to_use = self.arguments[0]
@@ -685,10 +686,10 @@ class DawnManager(object):
             category_to_use = category_implied
         elif category_implied and (category_implied != category_to_use):
             # if a component abbreviation was provided, it implies a category. If a category was also specified, it must match the implied category 
-            raise DawnException('ERROR: component "%s" is not consistent with category "%s"' % (component_to_use, category_to_use,))
+            raise PewmaException('ERROR: component "%s" is not consistent with category "%s"' % (component_to_use, category_to_use,))
 
         if not (category_to_use or cquery_to_use):
-            raise DawnException('ERROR: the category for component "%s" is missing (can be one of %s)' % (component_to_use, '/'.join(CATEGORIES_AVAILABLE)))
+            raise PewmaException('ERROR: the category for component "%s" is missing (can be one of %s)' % (component_to_use, '/'.join(CATEGORIES_AVAILABLE)))
 
         if category_to_use and version_to_use:
             cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
@@ -767,7 +768,7 @@ class DawnManager(object):
             if category_or_cquery.endswith('.cquery'):
                 cquery_to_use = category_or_cquery
                 if len(arguments_part) > 1:
-                    raise DawnException('ERROR: No other options can follow the CQuery')
+                    raise PewmaException('ERROR: No other options can follow the CQuery')
                 for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
                     template_to_use = t
                     break
@@ -780,9 +781,9 @@ class DawnManager(object):
                             version_to_use = v
                             break
                     else:
-                        raise DawnException('ERROR: category "%s" is not consistent with version "%s"' % (category_to_use, version))
+                        raise PewmaException('ERROR: category "%s" is not consistent with version "%s"' % (category_to_use, version))
             else:
-                raise DawnException('ERROR: "%s" is neither a category nor a CQuery' % (category_or_cquery,))
+                raise PewmaException('ERROR: "%s" is neither a category nor a CQuery' % (category_or_cquery,))
 
         return (category_to_use, version_to_use, cquery_to_use, template_to_use)
 
@@ -819,7 +820,7 @@ class DawnManager(object):
         git_directories = []
         for root, dirs, files in os.walk(self.workspace_git_loc):
             if os.path.basename(root) == '.git':
-                raise DawnException('ERROR: _get_git_directories attempted to recurse into a .git directory: %s' % (root,))
+                raise PewmaException('ERROR: _get_git_directories attempted to recurse into a .git directory: %s' % (root,))
             if os.path.basename(root).startswith('.'):
                 # don't recurse into hidden directories
                 self.logger.debug('%sSkipping: %s' % (self.log_prefix, root))
@@ -839,7 +840,7 @@ class DawnManager(object):
         """
 
         if self.arguments:
-            raise DawnException('ERROR: gerrit_switch command does not take any arguments')
+            raise PewmaException('ERROR: gerrit_switch command does not take any arguments')
 
         git_directories = self._get_git_directories()
 
@@ -917,7 +918,7 @@ class DawnManager(object):
         """
 
         if self.arguments:
-            raise DawnException('ERROR: gerrit_config command does not take any arguments')
+            raise PewmaException('ERROR: gerrit_config command does not take any arguments')
 
         git_directories = self._get_git_directories()
 
@@ -993,7 +994,7 @@ class DawnManager(object):
         """
 
         if len(self.arguments) < 1:
-            raise DawnException('ERROR: git command has too few arguments')
+            raise PewmaException('ERROR: git command has too few arguments')
 
         git_directories = self._get_git_directories()
 
@@ -1034,15 +1035,15 @@ class DawnManager(object):
             sys.stderr.flush()
             try:
                 # set environment variables to pass to git command extensions 
-                os.environ['DAWN_PY_WORKSPACE_GIT_LOC'] = self.workspace_git_loc
-                os.environ['DAWN_PY_COMMAND'] = str(command)
-                os.environ['DAWN_PY_DIRECTORY'] = str(directory)
+                os.environ['PEWMA_PY_WORKSPACE_GIT_LOC'] = self.workspace_git_loc
+                os.environ['PEWMA_PY_COMMAND'] = str(command)
+                os.environ['PEWMA_PY_DIRECTORY'] = str(directory)
                 process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, cwd=directory)
                 out,err = process.communicate()
                 out,err = out.rstrip(),err.rstrip()
                 retcode = process.returncode
             except OSError:
-                raise DawnException('ERROR: "%s" failed in %s: %s' % (command, directory, sys.exc_value,))
+                raise PewmaException('ERROR: "%s" failed in %s: %s' % (command, directory, sys.exc_value,))
 
             if self.options.repo_prefix:
                 if len(out)!=0 or len(err)!=0:
@@ -1078,7 +1079,7 @@ class DawnManager(object):
         """
 
         if len(self.arguments) > 1:
-            raise DawnException('ERROR: bmclean command has too many arguments')
+            raise PewmaException('ERROR: bmclean command has too many arguments')
 
         self.set_site_name(self.arguments and self.arguments[0])
         self.set_buckminster_properties_path(self.site_name)
@@ -1135,20 +1136,20 @@ class DawnManager(object):
             return self.run_buckminster_in_subprocess(('listtargetdefinitions',))
 
         if len(self.arguments) > 1:
-            raise DawnException('ERROR: target command has too many arguments')
+            raise PewmaException('ERROR: target command has too many arguments')
 
         target = self.arguments[0]
         if not target.endswith( '.target' ):
-            raise DawnException('ERROR: target "%s" is not a valid target name (it must end with .target)' % (target,))
+            raise PewmaException('ERROR: target "%s" is not a valid target name (it must end with .target)' % (target,))
 
         if os.path.isabs(target):
             path = os.path.realpath(os.path.abspath(target))
             if not path.startswith( self.workspace_loc + os.sep ):
-                raise DawnException('ERROR: target "%s" is not within the workspace ("%s")' % (path, self.workspace_loc))
+                raise PewmaException('ERROR: target "%s" is not within the workspace ("%s")' % (path, self.workspace_loc))
         else:
             path = os.path.realpath(os.path.abspath(os.path.join(self.workspace_loc, target)))
         if not os.path.isfile(path):
-            raise DawnException('ERROR: target file "%s" ("%s") does not exist' % (target, path))
+            raise PewmaException('ERROR: target file "%s" ("%s") does not exist' % (target, path))
 
         return self.run_buckminster_in_subprocess(('importtargetdefinition', '--active', path[len(self.workspace_loc)+1:]))  # +1 for os.sep
 
@@ -1169,7 +1170,7 @@ class DawnManager(object):
         """
 
         if len(self.arguments) > 1:
-            raise DawnException('ERROR: site.p2%s command has too many arguments' % ('','.zip')[action_zip])
+            raise PewmaException('ERROR: site.p2%s command has too many arguments' % ('','.zip')[action_zip])
 
         self.set_site_name(self.arguments and self.arguments[0])
         self.set_buckminster_properties_path(self.site_name)
@@ -1222,7 +1223,7 @@ class DawnManager(object):
                             platforms.add(p)
                             break
                     else:
-                        raise DawnException('ERROR: "%s" was not recognised as either a site (in %s<_git>), or as a platform name' % (arg, self.workspace_loc))
+                        raise PewmaException('ERROR: "%s" was not recognised as either a site (in %s<_git>), or as a platform name' % (arg, self.workspace_loc))
 
         if not hasattr(self, 'site_name') or not self.site_name:
             self.set_site_name(None)
@@ -1250,7 +1251,7 @@ class DawnManager(object):
                     break
 
         if action_zip and not zip_actions_available:
-            raise DawnException('ERROR: product.zip is not available for "%s"' % (self.site_name,))
+            raise PewmaException('ERROR: product.zip is not available for "%s"' % (self.site_name,))
 
         self.set_buckminster_properties_path(self.site_name)
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
@@ -1400,7 +1401,7 @@ class DawnManager(object):
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
                 retcode = process.returncode
             except OSError:
-                raise DawnException('ERROR: Buckminster failed: %s' % (sys.exc_value,))
+                raise PewmaException('ERROR: Buckminster failed: %s' % (sys.exc_value,))
             sys.stdout.flush()
             sys.stderr.flush()
             if retcode:
@@ -1437,7 +1438,7 @@ class DawnManager(object):
                 else:
                     ant_command.extend(("-DGDALargeTestFilesLocation=%s%s" % (loc, os.sep),))
             else:
-                raise DawnException('ERROR: --GDALargeTestFilesLocation=%s does not exist. If any tests require this, they will fail.\n' % (loc,))
+                raise PewmaException('ERROR: --GDALargeTestFilesLocation=%s does not exist. If any tests require this, they will fail.\n' % (loc,))
         for keyval in self.options.system_property:
             ant_command.extend(("-D%s " % (keyval,),))
 
@@ -1456,7 +1457,7 @@ class DawnManager(object):
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
                 retcode = process.returncode
             except OSError:
-                raise DawnException('ERROR: Ant failed: %s' % (sys.exc_value,))
+                raise PewmaException('ERROR: Ant failed: %s' % (sys.exc_value,))
             sys.stdout.flush()
             sys.stderr.flush()
             if retcode:
@@ -1476,12 +1477,12 @@ class DawnManager(object):
             call_args[1:] == build options and parameters. """
 
         if (sys.version < "2.6") or (sys.version >= "3"):
-            raise DawnException("ERROR: This script must be run using Python 2.6 or higher.")
+            raise PewmaException("ERROR: This script must be run using Python 2.6 or higher.")
         try:
             if not len(call_args):
                 raise TypeError
         except TypeError:
-            raise DawnException("ERROR: DawnManager.main() called with incorrect argument.")
+            raise PewmaException("ERROR: PewmaManager.main() called with incorrect argument.")
 
         start_time = datetime.datetime.now()
 
@@ -1510,30 +1511,30 @@ class DawnManager(object):
         # validation of options and action
         self.validate_plugin_patterns()
         if self.options.delete and self.options.recreate:
-            raise DawnException('ERROR: you can specify at most one of --delete and --recreate')
+            raise PewmaException('ERROR: you can specify at most one of --delete and --recreate')
         if (self.action not in self.valid_actions.keys()):
-            raise DawnException('ERROR: action "%s" unrecognised (try --help)' % (self.action,))
+            raise PewmaException('ERROR: action "%s" unrecognised (try --help)' % (self.action,))
         if self.options.keyring:
             self.options.keyring = os.path.realpath(os.path.abspath(os.path.expanduser(self.options.keyring)))
             if ((os.path.sep + '.ssh' + os.path.sep) in self.options.keyring) or self.options.keyring.endswith(('id_rsa','id_rsa.pub')):
-                raise DawnException('ERROR: --keyring "%s" appears to be an ssh key. This is **WRONG**, it should be an Eclipse keyring.' % (self.options.keyring,))
+                raise PewmaException('ERROR: --keyring "%s" appears to be an ssh key. This is **WRONG**, it should be an Eclipse keyring.' % (self.options.keyring,))
             if not os.path.isfile(self.options.keyring):
                 # sometimes, for reasons unknown, we temporarily can't see the file
                 self.logger.warn('--keyring "%s" is not a valid filename, will look again in 2 seconds' % (self.options.keyring,))
                 time.sleep(2)
                 if not os.path.isfile(self.options.keyring):
-                    raise DawnException('ERROR: --keyring "%s" is not a valid filename' % (self.options.keyring,))
+                    raise PewmaException('ERROR: --keyring "%s" is not a valid filename' % (self.options.keyring,))
             if not os.access(self.options.keyring, os.R_OK):
                 # sometimes, for reasons unknown, we temporarily can't read the file
                 self.logger.warn('current user does not have read access to --keyring "%s", will look again in 2 seconds' % (self.options.keyring,))
                 time.sleep(2)
                 if not os.access(self.options.keyring, os.R_OK):
-                    raise DawnException('ERROR: current user does not have read access to --keyring "%s"' % (self.options.keyring,))
+                    raise PewmaException('ERROR: current user does not have read access to --keyring "%s"' % (self.options.keyring,))
         if self.options.delete and self.action not in ('setup', 'materialize'):
-            raise DawnException('ERROR: the --delete option cannot be specified with action "%s"' % (self.action))
+            raise PewmaException('ERROR: the --delete option cannot be specified with action "%s"' % (self.action))
         if self.options.system_property:
             if any((keyval.find('=') == -1) for keyval in self.options.system_property):
-                raise DawnException('ERROR: the -D option must specify a property and value as "key=value"')
+                raise PewmaException('ERROR: the -D option must specify a property and value as "key=value"')
         else:
             self.options.system_property = []  # use [] rather than None so we can iterate over it
         if not self.options.jvmargs:
@@ -1542,10 +1543,10 @@ class DawnManager(object):
         # validate workspace
         if self.options.workspace:
             if ' ' in self.options.workspace:
-                raise DawnException('ERROR: the "--workspace" directory must not contain blanks')
+                raise PewmaException('ERROR: the "--workspace" directory must not contain blanks')
             self.workspace_loc = os.path.realpath(os.path.abspath(os.path.expanduser(self.options.workspace)))
         elif not self.workspace_loc:
-            raise DawnException('ERROR: the "--workspace" option must be specified, unless you run this script from an existing workspace')
+            raise PewmaException('ERROR: the "--workspace" option must be specified, unless you run this script from an existing workspace')
         self.workspace_git_loc = (self.workspace_loc and os.path.isdir( self.workspace_loc + '_git' ) and (self.workspace_loc + '_git')) or None
 
         # delete previous workspace as required
@@ -1623,10 +1624,10 @@ class DawnManager(object):
 ###############################################################################
 
 if __name__ == '__main__':
-    dawn = DawnManager()
+    pewma = PewmaManager()
     try:
-        sys.exit(dawn.main(sys.argv))
-    except DawnException, e:
+        sys.exit(pewma.main(sys.argv))
+    except PewmaException, e:
         print e
         sys.exit(3)
     except KeyboardInterrupt:
