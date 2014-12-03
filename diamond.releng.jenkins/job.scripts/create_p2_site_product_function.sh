@@ -60,7 +60,7 @@ create_p2_site_product_function () {
     rm -rf ${buckminster_root_prefix} || return 3
     # product for all requested platforms (or just site.p2)
     if [ -n "${dawn_action}" ]; then
-        ${dawn_py} ${log_level_option} -w ${materialize_workspace_path} --buckminster.root.prefix=${buckminster_root_prefix} --assume-build --buckminster.properties.file=${buckminster_properties_filename} ${product_options_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} ${dawn_action} ${product_site} ${platform_list} || return 1
+        ${pewma_py} ${log_level_option} -w ${materialize_workspace_path} --buckminster.root.prefix=${buckminster_root_prefix} --assume-build --buckminster.properties.file=${buckminster_properties_filename} ${product_options_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} ${dawn_action} ${product_site} ${platform_list} || return 1
         export platforms_built=$(find ${buckminster_root_prefix}/products/ -mindepth 1 -maxdepth 1 -type d ! -name '*.zip' ! -name '*squish*' -name '*.v[0-9]*' | wc -l)
     else
         echo "No platforms were specified, and no p2 site was requested, so skipping action"
@@ -69,7 +69,7 @@ create_p2_site_product_function () {
 
     if [[ "${p2_site}" == "true" || "${publish_p2_site}" == "true" ]]; then
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Zipping p2 site ***\n"
-        ${dawn_py} ${log_level_option} -w ${materialize_workspace_path} --buckminster.root.prefix=${buckminster_root_prefix} --assume-build --buckminster.properties.file=${buckminster_properties_filename} ${product_options_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} site.p2.zip ${product_site} || return 1
+        ${pewma_py} ${log_level_option} -w ${materialize_workspace_path} --buckminster.root.prefix=${buckminster_root_prefix} --assume-build --buckminster.properties.file=${buckminster_properties_filename} ${product_options_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} site.p2.zip ${product_site} || return 1
 
         # move zipped p2 site to directory for archiving
         mv -v ${buckminster_root_prefix}/output/*site*/site.p2.zip/*site*.zip ${buckminster_root_prefix}/products/

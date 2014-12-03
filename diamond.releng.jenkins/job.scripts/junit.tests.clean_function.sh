@@ -31,7 +31,7 @@ junit_tests_clean_function () {
 
         echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Cleaning previous JUnit test results ***\n  "
 
-        ${dawn_py} -w ${materialize_workspace_path} tests-clean
+        ${pewma_py} -w ${materialize_workspace_path} tests-clean
 
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
         $([ "$olderrexit" == "1" ]) && set +e || true  # Turn errexit off if it was off at the top of this script

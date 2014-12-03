@@ -109,27 +109,27 @@ set_environment_step () {
         echo "Diamond Modules system not available"
     fi
 
-    # set path to dawn.py if it is not already set
-    if [[ "${dawn_py_use_public_version:-}" == "true" ]]; then
-        # download dawn.py from the public web site and use that
-        dawn_py="${WORKSPACE}/dawn.py"
-        rm -f ${dawn_py}
+    # set path to pewma.py if it is not already set
+    if [[ "${pewma_py_use_public_version:-}" == "true" ]]; then
+        # download pewma.py from the public web site and use that
+        pewma_py="${WORKSPACE}/pewma.py"
+        rm -f ${pewma_py}
         set -x  # Turn on xtrace
-        wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/dawn.py
-        chmod +x ${dawn_py}
+        wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+        chmod +x ${pewma_py}
         set +x  # Turn off xtrace
-    elif [[ "${dawn_py_use_public_version:-false}" == "false" ]]; then
-        if [[ -z "${dawn_py}" ]]; then
-            dawn_py="/dls_sw/dasc/dawn.py"
+    elif [[ "${pewma_py_use_public_version:-false}" == "false" ]]; then
+        if [[ -z "${pewma_py}" ]]; then
+            pewma_py="/dls_sw/dasc/pewma.py"
         fi
     else
-        echo "Unrecognised value of $""dawn_py_use_public_version=\"${dawn_py_use_public_version}\" - exiting"
+        echo "Unrecognised value of $""pewma_py_use_public_version=\"${pewma_py_use_public_version}\" - exiting"
         return 100
     fi
     if [[ -n "${nice_setting_common:-}" ]]; then
-        dawn_py="nice -n ${nice_setting_common} ${dawn_py}"
+        pewma_py="nice -n ${nice_setting_common} ${pewma_py}"
     fi
-    export dawn_py
+    export pewma_py
 
     ###
     ### Setup environment

@@ -44,21 +44,21 @@ build_function () {
     set -x  # Turn on xtrace
 
     if [[ "${workspace_build_type}" == *clean* ]]; then
-        ${dawn_py} ${log_level_option} ${build_options_extra} -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} clean || return 1
+        ${pewma_py} ${log_level_option} ${build_options_extra} -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} clean || return 1
     fi
     if [[ "${workspace_build_type}" != *skip* ]]; then
         if [[ "${build_attempt_twice:-false}" == "true" ]]; then
             # Due to long dependency chains, the first GDA build fails with "The project cannot be built until its prerequisite is built",
             # and needs to be followed by an incremental build to complete the build.
             set +e  # Turn off errexit
-            ${dawn_py} ${log_level_option} ${build_options_extra} -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} buildthorough
+            ${pewma_py} ${log_level_option} ${build_options_extra} -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} buildthorough
             retcode=$?
             set -e  # Turn on errexit
             if [[ "${retcode}" != "0" ]]; then
-                ${dawn_py} ${log_level_option} ${build_options_extra} --suppress-compile-warnings -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} buildinc || return 1
+                ${pewma_py} ${log_level_option} ${build_options_extra} --suppress-compile-warnings -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} buildinc || return 1
             fi
         else
-            ${dawn_py} ${log_level_option} ${build_options_extra} -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} buildthorough || return 1
+            ${pewma_py} ${log_level_option} ${build_options_extra} -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} buildthorough || return 1
         fi
     fi
 

@@ -25,8 +25,8 @@ materialize_function () {
     ### Setup environment
     ###
 
-    if [ -z "${dawn_py}" ]; then
-        echo "$""dawn_py not set, so terminating"
+    if [ -z "${pewma_py}" ]; then
+        echo "$""pewma_py not set, so terminating"
         return 100
     fi
 
@@ -121,17 +121,17 @@ materialize_function () {
         # delete any existing workspace, and initialize a new workspace
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas
         if [[ -z "${materialize_cquery}" ]]; then
-            ${dawn_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
+            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
         else
-            ${dawn_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
+            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
         fi
 
     elif [[ "${materialize_type}" == "update" ]]; then
         # update whatever is in the existing workspace
-        ${dawn_py} ${log_level_option} -w ${materialize_workspace_path} git pull
+        ${pewma_py} ${log_level_option} -w ${materialize_workspace_path} git pull
     fi
     if [[ ( "${materialize_type}" != *skip* ) && ( "${materialize_type}" != "redo" ) ]]; then
-      ${dawn_py} -w ${materialize_workspace_path} git log -1
+      ${pewma_py} -w ${materialize_workspace_path} git log -1
     fi
 
     $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
