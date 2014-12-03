@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+warning_text = '''
+********************************************************************************
+*  WARNING:          "dawn.py" has been renamed to "pewma.py"                  *
+*  WARNING: The old name (dawn.py) will only be supported for a limited time   *
+*  WARNING:       Please switch to using pewma.py as soon as convenient        *
+*  (Reference: http://jira.diamond.ac.uk/browse/DASCTEST-267)                  *
+********************************************************************************
+'''
+
 ###
 ### platform-independent script to manage development of Dawn (GDA, SciSoft, IDA)
 ###
@@ -1623,9 +1632,12 @@ class DawnManager(object):
 ###############################################################################
 
 if __name__ == '__main__':
+    print warning_text
     dawn = DawnManager()
     try:
-        sys.exit(dawn.main(sys.argv))
+        rc = dawn.main(sys.argv)
+        print warning_text
+        sys.exit(rc)
     except DawnException, e:
         print e
         sys.exit(3)
