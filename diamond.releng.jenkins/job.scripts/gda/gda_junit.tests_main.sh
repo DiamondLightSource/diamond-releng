@@ -9,7 +9,7 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/junit_function.sh
 
 # no need to clean if we are going to do a fresh materialize
-if [[ "${materialize_type:-unknown}" == *fresh* ]]; then
+if [[ "${materialize_type:-unknown}" != *fresh* ]]; then
     junit_tests_clean_function
 fi
 
