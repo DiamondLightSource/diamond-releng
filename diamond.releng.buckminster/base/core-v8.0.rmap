@@ -2164,7 +2164,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" searchPathRef="scisoft_2ddpr"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.arpes(\..+)?$" searchPathRef="scisoft_arpes"/>
   <rm:locator pattern="^uk\.ac\.diamond\.CBFlib$" searchPathRef="scisoft_cbflib"/>
-  <rm:locator pattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(osgi|plotserver|processing|xmlrpc))?(\.feature|\.test)?|core\.feature|deprecated|python))$" searchPathRef="scisoft_core"/>
+  <rm:locator pattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|python))$" searchPathRef="scisoft_core"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.icat.*$" searchPathRef="scisoft_icat"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" searchPathRef="scisoft_ispyb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" searchPathRef="scisoft_mx"/>
