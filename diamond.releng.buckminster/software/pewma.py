@@ -750,6 +750,8 @@ class PewmaManager(object):
 
         self.add_cquery_to_history(cquery_to_use)
 
+        rc = max(rc, self.action_gerrit_config(check_arguments=False) or 0)
+
         return rc
 
 
@@ -837,11 +839,11 @@ class PewmaManager(object):
 
 
     def action_gerrit_switch(self):
-        """ Processes command: gerrit_switch
+        """ Processes command: gerrit-switch
         """
 
         if self.arguments:
-            raise PewmaException('ERROR: gerrit_switch command does not take any arguments')
+            raise PewmaException('ERROR: gerrit-switch command does not take any arguments')
 
         git_directories = self._get_git_directories()
 
@@ -914,12 +916,14 @@ class PewmaManager(object):
         self.logger.info('%sFinished: repositories switched to Gerrit: %s' % (self.log_prefix, switched_count))
 
 
-    def action_gerrit_config(self):
-        """ Processes command: gerrit_config
+    def action_gerrit_config(self, check_arguments=True):
+        """ Processes command: gerrit-config
         """
 
-        if self.arguments:
-            raise PewmaException('ERROR: gerrit_config command does not take any arguments')
+        if check_arguments and self.arguments:
+            raise PewmaException('ERROR: gerrit-config command does not take any arguments')
+
+        self.logger.info('%sLooking for Gerrit repositories that need configuring for Eclipse' % (self.log_prefix,))
 
         git_directories = self._get_git_directories()
 
@@ -988,7 +992,7 @@ class PewmaManager(object):
                 else:
                     self.logger.error('%sFAILED: could not configure for Gerrit: %s' % (self.log_prefix, git_dir))
 
-        self.logger.info('%sFinished: repositories configured for Gerrit: %s' % (self.log_prefix, configured_count))
+        self.logger.info('%sFinished: additional repositories configured for Gerrit: %s' % (self.log_prefix, configured_count))
 
     def action_git(self):
         """ Processes command: git <command>
