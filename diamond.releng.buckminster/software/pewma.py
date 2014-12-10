@@ -741,7 +741,7 @@ class PewmaManager(object):
                     if len(jgit_errors_repos) == 1:
                         text += jgit_errors_repos[0]
                     else:
-                        text += len(jgit_errors_repos) + ' repositories'
+                        text += str(len(jgit_errors_repos)) + ' repositories'
                     text += ' (probable network issue)'
                 else:
                     text = 'set-build-description: Failure (probable network issue)'
