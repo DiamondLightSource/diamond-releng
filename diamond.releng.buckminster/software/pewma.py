@@ -1549,10 +1549,22 @@ class PewmaManager(object):
         if self.options.workspace:
             if ' ' in self.options.workspace:
                 raise PewmaException('ERROR: the "--workspace" directory must not contain blanks')
+            if self.options.workspace.endswith('_git'):
+                raise PewmaException('ERROR: the "--workspace" directory must not end with "_git"')
             self.workspace_loc = os.path.realpath(os.path.abspath(os.path.expanduser(self.options.workspace)))
+            # if the workspace location was specified, check that it's not inside an existing workspace
+            candidate = os.path.dirname(self.workspace_loc)
+            while candidate != os.path.dirname(candidate):  # if we are not at the filesystem root (this is a platform independent check)
+                if not candidate.endswith('_git'):
+                    parent_workspace = (os.path.isdir( os.path.join( candidate, '.metadata')) and candidate)
+                else:
+                    parent_workspace = (os.path.isdir( os.path.join( candidate[:-4], '.metadata')) and candidate[:-4])
+                if parent_workspace:
+                    raise PewmaException('ERROR: the workspace you specified ("' + self.workspace_loc + '") is inside what looks like another workspace ("' + parent_workspace + '")')
+                candidate = os.path.dirname(candidate)
         elif not self.workspace_loc:
             raise PewmaException('ERROR: the "--workspace" option must be specified, unless you run this script from an existing workspace')
-        self.workspace_git_loc = (self.workspace_loc and os.path.isdir( self.workspace_loc + '_git' ) and (self.workspace_loc + '_git')) or None
+        self.workspace_git_loc = self.workspace_loc + '_git'
 
         # delete previous workspace as required
         if self.options.delete or self.options.recreate:
