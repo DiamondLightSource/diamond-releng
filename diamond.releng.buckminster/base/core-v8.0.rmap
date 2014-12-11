@@ -2095,7 +2095,7 @@
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- ** dawn- *** -->
   <rm:locator pattern="^org\.dawnsci\.commandserver(\..+)?$" searchPathRef="dawn_commandserver"/>
-  <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|persistence|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
+  <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|macro|persistence|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
   <rm:locator pattern="^org\.eclipse\.dawnsci\..+$" searchPathRef="dawn_eclipse"/>
   <rm:locator pattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" searchPathRef="dawn_fable"/>
