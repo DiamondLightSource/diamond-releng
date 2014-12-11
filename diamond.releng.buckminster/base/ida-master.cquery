@@ -237,7 +237,7 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-cbflib.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-cbflib" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|python))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-core" value="true"/>
     </cq:advisorNode>
