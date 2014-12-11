@@ -112,15 +112,15 @@ set_environment_step () {
     # set path to dawn.py if it is not already set
     if [[ "${dawn_py_use_public_version:-}" == "true" ]]; then
         # download dawn.py from the public web site and use that
-        dawn_py="${WORKSPACE}/dawn.py"
+        dawn_py="${WORKSPACE}/pewma.py"
         rm -f ${dawn_py}
         set -x  # Turn on xtrace
-        wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/dawn.py
+        wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
         chmod +x ${dawn_py}
         set +x  # Turn off xtrace
     elif [[ "${dawn_py_use_public_version:-false}" == "false" ]]; then
         if [[ -z "${dawn_py}" ]]; then
-            dawn_py="/dls_sw/dasc/dawn.py"
+            dawn_py="/dls_sw/dasc/pewma.py"
         fi
     else
         echo "Unrecognised value of $""dawn_py_use_public_version=\"${dawn_py_use_public_version}\" - exiting"
