@@ -264,6 +264,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 				<syspropertyset>
 					<propertyref name="GDALargeTestFilesLocation" />
 					<propertyref name="uk.ac.diamond.jython.location" />
+					<propertyref name="run.in.eclipse" />
 					<propertyref prefix="org.dawnsci.python." />
 				</syspropertyset>
 				<junit-elements />
