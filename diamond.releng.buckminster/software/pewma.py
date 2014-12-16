@@ -52,8 +52,8 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms
-    ('gda', 'master', 'gda-master.cquery', 'v2.7', ('master', 'trunk')),
-    ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.7', ('masterhplc', 'hplc')),
+    ('gda', 'master', 'gda-master.cquery', 'v2.8', ('master', 'trunk')),
+    ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.8', ('masterhplc', 'hplc')),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842')),
     ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840')),
     ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839')),
@@ -69,12 +69,12 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v8.22', 'gda-v8.22.cquery', 'v2.2', ('v8.22', '8.22', '822')),
     ('gda', 'v8.20', 'gda-v8.20.cquery', 'v2.2', ('v8.20', '8.20', '820')),
     ('gda', 'v8.18', 'gda-v8.18.cquery', 'v1.0', ('v8.18', '8.18', '818')),
-    ('ida', 'master', 'ida-master.cquery', 'v2.5', ('master', 'trunk')),
+    ('ida', 'master', 'ida-master.cquery', 'v2.8', ('master', 'trunk')),
     ('ida', 'v2.20', 'ida-v2.20.cquery', 'v2.4', ('v2.20', '2.20', '220')),
     ('ida', 'v2.19', 'ida-v2.19.cquery', 'v2.3', ('v2.19', '2.19', '219')),
     ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218')),
     ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217')),
-    ('dawn', 'master', 'dawn-master.cquery', 'v2.7', ('master', 'trunk')),
+    ('dawn', 'master', 'dawn-master.cquery', 'v2.8', ('master', 'trunk')),
     ('dawn', '1.7.1', 'dawn-v1.7.1.cquery', 'v2.7', ('v1.7.1', '1.7.1', '171')),
     ('dawn', '1.7', 'dawn-v1.7.cquery', 'v2.7', ('v1.7', '1.7')),
     ('dawn', '1.6', 'dawn-v1.6.cquery', 'v2.6', ('v1.6', '1.6')),
