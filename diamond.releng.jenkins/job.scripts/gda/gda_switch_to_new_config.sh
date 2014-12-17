@@ -97,7 +97,7 @@ git status
 # now try merging in the "instance" changes
 # git merge --verbose --squash remotes/origin/GDA-6009b-b24  <-- the replay version
 git merge --verbose --squash remotes/origin/GDA-6009-b24-working-prototype
-git commit -m "GDA-6009 new configuration layout changes for group"
+git commit -m "GDA-6009 new configuration layout changes for b24"
 git status
 
 # now try merging in the "final" changes
