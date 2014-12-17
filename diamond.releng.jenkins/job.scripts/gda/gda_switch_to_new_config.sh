@@ -32,10 +32,10 @@ git status
 git rebase --verbose master 
 git status
 
-# now try merging in the "final" changes
-git merge --verbose --squash remotes/origin/GDA-6009-final-cleanup
-git commit -m "GDA-6009 complete switch to new configuration layout"
-git status
+# now try merging in the "final" changes (NB get Java compile errors, so skip this step for the moment)
+# git merge --verbose --squash remotes/origin/GDA-6009-final-cleanup
+# git commit -m "GDA-6009 complete switch to new configuration layout"
+# git status
 
 # see what we have in advance of master
 git log master^..
