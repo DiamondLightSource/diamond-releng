@@ -27,6 +27,9 @@ if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
                 if [[ "${JOB_NAME:-noname}" == *create.product.beamline* ]]; then
                     squish_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/create.product.beamline/squish.beamline/')
                 fi
+                if [[ "${JOB_NAME:-noname}" == *squish.beamline* ]]; then
+                    product_job_to_test=$(echo "${JOB_NAME}" | sed 's/squish.beamline/create.product.beamline/')
+                fi
                 result=good
             fi
         else
@@ -51,6 +54,9 @@ if [[ -n "${beamline}" ]]; then
 fi
 if [[ -n "${squish_job_to_trigger}" ]]; then
     echo "GDA_squish_job_to_trigger=${squish_job_to_trigger}" >> ${properties_filename}
+fi
+if [[ -n "${product_job_to_test}" ]]; then
+    echo "GDA_product_job_to_test=${product_job_to_test}" >> ${properties_filename}
 fi
 echo "download_public=${download_public:Error}" >> ${properties_filename}
 
