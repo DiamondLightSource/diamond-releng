@@ -37,9 +37,11 @@ create_p2_site_product_function () {
     p2_site=$(echo ${p2_site:-false} | tr '[:upper:]' '[:lower:]')
     publish_p2_site=$(echo ${publish_p2_site:-false} | tr '[:upper:]' '[:lower:]')
     product_zip=$(echo ${product_zip:-false} | tr '[:upper:]' '[:lower:]')
+    archive_products=$(echo ${archive_products:-false} | tr '[:upper:]' '[:lower:]')
+    trigger_squish_tests=$(echo ${trigger_squish_tests:-false} | tr '[:upper:]' '[:lower:]')
 
     if [ "${platform_list}" != " " ]; then
-        if [[ "${product_zip}" == "true" ]]; then
+        if [[ "${product_zip}" == "true" || "${archive_products}" == "true" || "${trigger_squish_tests}" == "true" ]]; then
             dawn_action=product.zip
         else
             dawn_action=product
