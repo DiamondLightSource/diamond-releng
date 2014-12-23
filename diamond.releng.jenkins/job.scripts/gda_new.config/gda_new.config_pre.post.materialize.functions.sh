@@ -17,5 +17,5 @@ pre_materialize_function () {
 
 # after materialize, switch to new configuration
 post_materialize_function () {
-    . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda_new_config/gda_switch_to_new_config.sh
+    . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda_new.config/gda_switch_to_new_config.sh
 }
