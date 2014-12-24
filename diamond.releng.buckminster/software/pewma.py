@@ -135,7 +135,7 @@ GERRIT_SCHEME = 'ssh'
 GERRIT_NETLOC = 'gerrit.diamond.ac.uk:29418'
 
 class GitConfigParser(ConfigParser.SafeConfigParser):
-    """ Subclass of the regular SafeConfigParser that handles the tab characters in .git/config files """
+    """ Subclass of the regular SafeConfigParser that handles the leading tab characters in .git/config files """
     def readgit(self, filename):
         with open(filename, 'r') as config_file:
             text = config_file.read()
@@ -362,7 +362,8 @@ class PewmaManager(object):
         ''' remember the CQuery used, for future "File --> Open a Component Query" in the IDE
         '''
 
-        org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
+        org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
+          'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
         cquery_to_add = CQUERY_URI_PARENT.replace(':','\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
         if not os.path.exists(org_eclipse_buckminster_ui_prefs_loc):
             # create a new org.eclipse.buckminster.ui.prefs file with the CQuery history
@@ -393,9 +394,54 @@ class PewmaManager(object):
                 replacement_contents += 'lastCQueryURLs=%s\n' % (cquery_to_add,)
                 file_rewrite_required = True
             if file_rewrite_required:
-                with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
-                    for line in replacement_lines:
-                        oebup_file.write(line)
+                if not self.options.dry_run:
+                    with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
+                        for line in replacement_lines:
+                            oebup_file.write(line)
+                self.logger.debug('%sUpdated "%s" with CQuery %s' % (self.log_prefix, org_eclipse_buckminster_ui_prefs_loc, cquery_to_use))
+
+
+    def add_config_to_strings(self, component_name):
+        ''' Save the instance config used in "Window --> Preferences --> Run/Debug --> String Substitution"
+            This is referenced in the launchers for GDA servers etc.
+        '''
+
+        if component_name.startswith(('all-','core-', 'dls-', 'mt-', 'mx-')) or not component_name.endswith('-config'):
+            return  # component name is not an instance config, so don't save it 
+
+        org_eclipse_core_variables_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
+          'org.eclipse.core.runtime', '.settings', 'org.eclipse.core.variables.prefs')
+        if os.path.exists(org_eclipse_core_variables_prefs_loc):
+            # there should already be an existing org.eclipse.core.variables.prefs file (it exists in the template workspace)
+            replacement_lines = []
+            variable_found = False
+            file_rewrite_required = False
+            with open(org_eclipse_core_variables_prefs_loc, 'r') as oecvp_file:
+                for line in oecvp_file.readlines():
+                    if not line.startswith('org.eclipse.core.variables.valueVariables='):
+                        replacement_lines += line
+                    else:
+                        m = re.match(r'^org\.eclipse\.core\.variables\.valueVariables=(.+)<valueVariables>(.+)<valueVariable(.*) name\\="GDA_instance_config_name"(.*) value\\="([^"]+)"(.*)/>(.*)$', line)
+                        if m:
+                            assert not (variable_found or file_rewrite_required)
+                            variable_found = True
+                            if m.group(5) == component_name:
+                                # the new GDA_instance_config_name is the same as the current one, so nothing needs to be changed
+                                break 
+                            else:
+                                # the new GDA_instance_config_name is different from the current one, so update with the new value
+                                replacement = 'org.eclipse.core.variables.valueVariables=%s<valueVariables>%s<valueVariable%s name\="GDA_instance_config_name"%s value\="%s"%s/>%s\n' % (
+                                  m.group(1), m.group(2), m.group(3), m.group(4), component_name, m.group(6), m.group(7))
+                                self.logger.log(5, line)
+                                self.logger.log(5, replacement)
+                                replacement_lines += replacement
+                                file_rewrite_required = True
+            if file_rewrite_required:
+                if not self.options.dry_run:
+                    with open(org_eclipse_core_variables_prefs_loc, 'w') as oecvp_file:
+                        for line in replacement_lines:
+                            oecvp_file.write(line)
+                self.logger.debug('%sUpdated "%s" with %s' % (self.log_prefix, org_eclipse_core_variables_prefs_loc, component_name))
 
 
     def delete_directory(self, directory, description):
@@ -749,6 +795,7 @@ class PewmaManager(object):
                 print text
 
         self.add_cquery_to_history(cquery_to_use)
+        self.add_config_to_strings(component_to_use)
 
         rc = max(rc, self.action_gerrit_config(check_arguments=False) or 0)
 
@@ -951,7 +998,7 @@ class PewmaManager(object):
                 continue
             else:
                 if urlparse.urlunsplit((GERRIT_SCHEME, GERRIT_NETLOC, '', '', '')) not in origin_url:
-                    self.logger.debug('%sSkipped: not a DLS Gerrit repository: %s' % (self.log_prefix, git_dir))
+                    self.logger.log(5, '%sSkipped: not a DLS Gerrit repository: %s' % (self.log_prefix, git_dir))
                     continue
 
             config_changes = (  # section, option, name, required_value, use_replace
@@ -973,7 +1020,7 @@ class PewmaManager(object):
                         else:
                             git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
                     else:
-                        self.logger.debug('%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
+                        self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
 
             if not git_config_commands:
                 self.logger.info('%sSkipped: already configured for Gerrit: %s' % (self.log_prefix, git_dir))
