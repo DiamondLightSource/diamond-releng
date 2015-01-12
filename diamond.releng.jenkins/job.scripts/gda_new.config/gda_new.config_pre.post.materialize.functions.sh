@@ -3,16 +3,18 @@ export need_to_clone=false
 
 # before materialize, switch back to master
 pre_materialize_function () {
-   set -o verbose
-   for repo in gda-core gda-diamond gda-mt; do 
-       if [[ -d "${new_config_repo_parent}/${repo}.git/" ]]; then
-           cd ${new_config_repo_parent}/${repo}.git/
-           echo "# processing ${repo}.git"
-           git branch
-           git checkout master
-       fi
-   done
-   set +o verbose
+    set -o verbose
+    if [[ "$(echo ${materialize_type:-unknown} | tr '[:upper:]' '[:lower:]')" != *fresh* ]]; then
+        for repo in gda-core gda-diamond gda-mt; do 
+            if [[ -d "${new_config_repo_parent}/${repo}.git/" ]]; then
+            cd ${new_config_repo_parent}/${repo}.git/
+            echo "# processing ${repo}.git"
+            git branch
+            git checkout master
+        fi
+        done
+    fi
+    set +o verbose
 }
 
 # after materialize, switch to new configuration
