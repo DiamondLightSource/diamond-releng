@@ -5,7 +5,7 @@
 
 junit_tests_clean_function () {
 
-    if [[ -d "${materialize_workspace_path}" ]]; then
+    if [[ -d "${materialize_workspace_path}" && -d "${materialize_workspace_path}_git" ]]; then
 
         # Save xtrace state (1=was not set, 0=was set)
         if [[ $- = *x* ]]; then

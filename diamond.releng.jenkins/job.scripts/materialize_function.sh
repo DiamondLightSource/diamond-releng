@@ -99,6 +99,12 @@ materialize_function () {
                 export materialize_type=fresh
             fi
         fi
+        if [[ ! -d "${materialize_workspace_path}_git" ]]; then
+            if [[ "${materialize_type}" != "fresh" ]]; then
+                echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace_git exists"
+                export materialize_type=fresh
+            fi
+        fi
     fi
     echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` materialize_type=${materialize_type} ***\n"
 
