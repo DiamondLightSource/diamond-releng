@@ -782,6 +782,8 @@ class PewmaManager(object):
             rc = max(int(rc), 2)
             for repo in jgit_errors_repos:
                 self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
+            for error_summary in jgit_errors_general:
+                self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 if jgit_errors_repos:
                     text = 'set-build-description: Failure cloning '
@@ -1620,17 +1622,22 @@ class PewmaManager(object):
                 self.delete_directory(self.workspace_git_loc, "workspace_git directory")
 
         # define proxy if not already defined  (proxy_name not in os.environ) or (not os.environ[proxy_name].strip())
+        # note that Python looks for <protocol>_proxy environment variables in a case-independent manner
         if self.options.keep_proxy:
-            for env_name in ('http_proxy', 'https_proxy', 'no_proxy'):
-                if env_name not in os.environ:
-                    self.logger.debug('Using existing %s (unset)' % (env_name,))
-                else:
-                    self.logger.debug('Using existing %s=%s' % (env_name, os.environ[env_name]))
+            for env_name in ('http_proxy', 'https_proxy','no_proxy'):
+                log_text = 'Using existing %s/%s = ' % (env_name, env_name.upper())
+                for variant in (env_name, env_name.upper()):
+                    if variant not in os.environ:
+                        log_text += '(unset)'
+                    else:
+                        log_text += os.environ[variant]
+                    log_text += '/'
+                self.logger.debug(log_text[:-1])  # drop trailing /
         else:
             fqdn = socket.getfqdn()
             if fqdn.endswith('.diamond.ac.uk'):
                 proxy_value = 'wwwcache.rl.ac.uk:8080'
-                no_proxy_value = '127.0.0.1,localhost,.diamond.ac.uk,*.diamond.ac.uk'
+                no_proxy_value = '127.0.0.1,localhost,*.diamond.ac.uk'
             elif fqdn.endswith('.esrf.fr'):
                 proxy_value = 'proxy.esrf.fr:3128'
                 no_proxy_value = '127.0.0.1,localhost'
@@ -1652,6 +1659,12 @@ class PewmaManager(object):
                     else:
                         self.logger.debug('Setting %s=%s (previously null)' % (env_name, env_value,))
                     os.environ[env_name] = env_value
+                    env_name_upper = env_name.upper()
+                    if env_name_upper in os.environ:
+                        old_value = os.environ[env_name_upper].strip()
+                        if old_value and (old_value != env_value):
+                            self.logger.debug('Unsetting %s (previously: %s)' % (env_name_upper, old_value,))
+                            del os.environ[env_name_upper]
                 else:
                     if old_value:
                         self.logger.debug('No new value found for %s (left as: %s)' % (env_name, old_value))
