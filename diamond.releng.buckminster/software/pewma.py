@@ -117,8 +117,7 @@ TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
 CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
 
 JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent checkout problem (network) with a particular repository
-    ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): Connection timed out', 1),  # 1 = first match group is the repository
-    ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): verify: false', 1),  # 1 = first match group is the repository
+    ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+): (Connection refused|Connection timed out|verify: false)', 1),  # 1 = first match group is the repository
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (Connection reset|Short read of block\.)', 'Network error'),  # text = no specifc repository identified
     ('org\.apache\.http\.conn\.HttpHostConnectException: Connection to .+ refused', 'Connection refused'),  # text = no specifc repository identified
     ('HttpComponents connection error response code (500|502|503)', 'Server error'),  # text = no specifc repository identified
