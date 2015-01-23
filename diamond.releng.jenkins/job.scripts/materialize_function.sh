@@ -117,6 +117,11 @@ materialize_function () {
 
     set -x  # Turn on xtrace
 
+    # execute pre_materialize_function (if defined)
+    if [[ "$(type -t pre_materialize_function)" == "function" ]]; then
+        pre_materialize_function
+    fi
+
     # update any existing git repositories if required
     if [[ "${materialize_type}" == "update" || "${materialize_type}" == "recreate" ]]; then
         for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
@@ -147,6 +152,11 @@ materialize_function () {
     # print the HEAD commit from each repository
     if [[ ( "${materialize_type}" != *skip* ) && ( "${materialize_type}" != "recreate" ) ]]; then
       ${pewma_py} -w ${materialize_workspace_path} git log -1
+    fi
+
+    # execute post_materialize_function (if defined)
+    if [[ "$(type -t post_materialize_function)" == "function" ]]; then
+        post_materialize_function
     fi
 
     $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script

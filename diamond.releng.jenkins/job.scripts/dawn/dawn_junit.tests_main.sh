@@ -14,13 +14,7 @@ if [[ "$(echo ${materialize_type:-unknown} | tr '[:upper:]' '[:lower:]')" != *fr
     junit_tests_clean_function
 fi
 
-if [[ "$(type -t pre_materialize_function)" == "function" ]]; then
-    pre_materialize_function
-fi
 materialize_function
-if [[ "$(type -t post_materialize_function)" == "function" ]]; then
-    post_materialize_function
-fi
 
 mkdir -pv ${WORKSPACE}/artifacts_to_archive/
 record_head_commits_function > ${WORKSPACE}/artifacts_to_archive/materialized_head_commits.txt

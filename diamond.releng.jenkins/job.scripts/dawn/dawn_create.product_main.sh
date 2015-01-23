@@ -8,13 +8,7 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/create_p2_site_product_function.sh
 
-if [[ "$(type -t pre_materialize_function)" == "function" ]]; then
-    pre_materialize_function
-fi
 materialize_function
-if [[ "$(type -t post_materialize_function)" == "function" ]]; then
-    post_materialize_function
-fi
 
 record_head_commits_function > ${WORKSPACE}/materialized_head_commits.txt
 # also record the current head in repos that might not have been materialized, but we still need to branch when making a release
