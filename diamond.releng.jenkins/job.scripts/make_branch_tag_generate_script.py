@@ -103,7 +103,13 @@ git branch -a'''
     repository_names_to_exclude_compiled = re.compile(repository_names_to_exclude_pattern) if repository_names_to_exclude_pattern else ''
 
     repos_to_action = {}
-    with open('artifacts_to_archive/head_commits.txt', 'r') as commits_file:
+    for head_commits_filename in ('artifacts_to_archive/materialized_head_commits.txt', 'artifacts_to_archive/head_commits.txt'):
+        if os.path.isfile(head_commits_filename):
+            break
+    else:
+        print('*** ERROR: could not find file with materialized head commits')
+        sys.exit(1)
+    with open(head_commits_filename, 'r') as commits_file:
         for line in commits_file:  # standard OS terminator is converted to \n
             line = line.rstrip('\n') # remove trailing newline
             if line.startswith('#') or (not line.strip()):

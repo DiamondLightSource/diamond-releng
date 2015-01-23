@@ -68,22 +68,22 @@ materialize_function () {
     fi
 
     ###
-    ### Materialize the workspace (type will be one of Update/Fresh/Redo/Skip)
-    ###     Update - use existing workspace, update repositories (if no workspace, do a new materialize)
-    ###     Fresh - discard any existing workspace, do a new materialize
-    ###     Redo - use existing workspace, rerun materialize (if no workspace, do a new materialize) DOES NOT DO AN UPDATE
-    ###     Skip - use existing workspace unchanged    
+    ### Materialize the workspace (type will be one of Fresh/Update/Recreate/Skip)
+    ###     Fresh - discard existing workspace(_git)/, do a new materialize
+    ###     Update - use existing workspace(_git)/, update repositories (if no workspace, do a new materialize)
+    ###     Recreate - clean/reset/pull existing workspace_git/, discard workspace/, rerun materialize
+    ###     Skip - use existing workspace(_git)/ unchanged    
     ###
 
     export materialize_type=$(echo ${materialize_type:-fresh} | tr '[:upper:]' '[:lower:]')
 
     # translate the long materialize_type text to something shorter, for display
-    if [[ "${materialize_type}" == *update* ]]; then
-       export materialize_type=update
-    elif [[ "${materialize_type}" == *fresh* ]]; then
+    if [[ "${materialize_type}" == *fresh* ]]; then
        export materialize_type=fresh
-    elif [[ "${materialize_type}" == *redo* ]]; then
-       export materialize_type=redo
+    elif [[ "${materialize_type}" == *update* ]]; then
+       export materialize_type=update
+    elif [[ "${materialize_type}" == *recreate* ]]; then
+       export materialize_type=recreate
     elif [[ "${materialize_type}" == *skip* ]]; then
        export materialize_type=skip
     else
@@ -108,35 +108,44 @@ materialize_function () {
     fi
     echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` materialize_type=${materialize_type} ***\n"
 
-    if [[ ( "${materialize_type}" == "fresh" ) || ( "${materialize_type}" == "redo" ) ]]; then
+    if [[ ( "${materialize_type}" == "fresh" ) || ( "${materialize_type}" == "recreate" ) ]]; then
         if [ -z "${materialize_component}" ]; then
             echo "$""materialize_component not set, so terminating"
             return 100
         fi
     fi
 
-    if [[ "${materialize_type}" == "fresh" ]]; then
-        workspace_delete_option=--delete
-    else
-        workspace_delete_option=
-    fi
-
     set -x  # Turn on xtrace
 
-    if [[ ( "${materialize_type}" == "fresh" ) || ( "${materialize_type}" == "redo" ) ]]; then
-        # delete any existing workspace, and initialize a new workspace
+    # update any existing git repositories if required
+    if [[ "${materialize_type}" == "update" || "${materialize_type}" == "recreate" ]]; then
+        for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
+            if [[ -d "${repo}/.git" ]]; then
+                if [[ "${materialize_type}" == "recreate" ]]; then
+                    git --git-dir=${materialize_workspace_path}_git/${repo} clean -fdx
+                    git --git-dir=${materialize_workspace_path}_git/${repo} git reset --hard HEAD
+                fi
+                git --git-dir=${materialize_workspace_path}_git/${repo} git pull
+            fi
+        done
+    fi
+
+    if [[ ( "${materialize_type}" == "fresh" ) || ( "${materialize_type}" == "recreate" ) ]]; then
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas
+        if [[ "${materialize_type}" == "fresh" ]]; then
+            workspace_delete_option=--delete
+        elif [[ "${materialize_type}" == "recreate" ]]; then
+            workspace_delete_option=--recreate
+        fi
         if [[ -z "${materialize_cquery}" ]]; then
             ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
         else
             ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
         fi
-
-    elif [[ "${materialize_type}" == "update" ]]; then
-        # update whatever is in the existing workspace
-        ${pewma_py} ${log_level_option} -w ${materialize_workspace_path} git pull
     fi
-    if [[ ( "${materialize_type}" != *skip* ) && ( "${materialize_type}" != "redo" ) ]]; then
+
+    # print the HEAD commit from each repository
+    if [[ ( "${materialize_type}" != *skip* ) && ( "${materialize_type}" != "recreate" ) ]]; then
       ${pewma_py} -w ${materialize_workspace_path} git log -1
     fi
 
