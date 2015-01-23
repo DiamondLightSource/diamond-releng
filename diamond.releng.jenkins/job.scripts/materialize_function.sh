@@ -127,10 +127,10 @@ materialize_function () {
         for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
             if [[ -d "${repo}/.git" ]]; then
                 if [[ "${materialize_type}" == "recreate" ]]; then
-                    git --git-dir=${materialize_workspace_path}_git/${repo} clean -fdx
-                    git --git-dir=${materialize_workspace_path}_git/${repo} reset --hard HEAD
+                    git --git-dir=${repo} clean -fdx
+                    git --git-dir=${repo} reset --hard HEAD
                 fi
-                git --git-dir=${materialize_workspace_path}_git/${repo} pull
+                git --git-dir=${repo} pull
             fi
         done
     fi
