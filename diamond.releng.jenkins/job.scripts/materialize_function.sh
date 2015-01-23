@@ -128,9 +128,9 @@ materialize_function () {
             if [[ -d "${repo}/.git" ]]; then
                 if [[ "${materialize_type}" == "recreate" ]]; then
                     git --git-dir=${materialize_workspace_path}_git/${repo} clean -fdx
-                    git --git-dir=${materialize_workspace_path}_git/${repo} git reset --hard HEAD
+                    git --git-dir=${materialize_workspace_path}_git/${repo} reset --hard HEAD
                 fi
-                git --git-dir=${materialize_workspace_path}_git/${repo} git pull
+                git --git-dir=${materialize_workspace_path}_git/${repo} pull
             fi
         done
     fi
