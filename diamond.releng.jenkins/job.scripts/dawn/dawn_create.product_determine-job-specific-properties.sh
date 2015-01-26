@@ -6,6 +6,7 @@ properties_filename=${WORKSPACE}/job-specific-environment-variables.properties
 if [[ "${download_public:false}" == "true" ]]; then
     cat << EOF >> ${properties_filename}
 pewma_py_use_public_version=true
+buckminster_headless_use_public_version=true
 materialize_location_option=--location=public
 materialize_properties_base=\${materialize_properties_base__public_download}
 EOF

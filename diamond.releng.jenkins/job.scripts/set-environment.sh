@@ -57,7 +57,7 @@ set_environment_step () {
     fi
 
     ###
-    ### Load modules
+    ### Load modules (only applies to DLS environment)
     ###
     
     if [[ "${MODULEPATH}" == */dls_sw/apps/Modules/modulefiles* ]]; then
@@ -79,17 +79,19 @@ set_environment_step () {
             return 100
         fi
 
-        if [[ "${module_load_buckminster_version}" == "none" || -z "${module_load_buckminster_version-arbitrary}" || -z "${module_load_buckminster_version+arbitrary}" ]]; then
-            echo 'skipping "module load buckminster"'
-        elif [[ "${module_load_buckminster_version}" == "default" ]]; then
-            echo "issuing \"module load buckminster\""
-            module load buckminster
-        elif [[ "${module_load_buckminster_version+arbitrary}" ]]; then
-            echo "issuing \"module load buckminster/${module_load_buckminster_version}\""
-            module load buckminster/${module_load_buckminster_version}
-        else
-            echo 'Error in logic determining "module load buckminster"'
-            return 100
+        if [[ "${buckminster_headless_use_public_version:-false}" != "true" ]]; then
+            if [[ "${module_load_buckminster_version}" == "none" || -z "${module_load_buckminster_version-arbitrary}" || -z "${module_load_buckminster_version+arbitrary}" ]]; then
+                echo 'skipping "module load buckminster"'
+            elif [[ "${module_load_buckminster_version}" == "default" ]]; then
+                echo "issuing \"module load buckminster\""
+                module load buckminster
+            elif [[ "${module_load_buckminster_version+arbitrary}" ]]; then
+                echo "issuing \"module load buckminster/${module_load_buckminster_version}\""
+                module load buckminster/${module_load_buckminster_version}
+            else
+                echo 'Error in logic determining "module load buckminster"'
+                return 100
+            fi
         fi
 
         if [[ "${module_load_python_version}" == "none" || -z "${module_load_python_version-arbitrary}" || -z "${module_load_python_version+arbitrary}" ]]; then
@@ -109,8 +111,16 @@ set_environment_step () {
         echo "Diamond Modules system not available"
     fi
 
+    ###
+    ### Use the specified versions of pewma.py and buckminster_headless_install.sh (either pre-installed, or publicly-published)
+    ###
+
     # set path to pewma.py if it is not already set
-    if [[ "${pewma_py_use_public_version:-}" == "true" ]]; then
+    if [[ "${pewma_py_use_public_version:-false}" == "false" ]]; then
+        if [[ -z "${pewma_py}" ]]; then
+            pewma_py="/dls_sw/dasc/pewma.py"
+        fi
+    elif [[ "${pewma_py_use_public_version:-}" == "true" ]]; then
         # download pewma.py from the public web site and use that
         pewma_py="${WORKSPACE}/pewma.py"
         rm -f ${pewma_py}
@@ -118,22 +128,37 @@ set_environment_step () {
         wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
         chmod +x ${pewma_py}
         set +x  # Turn off xtrace
-    elif [[ "${pewma_py_use_public_version:-false}" == "false" ]]; then
-        if [[ -z "${pewma_py}" ]]; then
-            pewma_py="/dls_sw/dasc/pewma.py"
-        fi
-    else
+    elif [[ "${pewma_py_use_public_version:-false}" != "false" ]]; then
         echo "Unrecognised value of $""pewma_py_use_public_version=\"${pewma_py_use_public_version}\" - exiting"
         return 100
     fi
-    if [[ -n "${nice_setting_common:-}" ]]; then
-        pewma_py="nice -n ${nice_setting_common} ${pewma_py}"
-    fi
     export pewma_py
+
+    if [[ "${buckminster_headless_use_public_version:-false}" == "true" ]]; then
+        # download buckminster_headless_install.sh from the public web site and use that
+        buckminster_headless_install="${WORKSPACE}/buckminster_headless_install.sh"
+        buckminster_install_dir="${WORKSPACE}/buckminster_headless"
+        rm -f ${buckminster_headless_install}
+        rm -f ${buckminster_install_dir}
+        set -x  # Turn on xtrace
+        wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+        chmod +x ${buckminster_headless_install}
+        set +x  # Turn off xtrace
+        # run the install
+        ./${buckminster_headless_install}
+        export PATH=${buckminster_install_dir}:${PATH}
+    elif [[ "${buckminster_headless_use_public_version:-false}" != "false" ]]; then
+        echo "Unrecognised value of $""buckminster_headless_use_public_version=\"${buckminster_headless_use_public_version}\" - exiting"
+        return 100
+    fi
 
     ###
     ### Setup environment
     ###
+
+    if [[ -n "${nice_setting_common:-}" ]]; then
+        pewma_py="nice -n ${nice_setting_common} ${pewma_py}"
+    fi
 
     # Jenkins sets BUILD_ID to YYYY-MM-DD_hh-mm-ss. We convert this to YYYYMMDD_HHMMSS
     if [ -z "${build_timestamp}" ]; then
