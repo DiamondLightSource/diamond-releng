@@ -144,8 +144,8 @@ set_environment_step () {
         wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
         chmod +x ${buckminster_headless_install}
         set +x  # Turn off xtrace
-        # run the install
-        ./${buckminster_headless_install}
+        # install into buckminster_install_dir
+        ${buckminster_headless_install}
         export PATH=${buckminster_install_dir}:${PATH}
     elif [[ "${buckminster_headless_use_public_version:-false}" != "false" ]]; then
         echo "Unrecognised value of $""buckminster_headless_use_public_version=\"${buckminster_headless_use_public_version}\" - exiting"
