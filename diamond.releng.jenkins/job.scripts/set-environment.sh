@@ -145,7 +145,7 @@ set_environment_step () {
         buckminster_headless_install="${WORKSPACE}/buckminster_headless_install.sh"
         buckminster_install_dir="${WORKSPACE}/buckminster_headless"
         rm -f ${buckminster_headless_install}
-        rm -f ${buckminster_install_dir}
+        rm -rf ${buckminster_install_dir}
         set -x  # Turn on xtrace
         if tty -s; then
             # standard (verbose) output at the terminal
