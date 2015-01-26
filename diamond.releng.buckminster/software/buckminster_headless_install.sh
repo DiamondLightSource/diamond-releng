@@ -79,7 +79,13 @@ install_buckminster () {
     # install the director
     director_zip_file=~/director_${datetime}.zip
     director_unzip_dir=~/director_${datetime}
-    wget -O ${director_zip_file} "${director_download}"
+    if tty -s; then
+        # standard (verbose) output at the terminal
+        wget -O ${director_zip_file} "${director_download}"
+    else
+        # non-verbose output in a batch job
+        wget -nv -O ${director_zip_file} "${director_download}"
+    fi
 
     rm -rf ${director_unzip_dir}
     unzip -q ${director_zip_file} -d ${director_unzip_dir}
@@ -156,14 +162,15 @@ END_OF_MODULE_FILE
     fi
 
     #==========================================================
-    # test we can run it ok
-    ${buckminster_command} lscmds
+    # report what we have done (skip if not at the terminal)
     set +o xtrace
-
-    echo "======================================================="
-    echo "Install completed. To use Buckminster headless, either:"
-    echo "(1) add \"${buckminster_install_dir}\" to your $""PATH"
-    echo "(2) issue \"$""{buckminster_command}\" (expands to \"${buckminster_command}\")"
+    if tty -s; then
+        echo
+        echo "======================================================="
+        echo "Install completed. To use Buckminster headless, either:"
+        echo "(1) add \"${buckminster_install_dir}\" to your $""PATH"
+        echo "(2) issue \"$""{buckminster_command}\" (expands to \"${buckminster_command}\")"
+    fi
 
     if [[ "${buckminster_install_type}" == "DLSshared" ]]; then
         echo

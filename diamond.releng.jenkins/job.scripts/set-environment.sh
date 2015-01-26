@@ -125,7 +125,13 @@ set_environment_step () {
         pewma_py="${WORKSPACE}/pewma.py"
         rm -f ${pewma_py}
         set -x  # Turn on xtrace
-        wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+        if tty -s; then
+            # standard (verbose) output at the terminal
+            wget -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+        else
+            # non-verbose output in a batch job
+            wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+        fi
         chmod +x ${pewma_py}
         set +x  # Turn off xtrace
     elif [[ "${pewma_py_use_public_version:-false}" != "false" ]]; then
@@ -141,7 +147,13 @@ set_environment_step () {
         rm -f ${buckminster_headless_install}
         rm -f ${buckminster_install_dir}
         set -x  # Turn on xtrace
-        wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+        if tty -s; then
+            # standard (verbose) output at the terminal
+            wget -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+        else
+            # non-verbose output in a batch job
+            wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+        fi
         chmod +x ${buckminster_headless_install}
         set +x  # Turn off xtrace
         # install into buckminster_install_dir
