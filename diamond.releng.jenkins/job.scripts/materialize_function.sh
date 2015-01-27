@@ -135,7 +135,7 @@ materialize_function () {
             if [[ -d "${repo}/.git" ]]; then
                 if [[ "${materialize_type}" == "recreate" ]]; then
                     git -C ${repo} clean -fdxq
-                    git -C ${repo} reset --hard HEAD
+                    git -C ${repo} reset --quiet --hard HEAD
                 fi
                 git -C ${repo} pull
             fi
