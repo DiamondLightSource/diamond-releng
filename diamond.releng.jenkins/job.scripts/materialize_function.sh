@@ -81,9 +81,7 @@ materialize_function () {
     export materialize_type=$(echo ${materialize_type:-fresh} | tr '[:upper:]' '[:lower:]')
 
     # translate the long materialize_type text to something shorter, for display
-    if [[ "${materialize_type}" == *fresh* ]]; then
-       export materialize_type=fresh
-    elif [[ "${materialize_type}" == *update* ]]; then
+    if [[ "${materialize_type}" == *update* ]]; then
        export materialize_type=update
     elif [[ "${materialize_type}" == *extra-materialize* ]]; then
        export materialize_type=extra-materialize
@@ -91,6 +89,8 @@ materialize_function () {
        export materialize_type=recreate
     elif [[ "${materialize_type}" == *skip* ]]; then
        export materialize_type=skip
+    elif [[ "${materialize_type}" == *fresh* ]]; then
+       export materialize_type=fresh
     else
         echo "Unrecognised value $""{materialize_type}=${materialize_type}, so terminating"
         return 100
