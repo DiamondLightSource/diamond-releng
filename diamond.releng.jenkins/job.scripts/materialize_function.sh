@@ -96,24 +96,24 @@ materialize_function () {
         return 100
     fi
 
-    # if there is no existing populated workspace, then do a fresh materialize, even if update was requested
-    if [[ "${materialize_type}" == "update" || "${materialize_type}" == "extra-materialize" ]]; then
-        if [[ ! -d "${materialize_workspace_path}/.metadata" ]]; then
-            echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace exists"
-            export materialize_type=fresh
-        elif [[ ! -d "${materialize_workspace_path}_git" ]]; then
+    # if there's nothing much there already, we have to do a fresh materialize, even if update was requested
+    if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
+        if [[ ! -d "${materialize_workspace_path}_git" ]]; then
             echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace_git exists"
             export materialize_type=fresh
+        elif [[ ! -d "${materialize_workspace_path}/.metadata" ]]; then
+            if [[ "${materialize_type}" != "recreate" ]]; then
+                echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace exists"
+                export materialize_type=fresh
+            fi
         fi
-    fi
-    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` materialize_type=${materialize_type} ***\n"
-
-    if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         if [ -z "${materialize_component}" ]; then
             echo "$""materialize_component not set, so terminating"
             return 100
         fi
     fi
+
+    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` materialize_type=${materialize_type} ***\n"
 
     set -x  # Turn on xtrace
 
