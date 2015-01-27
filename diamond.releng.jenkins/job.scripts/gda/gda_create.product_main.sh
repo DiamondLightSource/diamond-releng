@@ -6,6 +6,9 @@
 if [[ "${new_config_test}" == "true" ]]; then
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda_new.config/gda_new.config_pre.post.materialize.functions.sh
 fi
+if [[ "${gerrit_test}" == "true" ]]; then
+  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda/gda.gerrit_pre.post.materialize.functions.sh
+fi
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/record_head_commits_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/record_targetplatform_contents_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh

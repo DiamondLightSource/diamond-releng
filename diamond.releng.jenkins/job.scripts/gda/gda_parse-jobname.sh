@@ -6,7 +6,7 @@ set +x  # Turn off xtrace
 properties_filename=${WORKSPACE}/parsed-jobname.properties
 rm -f ${properties_filename}
 
-# The jobname must start with "GDA.", followed by the release (e.g. master, 8.38), followed by a dash (-)
+# The jobname must start with "GDA.", followed by the release (e.g. master, 8.42), followed by a dash (-)
 # IF the jobname contains ".beamline-GROUP-", it must be followed by <beamline name> (which may contain a -), optionally followed by -download.public
 # OTHERWISE group and beamline do not apply
 
@@ -15,6 +15,12 @@ if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
     if [[ "${releasesuffixindex}" != "0" ]]; then
         # -5 is -4 for "GDA." and -1 for "-"
         release=${JOB_NAME:4:${releasesuffixindex}-5}
+
+        if [[ "${release}" == "master" ]]; then
+            repo_branch_name_for_release=master
+        else
+            repo_branch_name_for_release="gda-${release}"
+        fi
 
         groupbeamlinesuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*beamline-')
         if [[ "${groupbeamlinesuffixindex}" != "0" ]]; then
@@ -43,16 +49,22 @@ if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
     else
         download_public=false
     fi
-
     if [[ "${JOB_NAME:-noname}" == *new.config* ]]; then
         new_config_test=true
     else
         new_config_test=false
     fi
+    if [[ "${JOB_NAME:-noname}" == *gerrit* ]]; then
+        gerrit_test=true
+    else
+        gerrit_test=false
+    fi
 
 fi
 
 echo "GDA_release=${release:Error}" >> ${properties_filename}
+echo "repo_branch_name_for_release=${repo_branch_name_for_release:Error}" >> ${properties_filename}
+
 if [[ -n "${group}" ]]; then
     echo "GDA_group=${group}" >> ${properties_filename}
 fi
@@ -67,6 +79,7 @@ if [[ -n "${product_job_to_test}" ]]; then
 fi
 echo "download_public=${download_public:Error}" >> ${properties_filename}
 echo "new_config_test=${new_config_test:Error}" >> ${properties_filename}
+echo "gerrit_test=${gerrit_test:Error}" >> ${properties_filename}
 
 if [[ "${result:bad}" != "good" ]]; then
     echo "Error parsing \${JOB_NAME}=${JOB_NAME}"

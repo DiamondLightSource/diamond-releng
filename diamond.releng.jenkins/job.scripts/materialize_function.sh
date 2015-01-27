@@ -68,11 +68,13 @@ materialize_function () {
     fi
 
     ###
-    ### Materialize the workspace (type will be one of Fresh/Update/Recreate/Skip)
-    ###     Fresh - discard existing workspace(_git)/, do a new materialize
-    ###     Update - use existing workspace(_git)/, update repositories (if no workspace, do a new materialize)
-    ###     Recreate - clean/reset/pull existing workspace_git/, discard workspace/, rerun materialize
-    ###     Skip - use existing workspace(_git)/ unchanged    
+    ### Materialize the workspace (type will be one of Fresh/Update/Materialize/Recreate/Skip)
+    ###     Fresh - discard existing workspace(_git)/, run materialize
+    ###     Update - use existing workspace(_git)/, pull existing workspace_git/, no materialize (if no workspace, do Fresh)
+    ###     extra-materialize - use existing workspace(_git)/, run materialize (if no workspace, do Fresh)
+    ###     Recreate - clean/reset/pull existing workspace_git/, discard workspace/, run materialize
+    ###     Skip - use existing workspace(_git)/ unchanged
+    ### Note: the "extra-materialize" option is not shown in the Jenkins UI, it's just used internally (e.g. to materialize squish tests on top of an existing workspace)
     ###
 
     export materialize_type=$(echo ${materialize_type:-fresh} | tr '[:upper:]' '[:lower:]')
@@ -82,6 +84,8 @@ materialize_function () {
        export materialize_type=fresh
     elif [[ "${materialize_type}" == *update* ]]; then
        export materialize_type=update
+    elif [[ "${materialize_type}" == *extra-materialize* ]]; then
+       export materialize_type=extra-materialize
     elif [[ "${materialize_type}" == *recreate* ]]; then
        export materialize_type=recreate
     elif [[ "${materialize_type}" == *skip* ]]; then
@@ -92,23 +96,18 @@ materialize_function () {
     fi
 
     # if there is no existing populated workspace, then do a fresh materialize, even if update was requested
-    if [[ "${materialize_type}" != "skip" ]]; then
+    if [[ "${materialize_type}" == "update" || "${materialize_type}" == "extra-materialize" ]]; then
         if [[ ! -d "${materialize_workspace_path}/.metadata" ]]; then
-            if [[ "${materialize_type}" != "fresh" ]]; then
-                echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace exists"
-                export materialize_type=fresh
-            fi
-        fi
-        if [[ ! -d "${materialize_workspace_path}_git" ]]; then
-            if [[ "${materialize_type}" != "fresh" ]]; then
-                echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace_git exists"
-                export materialize_type=fresh
-            fi
+            echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace exists"
+            export materialize_type=fresh
+        elif [[ ! -d "${materialize_workspace_path}_git" ]]; then
+            echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace_git exists"
+            export materialize_type=fresh
         fi
     fi
     echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` materialize_type=${materialize_type} ***\n"
 
-    if [[ ( "${materialize_type}" == "fresh" ) || ( "${materialize_type}" == "recreate" ) ]]; then
+    if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         if [ -z "${materialize_component}" ]; then
             echo "$""materialize_component not set, so terminating"
             return 100
@@ -117,12 +116,18 @@ materialize_function () {
 
     set -x  # Turn on xtrace
 
-    # execute pre_materialize_function (if defined)
-    if [[ "$(type -t pre_materialize_function)" == "function" ]]; then
-        pre_materialize_function
+    if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "recreate" ]]; then
+        rm -rf ${materialize_workspace_path}_git
+        if [[ "${materialize_type}" == "fresh" ]]; then
+            rm -rf ${materialize_workspace_path}
     fi
 
-    # update any existing git repositories if required
+    # execute 1st pre_materialize_function (if defined)
+    if [[ "$(type -t pre_materialize_function_1)" == "function" ]]; then
+        pre_materialize_function_1
+    fi
+
+    # clean/reset/pull, or just pull, any existing git repositories if required
     if [[ "${materialize_type}" == "update" || "${materialize_type}" == "recreate" ]]; then
         for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
             if [[ -d "${repo}/.git" ]]; then
@@ -135,7 +140,12 @@ materialize_function () {
         done
     fi
 
-    if [[ ( "${materialize_type}" == "fresh" ) || ( "${materialize_type}" == "recreate" ) ]]; then
+    # execute 2nd pre_materialize_function (if defined)
+    if [[ "$(type -t pre_materialize_function_2)" == "function" ]]; then
+        pre_materialize_function_2
+    fi
+
+    if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas
         if [[ "${materialize_type}" == "fresh" ]]; then
             workspace_delete_option=--delete
@@ -150,7 +160,7 @@ materialize_function () {
     fi
 
     # print the HEAD commit from each repository
-    if [[ ( "${materialize_type}" != *skip* ) && ( "${materialize_type}" != "recreate" ) ]]; then
+    if [[ "${materialize_type}" != "skip" ]]; then
       ${pewma_py} -w ${materialize_workspace_path} git log -1
     fi
 

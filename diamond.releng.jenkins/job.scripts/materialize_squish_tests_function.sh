@@ -25,7 +25,7 @@ materialize_squish_tests_function () {
     ### Materialize the squish tests into an existing workspace
     ###
 
-    export materialize_type=recreate
+    export materialize_type=extra-materialize
 
     set -x  # Turn on xtrace
 
