@@ -4,7 +4,7 @@
 # source functions that we will use
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/materialize_function.sh
 if [[ "${new_config_test}" == "true" ]]; then
-  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda_new.config/gda_new.config_pre.post.materialize.functions.sh
+  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda_new.config_pre.post.materialize.functions.sh
 fi
 if [[ "${gerrit_test}" == "true" ]]; then
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda/gda.gerrit_pre.post.materialize.functions.sh
