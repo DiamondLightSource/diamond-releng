@@ -118,9 +118,9 @@ materialize_function () {
     set -x  # Turn on xtrace
 
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "recreate" ]]; then
-        rm -rf ${materialize_workspace_path}_git
+        rm -rf ${materialize_workspace_path}
         if [[ "${materialize_type}" == "fresh" ]]; then
-            rm -rf ${materialize_workspace_path}
+            rm -rf ${materialize_workspace_path}_git
         fi
     fi
 
