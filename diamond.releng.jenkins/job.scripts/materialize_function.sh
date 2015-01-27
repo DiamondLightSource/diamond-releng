@@ -74,7 +74,8 @@ materialize_function () {
     ###     extra-materialize - use existing workspace(_git)/, run materialize (if no workspace, do Fresh)
     ###     Recreate - clean/reset/pull existing workspace_git/, discard workspace/, run materialize
     ###     Skip - use existing workspace(_git)/ unchanged
-    ### Note: the "extra-materialize" option is not shown in the Jenkins UI, it's just used internally (e.g. to materialize squish tests on top of an existing workspace)
+    ### Note: the "extra-materialize" option is not shown in the Jenkins UI, it's just used internally
+    ###       (e.g. to materialize squish tests on top of an existing workspace)
     ###
 
     export materialize_type=$(echo ${materialize_type:-fresh} | tr '[:upper:]' '[:lower:]')
@@ -120,6 +121,7 @@ materialize_function () {
         rm -rf ${materialize_workspace_path}_git
         if [[ "${materialize_type}" == "fresh" ]]; then
             rm -rf ${materialize_workspace_path}
+        fi
     fi
 
     # execute 1st pre_materialize_function (if defined)
