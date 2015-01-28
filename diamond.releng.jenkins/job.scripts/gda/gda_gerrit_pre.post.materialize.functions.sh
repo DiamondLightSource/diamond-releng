@@ -18,6 +18,7 @@ pre_materialize_function_2 () {
     cd ${repo}
     git fetch origin ${GERRIT_REFSPEC}
     git checkout -f FETCH_HEAD
+    git rebase --verbose ${repo_branch_name_for_release}
     git clean -fdx
 
 }
