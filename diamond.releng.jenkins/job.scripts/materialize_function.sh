@@ -97,16 +97,17 @@ materialize_function () {
     fi
 
     # if there's nothing much there already, we have to do a fresh materialize, even if update was requested
-    if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
+    if [[ "${materialize_type}" == "update" || "${materialize_type}" == "extra-materialize" ]]; then
         if [[ ! -d "${materialize_workspace_path}_git" ]]; then
             echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace_git exists"
             export materialize_type=fresh
         elif [[ ! -d "${materialize_workspace_path}/.metadata" ]]; then
-            if [[ "${materialize_type}" != "recreate" ]]; then
-                echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace exists"
-                export materialize_type=fresh
-            fi
+            echo "Resetting materialize_type from \"${materialize_type}\" to \"fresh\", since no existing workspace exists"
+            export materialize_type=fresh
         fi
+    fi
+
+    if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         if [ -z "${materialize_component}" ]; then
             echo "$""materialize_component not set, so terminating"
             return 100
