@@ -10,6 +10,7 @@ pre_materialize_function_2 () {
     echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` getting Gerrit patch ${GERRIT_PROJECT} ${GERRIT_REFSPEC} ***\n"
     repo=${materialize_workspace_path}_git/$(basename ${GERRIT_PROJECT}).git
     if [[ ! -d "${repo}" ]]; then
+        mkdir -pv ${materialize_workspace_path}_git
         cd ${materialize_workspace_path}_git
         git clone ${GERRIT_SCHEME}://${GERRIT_HOST}:${GERRIT_PORT}/${GERRIT_PROJECT} ${repo}
         git -C ${repo} checkout ${repo_branch_name_for_release}
