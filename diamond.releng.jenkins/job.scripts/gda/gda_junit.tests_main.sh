@@ -15,8 +15,8 @@ fi
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/junit_function.sh
 
-# no need to clean if we are going to do a fresh materialize
-if [[ "$(echo ${materialize_type:-unknown} | tr '[:upper:]' '[:lower:]')" != *fresh* ]]; then
+# no need to clean if we are going to do a fresh materialize (match on "discard" not "fresh", since "fresh" occurs in the txt for more than one materialize_type)
+if [[ "$(echo ${materialize_type:-unknown} | tr '[:upper:]' '[:lower:]')" != *discard* ]]; then
     junit_tests_clean_function
 fi
 

@@ -29,9 +29,10 @@ junit_tests_clean_function () {
     
         set -x  # Turn on xtrace
 
-        echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Cleaning previous JUnit test results ***\n  "
+        echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Attempting to clean previous JUnit test results ***\n  "
 
-        ${pewma_py} -w ${materialize_workspace_path} tests-clean
+        # tests-clean can file if a previous build job left an incomplete workspace, in which case just ignore the failure
+        ${pewma_py} -w ${materialize_workspace_path} tests-clean || true
 
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
         $([ "$olderrexit" == "1" ]) && set +e || true  # Turn errexit off if it was off at the top of this script
