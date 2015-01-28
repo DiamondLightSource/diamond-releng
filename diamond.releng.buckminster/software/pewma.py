@@ -345,7 +345,9 @@ class PewmaManager(object):
                 os.makedirs(self.workspace_loc)
 
         if self.workspace_git_loc and os.path.isdir(self.workspace_git_loc):
-            self.logger.info('Using any existing .git repositories (which will not be updated) found in "%s"' % (self.workspace_git_loc,))
+            git_count_at_start = len(self._get_git_directories())
+            if git_count_at_start:
+                self.logger.info('Using %s existing .git repositories (which will not be updated) found in "%s"' % (git_count_at_start, self.workspace_git_loc,))
 
         if expand_template_required:
             template_zip = os.path.join( self.workspace_loc, self.template_name )
