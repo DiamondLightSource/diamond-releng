@@ -33,7 +33,7 @@ checkout_standard_branches_function () {
 
         cd ${materialize_workspace_path}_git
         for repo in $(find -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
-            git -C ${materialize_workspace_path}_git checkout ${repo_branch_name_for_release}
+            git -C ${materialize_workspace_path}_git/${repo} checkout ${repo_branch_name_for_release}
         done
 
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
