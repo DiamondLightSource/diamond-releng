@@ -18,5 +18,5 @@ pre_materialize_function_2 () {
     git fetch origin ${GERRIT_REFSPEC}
     git checkout -f FETCH_HEAD
     git clean -fdx
-    fi
+
 }
