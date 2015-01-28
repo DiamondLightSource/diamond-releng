@@ -18,9 +18,9 @@ pre_materialize_function_2 () {
     # do the merge or rebase in a new local branch, to avoid any risk of pushing something back to the remote
     cd ${repo}
     git checkout ${repo_branch_name_for_release}
-    git branch -D local-${JOBNAME} || true
-    git branch -vv --no-track local-${JOBNAME} remotes/origin/${repo_branch_name_for_release}
-    git checkout local-${JOBNAME}
+    git branch -D local-${JOB_NAME} || true
+    git branch -vv --no-track local-${JOB_NAME} remotes/origin/${repo_branch_name_for_release}
+    git checkout local-${JOB_NAME}
     git fetch origin ${GERRIT_REFSPEC}
 
     # Merge or rebase the change on the main branch, using whatever method is specified for Gerrit's "Submit Type:" for the repository
@@ -28,7 +28,7 @@ pre_materialize_function_2 () {
     if [[ "${submit_type}" == *REBASE_IF_NECESSARY* ]]; then
         # option - attempt to rebase the change with the main branch
         git checkout -f FETCH_HEAD
-        git rebase --verbose local-${JOBNAME}
+        git rebase --verbose local-${JOB_NAME}
     else
         # option - attempt to merge the change with the main branch
         git merge --verbose FETCH_HEAD
