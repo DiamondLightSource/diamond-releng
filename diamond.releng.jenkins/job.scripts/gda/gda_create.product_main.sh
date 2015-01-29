@@ -2,13 +2,8 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/set-environment.sh GDA.${GDA_release}-environment-variables.properties
 
 # source functions that we will use
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.post.materialize_functions.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/materialize_function.sh
-if [[ "${new_config_test}" == "true" ]]; then
-  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda/gda_new.config_pre.post.materialize.functions.sh
-fi
-if [[ "${gerrit_test}" == "true" ]]; then
-  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/gda/gda_gerrit_pre.post.materialize.functions.sh
-fi
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/record_head_commits_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/record_targetplatform_contents_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh
