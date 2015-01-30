@@ -9,9 +9,12 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/junit_function.sh
 
-# no need to clean if we are going to do a fresh materialize (match on "discard" not "fresh", since "fresh" occurs in the txt for more than one materialize_type)
-if [[ "$(echo ${materialize_type:-unknown} | tr '[:upper:]' '[:lower:]')" != *discard* ]]; then
+# remove old JUnit test report files from a previous run, so that Jenkins post-build cannot find them
+m_t="$(echo ${materialize_type:-unknown} | tr '[:upper:]' '[:lower:]' | cut -d ' ' -f1)"
+if [[ "${m_t}" != "extra-materialize" ]]; then
+if [[ "${m_t}" != "fresh" ]]; then
     junit_tests_clean_function
+fi
 fi
 
 materialize_function
