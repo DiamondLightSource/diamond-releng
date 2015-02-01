@@ -23,10 +23,6 @@ checkout_standard_branches_function () {
         fi
         set -e  # Turn on errexit
 
-        ###
-        ### Delete old JUnit test results
-        ###
-    
         set -x  # Turn on xtrace
 
         echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Switching all repos back to branch ${repo_branch_name_for_release:-Error} ***\n  "
