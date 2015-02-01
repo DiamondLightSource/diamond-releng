@@ -7,7 +7,7 @@ if [[ "${GDA_new_config_test}" == "true" ]]; then
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
 if [[ "${gerrit_single_test}" == "true" ]]; then
-  script="errit.single_pre.post.materialize.functions.sh
+  script=gerrit.single_pre.post.materialize.functions.sh
   echo "Sourcing ${script}"
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
