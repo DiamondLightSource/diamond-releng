@@ -2,7 +2,7 @@
 #------------------------------------#
 
 if [[ "${GDA_new_config_test}" == "true" ]]; then
-  script=gda/gda_new.config_pre.post.materialize.functions.sh"
+  script=gda/gda_new.config_pre.post.materialize.functions.sh
   echo "Sourcing ${script}"
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
