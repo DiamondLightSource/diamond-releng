@@ -5,7 +5,7 @@
 
 junit_tests_clean_function () {
 
-    if [[ -d "${materialize_workspace_path}" && -d "${materialize_workspace_path}_git" ]]; then
+    if [[ -d "${materialize_workspace_path}_git" ]]; then
 
         # Save xtrace state (1=was not set, 0=was set)
         if [[ $- = *x* ]]; then
@@ -32,9 +32,9 @@ junit_tests_clean_function () {
         echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Attempting to clean previous JUnit test results ***\n  "
 
         for dir in test-reports test-scratch; do
-            echo "Found $(find ${materialize_workspace_path} -type d -name "${dir}" | wc -l) \"${dir}\" directories to delete"
-            find ${materialize_workspace_path} -type d -name "${dir}"
-            find ${materialize_workspace_path} -depth -type d -name "${dir}" -exec rm -rf {} \;
+            echo "Found $(find ${materialize_workspace_path}_git -type d -name "${dir}" | wc -l) \"${dir}\" directories to delete"
+            find ${materialize_workspace_path}_git -type d -name "${dir}"
+            find ${materialize_workspace_path}_git -depth -type d -name "${dir}" -exec rm -rf {} \;
         done
 
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
