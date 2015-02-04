@@ -31,8 +31,11 @@ junit_tests_clean_function () {
 
         echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Attempting to clean previous JUnit test results ***\n  "
 
-        # tests-clean can file if a previous build job left an incomplete workspace, in which case just ignore the failure
-        ${pewma_py} -w ${materialize_workspace_path} tests-clean || true
+        for dir in test-reports test-scratch; do
+            echo "Found $(find ${materialize_workspace_path} -type d -name "${dir}" | wc -l) \"${dir}\" directories to delete"
+            find ${materialize_workspace_path} -type d -name "${dir}"
+            find ${materialize_workspace_path} -depth -type d -name "${dir}" -exec rm -rf {} \;
+        done
 
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
         $([ "$olderrexit" == "1" ]) && set +e || true  # Turn errexit off if it was off at the top of this script
