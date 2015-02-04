@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="1" hostname="g18-sc-serv-04.diamond.ac.uk" name="gda.training.DummyTest" skipped="0" tests="1" time="0.609">
+  <testcase classname="gda.training.DummyTest" name="test1" time="0.308">
+    <failure message="Simulated failure that happens 1 time out of 5">junit.framework.AssertionFailedError: the world is bad(DummyTest.java:10)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

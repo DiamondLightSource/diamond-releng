@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="g18-sc-serv-04.diamond.ac.uk" name="gda.training.DummyTest" skipped="0" tests="1" time="0.609">
+  <testcase classname="gda.training.DummyTest" name="test1" time="0.308" />
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
