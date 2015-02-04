@@ -29,6 +29,8 @@ checkout_standard_branches_function () {
 
         cd ${materialize_workspace_path}_git
         for repo in $(find -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
+            # abort any prior failed rebase
+            git -C ${materialize_workspace_path}_git/${repo} rebase --abort || true
             git -C ${materialize_workspace_path}_git/${repo} checkout ${repo_branch_name_for_release}
         done
 
