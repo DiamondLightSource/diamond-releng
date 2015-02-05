@@ -18,7 +18,7 @@ materialize_function
 
 # simulate running JUnit tests - copy either a "passed" (chance: 3/4) or "failed" (chance: 1/4) result file
 number=$RANDOM
-let "number %= 3"
+let "number %= 3" || true
 if [[ "${number}" == "0" ]]; then
     file_to_copy=TEST-failed.xml
 else
