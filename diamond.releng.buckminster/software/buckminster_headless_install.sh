@@ -18,10 +18,11 @@
 
 # The install is described in Appendix A of the "Bucky Book" (see Documentation link on http://www.eclipse.org/buckminster/)
 
-set -o errexit  # exit on any error
-set -o xtrace  # trace what the script does
 
 install_buckminster () {
+
+    set -o errexit  # exit on any error
+    set -o xtrace   # trace what the script does
 
     datetime=$(date +"%Y%m%d-%H%M")
 
@@ -62,7 +63,8 @@ install_buckminster () {
         modules_dir=/dls_sw/apps/Modules/modulefiles/buckminster
     fi
 
-    buckminster_install_dir_temp=${buckminster_install_dir}_install-in-progress
+    # create a temporary directory name: %/ is used to remove any trailing slah
+    buckminster_install_dir_temp=${buckminster_install_dir%/}_install-in-progress
 
     director_download="http://www.eclipse.org/downloads/download.php?file=/tools/buckminster/products/director_latest.zip&r=1"
     repository_buckminster=http://download.eclipse.org/tools/buckminster/headless-${buckminster_version}
@@ -76,9 +78,19 @@ install_buckminster () {
     set -o nounset  # variables must exist
 
     #==========================================================
+    for dir in ${buckminster_install_dir_temp} ${buckminster_install_dir}; do
+        if [[ -d "${dir}" ]]; then
+            echo "Deleting existing ${dir}"
+            rm -rf ${dir}
+        fi
+    done
+    umask 0002
+
+    #==========================================================
     # install the director
-    director_zip_file=~/director_${datetime}.zip
-    director_unzip_dir=~/director_${datetime}
+    director_zip_file=${buckminster_install_dir_temp}/director_latest.zip
+    director_unzip_dir=${buckminster_install_dir_temp}/director_${datetime}
+    mkdir -pv $(dirname ${director_zip_file})
     if tty -s; then
         # standard (verbose) output at the terminal
         wget -O ${director_zip_file} "${director_download}"
@@ -92,9 +104,6 @@ install_buckminster () {
 
     #==========================================================
     # install the base headless product, then delete the director
-    rm -rf ${buckminster_install_dir}
-    rm -rf ${buckminster_install_dir_temp}
-    umask 0002
     ${director_unzip_dir}/director/director -repository ${repository_buckminster} -destination ${buckminster_install_dir_temp} -profile Buckminster -installIU org.eclipse.buckminster.cmdline.product
     rm -rf ${director_unzip_dir}
     rm -f ${director_zip_file}
@@ -120,8 +129,8 @@ EOF
     ${buckminster_command_temp} install ${repository_buckminster} org.eclipse.buckminster.git.headless.feature
     ## ${buckminster_command_temp} install ${repository_cloudsmith} org.eclipse.buckminster.subclipse.headless.feature
 
-    mv -v ${buckminster_install_dir_temp}/ ${buckminster_install_dir}/
-    export buckminster_command=${buckminster_install_dir}/buckminster
+    mv -v ${buckminster_install_dir_temp}/ ${buckminster_install_dir%/}/
+    export buckminster_command=${buckminster_install_dir%/}/buckminster
 
     #==========================================================
     #==========================================================
@@ -168,7 +177,7 @@ END_OF_MODULE_FILE
         echo
         echo "======================================================="
         echo "Install completed. To use Buckminster headless, either:"
-        echo "(1) add \"${buckminster_install_dir}\" to your $""PATH"
+        echo "(1) add \"${buckminster_install_dir%/}\" to your $""PATH"
         echo "(2) issue \"$""{buckminster_command}\" (expands to \"${buckminster_command}\")"
     fi
 
@@ -181,6 +190,9 @@ END_OF_MODULE_FILE
         echo "    ln -s ${buckminster_version}-${datetime} ${buckminster_version}"
     fi
     echo
+
+    set +o errexit  # reset back
+    set +o xtrace   # reset back
 
 }
 
