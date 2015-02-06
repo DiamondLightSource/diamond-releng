@@ -127,10 +127,11 @@ set_environment_step () {
         set -x  # Turn on xtrace
         if tty -s; then
             # standard (verbose) output at the terminal
-            wget -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+            wget --timeout=60 --tries=2 --no-cache -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
         else
             # non-verbose output in a batch job
-            wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+            echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
+            wget --timeout=60 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
         fi
         chmod +x ${pewma_py}
         set +x  # Turn off xtrace
@@ -149,10 +150,11 @@ set_environment_step () {
         set -x  # Turn on xtrace
         if tty -s; then
             # standard (verbose) output at the terminal
-            wget -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+            wget --timeout=60 --tries=2 --no-cache -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
         else
             # non-verbose output in a batch job
-            wget -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+            echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
+            wget --timeout=60 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
         fi
         chmod +x ${buckminster_headless_install}
         set +x  # Turn off xtrace
@@ -200,7 +202,7 @@ set_environment_step () {
         if [ -z "${WORKSPACE}" ]; then
             export materialize_workspace_path=`pwd`/${materialize_workspace_name}
         else
-          export materialize_workspace_path=${WORKSPACE}/${materialize_workspace_name}
+            export materialize_workspace_path=${WORKSPACE}/${materialize_workspace_name}
         fi
     else
         export materialize_workspace_path
