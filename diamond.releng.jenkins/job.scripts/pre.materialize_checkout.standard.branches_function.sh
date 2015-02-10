@@ -31,7 +31,7 @@ checkout_standard_branches_function () {
         for repo in $(find -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
             # abort any prior failed rebase
             git -C ${materialize_workspace_path}_git/${repo} rebase --abort || true
-            if [[ "${repo_branch_name_for_release}" == "gda-8.40" && "${repo}" == gphl-*.git ]]; then
+            if [[ "${repo_branch_name_for_release}" == "gda-8.40" && "${repo}" == *gphl-*.git ]]; then
                 git -C ${materialize_workspace_path}_git/${repo} checkout master
             else
                 git -C ${materialize_workspace_path}_git/${repo} checkout ${repo_branch_name_for_release}
