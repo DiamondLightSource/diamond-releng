@@ -31,7 +31,11 @@ checkout_standard_branches_function () {
         for repo in $(find -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
             # abort any prior failed rebase
             git -C ${materialize_workspace_path}_git/${repo} rebase --abort || true
-            git -C ${materialize_workspace_path}_git/${repo} checkout ${repo_branch_name_for_release}
+            if [[ "${repo_branch_name_for_release}" == "gda-8.40" && "${repo}" == gphl-*.git ]]; then
+                git -C ${materialize_workspace_path}_git/${repo} checkout master
+            else
+                git -C ${materialize_workspace_path}_git/${repo} checkout ${repo_branch_name_for_release}
+            fi
         done
 
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
