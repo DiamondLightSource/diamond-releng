@@ -783,8 +783,12 @@ class PewmaManager(object):
             rc = max(int(rc), 2)
             for repo in jgit_errors_repos:
                 self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
+            # Some jgit_errors_general have the same text (e.g "Server error"), but only log them once
+            already_seen = []
             for error_summary in jgit_errors_general:
-                self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
+                if error_summary not in already_seen:
+                    self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
+                    already_seen.append(error_summary)
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 if jgit_errors_repos:
                     text = 'set-build-description: Failure cloning '
@@ -1638,7 +1642,7 @@ class PewmaManager(object):
             fqdn = socket.getfqdn()
             if fqdn.endswith('.diamond.ac.uk'):
                 proxy_value = 'wwwcache.rl.ac.uk:8080'
-                no_proxy_value = '127.0.0.1,localhost,*.diamond.ac.uk'
+                no_proxy_value = '127.0.0.1/8,localhost,*.diamond.ac.uk'
             elif fqdn.endswith('.esrf.fr'):
                 proxy_value = 'proxy.esrf.fr:3128'
                 no_proxy_value = '127.0.0.1,localhost'
