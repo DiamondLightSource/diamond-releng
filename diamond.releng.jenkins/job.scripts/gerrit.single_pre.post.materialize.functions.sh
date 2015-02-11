@@ -2,11 +2,7 @@
 
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh
 
-pre_materialize_function_1 () {
-    checkout_standard_branches_function
-}
-
-pre_materialize_function_2 () {
+pre_materialize_function_stage2_gerrit.single () {
     echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` getting Gerrit patch ${GERRIT_PROJECT} ${GERRIT_REFSPEC} (branch ${repo_branch_name_for_release}) ***\n"
     repo=${materialize_workspace_path}_git/$(basename ${GERRIT_PROJECT}).git
     if [[ ! -d "${repo}" ]]; then

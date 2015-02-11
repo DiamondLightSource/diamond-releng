@@ -125,10 +125,11 @@ materialize_function () {
         fi
     fi
 
-    # execute 1st pre_materialize_function (if defined)
-    if [[ "$(type -t pre_materialize_function_1)" == "function" ]]; then
-        pre_materialize_function_1
-    fi
+    # execute any stage 1 pre_materialize_functions (if defined)
+    for fname in $(compgen -A function pre_materialize_function_stage1_); do
+        echo "Executing: ${fname}"
+        ${fname}
+    done
 
     # clean/reset/pull, or just pull, any existing git repositories if required
     if [[ "${materialize_type}" == "update" || "${materialize_type}" == "recreate" ]]; then
@@ -143,10 +144,11 @@ materialize_function () {
         done
     fi
 
-    # execute 2nd pre_materialize_function (if defined)
-    if [[ "$(type -t pre_materialize_function_2)" == "function" ]]; then
-        pre_materialize_function_2
-    fi
+    # execute any stage 2 pre_materialize_functions (if defined)
+    for fname in $(compgen -A function pre_materialize_function_stage2_); do
+        echo "Executing: ${fname}"
+        ${fname}
+    done
 
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas
@@ -167,10 +169,11 @@ materialize_function () {
       ${pewma_py} -w ${materialize_workspace_path} git log -1
     fi
 
-    # execute post_materialize_function (if defined)
-    if [[ "$(type -t post_materialize_function)" == "function" ]]; then
-        post_materialize_function
-    fi
+    # execute any post_materialize_functions (if defined)
+    for fname in $(compgen -A function post_materialize_function_); do
+        echo "Executing: ${fname}"
+        ${fname}
+    done
 
     $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
     $([ "$olderrexit" == "1" ]) && set +e || true  # Turn errexit off if it was off at the top of this script

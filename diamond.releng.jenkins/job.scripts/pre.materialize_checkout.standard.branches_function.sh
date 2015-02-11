@@ -3,7 +3,7 @@
 #------------------------------------#
 #------------------------------------#
 
-checkout_standard_branches_function () {
+pre_materialize_function_stage1_checkout_standard_branches_function () {
 
     if [[ -d "${materialize_workspace_path}_git" ]]; then
 
