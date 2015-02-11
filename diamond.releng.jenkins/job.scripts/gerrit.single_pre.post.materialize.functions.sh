@@ -3,7 +3,7 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh
 
 pre_materialize_function_stage2_gerrit_single () {
-    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` getting Gerrit patch ${GERRIT_PROJECT} ${GERRIT_REFSPEC} (branch ${repo_branch_name_for_release}) ***\n"
+    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` getting Gerrit patch ${GERRIT_PROJECT} ${GERRIT_REFSPEC} (branch ${repo_default_BRANCH}) ***\n"
     repo=${materialize_workspace_path}_git/$(basename ${GERRIT_PROJECT}).git
     if [[ ! -d "${repo}" ]]; then
         mkdir -pv ${materialize_workspace_path}_git
@@ -13,9 +13,9 @@ pre_materialize_function_stage2_gerrit_single () {
 
     # do the merge or rebase in a new local branch, to avoid any risk of pushing something back to the remote
     cd ${repo}
-    git checkout ${repo_branch_name_for_release}
+    git checkout ${repo_default_BRANCH}
     git branch -D local-${JOB_NAME} || true
-    git branch -vv --no-track local-${JOB_NAME} remotes/origin/${repo_branch_name_for_release}
+    git branch -vv --no-track local-${JOB_NAME} remotes/origin/${repo_default_BRANCH}
     git checkout local-${JOB_NAME}
     git fetch origin ${GERRIT_REFSPEC}
 

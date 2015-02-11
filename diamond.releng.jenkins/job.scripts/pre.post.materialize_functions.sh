@@ -7,8 +7,8 @@ if [[ "${GDA_new_config_test}" == "true" ]]; then
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
 
-if [[ "${GDA_release}" == "8.40" ]]; then
-  script=gda/gda.8.40_pre.post.materialize.functions.sh
+if [[ -n "${GDA_release}" ]]; then
+  script=gda/gda_pre.post.materialize.functions.sh
   echo "Sourcing ${script}"
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi

@@ -17,12 +17,6 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
         result=good
     fi
 
-        if [[ "${release}" == "master" ]]; then
-            repo_branch_name_for_release=master
-        else
-            repo_branch_name_for_release="dawn-${release}"
-        fi
-
     if [[ "${JOB_NAME:-noname}" == *download.public ]]; then
         download_public=true
     else
@@ -40,7 +34,6 @@ fi
 
 echo "Dawn_flavour=${flavour:Error}" >> ${properties_filename}
 echo "Dawn_release=${release:Error}" >> ${properties_filename}
-echo "repo_branch_name_for_release=${repo_branch_name_for_release:Error}" >> ${properties_filename}
 echo "download_public=${download_public:Error}" >> ${properties_filename}
 if [[ -n "${publish_type}" ]]; then
     echo "publish_type=${publish_type}" >> ${properties_filename}

@@ -16,12 +16,6 @@ if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
         # -5 is -4 for "GDA." and -1 for "-"
         release=${JOB_NAME:4:${releasesuffixindex}-5}
 
-        if [[ "${release}" == "master" ]]; then
-            repo_branch_name_for_release=master
-        else
-            repo_branch_name_for_release="gda-${release}"
-        fi
-
         groupbeamlinesuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*beamline-')
         if [[ "${groupbeamlinesuffixindex}" != "0" ]]; then
             groupbeamlinesuffix=${JOB_NAME:groupbeamlinesuffixindex}
@@ -68,7 +62,6 @@ if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
 fi
 
 echo "GDA_release=${release:Error}" >> ${properties_filename}
-echo "repo_branch_name_for_release=${repo_branch_name_for_release:Error}" >> ${properties_filename}
 
 if [[ -n "${group}" ]]; then
     echo "GDA_group=${group}" >> ${properties_filename}
