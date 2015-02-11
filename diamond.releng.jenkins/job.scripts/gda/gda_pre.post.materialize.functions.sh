@@ -29,8 +29,8 @@ post_materialize_function_gda () {
         for repo in $(find -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
             repo_commit_env_var="repo_$(echo "${repo}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_COMMIT"
             repo_commit="${!repo_commit_env_var}"
-            if [[ -n "${repo_branch}" ]]; then
-                git -C ${repo} checkout ${repo_branch}
+            if [[ -n "${repo_commit}" ]]; then
+                git -C ${repo} checkout ${repo_commit}
             fi
         done
 
