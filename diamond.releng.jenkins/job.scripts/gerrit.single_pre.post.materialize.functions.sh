@@ -30,6 +30,6 @@ pre_materialize_function_stage2_gerrit_single () {
         git merge --verbose FETCH_HEAD
     fi
 
-    git log master^..
+    git log ${repo_default_BRANCH}^..
 
 }
