@@ -3,7 +3,7 @@
 #------------------------------------#
 #------------------------------------#
 
-pre_materialize_function_stage2_gda () {
+post_materialize_function_gda () {
 
     if [[ -d "${materialize_workspace_path}_git" ]]; then
 
