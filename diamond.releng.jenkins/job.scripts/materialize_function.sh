@@ -139,7 +139,8 @@ materialize_function () {
                     git -C ${repo} clean -fdxq
                     git -C ${repo} reset --quiet --hard HEAD
                 fi
-                git -C ${repo} pull
+                # pull may fail if we are not on a branch (i.e. if this repo was switched to a particular commit; that's ok
+                git -C ${repo} pull || true
             fi
         done
     fi
