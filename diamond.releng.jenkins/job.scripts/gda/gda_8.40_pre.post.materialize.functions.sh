@@ -2,7 +2,7 @@
 
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh
 
-pre_materialize_function_stage2_gda_8.40 () {
+pre_materialize_function_stage2_gda_8_40 () {
 
     repo=gphl-abstract-beamline.git
     commit=e81d221270876ddca7b9059b718a41c2ad303aec
