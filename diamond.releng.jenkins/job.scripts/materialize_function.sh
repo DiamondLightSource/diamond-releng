@@ -164,16 +164,16 @@ materialize_function () {
         fi
     fi
 
-    # print the HEAD commit from each repository
-    if [[ "${materialize_type}" != "skip" ]]; then
-      ${pewma_py} -w ${materialize_workspace_path} git log -1
-    fi
-
     # execute any post_materialize_functions (if defined)
     for fname in $(compgen -A function post_materialize_function_); do
         echo "Executing: ${fname}"
         ${fname}
     done
+
+    # print the HEAD commit from each repository
+    if [[ "${materialize_type}" != "skip" ]]; then
+      ${pewma_py} -w ${materialize_workspace_path} git log -1
+    fi
 
     $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
     $([ "$olderrexit" == "1" ]) && set +e || true  # Turn errexit off if it was off at the top of this script
