@@ -192,6 +192,9 @@
   <rm:propertyElement key="DiamondLightSource.github.authentication">
     <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
+  <rm:propertyElement key="eclipse.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
   <rm:propertyElement key="openGDA.github.authentication">
     <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
@@ -270,32 +273,6 @@
   </rm:propertyElement>
   <rm:propertyElement key="dawn.doc.git.url">
     <bc:constant value="${github.${dawn.doc.github.authentication}.url}${dawn.doc.github.organization}/dawn-doc.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.eclipse.git.location">
-    <bc:constant value="${dawn.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${dawn.eclipse.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/dawn"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.github.authentication">
-    <bc:constant value="${DawnScience.github.authentication}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.github.url">
-    <bc:constant value="${github.${dawn.eclipse.github.authentication}.url}${dawn.eclipse.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.git.url">
-    <bc:constant value="${dawn.eclipse.${dawn.eclipse.git.location.translated}.url}/dawn-eclipse.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.fable.github.organization">
@@ -416,6 +393,16 @@
   </rm:propertyElement>
   <rm:propertyElement key="dawn.workflow.git.url">
     <bc:constant value="${github.${dawn.workflow.github.authentication}.url}${dawn.workflow.github.organization}/dawn-workflow.git"/>
+  </rm:propertyElement>
+  <!-- ** (eclipse/)dawnsci *** -->
+  <rm:propertyElement key="dawnsci.github.organization">
+    <bc:constant value="eclipse"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="dawnsci.github.authentication">
+    <bc:constant value="${eclipse.github.authentication}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="dawnsci.git.url">
+    <bc:constant value="${github.${dawnsci.github.authentication}.url}${dawnsci.github.organization}/dawnsci.git"/>
   </rm:propertyElement>
   <!-- ** diamond- *** -->
   <rm:propertyElement key="diamond.enthought.git.location">
@@ -2097,7 +2084,7 @@
   <rm:locator pattern="^org\.dawnsci\.commandserver(\..+)?$" searchPathRef="dawn_commandserver"/>
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|macro|persistence|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
-  <rm:locator pattern="^org\.eclipse\.dawnsci\..+$" searchPathRef="dawn_eclipse"/>
+  <rm:locator pattern="^org\.eclipse\.dawnsci\..+$" searchPathRef="dawnsci"/>
   <rm:locator pattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" searchPathRef="dawn_fable"/>
   <rm:locator pattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" searchPathRef="dawn_hpc"/>
   <rm:locator pattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|runtime|project\.repository\..+)|org\.dawnsci\.passerelle\.parallel\.actor(\..+)?)$" searchPathRef="dawn_isencia"/>
@@ -2497,22 +2484,6 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="dawn_eclipse">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-eclipse=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.eclipse.git.url}"/>
-      <rm:uri format="{0}/dawn-eclipse.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-eclipse=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-eclipse.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
   <rm:searchPath name="dawn_fable">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-fable=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
@@ -2700,6 +2671,24 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-workflow=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from dawn-workflow.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!--
+       (eclipse/)DAWNSCI repository
+  -->
+  <rm:searchPath name="dawnsci">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawnsci=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${dawnsci.git.url}"/>
+      <rm:uri format="{0}/dawnsci.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawnsci=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from dawnsci.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>

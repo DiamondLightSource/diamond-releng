@@ -25,10 +25,6 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-doc.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-doc" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-eclipse.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.dawn-eclipse" value="true"/>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-fable.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-fable" value="true"/>
@@ -77,9 +73,9 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-workflow.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-workflow" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.embl\.cca\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">embl-cca.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.embl-cca" value="true"/>
+    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawnsci.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.dawnsci" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^diffcalc$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diffcalc.git repository branch</cq:documentation>
@@ -102,6 +98,10 @@
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-springframework.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.embl\.cca\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">embl-cca.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.embl-cca" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.bimorph(\..+)?" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-bimorph.git repository branch</cq:documentation>
