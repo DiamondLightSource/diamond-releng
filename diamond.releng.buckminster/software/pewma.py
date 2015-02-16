@@ -1591,6 +1591,8 @@ class PewmaManager(object):
                     raise PewmaException('ERROR: current user does not have read access to --keyring "%s"' % (self.options.keyring,))
         if self.options.delete and self.action not in ('setup', 'materialize'):
             raise PewmaException('ERROR: the --delete option cannot be specified with action "%s"' % (self.action))
+        if self.options.recreate and self.action not in ('setup', 'materialize'):
+            raise PewmaException('ERROR: the --recreate option cannot be specified with action "%s"' % (self.action))
         if self.options.system_property:
             if any((keyval.find('=') == -1) for keyval in self.options.system_property):
                 raise PewmaException('ERROR: the -D option must specify a property and value as "key=value"')
