@@ -18,6 +18,8 @@ def write_script_file_start():
     with open(SCRIPT_FILE_PATH, 'w') as script_file:
                 script_file.write('''\
 
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh
+
 pre_materialize_function_stage2_gerrit_multiple () {
 
 ''')
