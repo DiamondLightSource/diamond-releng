@@ -20,9 +20,9 @@ if [[ "${gerrit_single_test}" == "true" ]]; then
 fi
 
 if [[ "${gerrit_multiple_test}" == "true" ]]; then
-  script=gerrit.multiple_pre.post.materialize.functions.sh
-  echo "Sourcing ${script}"
-  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
+  script=gerrit_multiple_get_changes.py
+  echo "Running ${script}"
+  python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
 
 #------------------------------------#
