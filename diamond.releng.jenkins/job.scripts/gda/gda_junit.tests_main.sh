@@ -9,6 +9,7 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/record_targetplatform_contents_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/junit_function.sh
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/junit.ignore.selected.tests_function.sh
 
 # remove old JUnit test report files from a previous run, so that Jenkins post-build cannot find them
 m_t="$(echo ${materialize_type:-unknown} | tr '[:upper:]' '[:lower:]' | cut -d ' ' -f1)"
@@ -33,3 +34,5 @@ if [[ "$(type -t post_build_function)" == "function" ]]; then
 fi
 
 junit_function
+
+junit_ignore_selected_tests
