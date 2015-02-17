@@ -153,9 +153,9 @@ materialize_function () {
 
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas
-        if [[ "${materialize_type}" == "fresh" ]]; then
-            workspace_delete_option=--delete
-        elif [[ "${materialize_type}" == "recreate" ]]; then
+        if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "recreate" ]]; then
+            # if fresh was specified, we have already deleted any previous workspace and workspace_git
+            # but we need to say --recreate and not --delete, in case the pre_materialize_functions cloned and set up a repository (e.g. for Gerrit tests)
             workspace_delete_option=--recreate
         fi
         if [[ -z "${materialize_cquery}" ]]; then
