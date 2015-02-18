@@ -133,21 +133,24 @@ materialize_function () {
     # if a previous job left any git repository in an inconsistent state (e.g. due to network problems), delete the repository
     if [[ "${materialize_type}" == "update" || "${materialize_type}" == "recreate" ]]; then
         if [[ -d "${materialize_workspace_path}_git" ]]; then
+            set +e  # Turn off errexit
             for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
-                if git -C ${repo} fsck --full --strict; then
-                    echo "${repo} is not a valid Git repository - deleting"
-                    git -C ${repo} fsck --full --strict || true
-                    rm -rf ${repo}
-                    export materialize_type=recreate
-                else
+                git -C ${repo} fsck --no-progress --full --strict
+                RETVAL=$?
+                if [ "${RETVAL}" == "0" ]; then
                     if [[ "${materialize_type}" == "recreate" ]]; then
                         git -C ${repo} clean -fdxq
                         git -C ${repo} reset --quiet --hard HEAD
                     fi
                     # pull may fail if we are not on a branch (i.e. if this repo was switched to a particular commit); that's ok
                     git -C ${repo} pull || true
+                else
+                    echo "git fsck got rc=${RETVAL} on ${repo}, so deleting"
+                    rm -rf ${repo}
+                    export materialize_type=recreate
                 fi
             done
+            set -e  # Turn on errexit
         fi
     fi
 
