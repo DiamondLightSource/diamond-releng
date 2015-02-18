@@ -134,7 +134,7 @@ materialize_function () {
     if [[ "${materialize_type}" == "update" || "${materialize_type}" == "recreate" ]]; then
         if [[ -d "${materialize_workspace_path}_git" ]]; then
             for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
-                if git -C ${repo} fsck --full --strict; then
+                if ! git -C ${repo} fsck --full --strict; then
                     echo "${repo} is not a valid Git repository - deleting"
                     rm -rf ${repo}
                     export materialize_type=recreate
