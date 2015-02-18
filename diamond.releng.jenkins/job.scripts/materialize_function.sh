@@ -114,16 +114,14 @@ materialize_function () {
         fi
     fi
 
-    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` materialize_type=${materialize_type} ***\n"
-
-    set -x  # Turn on xtrace
-
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "recreate" ]]; then
         rm -rf ${materialize_workspace_path}
         if [[ "${materialize_type}" == "fresh" ]]; then
             rm -rf ${materialize_workspace_path}_git
         fi
     fi
+
+    set -x  # Turn on xtrace
 
     # execute any stage 1 pre_materialize_functions (if defined)
     for fname in $(compgen -A function pre_materialize_function_stage1_); do
@@ -132,17 +130,24 @@ materialize_function () {
     done
 
     # clean/reset/pull, or just pull, any existing git repositories if required
+    # if a previous job left any git repository in an inconsistent state (e.g. due to network problems), delete the repository
     if [[ "${materialize_type}" == "update" || "${materialize_type}" == "recreate" ]]; then
-        for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
-            if [[ -d "${repo}/.git" ]]; then
-                if [[ "${materialize_type}" == "recreate" ]]; then
-                    git -C ${repo} clean -fdxq
-                    git -C ${repo} reset --quiet --hard HEAD
+        if [[ -d "${materialize_workspace_path}_git" ]]; then
+            for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
+                if git -C ${repo} fsck --full --strict; then
+                    echo "${repo} is not a valid Git repository - deleting"
+                    rm -rf ${repo}
+                    export materialize_type=recreate
+                else
+                    if [[ "${materialize_type}" == "recreate" ]]; then
+                        git -C ${repo} clean -fdxq
+                        git -C ${repo} reset --quiet --hard HEAD
+                    fi
+                    # pull may fail if we are not on a branch (i.e. if this repo was switched to a particular commit); that's ok
+                    git -C ${repo} pull || true
                 fi
-                # pull may fail if we are not on a branch (i.e. if this repo was switched to a particular commit; that's ok
-                git -C ${repo} pull || true
-            fi
-        done
+            done
+        fi
     fi
 
     # execute any stage 2 pre_materialize_functions (if defined)
@@ -150,6 +155,8 @@ materialize_function () {
         echo "Executing: ${fname}"
         ${fname}
     done
+
+    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` materialize_type=${materialize_type} ***\n"
 
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas
