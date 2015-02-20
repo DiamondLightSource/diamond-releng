@@ -528,17 +528,18 @@ class PewmaManager(object):
             # .site projects can be up to three directory levels below the git materialize directory
             for level1 in os.listdir(self.workspace_git_loc):
                 level1_dir = os.path.join(self.workspace_git_loc, level1)
-                for level2 in os.listdir(level1_dir):
-                    level2_dir = os.path.join(level1_dir, level2)
-                    if os.path.isdir(level2_dir):
-                        if level2.endswith('.site') and os.path.exists( os.path.join(level2_dir, 'feature.xml')):
-                            sites[level2] = level2_dir
-                        else:
-                            for level3 in os.listdir(level2_dir):
-                                level3_dir = os.path.join(level2_dir, level3)
-                                if os.path.isdir(level3_dir):
-                                    if level3.endswith('.site') and os.path.exists( os.path.join(level3_dir, 'feature.xml')):
-                                        sites[level3] = level3_dir
+                if os.path.isdir(level1_dir):
+                    for level2 in os.listdir(level1_dir):
+                        level2_dir = os.path.join(level1_dir, level2)
+                        if os.path.isdir(level2_dir):
+                            if level2.endswith('.site') and os.path.exists( os.path.join(level2_dir, 'feature.xml')):
+                                sites[level2] = level2_dir
+                            else:
+                                for level3 in os.listdir(level2_dir):
+                                    level3_dir = os.path.join(level2_dir, level3)
+                                    if os.path.isdir(level3_dir):
+                                        if level3.endswith('.site') and os.path.exists( os.path.join(level3_dir, 'feature.xml')):
+                                            sites[level3] = level3_dir
         self.available_sites = sites
 
 
