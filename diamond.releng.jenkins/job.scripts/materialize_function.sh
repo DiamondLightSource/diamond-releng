@@ -135,17 +135,21 @@ materialize_function () {
         if [[ -d "${materialize_workspace_path}_git" ]]; then
             set +e  # Turn off errexit
             for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
-                git -C ${repo} fsck --no-progress --full --strict
-                RETVAL=$?
-                if [ "${RETVAL}" == "0" ]; then
+                # unfortunately git fsck can have an exit code of zero even if errors as found, so we need to check stderr as well as the exit code
+                git -C ${repo} fsck --no-progress --full --strict 2>&1 | tee ${WORKSPACE}/git-fsck-temp.txt
+                RETVAL=${PIPESTATUS[0]}
+                ERRORS=$(wc -l ${WORKSPACE}/git-fsck-temp.txt | cut -d ' ' -f 1)
+                if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
                     if [[ "${materialize_type}" == "recreate" ]]; then
                         git -C ${repo} clean -fdxq
                         git -C ${repo} reset --quiet --hard HEAD
+                        RETVAL=$?
                     fi
                     # pull may fail if we are not on a branch (i.e. if this repo was switched to a particular commit); that's ok
                     git -C ${repo} pull || true
-                else
-                    echo "git fsck got rc=${RETVAL} on ${repo}, so deleting"
+                fi
+                if [[ "${RETVAL}" != "0" || "${ERRORS}" != "0" ]]; then
+                    echo "Problems with structure or state of ${repo}, so deleting"
                     rm -rf ${repo}
                     export materialize_type=recreate
                 fi
