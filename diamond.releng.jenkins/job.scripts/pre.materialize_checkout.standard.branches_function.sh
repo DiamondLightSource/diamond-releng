@@ -32,12 +32,24 @@ pre_materialize_function_stage1_checkout_standard_branches_function () {
             # abort any prior failed operation
             git -C ${repo} rebase --abort || true
             git -C ${repo} merge --abort || true
-            repo_branch_env_var="repo_$(echo "${repo}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_BRANCH"
-            repo_branch="${!repo_branch_env_var}"
-            if [[ -z "${repo_branch}" ]]; then
-                repo_branch=${repo_default_BRANCH}
+            # if a previous job left any git repository in an inconsistent state (e.g. due to network problems), delete the repository
+            git -C ${repo} fsck --no-progress --full --strict 2>&1 | tee ${WORKSPACE}/git-fsck-temp.txt
+            RETVAL=${PIPESTATUS[0]}
+            ERRORS=$(wc -l ${WORKSPACE}/git-fsck-temp.txt | cut -d ' ' -f 1)
+            if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
+                repo_branch_env_var="repo_$(echo "${repo}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_BRANCH"
+                repo_branch="${!repo_branch_env_var}"
+                if [[ -z "${repo_branch}" ]]; then
+                    repo_branch=${repo_default_BRANCH}
+                fi
+                git -C ${repo} checkout ${repo_branch}
+                RETVAL=$?
             fi
-            git -C ${repo} checkout ${repo_branch}
+            if [[ "${RETVAL}" != "0" || "${ERRORS}" != "0" ]]; then
+                echo "Problems with structure or state of ${repo}, so deleting"
+                rm -rf ${repo}
+                export materialize_type=recreate
+            fi
         done
 
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
