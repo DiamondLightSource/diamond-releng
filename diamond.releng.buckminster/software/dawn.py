@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 warning_text = '''
-********************************************************************************
-*  WARNING:          "dawn.py" has been renamed to "pewma.py"                  *
-*  WARNING: The old name (dawn.py) will only be supported for a limited time   *
-*  WARNING:       Please switch to using pewma.py as soon as convenient        *
-*  (Reference: http://jira.diamond.ac.uk/browse/DASCTEST-267)                  *
-********************************************************************************
+******************************************************************************
+*  ERROR: "dawn.py" has been renamed to "pewma.py"                           *
+*  ERROR: The old name (dawn.py) is no longer supported. Please use pewma.py *
+*  (Reference: http://jira.diamond.ac.uk/browse/DASCTEST-267)                *
+******************************************************************************
 '''
 
 ###
@@ -1632,11 +1631,12 @@ class DawnManager(object):
 ###############################################################################
 
 if __name__ == '__main__':
-    print warning_text
+    if os.environ.get('USER', '') != 'dlshudson':
+        print warning_text
+        sys.exit(3)
     dawn = DawnManager()
     try:
         rc = dawn.main(sys.argv)
-        print warning_text
         sys.exit(rc)
     except DawnException, e:
         print e
