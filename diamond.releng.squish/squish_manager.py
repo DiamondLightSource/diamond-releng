@@ -203,17 +203,17 @@ class SquishTestManager():
         squish_zip_origin = os.environ['squish_' + self.squish_platform + '_zip']
         if not os.path.isfile(squish_zip_origin):
             raise SquishTestSetupError('ERROR: file does not exist: ' + squish_zip_origin)
-        squish_zip_name = os.path.basename(squish_zip_origin)
+        self.squish_zip_name = os.path.basename(squish_zip_origin)
         run_cmd('rsync -e "ssh {}" -itv {} {}/'.format(self.ssh_options, squish_zip_origin, jenkins_squish_framework_abspath))
 
         # get the name of the directory that squish expands into
-        with zipfile.ZipFile(os.path.join(jenkins_squish_framework_abspath, squish_zip_name), 'r') as squishzip:
+        with zipfile.ZipFile(os.path.join(jenkins_squish_framework_abspath, self.squish_zip_name), 'r') as squishzip:
             namelist = squishzip.namelist()
             direct_descendents_dirs = [filename for filename in namelist if (filename.count('/') == 1) and filename.endswith('/')]
             direct_descendents_files = [filename for filename in namelist if (filename.count('/') == 0)]
         if (len(direct_descendents_dirs) != 1) or (len(direct_descendents_files) != 0):
             raise SquishTestSetupError('ERROR: {} does not contain exactly one directory; instead has directories: {}, files: {}'.format
-                                       (squish_zip_name, direct_descendents_dirs, direct_descendents_files))
+                                       (self.squish_zip_name, direct_descendents_dirs, direct_descendents_files))
         self.squish_abspath = self.squish_path.join(self.squish_tmp_abspath, 'squish', direct_descendents_dirs[0].rstrip(self.squish_path.sep))
 
         ### EPD
@@ -367,7 +367,7 @@ unzip -q -d {aut} {artifacts_to_test}/{aut_zip_name}
 for zip in {aut_other_zip_names}; do
     unzip -q -d {aut_other} {artifacts_to_test}/${{zip}}
 done
-unzip -q -d {squish_tmp}/squish/ {squish_framework}/squish-*-java-*.zip
+unzip -q -d {squish_tmp}/squish/ {squish_framework}/{squish_zip_name}
 unzip -q -d {squish_tmp}/squish_control/ {squish_framework}/squish_control.zip
 unzip -q -d {squish_tmp}/squish_tests/ {artifacts_to_test}/squish_tests.zip
 '''.format(aut=self.aut_abspath,
@@ -376,7 +376,8 @@ unzip -q -d {squish_tmp}/squish_tests/ {artifacts_to_test}/squish_tests.zip
            aut_zip_name=self.aut_zip_name,
            aut_other_zip_names=''.join(self.aut_other_zip_names),
            squish_tmp=self.squish_tmp_abspath,
-           squish_framework=self.squish_framework_abspath)
+           squish_framework=self.squish_framework_abspath,
+           squish_zip_name=self.squish_zip_name)
         elif self.squish_isWin:
             raise NotImplementedError
         else:
