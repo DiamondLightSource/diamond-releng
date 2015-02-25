@@ -483,6 +483,32 @@
     <bc:constant value="${diamond.jython.${diamond.jython.git.location.translated}.url}/diamond-jython.git"/>
   </rm:propertyElement>
   <!-- -->
+  <rm:propertyElement key="diamond.miniconda.git.location">
+    <bc:constant value="${gda.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.miniconda.git.location.translated">
+    <bc:replace>
+      <bc:propertyRef key="diamond.miniconda.git.location"/>
+      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^public$" replacement="github"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.miniconda.dascgit.url">
+    <bc:constant value="${diamond.dascgit.url}/diamond"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.miniconda.github.organization">
+    <bc:constant value="openGDA"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.miniconda.github.authentication">
+    <bc:constant value="${openGDA.github.authentication}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.miniconda.github.url">
+    <bc:constant value="${github.${diamond.miniconda.github.authentication}.url}${diamond.miniconda.github.organization}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.miniconda.git.url">
+    <bc:constant value="${diamond.miniconda.${diamond.miniconda.git.location.translated}.url}/diamond-miniconda.git"/>
+  </rm:propertyElement>
+  <!-- -->
   <rm:propertyElement key="diamond.releng.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -2081,6 +2107,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\.sda\.enthought(\..+)?$" searchPathRef="diamond_enthought"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.jacorb$" searchPathRef="diamond_jacorb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.jython$" searchPathRef="diamond_jython"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.miniconda(\..+)?$" searchPathRef="diamond_minconda"/>
   <rm:locator pattern="^diamond\.releng\..+$" searchPathRef="diamond_releng"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="diamond_springframework"/>
   <!-- ** diffcalc *** -->
@@ -2714,6 +2741,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.diamond-jython=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from diamond-jython.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="diamond_miniconda">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.diamond-miniconda=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${diamond.miniconda.git.url}"/>
+      <rm:uri format="{0}/diamond-miniconda.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.diamond-miniconda=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from diamond-miniconda.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
