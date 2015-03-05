@@ -282,6 +282,9 @@ class PewmaManager(object):
         group = optparse.OptionGroup(self.parser, "Build/Product options")
         group.add_option('--suppress-compile-warnings', dest='suppress_compile_warnings', action='store_true', default=False,
                                help='Don\'t print compiler warnings')
+        group.add_option('--assume-build', dest='assume_build', action='store_true', default=False, help='Skip explicit build when running "site.p2" or "product" actions')
+        group.add_option('--create-symlink', dest='create_symlink', action='store_true', default=False,
+                               help='Create or update the "client" symlink to the built product (linux64 only)')
         group.add_option('--buckminster.properties.file', dest='buckminster_properties_file', type='string', metavar='<path>',
                          help='Properties file, relative to site project if not absolute (default: filenames looked for in order: buckminster.properties, buckminster.beamline.properties)')
         group.add_option('--buckminster.root.prefix', dest='buckminster_root_prefix', type='string', metavar='<path>',
@@ -308,7 +311,6 @@ class PewmaManager(object):
         group.add_option('-h', '--help', dest='help', action='store_true', default=False, help='Show help information and exit')
         group.add_option('-n', '--dry-run', dest='dry_run', action='store_true', default=False,
                                help='Log the actions to be done, but don\'t actually do them')
-        group.add_option('--assume-build', dest='assume_build', action='store_true', default=False, help='Skip explicit build when running "site.p2" or "product" actions')
         group.add_option('-s', '--script-file', dest='script_file', type='string', metavar='<path>',
                                default='pewma-script.txt',
                                help='Script file, relative to workspace if not absolute (default: %default)')
@@ -1299,19 +1301,24 @@ class PewmaManager(object):
         # (C) a single action for all platforms (create.product)
 
         cspex_file_path = os.path.abspath(os.path.join(self.available_sites[self.site_name], 'buckminster.cspex'))
+        linux64_with_symlink_action_available = False
         per_platform_actions_available = False
         zip_actions_available = False
         with open(cspex_file_path, 'r') as cspex_file:
             for line in cspex_file:
-                if 'create.product-linux.gtk.x86' in line:
+                if 'create.product-linux.gtk.x86_64-with.symlink' in line:
+                    linux64_with_symlink_action_available = True
+                if 'create.product-linux.gtk.x86_64' in line:
                     per_platform_actions_available = True
-                if 'create.product.zip-linux.gtk.x86' in line:
+                if 'create.product.zip-linux.gtk.x86_64' in line:
                     zip_actions_available = True
-                if per_platform_actions_available and zip_actions_available:
+                if all((linux64_with_symlink_action_available, per_platform_actions_available, zip_actions_available)):
                     break
 
         if action_zip and not zip_actions_available:
             raise PewmaException('ERROR: product.zip is not available for "%s"' % (self.site_name,))
+        if self.options.create_symlink and not linux64_with_symlink_action_available:
+            raise PewmaException('ERROR: --create-symlink is not available for "%s"' % (self.site_name,))
 
         self.set_buckminster_properties_path(self.site_name)
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
@@ -1327,9 +1334,11 @@ class PewmaManager(object):
             script_file.write('-Dtarget.os=* -Dtarget.ws=* -Dtarget.arch=* ')
             if per_platform_actions_available:
                 for p in platforms:
-                    perform_options = {'action': 'create.product.zip' if action_zip else 'create.product', 'site_name': self.site_name,
+                    perform_options = {'action': 'create.product.zip' if action_zip else 'create.product', 'withsymlink': '', 'site_name': self.site_name,
                                        'os': p.split(',')[0], 'ws': p.split(',')[1], 'arch': p.split(',')[2]}
-                    script_file.write(' %(site_name)s#%(action)s-%(os)s.%(ws)s.%(arch)s' % perform_options)
+                    if self.options.create_symlink and (p == 'linux,gtk,x86_64') and not action_zip:
+                        perform_options['withsymlink'] = '-with.symlink'
+                    script_file.write(' %(site_name)s#%(action)s-%(os)s.%(ws)s.%(arch)s%(withsymlink)s' % perform_options)
                 script_file.write('\n')
             else:
                 script_file.write('%(site_name)s#site.p2\n' % {'site_name': self.site_name})
