@@ -14,7 +14,7 @@ import squish_manager
 
 if __name__ == '__main__':
 
-    manager = squish_manager.SquishTestManager(None, use_epdfree=False, use_JRE=False, jenkins_workspace = os.environ['WORKSPACE'])
+    manager = squish_manager.SquishTestManager(None, use_JRE=False, jenkins_workspace = os.environ['WORKSPACE'])
     manager.specify_application('gda-'+os.environ['GDA_beamline'], 'GDA-.+')
 
     try:

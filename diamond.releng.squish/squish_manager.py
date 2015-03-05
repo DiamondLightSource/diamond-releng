@@ -15,7 +15,6 @@ The Jenkins slave starts off like this:
     ${WORKSPACE}/squish_framework/     (set up by this script)
         squish_control.zip
         squish-${squish_version}-java-${squish_platform}.zip
-        epd_free-${epd_free_version}-${epd_platform}.sh (or ./msi)
     ${scratch}/squish_results/
         initially empty
 
@@ -105,7 +104,7 @@ class SquishTestManager():
                 might or might not be a virtual machine
     '''
 
-    def __init__(self, squish_hostname=None, squish_platform=None, squish_VMname=None, use_epdfree=False, use_JRE=True, jenkins_workspace=None):
+    def __init__(self, squish_hostname=None, squish_platform=None, squish_VMname=None, use_JRE=True, jenkins_workspace=None):
         ''' if this Squish host is *not* the same machine as the Jenkins slave which launches it:
                 squish_hostname:   network name or address of Squish host
                 squish_platform:   platform of Squish host (linux32/linux64/win32/win64)
@@ -141,7 +140,6 @@ class SquishTestManager():
             assert not self.squishHostIsJenkins  # if the Squish Host is a VM, it must be a different machine to the Jenkins slave
         self.squish_VMname = squish_VMname
 
-        self.use_epdfree = use_epdfree
         self.use_JRE = use_JRE
         assert self.squish_path.isabs(jenkins_workspace)
         self.jenkins_workspace = jenkins_workspace
@@ -215,16 +213,6 @@ class SquishTestManager():
             raise SquishTestSetupError('ERROR: {} does not contain exactly one directory; instead has directories: {}, files: {}'.format
                                        (self.squish_zip_name, direct_descendents_dirs, direct_descendents_files))
         self.squish_abspath = self.squish_path.join(self.squish_tmp_abspath, 'squish', direct_descendents_dirs[0].rstrip(self.squish_path.sep))
-
-        ### EPD
-        # copy the EPD free installer (if one exists for the Squish platform) to the Jenkins slave workspace
-        if self.use_epdfree:
-            epdfree_installer_origin = os.environ['epd_free_' + self.squish_platform + '_installer']
-            if epdfree_installer_origin:
-                if not os.path.isfile(epdfree_installer_origin):
-                    raise SquishTestSetupError('ERROR: file does not exist: ' + epdfree_installer_origin)
-                epdfree_installer_name = os.path.basename(epdfree_installer_origin)
-                run_cmd('rsync -e "ssh {}" -itv {} {}/'.format(self.ssh_options, epdfree_installer_origin, jenkins_squish_framework_abspath))
 
         ### squish_control
         # zip the squish_control directory

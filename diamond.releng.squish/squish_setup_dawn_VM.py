@@ -14,7 +14,7 @@ import squish_manager
 
 if __name__ == '__main__':
 
-    manager = squish_manager.SquishTestManager(squish_hostname='172.16.66.55', squish_platform='linux64', use_epdfree=True, squish_VMname='/scratch/vmware/diamond-ubuntu-12.04.1-desktop-amd64/diamond-ubuntu-12.04.1-desktop-amd64.vmx', jenkins_workspace=os.environ['WORKSPACE'])
+    manager = squish_manager.SquishTestManager(squish_hostname='172.16.66.55', squish_platform='linux64', squish_VMname='/scratch/vmware/diamond-ubuntu-12.04.1-desktop-amd64/diamond-ubuntu-12.04.1-desktop-amd64.vmx', jenkins_workspace=os.environ['WORKSPACE'])
     manager.specify_application('dawn', 'DawnDiamond-.+')
 
     try:
