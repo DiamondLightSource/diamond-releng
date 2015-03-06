@@ -34,7 +34,7 @@ for gda_config in (
     'b16', 'b18', 'b21', 'b23', 'b24', 'dls', 'excalibur',
     'i02', 'i03', 'i04', 'i04-1', 'i05', 'i06', 'i07', 'i08', 'i09', 'i09-1', 'i09-2',
     'i10', 'i11', 'i11-1', 'i12', 'i13i', 'i13j', 'i15', 'i16', 'i18',
-    'i19', 'i19.eh1', 'i19.eh2', 'i20', 'i20-1', 'i22', 'i23', 'i24', 'lab11', 'mt', 'mx', 'ncdsim'):
+    'i19', 'i19-1', 'i19-2', 'i20', 'i20-1', 'i22', 'i23', 'i24', 'lab11', 'mt', 'mx', 'ncdsim'):
     COMPONENT_ABBREVIATIONS.append((gda_config, 'gda', gda_config+'-config'))  # recognise name without -config suffix
     COMPONENT_ABBREVIATIONS.append((gda_config+'-config', 'gda', gda_config+'-config'))  # recognise name with -config suffix
 
@@ -283,7 +283,7 @@ class PewmaManager(object):
         group.add_option('--suppress-compile-warnings', dest='suppress_compile_warnings', action='store_true', default=False,
                                help='Don\'t print compiler warnings')
         group.add_option('--assume-build', dest='assume_build', action='store_true', default=False, help='Skip explicit build when running "site.p2" or "product" actions')
-        group.add_option('--create-symlink', dest='create_symlink', action='store_true', default=False,
+        group.add_option('--recreate-symlink', dest='recreate_symlink', action='store_true', default=False,
                                help='Create or update the "client" symlink to the built product (linux64 only)')
         group.add_option('--buckminster.properties.file', dest='buckminster_properties_file', type='string', metavar='<path>',
                          help='Properties file, relative to site project if not absolute (default: filenames looked for in order: buckminster.properties, buckminster.beamline.properties)')
@@ -1317,8 +1317,8 @@ class PewmaManager(object):
 
         if action_zip and not zip_actions_available:
             raise PewmaException('ERROR: product.zip is not available for "%s"' % (self.site_name,))
-        if self.options.create_symlink and not linux64_with_symlink_action_available:
-            raise PewmaException('ERROR: --create-symlink is not available for "%s"' % (self.site_name,))
+        if self.options.recreate_symlink and not linux64_with_symlink_action_available:
+            raise PewmaException('ERROR: --recreate-symlink is not available for "%s"' % (self.site_name,))
 
         self.set_buckminster_properties_path(self.site_name)
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
@@ -1336,7 +1336,7 @@ class PewmaManager(object):
                 for p in platforms:
                     perform_options = {'action': 'create.product.zip' if action_zip else 'create.product', 'withsymlink': '', 'site_name': self.site_name,
                                        'os': p.split(',')[0], 'ws': p.split(',')[1], 'arch': p.split(',')[2]}
-                    if self.options.create_symlink and (p == 'linux,gtk,x86_64') and not action_zip:
+                    if self.options.recreate_symlink and (p == 'linux,gtk,x86_64') and not action_zip:
                         perform_options['withsymlink'] = '-with.symlink'
                     script_file.write(' %(site_name)s#%(action)s-%(os)s.%(ws)s.%(arch)s%(withsymlink)s' % perform_options)
                 script_file.write('\n')
