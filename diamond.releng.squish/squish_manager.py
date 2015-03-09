@@ -249,7 +249,6 @@ class SquishTestManager():
                 print(part(), file=script)
         with open(os.path.join(jenkins_squish_framework_abspath, 'squishhostrun.sh'), 'w') as script:
             for part in (self.squish_host_setup_display,
-                         self.squish_host_setup_environment_DAWN,
                          self.squish_host_setup_squish,
                          self.squish_host_runtests_script,):
                 print(part(), file=script)
@@ -403,30 +402,6 @@ export UBUNTU_MENUPROXY=0
 '''
 
         return script
-
-#=====================================================================================================================#
-
-    def squish_host_setup_environment_DAWN(self):
-        '''
-        returns a script to run on the Squish host, which
-            sets up the environment for running DAWN tests
-        '''
-
-        if self.squish_isLinux:
-            return '''
-
-# set up the environment for running Dawn to match what happens on Diamond machines
-module load dawn/nightly
-if [[ ${PATH:0:42} == "/dls_sw/apps/Modules/modulefiles/dawn/bin:" ]]; then
-    export PATH=${PATH:42}
-fi
-
-'''
-
-        elif self.squish_isWin:
-            raise NotImplementedError
-        else:
-            assert False
 
 #=====================================================================================================================#
 

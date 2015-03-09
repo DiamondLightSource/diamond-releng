@@ -107,6 +107,25 @@ set_environment_step () {
             return 100
         fi
 
+        if [[ "${module_load_dawn_version}" == "none" || -z "${module_load_dawn_version-arbitrary}" || -z "${module_load_dawn_version+arbitrary}" ]]; then
+            echo 'skipping "module load dawn"'
+        else
+            if [[ "${module_load_dawn_version}" == "default" ]]; then
+                echo "issuing \"module load dawn\""
+                module load dawn
+            elif [[ "${module_load_dawn_version+arbitrary}" ]]; then
+                echo "issuing \"module load dawn/${module_load_dawn_version}\""
+                module load dawn/${module_load_dawn_version}
+            else
+                echo 'Error in logic determining "module load dawn"'
+                return 100
+            fi
+            if [[ ${PATH:0:42} == "/dls_sw/apps/Modules/modulefiles/dawn/bin:" ]]; then
+                echo "removing /dls_sw/apps/Modules/modulefiles/dawn/bin: from $""PATH"
+                export PATH=${PATH:42}
+            fi
+        fi
+
     else
         echo "Diamond Modules system not available"
     fi
