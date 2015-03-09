@@ -250,7 +250,6 @@ class SquishTestManager():
         with open(os.path.join(jenkins_squish_framework_abspath, 'squishhostrun.sh'), 'w') as script:
             for part in (self.squish_host_setup_display,
                          self.squish_host_setup_environment_DAWN,
-                         self.squish_host_setup_environment,
                          self.squish_host_setup_squish,
                          self.squish_host_runtests_script,):
                 print(part(), file=script)
