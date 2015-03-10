@@ -206,8 +206,11 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(i05-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.gda\.(arpes|beamline\.i05|devices\.vgscienta)(\..+)?)$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-pes.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|org\.gda\.tango(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-scm.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.gda\.tango(\..+)?$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-tango.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-tomography.git repository branch</cq:documentation>

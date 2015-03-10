@@ -1328,6 +1328,32 @@
     <bc:constant value="${gda.scm.${gda.scm.git.location.translated}.url}/gda-scm.git"/>
   </rm:propertyElement>
   <!-- -->
+  <rm:propertyElement key="gda.tango.git.location">
+    <bc:constant value="${gda.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.tango.git.location.translated">
+    <bc:replace>
+      <bc:propertyRef key="gda.tango.git.location"/>
+      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^public$" replacement="github"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.tango.dascgit.url">
+    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.tango.github.organization">
+    <bc:constant value="openGDA"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.tango.github.authentication">
+    <bc:constant value="${openGDA.github.authentication}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.tango.github.url">
+    <bc:constant value="${github.${gda.tango.github.authentication}.url}${gda.tango.github.organization}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.tango.git.url">
+    <bc:constant value="${gda.tango.${gda.tango.git.location.translated}.url}/gda-tango.git"/>
+  </rm:propertyElement>
+  <!-- -->
   <rm:propertyElement key="gda.tomography.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -2143,8 +2169,9 @@
   <rm:locator pattern="^((i02|i03|i04|i04-1|i23|i24|mx|all-mx)-config|uk\.ac\.(gda\.(beamline\.(i02|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec)(\..+)?|px(\..+)?|services(\.(common|impl)(\..+)?)?)|diamond\.(dna|stac)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
   <rm:locator pattern="^(i05-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.gda\.(arpes|beamline\.i05|devices\.vgscienta)(\..+)?)$" searchPathRef="gda_pes"/>
-  <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|org\.gda\.tango(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
+  <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
+  <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
   <rm:locator pattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(hidenrga|xmap|xspress2|xspress3)(\..+)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?)$" searchPathRef="gda_xas_core"/>
   <!-- ** gphl *** -->
@@ -3397,6 +3424,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-scm=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-scm.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="gda_tango">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-tango=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.tango.git.url}"/>
+      <rm:uri format="{0}/gda-tango.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-tango=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from gda-tango.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
