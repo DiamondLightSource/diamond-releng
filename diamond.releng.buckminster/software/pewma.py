@@ -33,7 +33,7 @@ for gda_config in (
     'all-dls', 'all-mt', 'all-mx',                      # Diamond
     'b16', 'b18', 'b21', 'b23', 'b24', 'dls', 'excalibur',
     'i02', 'i03', 'i04', 'i04-1', 'i05', 'i06', 'i07', 'i08', 'i09', 'i09-1', 'i09-2',
-    'i10', 'i11', 'i11-1', 'i12', 'i13i', 'i13j', 'i15', 'i16', 'i18',
+    'i10', 'i11', 'i11-1', 'i12', 'i13i', 'i13j', 'i14', 'i15', 'i16', 'i18',
     'i19', 'i19-1', 'i19-2', 'i20', 'i20-1', 'i22', 'i23', 'i24', 'lab11', 'mt', 'mx', 'ncdsim'):
     COMPONENT_ABBREVIATIONS.append((gda_config, 'gda', gda_config+'-config'))  # recognise name without -config suffix
     COMPONENT_ABBREVIATIONS.append((gda_config+'-config', 'gda', gda_config+'-config'))  # recognise name with -config suffix
@@ -52,8 +52,9 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms
-    ('gda', 'master', 'gda-master.cquery', 'v2.8', ('master', 'trunk')),
-    ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.8', ('masterhplc', 'hplc')),
+    ('gda', 'master', 'gda-master.cquery', 'v2.9', ('master', 'trunk')),
+    ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.9', ('masterhplc', 'hplc')),
+    ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844')),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842')),
     ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840')),
     ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839')),
@@ -74,13 +75,15 @@ COMPONENT_CATEGORIES = (
     ('ida', 'v2.19', 'ida-v2.19.cquery', 'v2.3', ('v2.19', '2.19', '219')),
     ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218')),
     ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217')),
-    ('dawn', 'master', 'dawn-master.cquery', 'v2.8', ('master', 'trunk')),
+    ('dawn', 'master', 'dawn-master.cquery', 'v2.9', ('master', 'trunk')),
+    ('dawn', '1.8', 'dawn-v1.8.cquery', 'v2.9', ('v1.8', '1.8')),
     ('dawn', '1.7.1', 'dawn-v1.7.1.cquery', 'v2.7', ('v1.7.1', '1.7.1', '171')),
     ('dawn', '1.7', 'dawn-v1.7.cquery', 'v2.7', ('v1.7', '1.7')),
     ('dawn', '1.6', 'dawn-v1.6.cquery', 'v2.6', ('v1.6', '1.6')),
     ('dawn', '1.5', 'dawn-v1.5.cquery', 'v2.6', ('v1.5', '1.5')),
     ('dawn', '1.4.1', 'dawn-v1.4.1.cquery', 'v2.5', ('v1.4.1', '1.4.1')),
     ('dawn', '1.4', 'dawn-v1.4.cquery', 'v2.5', ('v1.4', '1.4')),
+    ('dawn', 'gda-8.44', 'dawn-gda-8.44.cquery', 'v2.9', ('gda-8.44', 'gda844')),
     ('dawn', 'gda-8.42', 'dawn-gda-8.42.cquery', 'v2.6', ('gda-8.42', 'gda842')),
     ('dawn', 'gda-8.40', 'dawn-gda-8.40.cquery', 'v2.6', ('gda-8.40', 'gda840')),
     ('dawn', 'gda-8.38', 'dawn-gda-8.38.cquery', 'v2.6', ('gda-8.38', 'gda838')),
@@ -125,8 +128,11 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent chec
     )
 
 GERRIT_REPOSITORIES = (
-    # repositories whose origin can be switched to Gerrit when the gerrit-config is run
+    # repositories whose origin can be switched to Gerrit when gerrit-config is run
+    # 'gda-core.git',
     'gda-dls-beamlines-xas.git',
+    # 'gda-epics.git',
+    # gda-pes.git',
     'gda-xas-core.git',
     'training-gerrit-1.git',
     )
