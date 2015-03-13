@@ -11,10 +11,10 @@ servers_start () {
     echo -e "\n$(date +"%a %d/%b/%Y %H:%M:%S") ==== Starting GDA servers ===="
 
     # determine the configuration we are testing
-    config_dir=$(find /scratch/aut_other/materialize_workspace_git -type d -name ${config_dir_basename} | xargs -i find {} -mindepth 1 -maxdepth 1 -type f -name ".project" | xargs -i dirname {})
+    config_dir=$(find /scratch/aut_other/workspace_git -type d -name ${config_dir_basename} | xargs -i find {} -mindepth 1 -maxdepth 1 -type f -name ".project" | xargs -i dirname {})
     config_dir_count=$(echo "${config_dir}" | wc -l)
     if [ "${config_dir_count}" != "1" ]; then
-        echo "Found ${config_dir_count} matches for $""{config_dir_basename}=${config_dir_basename} in /scratch/aut_other/materialize_workspace_git, so terminating"
+        echo "Found ${config_dir_count} matches for $""{config_dir_basename}=${config_dir_basename} in /scratch/aut_other/workspace_git, so terminating"
         return 100
     fi
     export GDA_CONFIG=${config_dir}
@@ -28,7 +28,7 @@ servers_start () {
     echo "Running with gda_server_test_options=${gda_server_test_options}"
     echo "Running with GDA_SERVER_LOGDIR=${GDA_SERVER_LOGDIR}"
 
-    export gda_command="python /scratch/aut_other/materialize_workspace_git/gda-core.git/uk.ac.gda.core/bin/gda"
+    export gda_command="python /scratch/aut_other/workspace_git/gda-core.git/uk.ac.gda.core/bin/gda"
     print_and_exec "$gda_command servers --stop  --verbose ${gda_server_test_options}" "${GDA_SERVER_LOGDIR}/00-stop_old_servers.log"
     sleep 20
 

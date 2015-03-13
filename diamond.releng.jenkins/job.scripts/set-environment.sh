@@ -214,10 +214,11 @@ set_environment_step () {
     fi
 
     # Workspace
-    if [ -z "${materialize_workspace_name}" ]; then
-        export materialize_workspace_name=materialize_workspace
-    fi
     if [ -z "${materialize_workspace_path}" ]; then
+        if [ -z "${materialize_workspace_name}" ]; then
+            echo "Neither $""materialize_workspace_name nor $""materialize_workspace_path was set - exiting"
+            return 100
+        fi
         if [ -z "${WORKSPACE}" ]; then
             export materialize_workspace_path=`pwd`/${materialize_workspace_name}
         else

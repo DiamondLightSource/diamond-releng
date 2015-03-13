@@ -2,8 +2,8 @@
 rm -rf ${WORKSPACE}/artifacts_to_test
 
 # delete any previous squish tests materialize
-rm -rf ${WORKSPACE}/materialize_workspace
-rm -rf ${WORKSPACE}/materialize_workspace_git
+rm -rf ${WORKSPACE}/workspace
+rm -rf ${WORKSPACE}/workspace_git
 
 # delete any previous results
 rm -rf ${WORKSPACE}/squish_results
