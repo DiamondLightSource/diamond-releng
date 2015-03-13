@@ -198,6 +198,19 @@
   <rm:propertyElement key="gda.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
+  <!-- repos that have moved, or will move soon, to Gerrit -->
+  <rm:propertyElement key="gda.core.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
+    <bc:constant value="${gda.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.epics.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
+    <bc:constant value="${gda.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.pes.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
+    <bc:constant value="${gda.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="xas.git.location">  <!-- applies to both gda.dls.beamlines.xas and gda.xas.core, must be "dascgerrit" -->
+    <bc:constant value="dascgerrit"/>
+  </rm:propertyElement>
   <rm:propertyElement key="githubgphl.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="diamond"/>  <!-- always materialize from DLS unless specifically overridden -->
   </rm:propertyElement>
@@ -649,9 +662,6 @@
     <bc:constant value="${gda.common.rcp.${gda.common.rcp.git.location.translated}.url}/gda-common-rcp.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="gda.core.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="gda.core.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.core.git.location"/>
@@ -1068,9 +1078,6 @@
     <bc:constant value="${gda.dls.excalibur.${gda.dls.excalibur.git.location.translated}.url}/gda-dls-excalibur.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="gda.epics.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="gda.epics.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.epics.git.location"/>
@@ -1080,6 +1087,9 @@
   </rm:propertyElement>
   <rm:propertyElement key="gda.epics.dascgit.url">
     <bc:constant value="${diamond.dascgit.url}/gda"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.epics.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.epics.github.organization">
     <bc:constant value="openGDA"/>
@@ -1224,9 +1234,6 @@
     <bc:constant value="${gda.nexus.${gda.nexus.git.location.translated}.url}/gda-nexus.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="gda.pes.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="gda.pes.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.pes.git.location"/>
@@ -1236,6 +1243,9 @@
   </rm:propertyElement>
   <rm:propertyElement key="gda.pes.dascgit.url">
     <bc:constant value="${diamond.dascgit.url}/gda"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.pes.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.pes.github.organization">
     <bc:constant value="openGDA"/>

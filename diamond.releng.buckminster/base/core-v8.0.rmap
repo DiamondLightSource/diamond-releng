@@ -207,7 +207,7 @@
   <rm:propertyElement key="gda.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
-  <!-- repos that have moved, or will move soon, to gerrit -->
+  <!-- repos that have moved, or will move soon, to Gerrit -->
   <rm:propertyElement key="gda.core.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
