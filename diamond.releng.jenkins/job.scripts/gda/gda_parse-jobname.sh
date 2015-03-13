@@ -43,11 +43,6 @@ if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
     else
         download_public=false
     fi
-    if [[ "${JOB_NAME:-noname}" == *new.config* ]]; then
-        new_config_test=true
-    else
-        new_config_test=false
-    fi
     if [[ "${JOB_NAME:-noname}" == *gerrit.multiple* ]]; then
         gerrit_multiple_test=true
         gerrit_single_test=false
@@ -76,7 +71,6 @@ if [[ -n "${product_job_to_test}" ]]; then
     echo "GDA_product_job_to_test=${product_job_to_test}" >> ${properties_filename}
 fi
 echo "download_public=${download_public:Error}" >> ${properties_filename}
-echo "GDA_new_config_test=${new_config_test:Error}" >> ${properties_filename}
 echo "gerrit_multiple_test=${gerrit_multiple_test:Error}" >> ${properties_filename}
 echo "gerrit_single_test=${gerrit_single_test:Error}" >> ${properties_filename}
 
