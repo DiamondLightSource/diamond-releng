@@ -129,10 +129,10 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent chec
 
 GERRIT_REPOSITORIES = (
     # repositories whose origin can be switched to Gerrit when gerrit-config is run
-    # 'gda-core.git',
+    'gda-core.git',
     'gda-dls-beamlines-xas.git',
-    # 'gda-epics.git',
-    # gda-pes.git',
+    'gda-epics.git',
+    'gda-pes.git',
     'gda-xas-core.git',
     'training-gerrit-1.git',
     )

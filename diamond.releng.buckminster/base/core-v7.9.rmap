@@ -206,13 +206,13 @@
   </rm:propertyElement>
   <!-- repos that have moved, or will move soon, to Gerrit -->
   <rm:propertyElement key="gda.core.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
-    <bc:constant value="${gda.git.location}"/>
+    <bc:constant value="dascgerrit"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.epics.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
-    <bc:constant value="${gda.git.location}"/>
+    <bc:constant value="dascgerrit"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.pes.git.location">  <!-- can be "diamond", "public" or "dascgerrit" -->
-    <bc:constant value="${gda.git.location}"/>
+    <bc:constant value="dascgerrit"/>
   </rm:propertyElement>
   <rm:propertyElement key="xas.git.location">  <!-- applies to both gda.dls.beamlines.xas and gda.xas.core, must be "dascgerrit" -->
     <bc:constant value="dascgerrit"/>
