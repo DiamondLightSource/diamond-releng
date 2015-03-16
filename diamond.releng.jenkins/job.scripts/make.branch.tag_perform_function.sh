@@ -17,9 +17,7 @@ make_branch_tag_action_perform_function () {
     fi
 
     mkdir -pv ${WORKSPACE}/artifacts_to_archive/
-    # First copy an occurrences of the old name, then try the new names
-    cp -pv ${WORKSPACE}/artifacts_to_publish/head_commits.txt ${WORKSPACE}/artifacts_to_archive/ || true
-    cp -pv ${WORKSPACE}/artifacts_to_publish/materialized_*.txt ${WORKSPACE}/artifacts_to_archive/ || true
+    cp -pv ${WORKSPACE}/artifacts_to_publish/materialized_*.txt ${WORKSPACE}/artifacts_to_archive/
 
     python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/make_branch_tag_generate_script.py ${WORKSPACE}/make_branch_tag_tmp > ${WORKSPACE}/artifacts_to_archive/make_branch_tag_script.sh
 
