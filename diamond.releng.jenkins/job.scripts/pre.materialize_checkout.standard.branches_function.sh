@@ -25,7 +25,7 @@ pre_materialize_function_stage1_checkout_standard_branches_function () {
 
         set -x  # Turn on xtrace
 
-        echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Switching all repos back to original branch ***\n  "
+        echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Switching all repos back to original branch if required ***\n  "
 
         cd ${materialize_workspace_path}_git
         for repo in $(find -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
@@ -37,13 +37,16 @@ pre_materialize_function_stage1_checkout_standard_branches_function () {
             RETVAL=${PIPESTATUS[0]}
             ERRORS=$(wc -l ${WORKSPACE}/git-fsck-temp.txt | cut -d ' ' -f 1)
             if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
-                repo_branch_env_var="repo_$(echo "${repo}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_BRANCH"
-                repo_branch="${!repo_branch_env_var}"
-                if [[ -z "${repo_branch}" ]]; then
-                    repo_branch=${repo_default_BRANCH}
+                CURRENT_BRANCH=$(git -C ${repo} rev-parse --abbrev-ref HEAD)
+                if [[ "${CURRENT_BRANCH}" == local* ]]; then
+                    repo_branch_env_var="repo_$(echo "${repo}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_BRANCH"
+                    repo_branch="${!repo_branch_env_var}"
+                    if [[ -z "${repo_branch}" ]]; then
+                        repo_branch=${repo_default_BRANCH}
+                    fi
+                    git -C ${repo} checkout ${repo_branch}
+                    RETVAL=$?
                 fi
-                git -C ${repo} checkout ${repo_branch}
-                RETVAL=$?
             fi
             if [[ "${RETVAL}" != "0" || "${ERRORS}" != "0" ]]; then
                 echo "Problems with structure or state of ${repo}, so deleting"
