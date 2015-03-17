@@ -13,7 +13,7 @@
     <cq:advisorNode namePattern="^org\.openscience\.cdk\..+" branchTagPath="none">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">bioclipse repositories branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawnsci\.commandserver(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^org\.dawnsci\.(commandserver|slice\.server)(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-commandserver.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-commandserver" value="true"/>
     </cq:advisorNode>
