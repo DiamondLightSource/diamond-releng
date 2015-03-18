@@ -53,6 +53,7 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms
     ('gda', 'master', 'gda-master.cquery', 'v2.9', ('master', 'trunk')),
+    ('gda', 'gda6113', 'GDA-6113.cquery', 'v2.9', ('gda6113', 'gda-6113')),
     ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.9', ('masterhplc', 'hplc')),
     ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844')),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842')),
@@ -842,7 +843,7 @@ class PewmaManager(object):
             elif category_or_cquery in CATEGORIES_AVAILABLE:
                 category_to_use = category_or_cquery
                 if len(arguments_part) > 1:
-                    version = arguments_part[1]
+                    version = arguments_part[1].lower()
                     for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
                         if version in s:
                             version_to_use = v
