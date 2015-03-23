@@ -10,7 +10,7 @@ import os
 import urllib2
 import sys
 
-MAX_CHANGESETS = 5  # the number of parameters in the Jenkins job 
+MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job 
 
 SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.multiple_pre.post.materialize.functions.sh')))
 
@@ -127,7 +127,7 @@ def write_script_file_for_changes():
         git merge --verbose FETCH_HEAD
     fi
 
-    git log master^..
+    git log ${repo_default_BRANCH}^..
 
 ''' % {'GERRIT_PROJECT': project, 'GERRIT_REFSPEC': refspec,}
 
