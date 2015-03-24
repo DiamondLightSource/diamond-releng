@@ -2028,9 +2028,19 @@
   <!--
        Target Platform (Eclipse) URLs
   -->
-  <rm:propertyElement key="eclipse.release">
-    <bc:constant value="3.8"/>
+  <rm:propertyElement key="e4.trial">  <!-- defined here in case it is not defined in the CQuery -->
+    <bc:constant value="false"/>
   </rm:propertyElement>
+  <rm:propertyElement key="eclipse.release">
+    <bc:replace>
+      <bc:constant value="${e4.trial.common}"/>
+      <bc:match pattern="^true$" replacement="4.5"/>
+      <bc:match pattern="^(?!4\.5$).*$" replacement="3.8"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="e4.trial.common">
+    <bc:constant value="${e4.trial}"/>
+  </rm:propertyElement>  
   <rm:propertyElement key="rap.release">
     <bc:constant value="2.1"/>
   </rm:propertyElement>
@@ -2167,7 +2177,7 @@
   <rm:locator pattern="^((b16|b24|i06|i07|i10|i15|i16|mt|all-mt)-(config|shared)|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
   <rm:locator pattern="^((i02|i03|i04|i04-1|i23|i24|mx|all-mx)-config|uk\.ac\.(gda\.(beamline\.(i02|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec)(\..+)?|px(\..+)?|services(\.(common|impl)(\..+)?)?)|diamond\.(dna|stac)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
-  <rm:locator pattern="^(i05-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.gda\.(arpes|beamline\.i05|devices\.vgscienta)(\..+)?)$" searchPathRef="gda_pes"/>
+  <rm:locator pattern="^(i05(-1)?-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.gda\.(arpes|beamline\.i05(-1)?|devices\.vgscienta)(\..+)?)$" searchPathRef="gda_pes"/>
   <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
   <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
@@ -2302,8 +2312,10 @@
   <!-- patterns for eclipse repositories are there to speed up failure if we fall through (in case of error, or when looking for source bundles) -->
   <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.8_platform" failOnError="false"/>
   <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.8_release" failOnError="false"/>
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.2_platform" failOnError="false"/>
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.2_release" failOnError="false"/>
+  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.4_platform" failOnError="false"/>
+  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.4_release" failOnError="false"/>
+  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.5_platform" failOnError="false"/>
+  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.5_release" failOnError="false"/>
   <!--                                                                      -->
   <!--######################################################################-->
   <!--# Search Paths                                                       #-->
@@ -4052,22 +4064,38 @@
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_emf_emf">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/modeling/emf/updates/releases/"/>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(e4.trial.common=true))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${emf.emf.download.url}/modeling/emf/emf/updates/releases_20140212"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_gef">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/tools/gef/updates/releases/"/>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(e4.trial.common=true))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${gef.download.url}/tools/gef/updates/releases"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_graphiti">
-    <!-- provider for version 0.10.0 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+    <!-- provider for version 0.11.2, can be used together with the Eclipse versions 4.4 (Luna) and 4.3 (Kepler) -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/graphiti/updates/0.11.2"/>
+    </rm:provider>
+    <!-- provider for version 0.10.0, can be used together with the Eclipse versions 4.3 (Kepler) and 4.2/3.8 (Juno) -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(e4.trial.common=true))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${graphiti.download.url}/graphiti/updates/0.10.0"/>
@@ -4133,18 +4161,32 @@
       <rm:uri format="${eclipse.download.url}/releases/juno"/>  <!-- yes this is correct, 3.8 is Juno -->
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_4.2_platform">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.2)" readerType="p2" source="false" mutable="false">
+  <rm:searchPath name="eclipse_4.4_platform">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.4)" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.download.url}/eclipse/updates/4.2"/>
+      <rm:uri format="${eclipse.download.url}/eclipse/updates/4.4"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_4.2_release">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.2)" readerType="p2" source="false" mutable="false">
+  <rm:searchPath name="eclipse_4.4_release">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.4)" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.download.url}/releases/juno"/>
+      <rm:uri format="${eclipse.download.url}/releases/luna"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_4.5_platform">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.5)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/eclipse/updates/4.5"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_4.5_release">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.5)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/releases/mars"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_rap">
