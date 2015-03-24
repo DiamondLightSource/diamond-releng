@@ -14,23 +14,23 @@
     <cq:property key="target.ws" value="*"/>
     <cq:property key="use.eclipse.rap" value="no"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^org\.eclipse\.swt\.gtk\.linux\.ppc64le$" filter="(e4.trial.override=true)" componentType="osgi.bundle" skipComponent="true">
+    <cq:advisorNode namePattern="^org\.eclipse\.swt\.gtk\.linux\.ppc64le$" filter="(e4.trial=true)" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">With Eclipse Mars pre-release, this does not exist</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.draw2d.*$" filter="(e4.trial.override=true)" versionOverride="1.0.0">
+    <cq:advisorNode namePattern="^org\.eclipse\.draw2d.*$" filter="(e4.trial=true)" versionOverride="1.0.0">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Materialize the latest version of various eclipse components, overriding the version range in the Dawn MANIFEST.MF files</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.emf.*$" filter="(e4.trial.override=true)" versionOverride="1.0.0">
+    <cq:advisorNode namePattern="^org\.eclipse\.emf.*$" filter="(e4.trial=true)" versionOverride="1.0.0">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Materialize the latest version of various eclipse components, overriding the version range in the Dawn MANIFEST.MF files</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^javax\.activation$" filter="(e4.trial.override=true)" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^javax\.activation$" filter="(e4.trial=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^builder(s\.(dawn|diamond))?$" skipComponent="true"/>
     <cq:advisorNode namePattern="^.*\.tests?$" filter="(skip_ALL_test_fragments=true)" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Set in Jenkins create.product jobs to speed build</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|org\.eclipse\.dawnsci\.|uk\.ac\.diamond\.(scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(skip_GDA_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^org\.eclipse\.e4\..+$" filter="(!(e4.trial.override=true))" componentType="osgi.bundle" skipComponent="true">
+    <cq:advisorNode namePattern="^org\.eclipse\.e4\..+$" filter="(!(e4.trial=true))" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">The only requirement on org.eclipse.e4.* components is an optional dependency from org.python.pydev.
 There is only one place that it is used, in PydevPlugin, where a bug try/catch protects the code. 
 It does mean you need e4 to compile, but not to run.
