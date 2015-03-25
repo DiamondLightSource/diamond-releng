@@ -2257,8 +2257,7 @@
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_R20150124073747" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_R20150124073747" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_R20150124073747"/>
   <rm:locator pattern="^org\.apache\.(camel|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <rm:locator pattern="^org\.eclipse\.nebula\..+$" searchPathRef="eclipse_nebula"/>
@@ -4057,7 +4056,7 @@
        Target Platform (Eclipse)
   -->
   <rm:searchPath name="eclipse_orbit_R20150124073747">  <!-- Luna SR2 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(|(e4.trial.common=true)(buckminster.component=org.apache.httpcomponents*))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/"/>
