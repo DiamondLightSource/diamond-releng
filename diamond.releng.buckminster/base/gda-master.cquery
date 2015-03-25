@@ -13,16 +13,6 @@
     <cq:property key="target.os" value="*"/>
     <cq:property key="target.ws" value="*"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^org\.eclipse\.swt\.gtk\.linux\.ppc64le$" filter="(e4.trial=true)" componentType="osgi.bundle" skipComponent="true">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">With Eclipse Mars pre-release, this does not exist</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.draw2d.*$" filter="(e4.trial=true)" versionOverride="1.0.0">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Materialize the latest version of various eclipse components, overriding the version range in the Dawn MANIFEST.MF files</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.emf.*$" filter="(e4.trial=true)" versionOverride="1.0.0">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Materialize the latest version of various eclipse components, overriding the version range in the Dawn MANIFEST.MF files</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^javax\.activation$" filter="(e4.trial=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(?!.*-config$).*" filter="(only_..-config=true)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(skip_i23=true)" skipComponent="true"/>
     <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
@@ -40,6 +30,9 @@ Used for public downloads.</cq:documentation>
 There is only one place that it is used, in PydevPlugin, where a bug try/catch protects the code. 
 It does mean you need e4 to compile, but not to run.
 As e4 is not required at runtime, we don't need to materialize it.</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.apache\.batik.*$" filter="(e4.trial=true)" versionOverride="1.7.0">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Temporarily required until Model runners are updated to use batik 1.7</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.apache\.commons\.codec\.source$" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">This is to avoid what appear to be a Buckminster bug (noticed 2014/02/06 using Eclipse 4.3.1).
