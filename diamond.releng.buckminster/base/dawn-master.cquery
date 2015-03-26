@@ -26,6 +26,7 @@ There is only one place that it is used, in PydevPlugin, where a bug try/catch p
 It does mean you need e4 to compile, but not to run.
 As e4 is not required at runtime, we don't need to materialize it.</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.apache\.batik\.pdf$" filter="(e4.trial=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^org\.apache\.batik.*$" filter="(e4.trial=true)" versionOverride="1.7.0">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Temporarily required until Model runners are updated to use batik 1.7</cq:documentation>
     </cq:advisorNode>
