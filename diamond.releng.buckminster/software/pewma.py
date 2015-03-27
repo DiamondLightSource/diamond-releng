@@ -751,7 +751,8 @@ class PewmaManager(object):
             raise PewmaException('ERROR: the category for component "%s" is missing (can be one of %s)' % (component_to_use, '/'.join(CATEGORIES_AVAILABLE)))
 
         if category_to_use and version_to_use:
-            cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
+            if not cquery_to_use:
+                cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
             template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
 
         assert template_to_use and cquery_to_use
@@ -996,6 +997,7 @@ class PewmaManager(object):
             # get the commit hook, for people who use command line Git rather than EGit #
             #############################################################################
 
+        return
         '''
             hooks_commit_msg_loc = os.path.join(git_dir, '.git', 'hooks', 'commit-msg')
             if os.path.exists(hooks_commit_msg_loc):
