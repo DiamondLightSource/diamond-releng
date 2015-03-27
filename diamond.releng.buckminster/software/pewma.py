@@ -932,7 +932,9 @@ class PewmaManager(object):
                 self.logger.error('%sSkipped: %s should exist, but does not' % (self.log_prefix, config_file_loc))
                 continue
 
-            # parse and potentially update the .git/config file
+            #####################################################
+            # parse and potentially update the .git/config file #
+            #####################################################
             config = GitConfigParser()
             config.readgit(config_file_loc)
             # we only need to process repositories that are Gerrit repos
@@ -989,6 +991,23 @@ class PewmaManager(object):
                     self.logger.error('%sFAILED: could not configure for Gerrit: %s' % (self.log_prefix, git_dir))
 
         self.logger.info('%sFinished: additional repositories configured for Gerrit: %s' % (self.log_prefix, configured_count))
+
+            #############################################################################
+            # get the commit hook, for people who use command line Git rather than EGit #
+            #############################################################################
+
+        '''
+            hooks_commit_msg_loc = os.path.join(git_dir, '.git', 'hooks', 'commit-msg')
+            if os.path.exists(hooks_commit_msg_loc):
+                self.logger.debug('%scommit-msg hook already set up: %s' % (self.log_prefix, git_dir))
+                continue
+            commit_hook = self.gerrit_commit_hook()
+            with open(hooks_commit_msg_loc, 'w') as commit_msg_file:
+                commit_msg_file.write(commit_hook)
+            hooks_added_count += 1
+        '''
+
+        self.logger.info('%sFinished: additional repositories configured for Gerrit: %s; commit-msg hooks added: %s' % (self.log_prefix, configured_count, hooks_added_count))
 
     def action_git(self):
         """ Processes command: git <command>
@@ -1474,6 +1493,44 @@ class PewmaManager(object):
                 self.logger.debug('Return Code: %s' % (retcode,))
             return retcode
 
+
+    def gerrit_commit_hook(self):
+        """ Returns a string containing the Gerrit commit hook (which adds a ChangeId to a commit)
+        """
+
+        # we cache the commit_hook and never refetch it from the Gerrit server
+        if hasattr(self, '_gerrit_commit_hook'):
+            return self._gerrit_commit_hook
+
+        commit_hook_url = urlparse.urlunparse((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '/tools/hooks/commit-msg', '', '', ''))
+        # open the URL
+        try:
+            resp = urllib2.urlopen(commit_hook_url, timeout=30)
+        except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
+            self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
+            if self.options.prepare_jenkins_build_description_on_materialize_error:
+                text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
+                print text
+            raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
+
+        # read the data (small enough to do in one chunk)
+        self.logger.debug('Downloading %s bytes from "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl()))
+        try:
+            commit_hook = resp.read()
+        except Exception as e:
+            self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
+            if self.options.prepare_jenkins_build_description_on_materialize_error:
+                text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
+                print text
+            raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
+        finally:
+            try:
+                resp.close()
+            except:
+                pass
+
+        self._gerrit_commit_hook = commit_hook
+        return self._gerrit_commit_hook
 
 ###############################################################################
 #  Main driver                                                                #
