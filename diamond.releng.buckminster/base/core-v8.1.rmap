@@ -2028,6 +2028,9 @@
   <rm:propertyElement key="e4.trial">  <!-- defined here in case it is not defined in the CQuery -->
     <bc:constant value="false"/>
   </rm:propertyElement>
+  <rm:propertyElement key="e4.trial.common">
+    <bc:constant value="${e4.trial}"/>
+  </rm:propertyElement>  
   <rm:propertyElement key="eclipse.release">
     <bc:replace>
       <bc:constant value="${e4.trial.common}"/>
@@ -2035,9 +2038,6 @@
       <bc:match pattern="^(?!4\.5$).*$" replacement="3.8"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="e4.trial.common">
-    <bc:constant value="${e4.trial}"/>
-  </rm:propertyElement>  
   <rm:propertyElement key="rap.release">
     <bc:constant value="2.1"/>
   </rm:propertyElement>

@@ -25,15 +25,15 @@ Used for public downloads.</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|org\.eclipse\.dawnsci\.|uk\.ac\.diamond\.(scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(skip_GDA_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^org\.eclipse\.e4\..+$" filter="(!(e4.trial=true))" componentType="osgi.bundle" skipComponent="true">
+    <cq:advisorNode namePattern="^org\.eclipse\.e4\..+$" filter="(|(e4.trial=true)(e4.trial.common=true))">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Do-nothing node which is just here to allow org.eclipse.e4.* when materializing for e4.
+Matches ahead of the next node, and is required only because negative conditions on advisor node filters do not seem to work.</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.eclipse\.e4\..+$" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">The only requirement on org.eclipse.e4.* components is an optional dependency from org.python.pydev.
 There is only one place that it is used, in PydevPlugin, where a bug try/catch protects the code. 
 It does mean you need e4 to compile, but not to run.
 As e4 is not required at runtime, we don't need to materialize it.</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.apache\.batik\.pdf$" filter="(e4.trial=true)" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^org\.apache\.batik.*$" filter="(e4.trial=true)" versionOverride="1.7.0">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Temporarily required until Model runners are updated to use batik 1.7</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.apache\.commons\.codec\.source$" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">This is to avoid what appear to be a Buckminster bug (noticed 2014/02/06 using Eclipse 4.3.1).
