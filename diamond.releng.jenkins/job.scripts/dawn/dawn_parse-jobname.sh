@@ -30,7 +30,7 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
     fi
     # if this is the squish trigger job (nb: not the individual squish jobs), work out the name of the upstream job (the create.product job)
     if [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
-        product_job_to_test=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
+        upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
     fi
 
     if [[ "${JOB_NAME:-noname}" =~ ^Dawn.+--publish-([a-z0-9]+)$ ]]; then
@@ -51,8 +51,8 @@ fi
 if [[ -n "${squish_trigger_job_to_trigger}" ]]; then
     echo "DAWN_squish_trigger_job_to_trigger=${squish_trigger_job_to_trigger}" >> ${properties_filename}
 fi
-if [[ -n "${product_job_to_test}" ]]; then
-    echo "DAWN_product_job_to_test=${product_job_to_test}" >> ${properties_filename}
+if [[ -n "${upstream_product_job}" ]]; then
+    echo "DAWN_upstream_product_job=${upstream_product_job}" >> ${properties_filename}
 fi
 if [[ -n "${publish_type}" ]]; then
     echo "publish_type=${publish_type}" >> ${properties_filename}
