@@ -3,7 +3,7 @@
 # The next step in the Jenkins job is "Inject Environment Variables" which sets the name=value pairs as environment variables for the remainder of the job
 set +x  # Turn off xtrace
 
-properties_filename=${WORKSPACE}/parsed-jobname.properties
+properties_filename=${WORKSPACE}/parsed-jobname-and-parameters.properties
 rm -f ${properties_filename}
 
 # The jobname must start with "DawnDiamond." or "DawnVanilla.", followed by the release, followed by "-", followed by anything
@@ -71,6 +71,24 @@ if [[ "${result:bad}" != "good" ]]; then
     exit 2
 fi
 
-echo "[dawn_parse-jobname.sh] wrote ${properties_filename} --->"
+# determine whether any publish_* parameter was set
+at_least_one_publish_parameter_selected=false
+for var in $(compgen -A variable publish_); do
+    if [[ "${!var:false}" == "true" ]]; then
+        at_least_one_publish_parameter_selected=true
+    fi
+done
+echo "at_least_one_publish_parameter_selected=${at_least_one_publish_parameter_selected}" >> ${properties_filename}
+
+# determine whether any trigger_* parameter was set
+at_least_one_squish_trigger_parameter_selected=false
+for var in $(compgen -A variable trigger_); do
+    if [[ "${!var:false}" == "true" ]]; then
+        at_least_one_squish_trigger_parameter_selected=true
+    fi
+done
+echo "at_least_one_squish_trigger_parameter_selected=${at_least_one_squish_trigger_parameter_selected}" >> ${properties_filename}
+
+echo "[dawn_parse-jobname-and-parameters.sh] wrote ${properties_filename} --->"
 cat ${properties_filename}
 
