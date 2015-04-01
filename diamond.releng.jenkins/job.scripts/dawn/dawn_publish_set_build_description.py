@@ -2,11 +2,14 @@ import os
 
 set_build_description_done = False
 try:
-    product_build_job = 'Dawn%s.%s-create.product' % (os.environ['Dawn_flavour'], os.environ['Dawn_release'])
-    if os.environ['Dawn_release'] == 'master':
-        product_build_job_short = 'Dawn%s-create.product' % (os.environ['Dawn_flavour'],)
+    product_build_job = os.environ['DAWN_upstream_product_job']
+    if '.master-' in product_build_job:
+        product_build_job_short = product_build_job.replace('.master-', '-', 1)
+    elif product_build_job.startswith('DawnDiamond.'):
+        product_build_job_short = product_build_job.replace('DawnDiamond.', '', 1)
     else:
-        product_build_job_short = '%s-create.product' % (os.environ['Dawn_release'],)
+        product_build_job_short = product_build_job
+
     product_build_number = os.environ['copyartifact_build_number']
     build_description_line_1 = os.environ['product_version_number']
     build_description_line_1 += r'  (x%(platform_count)s) (<a href="/job/%(product_build_job)s/">%(product_build_job_short)s</a> <a href="/job/%(product_build_job)s/%(product_build_number)s/">%(product_build_number)s</a>)' % \
