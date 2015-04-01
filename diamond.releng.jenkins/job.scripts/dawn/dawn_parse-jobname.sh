@@ -31,11 +31,11 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
     # if this is any publish job, or the squish-trigger job (nb: not the individual squish jobs), work out the name of the upstream job (the create.product job)
     if [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
-    elfi [[ "${JOB_NAME:-noname}" == *--publish-snapshot* ]]; then
+    elif [[ "${JOB_NAME:-noname}" == *--publish-snapshot* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-snapshot/-create.product/')
-    elfi [[ "${JOB_NAME:-noname}" == *--publish-beta* ]]; then
+    elif [[ "${JOB_NAME:-noname}" == *--publish-beta* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-beta/-create.product/')
-    elfi [[ "${JOB_NAME:-noname}" == *--publish-stable* ]]; then
+    elif [[ "${JOB_NAME:-noname}" == *--publish-stable* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-stable/-create.product/')
     fi
 
