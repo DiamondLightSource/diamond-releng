@@ -25,7 +25,7 @@ build_function () {
     ### Build the workspace (type will be one of clean/incremental/skip)
     ###
 
-    export workspace_build_type=$(echo ${workspace_build_type:-fresh} | tr '[:upper:]' '[:lower:]')
+    export workspace_build_type=$(echo ${workspace_build_type:-incremental} | tr '[:upper:]' '[:lower:]')
 
     # translate the long workspace_build_type text to something shorter, for display
     if [[ "${workspace_build_type}" == *clean* ]]; then
