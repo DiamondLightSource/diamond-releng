@@ -45,6 +45,15 @@ fi
 echo "Dawn_flavour=${flavour:Error}" >> ${properties_filename}
 echo "Dawn_release=${release:Error}" >> ${properties_filename}
 echo "download_public=${download_public:Error}" >> ${properties_filename}
+if [[ -n "${publish_snapshot_job_to_trigger}" ]]; then
+    echo "DAWN_publish_snapshot_job_to_trigger=${publish_snapshot_job_to_trigger}" >> ${properties_filename}
+fi
+if [[ -n "${squish_trigger_job_to_trigger}" ]]; then
+    echo "DAWN_squish_trigger_job_to_trigger=${squish_trigger_job_to_trigger}" >> ${properties_filename}
+fi
+if [[ -n "${product_job_to_test}" ]]; then
+    echo "DAWN_product_job_to_test=${product_job_to_test}" >> ${properties_filename}
+fi
 if [[ -n "${publish_type}" ]]; then
     echo "publish_type=${publish_type}" >> ${properties_filename}
 fi
