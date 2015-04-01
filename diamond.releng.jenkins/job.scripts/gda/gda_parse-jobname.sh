@@ -24,11 +24,13 @@ if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
                 group=${groupbeamlinesuffix:0:${dash}-1}
                 beamlinesuffix=${groupbeamlinesuffix:${dash}}
                 beamline=${beamlinesuffix%%-download.public}
-                if [[ "${JOB_NAME:-noname}" == *create.product.beamline* ]]; then
-                    squish_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/create.product.beamline/squish.beamline/')
+                # if this is a create.product job, work out the name of the downstream job (the squish job)
+                if [[ "${JOB_NAME:-noname}" == *-create.product.beamline* ]]; then
+                    squish_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product.beamline/-squish.beamline/')
                 fi
-                if [[ "${JOB_NAME:-noname}" == *squish.beamline* ]]; then
-                    product_job_to_test=$(echo "${JOB_NAME}" | sed 's/squish.beamline/create.product.beamline/')
+                # if this is a squish job, work out the name of the upstream job (the create.product job)
+                if [[ "${JOB_NAME:-noname}" == *-squish.beamline* ]]; then
+                    product_job_to_test=$(echo "${JOB_NAME}" | sed 's/-squish.beamline/-create.product.beamline/')
                 fi
                 result=good
             fi

@@ -23,6 +23,16 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
         download_public=false
     fi
 
+    # if this is a create.product job, work out the name of the two downstream jobs (the publish-snapshot job, and the squish trigger job)
+    if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
+        publish_snapshot_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--publish.snapshot/')
+        squish_trigger_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--squish.trigger/')
+    fi
+    # if this is the squish trigger job (nb: not the individual squish jobs), work out the name of the upstream job (the create.product job)
+    if [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
+        product_job_to_test=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
+    fi
+
     if [[ "${JOB_NAME:-noname}" =~ ^Dawn.+--publish-([a-z0-9]+)$ ]]; then
         publish_type=${BASH_REMATCH[1]}
     fi
