@@ -42,7 +42,7 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
     # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
     elif [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
-        squish_platform_job_prefix=$(echo "${JOB_NAME}" | sed 's/--squish.trigger.*$/--squish./')
+        squish_platform_job_prefix=$(echo "${JOB_NAME}" | sed 's/--squish.trigger.*$/-squish./')
         squish_platform_job_suffix=$(echo "${JOB_NAME}" | sed 's/^.*--squish.trigger//')
 
     # if this is any squish job, work out the name of the upstream job (the create.product job)
