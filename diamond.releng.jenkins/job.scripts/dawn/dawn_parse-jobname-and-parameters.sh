@@ -78,8 +78,6 @@ if [[ -n "${upstream_product_job}" ]]; then
 fi
 if [[ -n "${squish_platform_job_prefix}" ]]; then
     echo "DAWN_squish_platform_job_prefix=${squish_platform_job_prefix}" >> ${properties_filename}
-fi
-if [[ -n "${squish_platform_job_suffix}" ]]; then
     echo "DAWN_squish_platform_job_suffix=${squish_platform_job_suffix}" >> ${properties_filename}
 fi
 if [[ -n "${publish_type}" ]]; then
