@@ -31,6 +31,8 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
     # if this is any publish job, or the squish-trigger job (nb: not the individual squish jobs), work out the name of the upstream job (the create.product job)
     if [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
+        squish_platform_job_prefix=$(echo "${JOB_NAME}" | sed 's/--squish.trigger.*$/--squish./')
+        squish_platform_job_suffix=$(echo "${JOB_NAME}" | sed 's/^.*--squish.trigger//')
     elif [[ "${JOB_NAME:-noname}" == *--publish-snapshot* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-snapshot/-create.product/')
     elif [[ "${JOB_NAME:-noname}" == *--publish-beta* ]]; then
@@ -60,6 +62,12 @@ fi
 if [[ -n "${upstream_product_job}" ]]; then
     echo "DAWN_upstream_product_job=${upstream_product_job}" >> ${properties_filename}
 fi
+if [[ -n "${squish_platform_job_prefix}" ]]; then
+    echo "DAWN_squish_platform_job_prefix=${squish_platform_job_prefix}" >> ${properties_filename}
+fi
+if [[ -n "${squish_platform_job_suffix}" ]]; then
+    echo "DAWN_squish_platform_job_suffix=${squish_platform_job_suffix}" >> ${properties_filename}
+fi
 if [[ -n "${publish_type}" ]]; then
     echo "publish_type=${publish_type}" >> ${properties_filename}
 fi
@@ -80,14 +88,14 @@ for var in $(compgen -A variable publish_); do
 done
 echo "at_least_one_publish_parameter_selected=${at_least_one_publish_parameter_selected}" >> ${properties_filename}
 
-# determine whether any trigger_* parameter was set
-at_least_one_squish_trigger_parameter_selected=false
-for var in $(compgen -A variable trigger_); do
+# determine whether any trigger_squish_* parameter was set
+at_least_one_trigger_squish_parameter_selected=false
+for var in $(compgen -A variable trigger_squish_); do
     if [[ "${!var:false}" == "true" ]]; then
-        at_least_one_squish_trigger_parameter_selected=true
+        at_least_one_trigger_squish_parameter_selected=true
     fi
 done
-echo "at_least_one_squish_trigger_parameter_selected=${at_least_one_squish_trigger_parameter_selected}" >> ${properties_filename}
+echo "at_least_one_trigger_squish_parameter_selected=${at_least_one_trigger_squish_parameter_selected}" >> ${properties_filename}
 
 echo "[dawn_parse-jobname-and-parameters.sh] wrote ${properties_filename} --->"
 cat ${properties_filename}
