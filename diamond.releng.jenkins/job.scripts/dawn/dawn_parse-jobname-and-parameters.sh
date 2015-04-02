@@ -6,7 +6,10 @@ set +x  # Turn off xtrace
 properties_filename=${WORKSPACE}/parsed-jobname-and-parameters.properties
 rm -f ${properties_filename}
 
-# The jobname must start with "DawnDiamond." or "DawnVanilla.", followed by the release, followed by "-", followed by anything
+# The jobname must start with "DawnDiamond." or "DawnVanilla.",
+# followed by the release, followed by "-" (something like "master-" or "1.8-")
+# followed by anything
+# optionally terminated by "~" and a variant name (something like "~JAVA8")
 
 if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla." ]]; then
     flavour=${JOB_NAME:4:7}
@@ -17,7 +20,7 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
         result=good
     fi
 
-    if [[ "${JOB_NAME:-noname}" == *download.public ]]; then
+    if [[ "${JOB_NAME:-noname}" == *download.public* ]]; then
         download_public=true
     else
         download_public=false
@@ -27,18 +30,29 @@ if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla
     if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
         publish_snapshot_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--publish-snapshot/')
         squish_trigger_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--squish.trigger/')
-    fi
-    # if this is any publish job, or the squish-trigger job (nb: not the individual squish jobs), work out the name of the upstream job (the create.product job)
-    if [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
-        upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
-        squish_platform_job_prefix=$(echo "${JOB_NAME}" | sed 's/--squish.trigger.*$/--squish./')
-        squish_platform_job_suffix=$(echo "${JOB_NAME}" | sed 's/^.*--squish.trigger//')
+
+    # if this is any publish job, work out the name of the upstream job (the create.product job)
     elif [[ "${JOB_NAME:-noname}" == *--publish-snapshot* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-snapshot/-create.product/')
     elif [[ "${JOB_NAME:-noname}" == *--publish-beta* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-beta/-create.product/')
     elif [[ "${JOB_NAME:-noname}" == *--publish-stable* ]]; then
         upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-stable/-create.product/')
+
+    # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
+    elif [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
+        upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
+        squish_platform_job_prefix=$(echo "${JOB_NAME}" | sed 's/--squish.trigger.*$/--squish./')
+        squish_platform_job_suffix=$(echo "${JOB_NAME}" | sed 's/^.*--squish.trigger//')
+
+    # if this is any squish job, work out the name of the upstream job (the create.product job)
+    elif [[ "${JOB_NAME:-noname}" == *-squish.* ]]; then
+        if [[ "${JOB_NAME:-noname}" == *~* ]]; then
+            job_variant=$(echo "${JOB_NAME}" | sed 's/^.*-squish.*~/~/')
+        else
+            job_variant=
+        fi
+        upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish..*$/-create.product/')${job_variant}
     fi
 
     if [[ "${JOB_NAME:-noname}" =~ ^Dawn.+--publish-([a-z0-9]+)$ ]]; then
