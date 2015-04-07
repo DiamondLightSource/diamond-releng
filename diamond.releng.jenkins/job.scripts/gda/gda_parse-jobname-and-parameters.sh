@@ -81,6 +81,6 @@ if [[ "${result:bad}" != "good" ]]; then
     exit 2
 fi
 
-echo "[gda_parse-jobname.sh] wrote ${properties_filename} --->"
+echo "[gda_parse-jobname-and-parameters.sh] wrote ${properties_filename} --->"
 cat ${properties_filename}
 
