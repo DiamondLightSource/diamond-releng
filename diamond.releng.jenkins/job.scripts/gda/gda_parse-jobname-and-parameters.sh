@@ -3,7 +3,7 @@
 # The next step in the Jenkins job is "Inject Environment Variables" which sets the name=value pairs as environment variables for the remainder of the job
 set +x  # Turn off xtrace
 
-properties_filename=${WORKSPACE}/parsed-jobname.properties
+properties_filename=${WORKSPACE}/parsed-jobname-and-parameters.properties
 rm -f ${properties_filename}
 
 # The jobname must start with "GDA.", followed by the release (e.g. master, 8.42), followed by a dash (-)
