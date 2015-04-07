@@ -9,7 +9,7 @@ rm -f ${properties_filename}
 # The jobname must start with "DawnDiamond." or "DawnVanilla.",
 # followed by the release, followed by "-" (something like "master-" or "1.8-")
 # followed by anything
-# optionally terminated by "~" and a variant name (something like "~JAVA8")
+# optionally terminated by "~" and a variant name (something like "~java8")
 
 if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla." ]]; then
     flavour=${JOB_NAME:4:7}
