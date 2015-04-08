@@ -22,6 +22,12 @@ if [[ "${gerrit_multiple_test}" == "true" ]]; then
   . ${WORKSPACE}/gerrit.multiple_pre.post.materialize.functions.sh
 fi
 
+if [[ "${JOB_NAME}" == *~*e4* ]]; then
+  script=e4_pre.materialize.functions.sh
+  echo "Sourcing ${script}"
+  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
+fi
+
 #------------------------------------#
 #------------------------------------#
 
