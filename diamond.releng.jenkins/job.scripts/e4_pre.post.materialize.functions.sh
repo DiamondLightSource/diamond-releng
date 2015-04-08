@@ -15,7 +15,7 @@ pre_materialize_function_stage1_e4 () {
 #------------------------------------#
 #------------------------------------#
 
-pre_materialize_function_stage2_e4 () {
+post_materialize_function_e4 () {
 
     repo_list="dawn-product.git dawn-third.git dawn-ui.git embl-cca.git scisoft-ui.git"
 
