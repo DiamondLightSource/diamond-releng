@@ -288,7 +288,7 @@ class PewmaManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Build/Product options")
-        group.add_option('--suppress-compile-warnings', dest='suppress_compile_warnings', action='store_true', default=False,
+        group.add_option('--scw', '--suppress-compile-warnings', dest='suppress_compile_warnings', action='store_true', default=False,
                                help='Don\'t print compiler warnings')
         group.add_option('--assume-build', dest='assume_build', action='store_true', default=False, help='Skip explicit build when running "site.p2" or "product" actions')
         group.add_option('--recreate-symlink', dest='recreate_symlink', action='store_true', default=False,
