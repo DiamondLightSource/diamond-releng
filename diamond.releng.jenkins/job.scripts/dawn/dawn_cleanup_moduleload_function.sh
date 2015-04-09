@@ -44,7 +44,6 @@ dawn_cleanup_moduleload_function () {
     export cleanup_linux64=$(echo ${cleanup_linux64:-true} | tr '[:upper:]' '[:lower:]')
     export cleanup_windows32=$(echo ${cleanup_windows32:-true} | tr '[:upper:]' '[:lower:]')
     export cleanup_windows64=$(echo ${cleanup_windows64:-true} | tr '[:upper:]' '[:lower:]')
-    export cleanup_mac32=$(echo ${cleanup_mac32:-true} | tr '[:upper:]' '[:lower:]')
     export cleanup_mac64=$(echo ${cleanup_mac64:-true} | tr '[:upper:]' '[:lower:]')
 
     ###
@@ -63,7 +62,7 @@ dawn_cleanup_moduleload_function () {
 
     if [[ "${cleanup_module_load}" == "true" ]]; then
         rm -f ${WORKSPACE}/cleanup_*_script
-        for platform in linux32 linux64 windows32 windows64 mac32 mac64; do
+        for platform in linux32 linux64 windows32 windows64 mac64; do
             cleanup_platform__indirect="cleanup_${platform}"
             if [[ "${!cleanup_platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Cleaning up module load for ${platform} ***\n"

@@ -27,7 +27,7 @@ create_p2_site_product_function () {
 
     # create list of platforms for which we need to create the product (this might be empty)
     platform_list=" "
-    for platform in linux32 linux64 windows32 windows64 mac32 mac64; do
+    for platform in linux32 linux64 windows32 windows64 mac64; do
         platform__indirect=platform_${platform}
         if [[ "$(echo ${!platform__indirect:-false} | tr '[:upper:]' '[:lower:]')" == "true" ]]; then
             platform_list="${platform_list}${platform} "

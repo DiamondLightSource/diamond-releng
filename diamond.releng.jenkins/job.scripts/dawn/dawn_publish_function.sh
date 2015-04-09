@@ -48,7 +48,6 @@ dawn_publish_function () {
     export platform_linux64=$(echo ${platform_linux64:-false} | tr '[:upper:]' '[:lower:]')
     export platform_windows32=$(echo ${platform_windows32:-false} | tr '[:upper:]' '[:lower:]')
     export platform_windows64=$(echo ${platform_windows64:-false} | tr '[:upper:]' '[:lower:]')
-    export platform_mac32=$(echo ${platform_mac32:-false} | tr '[:upper:]' '[:lower:]')
     export platform_mac64=$(echo ${platform_mac64:-false} | tr '[:upper:]' '[:lower:]')
     export publish_p2_site=$(echo ${publish_p2_site:-false} | tr '[:upper:]' '[:lower:]')
 
@@ -74,7 +73,7 @@ dawn_publish_function () {
     export product_version_number=$(head -q -n 1 artifacts_to_publish/product_version_number.txt)
     export platforms_requested=0
     if [[ "${publish_module_load}" == "true" || "${publish_webserver_diamond_zip}" == "true" || "${publish_webserver_opengda_zip}" == "true" ]]; then
-        for platform in linux32 linux64 windows32 windows64 mac32 mac64; do
+        for platform in linux32 linux64 windows32 windows64 mac64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 (( platforms_requested += 1 ))
@@ -108,7 +107,7 @@ dawn_publish_function () {
                 running_platform=unknown
             fi
         fi
-        for platform in linux32 linux64 windows32 windows64 mac32 mac64; do
+        for platform in linux32 linux64 windows32 windows64 mac64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Publishing to module load for ${platform} ***\n"
@@ -153,7 +152,7 @@ dawn_publish_function () {
     export publish_webserver_diamond_zip_platforms_skipped=0
     if [[ "${publish_webserver_diamond_zip}" == "true" ]]; then
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Publishing .zip to diamond webserver ***\n"
-        for platform in linux32 linux64 windows32 windows64 mac32 mac64; do
+        for platform in linux32 linux64 windows32 windows64 mac64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Publishing to diamond webserver of .zip for ${platform} ***\n"
@@ -174,7 +173,7 @@ dawn_publish_function () {
     export publish_webserver_opengda_zip_platforms_skipped=0
     if [[ "${publish_webserver_opengda_zip}" == "true" ]]; then
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Publishing .zip to opengda webserver ***\n"
-        for platform in linux32 linux64 windows32 windows64 mac32 mac64; do
+        for platform in linux32 linux64 windows32 windows64 mac64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Publishing to opengda webserver of .zip for ${platform} ***\n"
