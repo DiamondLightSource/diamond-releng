@@ -31,7 +31,7 @@ install_buckminster () {
 
     # buckminster version (same as an Eclipse version)
     if [[ -z "${buckminster_version}" ]]; then
-        buckminster_version=4.3
+        buckminster_version=4.4
     fi
 
     # install type
