@@ -1230,6 +1230,7 @@ class PewmaManager(object):
 
         self.set_available_sites()
         platforms = set()
+        all_platforms_specified = False
 
         for (index, arg) in enumerate(self.arguments):
             # interpret any site / platform arguments, recognising that all arguments are optional
@@ -1237,6 +1238,7 @@ class PewmaManager(object):
                 self.set_site_name(arg, must_exist=False)
             if (index != 0) or (not hasattr(self, 'site_name')) or (not self.site_name):
                 if arg == 'all':
+                    all_platforms_specified = True
                     for (p,a) in PLATFORMS_AVAILABLE:
                         platforms.add(p)
                 else:
@@ -1253,32 +1255,43 @@ class PewmaManager(object):
             platforms = sorted(platforms)
         else:
             platforms = [{'Linuxi686': 'linux,gtk,x86', 'Linuxx86_64': 'linux,gtk,x86_64', 'Windowsx86': 'win32,win32,x86', 'Windowsx86_64': 'win32,win32,x86_64'}.get('%s%s' % (self.system, platform.machine()))]
-        self.logger.info('Product "%s" will be built for %d platform%s: %s' % (self.site_name, len(platforms), ('','s')[bool(len(platforms)>1)], platforms))
 
-        # determine whether cspex for the .site project specifies (newest to oldest):
-        # (A) a separate action for each platform (create.product-<os>.<ws>.<arch>), and a separate zip action for each platform
-        # (B) a separate action for each platform (create.product-<os>.<ws>.<arch>), but no separate zip action for each platform
-        # (C) a single action for all platforms (create.product)
+        # determine what edition the cspex for the .site project is (newest to oldest):
+        # (5) Removed the 'create.product-macosx.cocoa.x86' and 'create.product.zip-macosx.cocoa.x86' actions (retained x86_64)    [GDA 8.46+]
+        # (4) Added a 'create.product-linux.gtk.x86_64-with.symlink' action                                                        [GDA 8.44+]
+        # (3) a separate action for each platform (create.product-<os>.<ws>.<arch>), and a separate zip action for each platform   [GDA 8.30+]
+        # (2) a separate action for each platform (create.product-<os>.<ws>.<arch>), but no separate zip action for each platform  [GDA 8.30+]
+        # (1) a single action for all platforms (create.product)                                                                   [GDA 8.28-]
 
         cspex_file_path = os.path.abspath(os.path.join(self.available_sites[self.site_name], 'buckminster.cspex'))
-        linux64_with_symlink_action_available = False
-        per_platform_actions_available = False
-        zip_actions_available = False
+        mac32_available = False                        # if False, version 5+
+        linux64_with_symlink_action_available = False  # if True, version 4+
+        zip_actions_available = False                  # if True, version 3+
+        per_platform_actions_available = False         # if True, version 2+
         with open(cspex_file_path, 'r') as cspex_file:
             for line in cspex_file:
+                if '"create.product-macosx.cocoa.x86"' in line:  # "s so that we don't mactch on create.product-macosx.cocoa.x86_64
+                    mac32_available = True
                 if 'create.product-linux.gtk.x86_64-with.symlink' in line:
                     linux64_with_symlink_action_available = True
                 if 'create.product-linux.gtk.x86_64' in line:
                     per_platform_actions_available = True
                 if 'create.product.zip-linux.gtk.x86_64' in line:
                     zip_actions_available = True
-                if all((linux64_with_symlink_action_available, per_platform_actions_available, zip_actions_available)):
+                if all((mac32_available, linux64_with_symlink_action_available, per_platform_actions_available, zip_actions_available)):
                     break
 
         if action_zip and not zip_actions_available:
             raise PewmaException('ERROR: product.zip is not available for "%s"' % (self.site_name,))
         if self.options.recreate_symlink and not linux64_with_symlink_action_available:
             raise PewmaException('ERROR: --recreate-symlink is not available for "%s"' % (self.site_name,))
+        if ('macosx,cocoa,x86' in platforms) and not mac32_available:
+            if all_platforms_specified:
+                platforms.remove('macosx,cocoa,x86')  #  platform "all" was specified, so removed macos 32-bit platform  from the auot-added list  
+            else:
+                raise PewmaException('ERROR: MacOSX 32-bit cannot be build for "%s"' % (self.site_name,))
+
+        self.logger.info('Product "%s" will be built for %d platform%s: %s' % (self.site_name, len(platforms), ('','s')[bool(len(platforms)>1)], platforms))
 
         self.set_buckminster_properties_path(self.site_name)
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
