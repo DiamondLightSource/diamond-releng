@@ -269,7 +269,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-mx.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-mx" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ncd.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">

@@ -281,9 +281,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-cbflib.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python))$" allowCircularDependency="true" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch
-(2014/02/11) "Allow circular dependency" is because otherwise you get the following:
-Circular component dependency detected. Chain is uk.ac.diamond.dawn.site -&gt; uk.ac.diamond.dawn.product.feature -&gt; uk.ac.diamond.dawn.base.product.feature -&gt; uk.ac.diamond.sda.mxlive -&gt; uk.ac.diamond.scisoft.analysis.rcp -&gt; org.dawb.common.ui -&gt; uk.ac.diamond.scisoft.analysis -&gt; uk.ac.diamond.scisoft.analysis.test -&gt; uk.ac.diamond.scisoft.analysis.osgi -&gt; uk.ac.diamond.scisoft.analysis</cq:documentation>
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.icat.*$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-icat.git repository branch</cq:documentation>
@@ -294,7 +292,7 @@ Circular component dependency detected. Chain is uk.ac.diamond.dawn.site -&gt; u
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-mx.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ncd.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" useTargetPlatform="false">
