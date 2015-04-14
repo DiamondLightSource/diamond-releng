@@ -1,4 +1,4 @@
-# The purpose of these functions is to rebase the SCI-5214 branch on top of master
+# The purpose of these functions is to rebase the SCI-5214 branch (called SCI-5214 or SCI-5214b, depending on the repo) on top of master
 
 #------------------------------------#
 #------------------------------------#
@@ -22,7 +22,7 @@ post_materialize_function_e4 () {
     # check that we are on the expected branch
     for repo in ${repo_list}; do
         if [[ -d "${materialize_workspace_path}_git/${repo}" ]]; then
-            if [[ "$(git -C ${materialize_workspace_path}_git/${repo} rev-parse --abbrev-ref HEAD)" != "SCI-5214" ]]; then
+            if [[ "$(git -C ${materialize_workspace_path}_git/${repo} rev-parse --abbrev-ref HEAD)" != SCI-5214* ]]; then
                 echo "ERROR: ${materialize_workspace_path}_git/${repo} is not on the expected branch"
                 exit 2
             fi
