@@ -1029,11 +1029,11 @@ class PewmaManager(object):
                                           ('hook_added'               , 'add Gerrit commit-msg hook for git'),
                                          ):
                     if repo_status[action] == NOT_REQUIRED:
-                        self.logger.debug('%s(Already done): %s: %s' % (self.log_prefix, message, git_dir))
+                        self.logger.debug('%sDone previously: %s: %s' % (self.log_prefix, message, git_dir))
                     elif repo_status[action] == DONE:
-                        self.logger.info('%sImplemented   : %s: %s' % (self.log_prefix, message, git_dir))
+                        self.logger.info('%sDone: %s: %s' % (self.log_prefix, message, git_dir))
                     elif repo_status[action] == FAILED:
-                        self.logger.error('%sFailed       : %s: %s' % (self.log_prefix, message, git_dir))
+                        self.logger.error('%sFailed: %s: %s' % (self.log_prefix, message, git_dir))
 
 
     def action_git(self):
