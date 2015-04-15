@@ -908,10 +908,14 @@ class PewmaManager(object):
         """ Processes command: gerrit-config
         """
 
+        NOT_REQUIRED, DONE, FAILED = range(3)  # possible status for various configure actions
+        assert NOT_REQUIRED < DONE 
+        assert DONE < FAILED                   # we record the highest status, which must therefore be FAILED
+
         if check_arguments and self.arguments:
             raise PewmaException('ERROR: gerrit-config command does not take any arguments')
 
-        self.logger.info('%sLooking for repositories that need switching to Gerrit and configuring for Eclipse' % (self.log_prefix,))
+        self.logger.info('%sLooking for repositories that need switching to Gerrit, and/or configuring for EGit/JGit and git' % (self.log_prefix,))
 
         git_directories = self._get_git_directories()
 
@@ -921,13 +925,10 @@ class PewmaManager(object):
 
         prefix= "%%%is: " % max([len(os.path.basename(x)) for x in git_directories]) if self.options.repo_prefix else ""
 
-        configured_count = 0
         for git_dir in sorted(git_directories):
-
             if os.path.basename(git_dir) not in GERRIT_REPOSITORIES:
                 self.logger.debug('%sSkipped: not in Gerrit: %s' % (self.log_prefix, git_dir))
                 continue
-
             config_file_loc = os.path.join(git_dir, '.git', 'config')
             if not os.path.isfile(config_file_loc):
                 self.logger.error('%sSkipped: %s should exist, but does not' % (self.log_prefix, config_file_loc))
@@ -945,13 +946,25 @@ class PewmaManager(object):
                 self.logger.warn('%sSkipped: no [remote "origin"]: %s' % (self.log_prefix, config_file_loc))
                 continue
 
+            # get the current branch (so we can set up the push branch correctly)
+            # the HEAD file contains one line which looks like "ref: refs/heads/gda-8.44" (probably)
+            HEAD_file_loc = os.path.join(git_dir, '.git', 'HEAD')
+            if not os.path.isfile(HEAD_file_loc):
+                self.logger.error('%sSkipped: %s should exist, but does not' % (self.log_prefix, HEAD_file_loc))
+                continue
+            current_branch = 'master'  # in case of problems parsing HEAD file
+            with open(HEAD_file_loc, 'r') as HEAD_file:
+                for line in HEAD_file:
+                    current_branch = line.rsplit('/')[-1] or 'master'
+                    break
+
             git_config_commands = []
             new_url = urlparse.urlunsplit((GERRIT_SCHEME, GERRIT_NETLOC) + urlparse.urlsplit(origin_url)[2:])
             if urlparse.urlunsplit((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '', '', '')) in origin_url:
                 config_changes = ()  # if already pointing at Gerrit, but with anonymous checkout, leave the origin unchanged
             else:
                 config_changes = (
-                    ('remote "origin"', 'url'                 , 'remote.origin.url'    , new_url                    , True),)  # make sure the 
+                    ('remote "origin"', 'url'                 , 'remote.origin.url'    , new_url                    , True),)
 
             config_changes += (
                 # section         , option                    , name                   , required_value             , use_replace
@@ -961,55 +974,67 @@ class PewmaManager(object):
                 ('remote "origin"', 'push'                    , 'remote.origin.push'   , 'HEAD:refs/for/master'     , False))
 
             for (section, option, name, required_value, use_replace) in config_changes:
+                self.logger.debug('%sGetting: %s' % (self.log_prefix, (section, option, name, required_value, use_replace)))
                 try:
                     option_value = config.get(section, option)
+                    self.logger.debug('%sGot: %s' % (self.log_prefix, option_value))
+                    # I think at one point there was an issue with repeated keys in .git/config (which ConfigParser does not handle). Debugging statements left in
+                    option_value_plural = config.items(section)
+                    self.logger.debug('%sMany: %s' % (self.log_prefix, option_value_plural))
+
                 except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
-                    git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
-                else:
-                    if option_value != required_value:
-                        if use_replace:
-                            git_config_commands.append('git config -f %s %s %s' % (config_file_loc, name, required_value))
-                        else:
-                            git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
+                    option_value = None
+
+                if option_value != required_value:
+                    if use_replace:
+                        git_config_commands.append('git config -f %s %s %s' % (config_file_loc, name, required_value))
                     else:
-                        self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
-
-            if not git_config_commands:
-                self.logger.info('%sSkipped: already switched to Gerrit and configured for Eclipse: %s' % (self.log_prefix, git_dir))
-            else:
-                max_retcode = 0
-                for command in git_config_commands:
-                    self.logger.debug('%sRunning: %s' % (self.log_prefix, command))
-                    if not self.options.dry_run:
-                        retcode = subprocess.call(shlex.split(command), shell=False)
-                        if retcode:
-                            self.logger.error('%sFAILED: rc=%s' % (self.log_prefix, retcode))
-                            max_retcode = max(max_retcode, retcode)
-                if not max_retcode:
-                    configured_count += 1
-                    self.logger.info('%sConfigured: set up for Gerrit: %s' % (self.log_prefix, git_dir))
+                        git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
                 else:
-                    self.logger.error('%sFAILED: could not configure for Gerrit: %s' % (self.log_prefix, git_dir))
+                    self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
 
-        self.logger.info('%sFinished: additional repositories configured for Gerrit: %s' % (self.log_prefix, configured_count))
+            repo_status = {'switched_remote_to_gerrit': NOT_REQUIRED, 'configured_for_eclipse': NOT_REQUIRED, 'hook_added': NOT_REQUIRED}
+
+            for command in git_config_commands:
+                self.logger.debug('%sRunning: %s' % (self.log_prefix, command))
+                action_type = 'switched_remote_to_gerrit' if 'remote.origin.url' in command else 'configured_for_eclipse'
+                status = DONE  # for dry run, pretend the operation succeeded
+                if not self.options.dry_run:
+                    retcode = subprocess.call(shlex.split(command), shell=False)
+                    if retcode:
+                        self.logger.error('%sFAILED: rc=%s' % (self.log_prefix, retcode))
+                        status = FAILED
+                repo_status[action_type] = max(repo_status[action_type], status)  # FAILED is the highest status, sicne we want to know if _any_ failed
 
             #############################################################################
             # get the commit hook, for people who use command line Git rather than EGit #
             #############################################################################
 
-        return
-        '''
             hooks_commit_msg_loc = os.path.join(git_dir, '.git', 'hooks', 'commit-msg')
             if os.path.exists(hooks_commit_msg_loc):
-                self.logger.debug('%scommit-msg hook already set up: %s' % (self.log_prefix, git_dir))
-                continue
-            commit_hook = self.gerrit_commit_hook()
-            with open(hooks_commit_msg_loc, 'w') as commit_msg_file:
-                commit_msg_file.write(commit_hook)
-            hooks_added_count += 1
-        '''
+                self.logger.debug('%scommit-msg hook already set up: %s' % (self.log_prefix, hooks_commit_msg_loc))
+            else:
+                commit_hook = self.gerrit_commit_hook()
+                if not self.options.dry_run:
+                    with open(hooks_commit_msg_loc, 'w') as commit_msg_file:
+                        commit_msg_file.write(commit_hook)
+                self.logger.debug('%scommit-msg hook copied to: %s' % (self.log_prefix, hooks_commit_msg_loc))
+                repo_status['hook_added'] = DONE
 
-        self.logger.info('%sFinished: additional repositories configured for Gerrit: %s; commit-msg hooks added: %s' % (self.log_prefix, configured_count, hooks_added_count))
+            if all(status == NOT_REQUIRED for status in repo_status.itervalues()):
+                self.logger.info('%sSkipped: already switched to Gerrit; configured for EGit/JGit and git: %s' % (self.log_prefix, git_dir))
+            else:
+                for (action, message) in (('switched_remote_to_gerrit', 'switch remote.origin.url to Gerrit'),
+                                          ('configured_for_eclipse'   , 'configure repository for EGit/JGit'),
+                                          ('hook_added'               , 'add Gerrit commit-msg hook for git'),
+                                         ):
+                    if repo_status[action] == NOT_REQUIRED:
+                        self.logger.debug('%s(Already done): %s: %s' % (self.log_prefix, message, git_dir))
+                    elif repo_status[action] == DONE:
+                        self.logger.info('%sImplemented   : %s: %s' % (self.log_prefix, message, git_dir))
+                    elif repo_status[action] == FAILED:
+                        self.logger.error('%sFailed       : %s: %s' % (self.log_prefix, message, git_dir))
+
 
     def action_git(self):
         """ Processes command: git <command>
