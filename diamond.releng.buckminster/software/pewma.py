@@ -1018,6 +1018,7 @@ class PewmaManager(object):
                 if not self.options.dry_run:
                     with open(hooks_commit_msg_loc, 'w') as commit_msg_file:
                         commit_msg_file.write(commit_hook)
+                    os.chmod(hooks_commit_msg_loc, 0o775)  # rwxrwxr-x
                 self.logger.debug('%scommit-msg hook copied to: %s' % (self.log_prefix, hooks_commit_msg_loc))
                 repo_status['hook_added'] = DONE
 
