@@ -56,6 +56,8 @@ elif [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
     squish_platform_job_suffix=$(echo "${JOB_NAME}" | sed 's/^.*--squish.trigger//')
 
 # if this is any squish job, work out the name of the upstream job (the create.product job)
+elif [[ "${JOB_NAME:-noname}" == *-squish-subset.* ]]; then
+    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish-subset.[^~]*/-create.product/')
 elif [[ "${JOB_NAME:-noname}" == *-squish.* ]]; then
     upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.[^~]*/-create.product/')
 fi
