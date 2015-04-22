@@ -85,8 +85,8 @@ def write_script_file_for_changes():
         refspec = changeinfo[0]['revisions'][current_revision]['fetch']['anonymous http']['ref']
         changes_to_fetch.append((project, change, current_revision_number, change_id, refspec))
 
-        if errors_found:
-            sys.exit(1)
+    if errors_found:
+        return 1
 
     # sort the changes to apply in order of project, and change ascending, and group changes in the same project
     changes_to_fetch.sort(key=operator.itemgetter(1))  # sort on secondary key, the change (a number)
@@ -135,6 +135,7 @@ def write_script_file_for_changes():
 
 if __name__ == '__main__':
     write_script_file_start()
-    write_script_file_for_changes()
+    return_code = write_script_file_for_changes()
     write_script_file_end()
+    sys.exit(return_code)
 
