@@ -32,7 +32,7 @@ for gda_config in (
     'lpd',                                              # Rutherford
     'all-dls', 'all-mt', 'all-mx',                      # Diamond
     'b16', 'b18', 'b21', 'b23', 'b24', 'dls', 'excalibur',
-    'i02', 'i03', 'i04', 'i04-1', 'i05', 'i06', 'i07', 'i08', 'i09', 'i09-1', 'i09-2',
+    'i02', 'i03', 'i04', 'i04-1', 'i05', 'i05-1', 'i06', 'i07', 'i08', 'i09', 'i09-1', 'i09-2',
     'i10', 'i11', 'i11-1', 'i12', 'i13i', 'i13j', 'i14', 'i15', 'i16', 'i18',
     'i19', 'i19-1', 'i19-2', 'i20', 'i20-1', 'i22', 'i23', 'i24', 'lab11', 'mt', 'mx', 'ncdsim'):
     COMPONENT_ABBREVIATIONS.append((gda_config, 'gda', gda_config+'-config'))  # recognise name without -config suffix
