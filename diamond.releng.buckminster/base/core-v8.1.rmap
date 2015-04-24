@@ -2276,7 +2276,7 @@
   <rm:locator pattern="^org\.eclipse\.gemini\.blueprint\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^net\.sf\.cglib$" searchPathRef="tp_bioclipse"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_R20140525021250"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies --> 
+  <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_R20140525021250"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies -->
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="GDA_tp_bundles"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javassist$" searchPathRef="GDA_tp_bundles"/>
@@ -2301,10 +2301,14 @@
   <rm:locator pattern="^org\.apache\.commons\.(dbcp|math|net|pool)$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.dom4j$" searchPathRef="DAWB_p2"/>
   <!--
-       Target Platform components (Eclipse)
+       Target Platform components: Eclipse)
+       Target Platform components: Eclipse Orbit (which contains third-party jars which have passed Eclipse IP checks, and been turned in OSGI bundles)
        Some Eclipse components are published both as part of the platform release, and separately. Put the platform release last so we can get a newer release.
   -->
   <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_rap" failOnError="false"/>
+  <rm:locator pattern="^javax\.servlet(\..+)?" searchPathRef="eclipse_orbit_R20150124073747"/>  <!-- if required version not found here, keep looking -->
+  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_4.5_platform" failOnError="false"/>  <!-- if required version not found here, keep looking -->
+  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_4.5_release" failOnError="false"/>  <!-- if required version not found here, keep looking -->
   <rm:locator pattern="^org\.eclipse\.(emf|xsd)(\..+)?" searchPathRef="eclipse_emf_emf" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse.(draw2d|gef|zest)(\..+)?" searchPathRef="eclipse_gef"/>
   <rm:locator pattern="^org\.eclipse\.graphiti(\..+)?" searchPathRef="eclipse_graphiti"/>
@@ -4056,7 +4060,7 @@
        Target Platform (Eclipse)
   -->
   <rm:searchPath name="eclipse_orbit_R20150124073747">  <!-- Luna SR2 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(|(e4.trial.common=true)(buckminster.component=javax.servlet*))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/"/>
@@ -4182,14 +4186,14 @@
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_4.5_platform">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.5)" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(|(eclipse.release=4.5)(buckminster.component=org.eclipse.jetty*))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="http://download.eclipse.org/eclipse/updates/4.5milestones"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_4.5_release">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.5)" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(|(eclipse.release=4.5)(buckminster.component=org.eclipse.jetty*))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="http://download.eclipse.org/releases/mars"/>
