@@ -150,7 +150,14 @@ set_environment_step () {
         else
             # non-verbose output in a batch job
             echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
+            set +e  # Turn off errexit
             wget --timeout=60 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+            RETVAL=$?
+            $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
+            if [ "${RETVAL}" != "0" ]; then
+                echo 'set-build-description: Failure on wget (probable network issue)'
+                return ${RETVAL}
+            fi
         fi
         chmod +x ${pewma_py}
         set +x  # Turn off xtrace
@@ -173,7 +180,14 @@ set_environment_step () {
         else
             # non-verbose output in a batch job
             echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
+            set +e  # Turn off errexit
             wget --timeout=60 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+            RETVAL=$?
+            $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
+            if [ "${RETVAL}" != "0" ]; then
+                echo 'set-build-description: Failure on wget (probable network issue)'
+                return ${RETVAL}
+            fi
         fi
         chmod +x ${buckminster_headless_install}
         set +x  # Turn off xtrace
