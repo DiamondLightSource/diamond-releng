@@ -125,7 +125,7 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent chec
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (Connection reset|Short read of block\.)', 'Network error'),  # text = no specifc repository identified
     ('org\.apache\.http\.conn\.HttpHostConnectException: Connection to .+ refused', 'Connection refused'),  # text = no specifc repository identified
     ('HttpComponents connection error response code (500|502|503)', 'Server error'),  # text = no specifc repository identified
-    ('ERROR +No repository found at http://www\.opengda\.org/', 'Server error'),  # text = no specifc repository identified
+    ('ERROR: No repository found at http://www\.opengda\.org/', 'Server error'),  # text = no specifc repository identified
     )
 
 GERRIT_REPOSITORIES = (
