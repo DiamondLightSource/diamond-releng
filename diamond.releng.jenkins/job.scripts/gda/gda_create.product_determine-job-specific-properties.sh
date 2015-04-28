@@ -53,12 +53,7 @@ EOF
 
 # the example beamline .properties filenames are different from the standard names defined in GDA.<release>-environment-variables.properties
 if [[ "${GDA_group}" == "GDA" && "${GDA_beamline}" == "example" ]]; then
-    if [[ "${download_public:false}" == "true" ]]; then
-        cat << EOF >> ${properties_filename}
-buckminster_properties_filename=buckminster.properties
-EOF
-    else
-        cat << EOF >> ${properties_filename}
+    cat << EOF >> ${properties_filename}
 buckminster_properties_filename=buckminster.diamond.jenkins.properties
 EOF
     fi
