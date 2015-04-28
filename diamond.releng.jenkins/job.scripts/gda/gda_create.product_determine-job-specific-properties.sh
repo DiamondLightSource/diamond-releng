@@ -56,7 +56,6 @@ if [[ "${GDA_group}" == "GDA" && "${GDA_beamline}" == "example" ]]; then
     cat << EOF >> ${properties_filename}
 buckminster_properties_filename=buckminster.diamond.jenkins.properties
 EOF
-    fi
 fi
 
 echo "[gda_create.product_determine-job-specific-properties.sh] wrote ${properties_filename} --->"
