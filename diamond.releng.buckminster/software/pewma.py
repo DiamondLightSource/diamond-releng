@@ -1691,7 +1691,7 @@ class PewmaManager(object):
             fqdn = socket.getfqdn()
             if fqdn.endswith('.diamond.ac.uk'):
                 proxy_value = 'wwwcache.rl.ac.uk:8080'
-                no_proxy_value = '127.0.0.1/8,localhost,*.diamond.ac.uk'
+                no_proxy_value = '127.0.0.1/8,localhost,.diamond.ac.uk'
             elif fqdn.endswith('.esrf.fr'):
                 proxy_value = 'proxy.esrf.fr:3128'
                 no_proxy_value = '127.0.0.1,localhost'
