@@ -280,7 +280,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ptychography.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-ptychography" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.spectroscopy(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-spectroscopy.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(exporter|meta(\.extended)?|navigator(\.test)?|polling))$" filter="(|(e4.trial=true)(e4.trial.common=true))" useTargetPlatform="false" branchTagPath="SCI-5214c">
