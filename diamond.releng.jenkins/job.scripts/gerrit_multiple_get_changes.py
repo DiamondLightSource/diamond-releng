@@ -104,7 +104,7 @@ def write_script_file_for_changes():
             script_file.write('''\
     GERRIT_PROJECT=%(GERRIT_PROJECT)s
     GERRIT_REFSPEC=%(GERRIT_REFSPEC)s
-    echo -e "\\n*** `date +"%%a %%d/%%b/%%Y %%H:%%M:%%S"` getting Gerrit patch ${GERRIT_PROJECT} ${GERRIT_REFSPEC} (branch ${repo_default_BRANCH}) ***\\n"
+    echo -e "\\n*** `date +"%%a %%d/%%b/%%Y %%H:%%M:%%S"` getting Gerrit patch ${GERRIT_PROJECT} ${GERRIT_REFSPEC} (branch %(repo_branch)s) ***\\n"
     repo=${materialize_workspace_path}_git/$(basename ${GERRIT_PROJECT}).git
     if [[ ! -d "${repo}" ]]; then
         mkdir -pv ${materialize_workspace_path}_git
