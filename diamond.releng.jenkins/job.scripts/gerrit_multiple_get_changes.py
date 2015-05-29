@@ -7,6 +7,7 @@ import itertools
 import json
 import operator
 import os
+import os.path
 import urllib2
 import sys
 
@@ -69,7 +70,7 @@ def write_script_file_for_changes():
         # check that this change is for the correct branch, and has not already been merged
         project = str(changeinfo[0]['project'])  # str converts from unicode 
         change_branch = changeinfo[0].get('branch', '**not returned by Gerrit**')
-        repo_branch_env_var = 'repo_%s_BRANCH' % (project.replace('.git', '').replace('-', '_'),)
+        repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
         expected_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
         status = str(changeinfo[0]['status'])
         if change_branch != expected_branch:
@@ -94,7 +95,7 @@ def write_script_file_for_changes():
     changes_to_fetch.sort()  # sort on primary key, the project (repository), taking advantage of the fact that sorts are stable
 
     for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
-        repo_branch_env_var = 'repo_%s_BRANCH' % (project.replace('.git', '').replace('-', '_'),)
+        repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
         repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
         print((project, change, current_revision_number, change_id, refspec, repo_branch))
 

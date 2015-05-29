@@ -40,7 +40,7 @@ pre_materialize_function_stage1_checkout_standard_branches_function () {
             if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
                 CURRENT_BRANCH=$(git -C ${repo} rev-parse --abbrev-ref HEAD)
                 if [[ "${CURRENT_BRANCH}" == local* ]]; then
-                    repo_branch_env_var="repo_$(echo "${repo}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_BRANCH"
+                    repo_branch_env_var="repo_$(basename "${repo}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_BRANCH"
                     repo_branch="${!repo_branch_env_var}"
                     if [[ -z "${repo_branch}" ]]; then
                         repo_branch=${repo_default_BRANCH}

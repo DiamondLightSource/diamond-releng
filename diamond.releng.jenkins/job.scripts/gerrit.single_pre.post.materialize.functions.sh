@@ -4,7 +4,7 @@
 
 pre_materialize_function_stage2_gerrit_single () {
     repo=${materialize_workspace_path}_git/$(basename ${GERRIT_PROJECT}).git
-    repo_branch_env_var="repo_$(echo "${GERRIT_PROJECT}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_BRANCH"
+    repo_branch_env_var="repo_$(basename "${GERRIT_PROJECT}" | sed s'#^./##' | sed s'/.git$//' |  sed s'/-/_/g')_BRANCH"
     repo_branch="${!repo_branch_env_var}"
     if [[ -z "${repo_branch}" ]]; then
         repo_branch=${repo_default_BRANCH}
