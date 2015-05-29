@@ -69,10 +69,11 @@ def write_script_file_for_changes():
         # check that this change is for the correct branch, and has not already been merged
         project = str(changeinfo[0]['project'])  # str converts from unicode 
         change_branch = changeinfo[0].get('branch', '**not returned by Gerrit**')
-        expected_branch = os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**')
+        repo_branch_env_var = 'repo_%s_BRANCH' % (project.replace('.git', '').replace('-', '_'),)
+        expected_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
         status = str(changeinfo[0]['status'])
         if change_branch != expected_branch:
-            print('*** Error: change %s branch ("%s") does not match the branch used by this test job ("%s")' % (change, change_branch, expected_branch))
+            print('*** Error: change %s branch ("%s") in %s does not match the branch used by this test job ("%s")' % (change, change_branch, project, expected_branch))
             errors_found = True
             continue
         if status not in ('NEW', 'DRAFT'):
@@ -93,7 +94,9 @@ def write_script_file_for_changes():
     changes_to_fetch.sort()  # sort on primary key, the project (repository), taking advantage of the fact that sorts are stable
 
     for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
-        print((project, change, current_revision_number, change_id, refspec))
+        repo_branch_env_var = 'repo_%s_BRANCH' % (project.replace('.git', '').replace('-', '_'),)
+        repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
+        print((project, change, current_revision_number, change_id, refspec, repo_branch))
 
         # generate the commands necessary to fetch and merge in this change
         with open(SCRIPT_FILE_PATH, 'a') as script_file:
@@ -110,9 +113,9 @@ def write_script_file_for_changes():
 
     # do the merge or rebase in a new local branch, to avoid any risk of pushing something back to the remote
     cd ${repo}
-    git checkout ${repo_default_BRANCH}
+    git checkout %(repo_branch)s
     git branch -D local-${JOB_NAME} || true
-    git branch -vv --no-track local-${JOB_NAME} remotes/origin/${repo_default_BRANCH}
+    git branch -vv --no-track local-${JOB_NAME} remotes/origin/%(repo_branch)s
     git checkout local-${JOB_NAME}
     git fetch origin ${GERRIT_REFSPEC}
 
@@ -127,9 +130,9 @@ def write_script_file_for_changes():
         git merge --verbose FETCH_HEAD
     fi
 
-    git log ${repo_default_BRANCH}^..
+    git log %(repo_branch)s^..
 
-''' % {'GERRIT_PROJECT': project, 'GERRIT_REFSPEC': refspec,}
+''' % {'GERRIT_PROJECT': project, 'GERRIT_REFSPEC': refspec, 'repo_branch': repo_branch}
 
 )
 

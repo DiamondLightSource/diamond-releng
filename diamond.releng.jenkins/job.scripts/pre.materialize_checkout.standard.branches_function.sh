@@ -1,4 +1,5 @@
-# switch back to the standard branches for each repository (used to after Gerrit tests, which create a new local branch)
+# switch back to the standard branches for each repository
+# (Gerrit test jobs create a new local branch, so the next time the job runs, we need to switch back to the standard branch)
 
 #------------------------------------#
 #------------------------------------#
