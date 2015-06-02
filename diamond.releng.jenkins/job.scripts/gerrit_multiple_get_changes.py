@@ -131,7 +131,7 @@ def write_script_file_for_changes():
         git merge --verbose FETCH_HEAD
     fi
 
-    git log %(repo_branch)s^..
+    git log %(repo_branch)s^.. --topo-order
 
 ''' % {'GERRIT_PROJECT': project, 'GERRIT_REFSPEC': refspec, 'repo_branch': repo_branch}
 

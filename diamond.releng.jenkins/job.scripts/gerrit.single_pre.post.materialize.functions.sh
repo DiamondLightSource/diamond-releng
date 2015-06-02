@@ -37,6 +37,6 @@ pre_materialize_function_stage2_gerrit_single () {
         git merge --verbose FETCH_HEAD
     fi
 
-    git log ${repo_branch}^..
+    git log ${repo_branch}^.. --topo-order
 
 }
