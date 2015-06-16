@@ -5,8 +5,8 @@
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/tp/plugins/slf4j.api_1.7.6.jar</path>
 <path>/tp/plugins/org.apache.commons.logging_1.0.4.v201101211617.jar</path>
-<path>/tp/plugins/ch.qos.logback.classic_1.1.0.jar</path>
-<path>/tp/plugins/ch.qos.logback.core_1.1.0.jar</path>
+<path>/tp/plugins/ch.qos.logback.classic_1.1.1.jar</path>
+<path>/tp/plugins/ch.qos.logback.core_1.1.1.jar</path>
 <path>/tp/plugins/org.apache.commons.math_2.2.0.jar</path>
 <path>/tp/plugins/org.apache.commons.math3_3.2.0.jar</path>
 <path>/tp/plugins/uk.ac.diamond.jama_1.0.3.jar</path>
