@@ -52,8 +52,7 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms
-    ('gda', 'master', 'gda-master.cquery', 'v2.9', ('master', 'trunk')),
-    ('gda', 'gda6113', 'GDA-6113.cquery', 'v2.9', ('gda6113', 'gda-6113')),
+    ('gda', 'master', 'gda-master.cquery', 'v2.10', ('master', 'trunk')),
     ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.9', ('masterhplc', 'hplc')),
     ('gda', 'v8.46', 'gda-v8.46.cquery', 'v2.9', ('v8.46', '8.46', '846')),
     ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844')),
@@ -77,7 +76,7 @@ COMPONENT_CATEGORIES = (
     ('ida', 'v2.19', 'ida-v2.19.cquery', 'v2.3', ('v2.19', '2.19', '219')),
     ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218')),
     ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217')),
-    ('dawn', 'master', 'dawn-master.cquery', 'v2.9', ('master', 'trunk')),
+    ('dawn', 'master', 'dawn-master.cquery', 'v2.10', ('master', 'trunk')),
     ('dawn', '1.9', 'dawn-v1.9.cquery', 'v2.9', ('v1.9', '1.9')),
     ('dawn', '1.8', 'dawn-v1.8.cquery', 'v2.9', ('v1.8', '1.8')),
     ('dawn', '1.7.1', 'dawn-v1.7.1.cquery', 'v2.7', ('v1.7.1', '1.7.1', '171')),
@@ -86,15 +85,6 @@ COMPONENT_CATEGORIES = (
     ('dawn', '1.5', 'dawn-v1.5.cquery', 'v2.6', ('v1.5', '1.5')),
     ('dawn', '1.4.1', 'dawn-v1.4.1.cquery', 'v2.5', ('v1.4.1', '1.4.1')),
     ('dawn', '1.4', 'dawn-v1.4.cquery', 'v2.5', ('v1.4', '1.4')),
-    ('dawn', 'gda-8.44', 'dawn-gda-8.44.cquery', 'v2.9', ('gda-8.44', 'gda844')),
-    ('dawn', 'gda-8.42', 'dawn-gda-8.42.cquery', 'v2.6', ('gda-8.42', 'gda842')),
-    ('dawn', 'gda-8.40', 'dawn-gda-8.40.cquery', 'v2.6', ('gda-8.40', 'gda840')),
-    ('dawn', 'gda-8.38', 'dawn-gda-8.38.cquery', 'v2.6', ('gda-8.38', 'gda838')),
-    ('dawn', 'gda-8.36', 'dawn-gda-8.36.cquery', 'v2.5', ('gda-8.36', 'gda836')),
-    ('dawn', 'gda-8.34', 'dawn-gda-8.34.cquery', 'v2.4', ('gda-8.34', 'gda834')),
-    ('dawn', 'gda-8.32', 'dawn-gda-8.32.cquery', 'v2.4', ('gda-8.32', 'gda832')),
-    ('dawn', 'gda-8.30', 'dawn-gda-8.30.cquery', 'v2.4', ('gda-8.30', 'gda830')),
-    ('dawn', 'gda-8.28', 'dawn-gda-8.28.cquery', 'v2.4', ('gda-8.28', 'gda828')),
     ('dawn', 'v1.0', 'dawn-v1.0.cquery', 'v2.3', ('v1.0', '1.0')),
     ('none', 'master', 'master.cquery', 'v2.3', ('master', 'trunk')),
     ('training', 'master', 'training-trunk.cquery', 'v2.0', ('master', 'trunk')),
@@ -1315,7 +1305,7 @@ class PewmaManager(object):
             raise PewmaException('ERROR: --recreate-symlink is not available for "%s"' % (self.site_name,))
         if ('macosx,cocoa,x86' in platforms) and not mac32_available:
             if all_platforms_specified:
-                platforms.remove('macosx,cocoa,x86')  #  platform "all" was specified, so removed macos 32-bit platform  from the auot-added list  
+                platforms.remove('macosx,cocoa,x86')  #  platform "all" was specified, so removed macos 32-bit platform  from the auto-added list  
             else:
                 raise PewmaException('ERROR: MacOSX 32-bit cannot be build for "%s"' % (self.site_name,))
 
