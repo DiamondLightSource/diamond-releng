@@ -8,12 +8,29 @@ import json
 import operator
 import os
 import os.path
-import urllib2
+import stat
 import sys
+import urllib2
 
 MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job 
 
 SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.multiple_pre.post.materialize.functions.sh')))
+
+def get_http_username_password():
+    ''' the token required to authenticate to Gerrit is stored in a file '''
+    username = 'dlshudson'
+    token_filename = '/home/dlshudson/passwords/http-password_Gerrit_Jenkins.txt'
+    assert os.path.isfile(token_filename)
+    assert os.stat(token_filename).st_mode == stat.S_IRUSR + stat.S_IFREG  # permissions must be user-read + regular-file
+    last_nonempty_line = ''
+    with open(token_filename, 'r') as token_file:
+        for line in token_file:  # standard OS terminator is converted to \n
+            line = line.rstrip('\n') # remove trailing newline
+            if line:
+                last_nonempty_line = line
+    if last_nonempty_line:
+        return (username, last_nonempty_line)
+    raise Exception('File %s appears empty' % token_filename)
 
 def write_script_file_start():
     with open(SCRIPT_FILE_PATH, 'w') as script_file:
@@ -39,6 +56,11 @@ def write_script_file_for_changes():
     changes_to_fetch = []  # list of (project, change, current_revision_number, change_id, refspec)
     errors_found = False
 
+    handler = urllib2.HTTPDigestAuthHandler()
+    handler.add_password('Gerrit Code Review', 'http://gerrit.diamond.ac.uk:8080', *get_http_username_password())
+    opener = urllib2.build_opener(handler)
+    urllib2.install_opener(opener)
+
     for i, change in ((i, os.environ.get('change_%s' % i, '').strip()) for i in range(1, MAX_CHANGESETS+1)):
         if not change:
             continue
@@ -53,7 +75,7 @@ def write_script_file_for_changes():
             change = int(change)
 
         # use the Gerrit REST interface to get some details about the change (do some basic validation on what is returned)
-        url = 'http://gerrit.diamond.ac.uk:8080/changes/?q=%s&o=CURRENT_REVISION' % (change,)
+        url = 'http://gerrit.diamond.ac.uk:8080/a/changes/?q=%s&o=CURRENT_REVISION' % (change,)
         request = urllib2.Request(url)
         try:
             changeinfo_json = urllib2.urlopen(request).read()
