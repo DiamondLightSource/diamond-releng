@@ -66,6 +66,10 @@ def write_script_file_for_changes():
             errors_found = True
             continue
         changeinfo = json.loads(changeinfo_json[5:])  # need to strip off the magic prefix line returned by Gerrit
+        if len(changeinfo) == 0:
+            print('*** Error: change %s does not exist (or is not visible to Jenkins')
+            errors_found = True
+            continue
 
         # check that this change is for the correct branch, and has not already been merged
         project = str(changeinfo[0]['project'])  # str converts from unicode 
