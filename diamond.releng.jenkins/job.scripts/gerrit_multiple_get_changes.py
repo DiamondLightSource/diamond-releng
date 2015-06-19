@@ -1,8 +1,16 @@
 '''
 Given one or more Gerrit changeset numbers, generates a script to apply them, one on top of another, to a set of repositories 
+
+Testing notes:
+   Set environment variables something like this:
+      export WORKSPACE=
+      export change_1=664
+      export repo_default_BRANCH=gda-8.46
+
 '''
 
 from __future__ import print_function
+import datetime
 import itertools
 import json
 import operator
@@ -16,8 +24,12 @@ MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job
 
 SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.multiple_pre.post.materialize.functions.sh')))
 
+# If the Gerrrit REST API has been secured, then you need to use digest authentication.
+USE_DIGEST_AUTHENTICATION = True
+
 def get_http_username_password():
     ''' the token required to authenticate to Gerrit is stored in a file '''
+    assert USE_DIGEST_AUTHENTICATION, "*** Internal Error: get_http_username_password called, but USE_DIGEST_AUTHENTICATION False"
     username = 'dlshudson'
     token_filename = '/home/dlshudson/passwords/http-password_Gerrit_Jenkins.txt'
     assert os.path.isfile(token_filename)
@@ -35,12 +47,13 @@ def get_http_username_password():
 def write_script_file_start():
     with open(SCRIPT_FILE_PATH, 'w') as script_file:
                 script_file.write('''\
+### File generated at %(GENERATE_DATETIME)s
 
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh
 
 pre_materialize_function_stage2_gerrit_multiple () {
 
-''')
+''' % {'GENERATE_DATETIME': datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M')})
 
 def write_script_file_end():
     
@@ -56,10 +69,11 @@ def write_script_file():
     changes_to_fetch = []  # list of (project, change, current_revision_number, change_id, refspec)
     errors_found = False
 
-    handler = urllib2.HTTPDigestAuthHandler()
-    handler.add_password('Gerrit Code Review', 'http://gerrit.diamond.ac.uk:8080', *get_http_username_password())
-    opener = urllib2.build_opener(handler)
-    urllib2.install_opener(opener)
+    if USE_DIGEST_AUTHENTICATION:
+        handler = urllib2.HTTPDigestAuthHandler()
+        handler.add_password('Gerrit Code Review', 'http://gerrit.diamond.ac.uk:8080', *get_http_username_password())
+        opener = urllib2.build_opener(handler)
+        urllib2.install_opener(opener)
 
     for i, change in ((i, os.environ.get('change_%s' % i, '').strip()) for i in range(1, MAX_CHANGESETS+1)):
         if not change:
@@ -75,7 +89,10 @@ def write_script_file():
             change = int(change)
 
         # use the Gerrit REST interface to get some details about the change (do some basic validation on what is returned)
-        url = 'http://gerrit.diamond.ac.uk:8080/a/changes/?q=%s&o=CURRENT_REVISION' % (change,)
+        url = 'http://gerrit.diamond.ac.uk:8080/'
+        if USE_DIGEST_AUTHENTICATION:
+            url += 'a/'
+        url += 'changes/?q=%s&o=CURRENT_REVISION' % (change,)
         request = urllib2.Request(url)
         try:
             changeinfo_json = urllib2.urlopen(request).read()
@@ -110,7 +127,10 @@ def write_script_file():
         change_id = changeinfo[0]['change_id']
         current_revision = changeinfo[0]['current_revision']
         current_revision_number = changeinfo[0]['revisions'][current_revision]['_number']
-        refspec = changeinfo[0]['revisions'][current_revision]['fetch']['http']['ref']
+        if USE_DIGEST_AUTHENTICATION:
+            refspec = changeinfo[0]['revisions'][current_revision]['fetch']['http']['ref']
+        else:
+            refspec = changeinfo[0]['revisions'][current_revision]['fetch']['anonymous http']['ref']
         changes_to_fetch.append((project, change, current_revision_number, change_id, refspec))
 
     if errors_found:
@@ -152,7 +172,22 @@ def write_script_file():
     git fetch origin ${GERRIT_REFSPEC}
 
     # Merge or rebase the change on the (local version of the) main branch, using whatever method is specified for Gerrit's "Submit Type:" for the repository
+''' % {'GERRIT_PROJECT': project, 'GERRIT_REFSPEC': refspec, 'repo_branch': repo_branch})
+
+        if USE_DIGEST_AUTHENTICATION:
+            with open(SCRIPT_FILE_PATH, 'a') as script_file:
+                script_file.write('''\
+    submit_type=$(echo "--user dlshudson:$(tail -n 1 ~/passwords/http-password_Gerrit_Jenkins.txt)" | curl --silent --fail --digest -K - "http://${GERRIT_HOST}:8080/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%%2F#g')/config" | grep '"submit_type"')
+''')
+        else:
+            with open(SCRIPT_FILE_PATH, 'a') as script_file:
+                script_file.write('''\
     submit_type=$(wget -q -O - "http://${GERRIT_HOST}:8080/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%%2F#g')/config" | grep '"submit_type"')
+''')
+
+        with open(SCRIPT_FILE_PATH, 'a') as script_file:
+            script_file.write('''\
+
     if [[ "${submit_type}" == *REBASE_IF_NECESSARY* ]]; then
         # option - attempt to rebase the change with the main branch
         git checkout -f FETCH_HEAD
@@ -164,9 +199,8 @@ def write_script_file():
 
     git log %(repo_branch)s^.. --topo-order
 
-''' % {'GERRIT_PROJECT': project, 'GERRIT_REFSPEC': refspec, 'repo_branch': repo_branch}
+''')
 
-)
     write_script_file_end()
     print('*** Done: wrote script file to', SCRIPT_FILE_PATH)
 
