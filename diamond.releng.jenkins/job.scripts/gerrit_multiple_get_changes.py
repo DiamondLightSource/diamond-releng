@@ -177,7 +177,7 @@ def write_script_file():
         if USE_DIGEST_AUTHENTICATION:
             with open(SCRIPT_FILE_PATH, 'a') as script_file:
                 script_file.write('''\
-    submit_type=$(curl --silent --fail --digest -K ~/passwords/http-password_Gerrit_for-REST.txt "http://${GERRIT_HOST}:8080/a/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%%2F#g')/config" | grep '"submit_type"')
+    submit_type=$(curl --silent --fail --digest -K ~/passwords/http-password_Gerrit_for-REST.txt "http://${GERRIT_HOST}:8080/a/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%2F#g')/config" | grep '"submit_type"')
 ''')
         else:
             with open(SCRIPT_FILE_PATH, 'a') as script_file:
