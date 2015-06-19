@@ -50,7 +50,7 @@ def write_script_file_end():
 
 ''')
 
-def write_script_file_for_changes():
+def write_script_file():
     ''' validate the environment variables passed by Jenkins '''
 
     changes_to_fetch = []  # list of (project, change, current_revision_number, change_id, refspec)
@@ -89,7 +89,7 @@ def write_script_file_for_changes():
             continue
         changeinfo = json.loads(changeinfo_json[5:])  # need to strip off the magic prefix line returned by Gerrit
         if len(changeinfo) == 0:
-            print('*** Error: change %s does not exist (or is not visible to Jenkins')
+            print('*** Error: change %s does not exist (or is not visible to Jenkins)'  % (change,))
             errors_found = True
             continue
 
@@ -110,16 +110,21 @@ def write_script_file_for_changes():
         change_id = changeinfo[0]['change_id']
         current_revision = changeinfo[0]['current_revision']
         current_revision_number = changeinfo[0]['revisions'][current_revision]['_number']
-        refspec = changeinfo[0]['revisions'][current_revision]['fetch']['anonymous http']['ref']
+        refspec = changeinfo[0]['revisions'][current_revision]['fetch']['http']['ref']
         changes_to_fetch.append((project, change, current_revision_number, change_id, refspec))
 
     if errors_found:
+        return 1
+
+    if not changes_to_fetch:
+        print('*** Error: no changes specified (you need to set the appropriate environment variables')
         return 1
 
     # sort the changes to apply in order of project, and change ascending, and group changes in the same project
     changes_to_fetch.sort(key=operator.itemgetter(1))  # sort on secondary key, the change (a number)
     changes_to_fetch.sort()  # sort on primary key, the project (repository), taking advantage of the fact that sorts are stable
 
+    write_script_file_start()
     for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
         repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
         repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
@@ -162,10 +167,10 @@ def write_script_file_for_changes():
 ''' % {'GERRIT_PROJECT': project, 'GERRIT_REFSPEC': refspec, 'repo_branch': repo_branch}
 
 )
+    write_script_file_end()
+    print('*** Done: wrote script file to', SCRIPT_FILE_PATH)
 
 if __name__ == '__main__':
-    write_script_file_start()
-    return_code = write_script_file_for_changes()
-    write_script_file_end()
+    return_code = write_script_file()
     sys.exit(return_code)
 
