@@ -27,7 +27,11 @@ pre_materialize_function_stage2_gerrit_single () {
     git fetch origin ${GERRIT_REFSPEC}
 
     # Merge or rebase the change on the (local version of the) main branch, using whatever method is specified for Gerrit's "Submit Type:" for the repository
-    submit_type=$(wget -q -O - "http://${GERRIT_HOST}:8080/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%2F#g')/config" | grep '"submit_type"')
+    if [[ "${GERRIT_USE_DIGEST_AUTHENTICATION:-true}" != "false" ]]; then
+        submit_type=$(curl --silent --fail --digest -K ~/passwords/http-password_Gerrit_for-curl.txt "http://${GERRIT_HOST}:8080/a/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%2F#g')/config" | grep '"submit_type"')
+    else
+        submit_type=$(curl --silent --fail "http://${GERRIT_HOST}:8080/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%2F#g')/config" | grep '"submit_type"')
+    fi
     if [[ "${submit_type}" == *REBASE_IF_NECESSARY* ]]; then
         # option - attempt to rebase the change with the main branch
         git checkout -f FETCH_HEAD

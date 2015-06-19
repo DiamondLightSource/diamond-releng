@@ -25,7 +25,7 @@ MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job
 SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.multiple_pre.post.materialize.functions.sh')))
 
 # If the Gerrrit REST API has been secured, then you need to use digest authentication.
-USE_DIGEST_AUTHENTICATION = True
+USE_DIGEST_AUTHENTICATION = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', True)
 
 def get_http_username_password():
     ''' the token required to authenticate to Gerrit is stored in a file '''
@@ -182,7 +182,7 @@ def write_script_file():
         else:
             with open(SCRIPT_FILE_PATH, 'a') as script_file:
                 script_file.write('''\
-    submit_type=$(wget -q -O - "http://${GERRIT_HOST}:8080/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%%2F#g')/config" | grep '"submit_type"')
+    submit_type=$(curl --silent --fail "http://${GERRIT_HOST}:8080/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%2F#g')/config" | grep '"submit_type"')
 ''')
 
         with open(SCRIPT_FILE_PATH, 'a') as script_file:
