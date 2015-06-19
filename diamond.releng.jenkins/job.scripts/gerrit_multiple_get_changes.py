@@ -31,7 +31,7 @@ def get_http_username_password():
     ''' the token required to authenticate to Gerrit is stored in a file '''
     assert USE_DIGEST_AUTHENTICATION, "*** Internal Error: get_http_username_password called, but USE_DIGEST_AUTHENTICATION False"
     username = 'dlshudson'
-    token_filename = '/home/dlshudson/passwords/http-password_Gerrit_Jenkins.txt'
+    token_filename = '/home/dlshudson/passwords/http-password_Gerrit_for-REST.txt'
     assert os.path.isfile(token_filename)
     assert os.stat(token_filename).st_mode == stat.S_IRUSR + stat.S_IFREG  # permissions must be user-read + regular-file
     last_nonempty_line = ''
@@ -177,7 +177,7 @@ def write_script_file():
         if USE_DIGEST_AUTHENTICATION:
             with open(SCRIPT_FILE_PATH, 'a') as script_file:
                 script_file.write('''\
-    submit_type=$(echo "--user dlshudson:$(tail -n 1 ~/passwords/http-password_Gerrit_Jenkins.txt)" | curl --silent --fail --digest -K - "http://${GERRIT_HOST}:8080/a/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%%2F#g')/config" | grep '"submit_type"')
+    submit_type=$(curl --silent --fail --digest -K ~/passwords/http-password_Gerrit_for-REST.txt "http://${GERRIT_HOST}:8080/a/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%%2F#g')/config" | grep '"submit_type"')
 ''')
         else:
             with open(SCRIPT_FILE_PATH, 'a') as script_file:
