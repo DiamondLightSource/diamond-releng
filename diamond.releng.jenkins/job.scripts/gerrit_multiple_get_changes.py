@@ -177,7 +177,7 @@ def write_script_file():
         if USE_DIGEST_AUTHENTICATION:
             with open(SCRIPT_FILE_PATH, 'a') as script_file:
                 script_file.write('''\
-    submit_type=$(echo "--user dlshudson:$(tail -n 1 ~/passwords/http-password_Gerrit_Jenkins.txt)" | curl --silent --fail --digest -K - "http://${GERRIT_HOST}:8080/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%%2F#g')/config" | grep '"submit_type"')
+    submit_type=$(echo "--user dlshudson:$(tail -n 1 ~/passwords/http-password_Gerrit_Jenkins.txt)" | curl --silent --fail --digest -K - "http://${GERRIT_HOST}:8080/a/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%%2F#g')/config" | grep '"submit_type"')
 ''')
         else:
             with open(SCRIPT_FILE_PATH, 'a') as script_file:
@@ -199,7 +199,7 @@ def write_script_file():
 
     git log %(repo_branch)s^.. --topo-order
 
-''')
+''' % {'repo_branch': repo_branch})
 
     write_script_file_end()
     print('*** Done: wrote script file to', SCRIPT_FILE_PATH)
