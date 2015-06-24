@@ -1,9 +1,11 @@
 '''
-Given one or more Gerrit changeset numbers, generates a script to apply them, one on top of another, to a set of repositories 
+Given multiple Gerrit changesets, generates a script to apply them, one on top of another, to a set of repositories.
+The changesets to be tested together can be specified either by a single Gerrit "topic", or by a set of changeset numbers (or both, though that is not good practice).
 
 Testing notes:
    Set environment variables something like this:
       export WORKSPACE=
+      export topic_1=GDA-1234
       export change_1=664
       export repo_default_BRANCH=gda-8.46
 
@@ -18,14 +20,16 @@ import os
 import os.path
 import stat
 import sys
+import urllib
 import urllib2
 
-MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job 
+MAX_TOPICS = 5  # a number >= the number of parameters in the Jenkins job
+MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job
 
 SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.multiple_pre.post.materialize.functions.sh')))
 
 # If the Gerrrit REST API has been secured, then you need to use digest authentication.
-USE_DIGEST_AUTHENTICATION = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', True)
+USE_DIGEST_AUTHENTICATION = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
 
 def get_http_username_password():
     ''' the token required to authenticate to Gerrit is stored in a file '''
@@ -44,6 +48,36 @@ def get_http_username_password():
         return (username, last_nonempty_line)
     raise Exception('File %s appears empty' % token_filename)
 
+def parse_changeinfo(changeinfo):
+    '''
+    A Gerrit ChangeInfo entity contains information about a change
+    This function parses a changeinfo, and either
+        returns a tuple of extracted data, or
+        None, if the change is not applicable in the current context
+    '''
+    # check that this change is for the correct branch, and has not already been merged
+    change = str(changeinfo['_number'])  # str converts from unicode
+    project = str(changeinfo['project'])  # str converts from unicode
+    change_branch = changeinfo.get('branch', '**not returned by Gerrit**')
+    repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
+    expected_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
+    status = str(changeinfo['status'])
+    if change_branch != expected_branch:
+        print('*** Error: change %s branch ("%s") in %s does not match the branch used by this test job ("%s")' % (change, change_branch, project, expected_branch))
+        return None
+    if status not in ('NEW', 'DRAFT'):
+        print('*** Error: change %s is not eligible for testing: status is %s' % (change, status))
+        return None
+    change_id = changeinfo['change_id']
+    current_revision = changeinfo['current_revision']
+    current_revision_number = changeinfo['revisions'][current_revision]['_number']
+    if USE_DIGEST_AUTHENTICATION:
+        refspec = changeinfo['revisions'][current_revision]['fetch']['http']['ref']
+    else:
+        refspec = changeinfo['revisions'][current_revision]['fetch']['anonymous http']['ref']
+    return (project, change, current_revision_number, change_id, refspec)
+
+
 def write_script_file_start():
     with open(SCRIPT_FILE_PATH, 'w') as script_file:
                 script_file.write('''\
@@ -55,6 +89,7 @@ pre_materialize_function_stage2_gerrit_multiple () {
 
 ''' % {'GENERATE_DATETIME': datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M')})
 
+
 def write_script_file_end():
     
     with open(SCRIPT_FILE_PATH, 'a') as script_file:
@@ -63,11 +98,9 @@ def write_script_file_end():
 
 ''')
 
+
 def write_script_file():
     ''' validate the environment variables passed by Jenkins '''
-
-    changes_to_fetch = []  # list of (project, change, current_revision_number, change_id, refspec)
-    errors_found = False
 
     if USE_DIGEST_AUTHENTICATION:
         handler = urllib2.HTTPDigestAuthHandler()
@@ -75,24 +108,39 @@ def write_script_file():
         opener = urllib2.build_opener(handler)
         urllib2.install_opener(opener)
 
+    urls_to_query = []  # list of Gerrit URLs to query to get change information
+    errors_found = 0
+
+    # Build the query URL for each topic specified
+    for i, topic in ((i, os.environ.get('topic_%s' % i, '').strip()) for i in range(1, MAX_TOPICS+1)):
+        if not topic:
+            continue
+        url = 'http://gerrit.diamond.ac.uk:8080/'
+        if USE_DIGEST_AUTHENTICATION:
+            url += 'a/'
+        url += 'changes/?q=topic:{%s}&o=CURRENT_REVISION' % (urllib.quote(topic,''),)
+        urls_to_query.append(url)
+
+    # Build the query URL for each change number specified
     for i, change in ((i, os.environ.get('change_%s' % i, '').strip()) for i in range(1, MAX_CHANGESETS+1)):
         if not change:
             continue
-        # check that the change is numeric
         try:
-            assert str(int(change)) == change
+            assert str(int(change)) == change  # check that the change is numeric
         except (ValueError, AssertionError):
             print('*** Error: invalid change_%s: "%s"' % (i, change))
             errors_found = True
             continue
         else:
             change = int(change)
-
-        # use the Gerrit REST interface to get some details about the change (do some basic validation on what is returned)
         url = 'http://gerrit.diamond.ac.uk:8080/'
         if USE_DIGEST_AUTHENTICATION:
             url += 'a/'
-        url += 'changes/?q=%s&o=CURRENT_REVISION' % (change,)
+        url += 'changes/?q=change:%s&o=CURRENT_REVISION' % (change,)
+        urls_to_query.append(url)
+
+    changes_to_fetch = []
+    for url in urls_to_query:
         request = urllib2.Request(url)
         try:
             changeinfo_json = urllib2.urlopen(request).read()
@@ -106,38 +154,28 @@ def write_script_file():
             continue
         changeinfo = json.loads(changeinfo_json[5:])  # need to strip off the magic prefix line returned by Gerrit
         if len(changeinfo) == 0:
-            print('*** Error: change %s does not exist (or is not visible to Jenkins)'  % (change,))
+            print('*** Error: item %s does not exist (or is not visible to Jenkins)'  % (url.partition('?')[2].partition('&')[0],))
             errors_found = True
             continue
-
-        # check that this change is for the correct branch, and has not already been merged
-        project = str(changeinfo[0]['project'])  # str converts from unicode 
-        change_branch = changeinfo[0].get('branch', '**not returned by Gerrit**')
-        repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
-        expected_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
-        status = str(changeinfo[0]['status'])
-        if change_branch != expected_branch:
-            print('*** Error: change %s branch ("%s") in %s does not match the branch used by this test job ("%s")' % (change, change_branch, project, expected_branch))
-            errors_found = True
-            continue
-        if status not in ('NEW', 'DRAFT'):
-            print('*** Error: change %s is not eligible for testing: status is %s' % (change, status))
-            errors_found = True
-            continue
-        change_id = changeinfo[0]['change_id']
-        current_revision = changeinfo[0]['current_revision']
-        current_revision_number = changeinfo[0]['revisions'][current_revision]['_number']
-        if USE_DIGEST_AUTHENTICATION:
-            refspec = changeinfo[0]['revisions'][current_revision]['fetch']['http']['ref']
-        else:
-            refspec = changeinfo[0]['revisions'][current_revision]['fetch']['anonymous http']['ref']
-        changes_to_fetch.append((project, change, current_revision_number, change_id, refspec))
+        for ci in changeinfo:
+            extracted_changeinfo = parse_changeinfo(ci)
+            if not extracted_changeinfo:
+                errors_found = True
+                continue
+            changes_to_fetch.append(extracted_changeinfo)
 
     if errors_found:
         return 1
-
     if not changes_to_fetch:
-        print('*** Error: no changes specified (you need to set the appropriate environment variables')
+        print('*** Error: no changes specified (you need to set the appropriate environment variables)')
+        return 1
+
+    # check that we didn't get any duplicated change numbers
+    change_numbers = [change for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch]
+    distinct_change_numbers = set(change_numbers)
+    if len(change_numbers) != len(distinct_change_numbers):
+        print('*** Error: the following change numbers were specified more than once:',
+              sorted([c for c in distinct_change_numbers if change_numbers.count(c) > 1]))
         return 1
 
     # sort the changes to apply in order of project, and change ascending, and group changes in the same project
