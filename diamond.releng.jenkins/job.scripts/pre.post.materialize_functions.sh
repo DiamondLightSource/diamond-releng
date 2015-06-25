@@ -13,13 +13,13 @@ if [[ "${gerrit_single_test}" == "true" ]]; then
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
 
-if [[ "${gerrit_multiple_test}" == "true" ]]; then
-  script=gerrit_multiple_get_changes.py
+if [[ "${gerrit_manual_test}" == "true" ]]; then
+  script=gerrit_manual_get_changes.py
   echo "Running ${script}"
   python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
-  script=gerrit.multiple_pre.post.materialize.functions.sh
+  script=gerrit.manual_pre.post.materialize.functions.sh
   echo "Sourcing ${script}"
-  . ${WORKSPACE}/gerrit.multiple_pre.post.materialize.functions.sh
+  . ${WORKSPACE}/gerrit.manual_pre.post.materialize.functions.sh
 fi
 
 if [[ "${JOB_NAME}" == *~*e4* ]]; then

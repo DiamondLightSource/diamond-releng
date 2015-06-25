@@ -53,14 +53,14 @@ if [[ "${groupbeamlinesuffixindex}" != "0" ]]; then
     fi
 fi
 
-if [[ "${JOB_NAME:-noname}" == *gerrit.multiple* ]]; then
-    gerrit_multiple_test=true
+if [[ "${JOB_NAME:-noname}" == *gerrit.manual* ]]; then
+    gerrit_manual_test=true
     gerrit_single_test=false
 elif [[ "${JOB_NAME:-noname}" == *gerrit* ]]; then
-    gerrit_multiple_test=false
+    gerrit_manual_test=false
     gerrit_single_test=true
 else
-    gerrit_multiple_test=false
+    gerrit_manual_test=false
     gerrit_single_test=false
 fi
 
@@ -80,7 +80,7 @@ if [[ -n "${upstream_product_job}" ]]; then
     echo "GDA_upstream_product_job=${upstream_product_job}" >> ${properties_filename}
 fi
 echo "download_public=${download_public:Error}" >> ${properties_filename}
-echo "gerrit_multiple_test=${gerrit_multiple_test:Error}" >> ${properties_filename}
+echo "gerrit_manual_test=${gerrit_manual_test:Error}" >> ${properties_filename}
 echo "gerrit_single_test=${gerrit_single_test:Error}" >> ${properties_filename}
 
 echo "[gda_parse-jobname-and-parameters.sh] wrote ${properties_filename} --->"

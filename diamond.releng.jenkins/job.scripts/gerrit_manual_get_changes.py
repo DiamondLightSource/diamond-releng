@@ -26,7 +26,8 @@ import urllib2
 MAX_TOPICS = 5  # a number >= the number of parameters in the Jenkins job
 MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job
 
-SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.multiple_pre.post.materialize.functions.sh')))
+ARTIFACT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_tested.txt')))
+SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.manual_pre.post.materialize.functions.sh')))
 
 # If the Gerrrit REST API has been secured, then you need to use digest authentication.
 USE_DIGEST_AUTHENTICATION = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
@@ -78,29 +79,7 @@ def parse_changeinfo(changeinfo):
     return (project, change, current_revision_number, change_id, refspec)
 
 
-def write_script_file_start():
-    with open(SCRIPT_FILE_PATH, 'w') as script_file:
-                script_file.write('''\
-### File generated at %(GENERATE_DATETIME)s
-
-. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh
-
-pre_materialize_function_stage2_gerrit_multiple () {
-
-''' % {'GENERATE_DATETIME': datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M')})
-
-
-def write_script_file_end():
-    
-    with open(SCRIPT_FILE_PATH, 'a') as script_file:
-                script_file.write('''\
-}
-
-''')
-
-
 def write_script_file():
-    ''' validate the environment variables passed by Jenkins '''
 
     if USE_DIGEST_AUTHENTICATION:
         handler = urllib2.HTTPDigestAuthHandler()
@@ -182,14 +161,28 @@ def write_script_file():
     changes_to_fetch.sort(key=operator.itemgetter(1))  # sort on secondary key, the change (a number)
     changes_to_fetch.sort()  # sort on primary key, the project (repository), taking advantage of the fact that sorts are stable
 
-    write_script_file_start()
-    for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
-        repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
-        repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
-        print((project, change, current_revision_number, change_id, refspec, repo_branch))
+    # generate and write the artifact file (a record of what changes we are testing) and the bash script (which actually fetches the changes to test)
+    with open(ARTIFACT_FILE_PATH, 'w') as artifact_file:
+     with open(SCRIPT_FILE_PATH, 'w') as script_file:
+        generated_header = '### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M')
+        artifact_file.write(generated_header + '\n')
+        script_file.write('''\
+%(GENERATED_HEADER)s
 
-        # generate the commands necessary to fetch and merge in this change
-        with open(SCRIPT_FILE_PATH, 'a') as script_file:
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh
+
+pre_materialize_function_stage2_gerrit_manual () {
+
+''' % {'GENERATED_HEADER': generated_header})
+
+        for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
+            repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
+            repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
+
+            print((project, change, current_revision_number, change_id, refspec, repo_branch))  # for the console log
+            artifact_file.write('***%s***%s***%s***%s***%s***%s\n' % (project, change, current_revision_number, change_id, refspec, repo_branch))
+
+            # generate the commands necessary to fetch and merge in this change
             script_file.write('''\
     GERRIT_PROJECT=%(GERRIT_PROJECT)s
     GERRIT_REFSPEC=%(GERRIT_REFSPEC)s
@@ -212,18 +205,15 @@ def write_script_file():
     # Merge or rebase the change on the (local version of the) main branch, using whatever method is specified for Gerrit's "Submit Type:" for the repository
 ''' % {'GERRIT_PROJECT': project, 'GERRIT_REFSPEC': refspec, 'repo_branch': repo_branch})
 
-        if USE_DIGEST_AUTHENTICATION:
-            with open(SCRIPT_FILE_PATH, 'a') as script_file:
+            if USE_DIGEST_AUTHENTICATION:
                 script_file.write('''\
     submit_type=$(curl --silent --fail --digest -K ~/passwords/http-password_Gerrit_for-curl.txt "http://${GERRIT_HOST}:8080/a/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%2F#g')/config" | grep '"submit_type"')
 ''')
-        else:
-            with open(SCRIPT_FILE_PATH, 'a') as script_file:
+            else:
                 script_file.write('''\
     submit_type=$(curl --silent --fail "http://${GERRIT_HOST}:8080/projects/$(echo ${GERRIT_PROJECT} | sed 's#/#%2F#g')/config" | grep '"submit_type"')
 ''')
 
-        with open(SCRIPT_FILE_PATH, 'a') as script_file:
             script_file.write('''\
 
     if [[ "${submit_type}" == *REBASE_IF_NECESSARY* ]]; then
@@ -239,8 +229,13 @@ def write_script_file():
 
 ''' % {'repo_branch': repo_branch})
 
-    write_script_file_end()
+        script_file.write('''\
+}
+
+''')
+
     print('*** Done: wrote script file to', SCRIPT_FILE_PATH)
+    print('*** Done: wrote report file to', ARTIFACT_FILE_PATH)
 
 if __name__ == '__main__':
     return_code = write_script_file()
