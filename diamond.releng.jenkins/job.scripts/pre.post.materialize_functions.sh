@@ -14,6 +14,7 @@ if [[ "${gerrit_single_test}" == "true" ]]; then
 fi
 
 if [[ "${gerrit_manual_test}" == "true" ]]; then
+  mkdir -pv ${WORKSPACE}/artifacts_to_archive
   script=gerrit_manual_get_changes.py
   echo "Running ${script}"
   python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
