@@ -16,10 +16,11 @@ if [[ "${m_t}" != "fresh" ]]; then
 fi
 fi
 
-materialize_function
-
 materialized_info_path=${WORKSPACE}/artifacts_to_archive
 mkdir -pv ${materialized_info_path}/
+
+materialize_function
+
 record_head_commits_function > ${materialized_info_path}/materialized_head_commits.txt
 record_workspace_projects_function > ${materialized_info_path}/materialized_project_names.txt
 record_targetplatform_contents_function > ${materialized_info_path}/materialized_targetplatform_contents.txt
