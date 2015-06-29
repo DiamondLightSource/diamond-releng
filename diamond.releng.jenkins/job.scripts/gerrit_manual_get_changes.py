@@ -8,7 +8,6 @@ Testing notes:
       export topic_1=GDA-1234
       export change_1=664
       export repo_default_BRANCH=gda-8.46
-
 '''
 
 from __future__ import print_function
@@ -26,8 +25,8 @@ import urllib2
 MAX_TOPICS = 5  # a number >= the number of parameters in the Jenkins job
 MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job
 
-ARTIFACT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_tested.txt')))
-SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.manual_pre.post.materialize.functions.sh')))
+CHANGE_LIST_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_tested.txt')))
+PRE_MATERIALIZE_FUNCTION_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.manual_pre.post.materialize.functions.sh')))
 
 # If the Gerrrit REST API has been secured, then you need to use digest authentication.
 USE_DIGEST_AUTHENTICATION = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
@@ -162,10 +161,11 @@ def write_script_file():
     changes_to_fetch.sort()  # sort on primary key, the project (repository), taking advantage of the fact that sorts are stable
 
     # generate and write the artifact file (a record of what changes we are testing) and the bash script (which actually fetches the changes to test)
-    with open(ARTIFACT_FILE_PATH, 'w') as artifact_file:
-     with open(SCRIPT_FILE_PATH, 'w') as script_file:
-        generated_header = '### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M')
-        artifact_file.write(generated_header + '\n')
+    with open(CHANGE_LIST_FILE_PATH, 'w') as change_list_file:
+     with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as script_file:
+        generated_header = ('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') + 
+            ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')')
+        change_list_file.write(generated_header + '\n')
         script_file.write('''\
 %(GENERATED_HEADER)s
 
@@ -180,7 +180,7 @@ pre_materialize_function_stage2_gerrit_manual () {
             repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
 
             print((project, change, current_revision_number, change_id, refspec, repo_branch))  # for the console log
-            artifact_file.write('***%s***%s***%s***%s***%s***%s\n' % (project, change, current_revision_number, change_id, refspec, repo_branch))
+            change_list_file.write('%s***%s***%s***%s***%s***%s***\n' % (project, change, current_revision_number, change_id, refspec, repo_branch))
 
             # generate the commands necessary to fetch and merge in this change
             script_file.write('''\
@@ -234,8 +234,8 @@ pre_materialize_function_stage2_gerrit_manual () {
 
 ''')
 
-    print('*** Done: wrote script file to', SCRIPT_FILE_PATH)
-    print('*** Done: wrote report file to', ARTIFACT_FILE_PATH)
+    print('*** Done: wrote script file to', PRE_MATERIALIZE_FUNCTION_FILE_PATH)
+    print('*** Done: wrote report file to', CHANGE_LIST_FILE_PATH)
 
 if __name__ == '__main__':
     return_code = write_script_file()
