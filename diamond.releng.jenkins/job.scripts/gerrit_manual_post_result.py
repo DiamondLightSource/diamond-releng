@@ -65,7 +65,8 @@ def write_script_file():
                 continue
             (project, change, current_revision_number, change_id, refspec, repo_branch) = (item for item in line.rstrip().split('***') if item)
             # generate the commands necessary to post the test result for this change
-            script_file.write('    ssh -p ${GERRIT_PORT} ${GERRIT_HOST} gerrit review %s,%s -p %s %s %s\n' % (change, current_revision_number, project, review_command_message, review_command_verified))
+            script_file.write('    ssh -p ${GERRIT_PORT} ${GERRIT_HOST} gerrit review %s,%s -p %s -n NONE %s %s\n'
+                              % (change, current_revision_number, project, review_command_message, review_command_verified))
 
         script_file.write('}\n\n')
 
