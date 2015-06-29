@@ -70,8 +70,8 @@ def write_script_file():
 
         script_file.write('}\n\n')
 
-    print('*** Done: read report file from', CHANGE_LIST_FILE_PATH)
-    print('*** Done: wrote script file to', POST_FUNCTION_FILE_PATH)
+    print('Done: read report file from', CHANGE_LIST_FILE_PATH)
+    print('Done: wrote script file to', POST_FUNCTION_FILE_PATH)
 
 if __name__ == '__main__':
     return_code = write_script_file()

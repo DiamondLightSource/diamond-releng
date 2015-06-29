@@ -234,8 +234,8 @@ pre_materialize_function_stage2_gerrit_manual () {
 
 ''')
 
-    print('*** Done: wrote script file to', PRE_MATERIALIZE_FUNCTION_FILE_PATH)
-    print('*** Done: wrote report file to', CHANGE_LIST_FILE_PATH)
+    print('Done: wrote script file to', PRE_MATERIALIZE_FUNCTION_FILE_PATH)
+    print('Done: wrote report file to', CHANGE_LIST_FILE_PATH)
 
 if __name__ == '__main__':
     return_code = write_script_file()
