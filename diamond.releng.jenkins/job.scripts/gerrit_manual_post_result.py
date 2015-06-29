@@ -41,17 +41,17 @@ def write_script_file():
     # build the review command to send to Gerrit
     review_command_verified = ''
     if jenkins_result == 'SUCCESS':
-        review_command_message = '--message \'Build Successful\''
+        review_command_message = '--message \'"Build Successful ' + os.environ.get('BUILD_URL','') + '"\''
         if any(s in gerrit_verified_option for s in ('only if test job passes', 'based on test job pass/fail')):
             review_command_verified = '--verified +1'
     elif jenkins_result == 'FAILURE':
-        review_command_message = '--message \'Build Failed\''
+        review_command_message = '--message \'"Build Failed ' + os.environ.get('BUILD_URL','') + '"\''
         if any(s in gerrit_verified_option for s in ('only if test job fails', 'based on test job pass/fail')):
             review_command_verified = '--verified -1'
     elif jenkins_result == 'ABORTED':
-        review_command_message = '--message \'Build Aborted\''
+        review_command_message = '--message \'"Build Aborted ' + os.environ.get('BUILD_URL','') + '"\''
     else:
-        review_command_message = '--message \'Jenkins got unknown status "' + jenkins_result + '"\''
+        review_command_message = '--message \'"Jenkins got unknown status ' + jenkins_result + ' ' + os.environ.get('BUILD_URL','') + '"\''
 
     # generate and write the artifact file (a record of what changes we are testing) and the bash script (which actually fetches the changes to test)
     with open(CHANGE_LIST_FILE_PATH, 'r') as change_list_file:
