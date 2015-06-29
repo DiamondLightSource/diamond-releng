@@ -61,7 +61,7 @@ dawn_cleanup_moduleload_function () {
     set -x  # Turn on xtrace
 
     if [[ "${cleanup_module_load}" == "true" ]]; then
-        rm -f ${WORKSPACE}/cleanup_*_script
+        rm -fv ${WORKSPACE}/cleanup_*_script
         for platform in linux32 linux64 windows32 windows64 mac64; do
             cleanup_platform__indirect="cleanup_${platform}"
             if [[ "${!cleanup_platform__indirect}" == "true" ]]; then

@@ -142,7 +142,7 @@ set_environment_step () {
     elif [[ "${pewma_py_use_public_version:-}" == "true" ]]; then
         # download pewma.py from the public web site and use that
         pewma_py="${WORKSPACE}/pewma.py"
-        rm -f ${pewma_py}
+        rm -fv ${pewma_py}
         set -x  # Turn on xtrace
         if tty -s; then
             # standard (verbose) output at the terminal
@@ -171,7 +171,7 @@ set_environment_step () {
         # download buckminster_headless_install.sh from the public web site and use that
         buckminster_headless_install="${WORKSPACE}/buckminster_headless_install.sh"
         buckminster_install_dir="${WORKSPACE}/buckminster_headless"
-        rm -f ${buckminster_headless_install}
+        rm -fv ${buckminster_headless_install}
         rm -rf ${buckminster_install_dir}
         set -x  # Turn on xtrace
         if tty -s; then

@@ -4,7 +4,7 @@
 set +x  # Turn off xtrace
 
 properties_filename=${WORKSPACE}/parsed-jobname-and-parameters.properties
-rm -f ${properties_filename}
+rm -fv ${properties_filename}
 
 # The jobname must start with "DawnDiamond." or "DawnVanilla.",
 # followed by the release, followed by "-" (something like "master-" or "1.8-")

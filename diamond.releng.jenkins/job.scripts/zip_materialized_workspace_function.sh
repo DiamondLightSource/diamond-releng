@@ -32,7 +32,7 @@ zip_materialized_workspace_function () {
     fi
 
     # zip materialize_workspace and materialize_workspace_git
-    rm -f ${WORKSPACE}/materialize_workspace.zip
+    rm -fv ${WORKSPACE}/materialize_workspace.zip
     zip_materialized_workspace=$(echo ${zip_materialized_workspace:-false} | tr '[:upper:]' '[:lower:]')
     set -x  # Turn on xtrace
     if [[ "${zip_materialized_workspace}" == "true" ]]; then

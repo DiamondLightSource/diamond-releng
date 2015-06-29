@@ -4,7 +4,7 @@
 set +x  # Turn off xtrace
 
 properties_filename=${WORKSPACE}/parsed-jobname-and-parameters.properties
-rm -f ${properties_filename}
+rm -fv ${properties_filename}
 
 # The jobname must start with "GDA.", followed by the release (e.g. master, 8.42), followed by a dash (-)
 # IF the jobname contains ".beamline-GROUP-", it must be followed by <beamline name> (which may contain a -), optionally followed by -download.public

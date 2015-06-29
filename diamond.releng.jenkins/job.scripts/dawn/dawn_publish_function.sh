@@ -132,7 +132,7 @@ dawn_publish_function () {
                     fi
                     chmod -R go-w ${publish_module_load_directory}/ || return 3
                     if [[ -L "${publish_module_load_link}" ]]; then
-                        rm ${publish_module_load_link}
+                        rm -v ${publish_module_load_link}
                     fi
                     if [[ -e "${publish_module_load_link}" ]]; then
                         echo "ERROR: exists, but is not a link: \"${publish_module_load_link}\""

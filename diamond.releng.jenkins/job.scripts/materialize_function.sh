@@ -123,7 +123,7 @@ materialize_function () {
 
     set -x  # Turn on xtrace
 
-    rm -f ${WORKSPACE}/git-fsck-temp.txt
+    rm -fv ${WORKSPACE}/git-fsck-temp.txt
 
     # execute any stage 1 pre_materialize_functions (if defined)
     for fname in $(compgen -A function pre_materialize_function_stage1_); do
@@ -188,7 +188,7 @@ materialize_function () {
         ${fname}
     done
 
-    rm -f ${WORKSPACE}/git-fsck-temp.txt
+    rm -fv ${WORKSPACE}/git-fsck-temp.txt
 
     # print the HEAD commit from each repository
     if [[ "${materialize_type}" != "skip" ]]; then

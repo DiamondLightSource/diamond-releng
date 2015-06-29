@@ -33,7 +33,7 @@ zip_squish_tests_function () {
 
     # zip all squish test directories, so that the product can be tested with a matching version of tests
     # note that locations must have distinct final directory names (these would normally correspond to the project name, so should be unique anyhow)
-    rm -f ${WORKSPACE}/squish_tests.zip
+    rm -fv ${WORKSPACE}/squish_tests.zip
     export zip_squish_tests=$(echo ${zip_squish_tests:-false} | tr '[:upper:]' '[:lower:]')
     set -x  # Turn on xtrace
     if [[ "${zip_squish_tests}" == "true" ]]; then
