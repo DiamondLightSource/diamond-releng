@@ -44,7 +44,7 @@ def write_script_file():
         review_command_message = '--message \'"Build Successful ' + os.environ.get('BUILD_URL','') + '"\''
         if any(s in gerrit_verified_option for s in ('only if test job passes', 'based on test job pass/fail')):
             review_command_verified = '--verified +1'
-    elif jenkins_result == 'FAILURE':
+    elif jenkins_result in ('UNSTABLE', 'FAILURE'):
         review_command_message = '--message \'"Build Failed ' + os.environ.get('BUILD_URL','') + '"\''
         if any(s in gerrit_verified_option for s in ('only if test job fails', 'based on test job pass/fail')):
             review_command_verified = '--verified -1'
