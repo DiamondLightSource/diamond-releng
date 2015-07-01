@@ -2268,6 +2268,7 @@
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="DAWB_p2" failOnError="false"/>
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="tp_bioclipse" failOnError="false"/>
   <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.objenesis" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.springframework\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
   <rm:locator pattern="^org\.springframework\..+" searchPathRef="tp_bioclipse" failOnError="false"/>
