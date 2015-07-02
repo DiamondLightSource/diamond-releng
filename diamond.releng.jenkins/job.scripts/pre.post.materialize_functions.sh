@@ -18,9 +18,9 @@ if [[ "${gerrit_manual_test}" == "true" ]]; then
   script=gerrit_manual_get_changes.py
   echo "Running ${script}"
   python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
-  script=gerrit.manual_pre.post.materialize.functions.sh
+  script=artifacts_to_archive/gerrit.manual_pre.post.materialize.functions.sh
   echo "Sourcing ${script}"
-  . ${WORKSPACE}/gerrit.manual_pre.post.materialize.functions.sh
+  . ${WORKSPACE}/${script}
 fi
 
 if [[ "${JOB_NAME}" == *~*e4* ]]; then

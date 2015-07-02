@@ -26,7 +26,7 @@ MAX_TOPICS = 5  # a number >= the number of parameters in the Jenkins job
 MAX_CHANGESETS = 20  # a number >= the number of parameters in the Jenkins job
 
 CHANGE_LIST_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_tested.txt')))
-PRE_MATERIALIZE_FUNCTION_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'gerrit.manual_pre.post.materialize.functions.sh')))
+PRE_MATERIALIZE_FUNCTION_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit.manual_pre.post.materialize.functions.sh')))
 
 # If the Gerrrit REST API has been secured, then you need to use digest authentication.
 USE_DIGEST_AUTHENTICATION = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
