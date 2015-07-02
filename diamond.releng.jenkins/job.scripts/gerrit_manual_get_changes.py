@@ -160,27 +160,36 @@ def write_script_file():
     changes_to_fetch.sort(key=operator.itemgetter(1))  # sort on secondary key, the change (a number)
     changes_to_fetch.sort()  # sort on primary key, the project (repository), taking advantage of the fact that sorts are stable
 
-    # generate and write the artifact file (a record of what changes we are testing) and the bash script (which actually fetches the changes to test)
+    # write the change list file (a record of what changes we are testing)
+    # write the pre_materialize stage1 function into the script file
+    generated_header = ('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') + 
+        ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')\n')
+
     with open(CHANGE_LIST_FILE_PATH, 'w') as change_list_file:
-     with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as script_file:
-        generated_header = ('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') + 
-            ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')')
-        change_list_file.write(generated_header + '\n')
-        script_file.write('''\
-%(GENERATED_HEADER)s
-
-. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh
-
-pre_materialize_function_stage2_gerrit_manual () {
-
-''' % {'GENERATED_HEADER': generated_header})
+      with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as script_file:
+        change_list_file.write(generated_header)
+        script_file.write(generated_header)
+        script_file.write('\n. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh\n\n')
+        script_file.write('pre_materialize_function_stage1_gerrit_manual () {\n')
 
         for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
             repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
             repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
-
             print((project, change, current_revision_number, change_id, refspec, repo_branch))  # for the console log
+
             change_list_file.write('%s***%s***%s***%s***%s***%s***\n' % (project, change, current_revision_number, change_id, refspec, repo_branch))
+            review_command_message = '--message \'"Build Started ' + os.environ.get('BUILD_URL','') + '"\''
+            script_file.write('    ssh -p ${GERRIT_PORT} ${GERRIT_HOST} gerrit review %s,%s -p %s -n NONE %s | true\n'
+                              % (change, current_revision_number, project, review_command_message))
+        script_file.write('}\n\n')
+
+    # write the pre_materialize stage1 function into the script file
+    with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'a') as script_file:
+        script_file.write('pre_materialize_function_stage2_gerrit_manual () {\n\n')
+
+        for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
+            repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
+            repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
 
             # generate the commands necessary to fetch and merge in this change
             script_file.write('''\
