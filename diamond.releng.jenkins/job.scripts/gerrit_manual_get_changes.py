@@ -164,13 +164,15 @@ def write_script_file():
     # write the pre_materialize stage1 function into the script file
     generated_header = ('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') + 
         ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')\n')
+    gerrit_verified_option = os.environ.get('gerrit_verified_option', '')
 
     with open(CHANGE_LIST_FILE_PATH, 'w') as change_list_file:
       with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as script_file:
         change_list_file.write(generated_header)
         script_file.write(generated_header)
         script_file.write('\n. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh\n\n')
-        script_file.write('pre_materialize_function_stage1_gerrit_manual () {\n')
+        if "don't post anything" not in gerrit_verified_option:
+            script_file.write('pre_materialize_function_stage1_gerrit_manual () {\n')
 
         for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
             repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
@@ -179,9 +181,11 @@ def write_script_file():
 
             change_list_file.write('%s***%s***%s***%s***%s***%s***\n' % (project, change, current_revision_number, change_id, refspec, repo_branch))
             review_command_message = '--message \'"Build Started ' + os.environ.get('BUILD_URL','') + '"\''
-            script_file.write('    ssh -p ${GERRIT_PORT} ${GERRIT_HOST} gerrit review %s,%s -p %s -n NONE %s | true\n'
-                              % (change, current_revision_number, project, review_command_message))
-        script_file.write('}\n\n')
+            if "don't post anything" not in gerrit_verified_option:
+                script_file.write('    ssh -p ${GERRIT_PORT} ${GERRIT_HOST} gerrit review %s,%s -p %s -n NONE %s | true\n'
+                                  % (change, current_revision_number, project, review_command_message))
+        if "don't post anything" not in gerrit_verified_option:
+            script_file.write('}\n\n')
 
     # write the pre_materialize stage1 function into the script file
     with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'a') as script_file:

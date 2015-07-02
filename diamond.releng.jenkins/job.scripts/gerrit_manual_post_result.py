@@ -21,7 +21,7 @@ import urllib
 import urllib2
 
 CHANGE_LIST_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_tested.txt')))
-POST_FUNCTION_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_post_result.txt')))
+POST_FUNCTION_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_post_result.sh')))
 
 def write_script_file():
 
@@ -31,22 +31,27 @@ def write_script_file():
     jenkins_result = json.loads(jenkins_result_json)['result']  # possible values are SUCCESS, ABORTED, FAILURE
 
     # get build parameter gerrit_verified_option, specified as a build parameter
-    # the option will be one of these (defined in the Jenkins configuration)
-    #    Leave any Gerrit "Verified" status unchanged
-    #    Set Gerrit "Verified", based on test job pass/fail
-    #    Set Gerrit "Verified", but only if test job passes
-    #    Set Gerrit "Verified", but only if test job fails
+    # the option will be one of these (defined in the main Jenkins configuration)
+    #    post Gerrit VERIFIED=+1/-1 ... depending on whether test job passes/fails
+    #    post Gerrit VERIFIED=+1 ... if test job passes, otherwise no change
+    #    post Gerrit VERIFIED=-1 ... if test job fails, otherwise no change
+    #    leave Gerrit verified status unchanged, but post a comment with build result
+    #    don't post anything to Gerrit
     gerrit_verified_option = os.environ['gerrit_verified_option']
+
+    if "don't post anything" in gerrit_verified_option:
+        print('Skipped: no script file written')
+        return
 
     # build the review command to send to Gerrit
     review_command_verified = ''
     if jenkins_result == 'SUCCESS':
         review_command_message = '--message \'"Build Successful ' + os.environ.get('BUILD_URL','') + '"\''
-        if any(s in gerrit_verified_option for s in ('only if test job passes', 'based on test job pass/fail')):
+        if any(s in gerrit_verified_option for s in ('depending on', 'if test job passes')):
             review_command_verified = '--verified +1'
     elif jenkins_result in ('UNSTABLE', 'FAILURE'):
         review_command_message = '--message \'"Build Failed ' + os.environ.get('BUILD_URL','') + '"\''
-        if any(s in gerrit_verified_option for s in ('only if test job fails', 'based on test job pass/fail')):
+        if any(s in gerrit_verified_option for s in ('depending on', 'if test job fails')):
             review_command_verified = '--verified -1'
     elif jenkins_result == 'ABORTED':
         review_command_message = '--message \'"Build Aborted ' + os.environ.get('BUILD_URL','') + '"\''
@@ -61,7 +66,7 @@ def write_script_file():
         script_file.write(generated_header + '\n\ngerrit_changes_post_result () {\n')
 
         for line in change_list_file:
-            if line.startswith('#'):
+            if line.startswith('#') or not line.rstrip():  # comment or empty line
                 continue
             (project, change, current_revision_number, change_id, refspec, repo_branch) = (item for item in line.rstrip().split('***') if item)
             # generate the commands necessary to post the test result for this change
