@@ -4174,7 +4174,7 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.5)" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/eclipse/updates/4.5milestones"/>
+      <rm:uri format="http://download.eclipse.org/eclipse/updates/4.5"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_4.5_release">
