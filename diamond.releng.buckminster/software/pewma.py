@@ -40,6 +40,7 @@ for gda_config in (
 
 for gda_config in ():
     COMPONENT_ABBREVIATIONS.append((gda_config, 'gda', 'uk.ac.gda.beamline.' + gda_config + '.site'))  # no config project for these beamlines
+COMPONENT_ABBREVIATIONS.append(('logpanel', 'gda', ' uk.ac.gda.client.logpanel.site'))
 COMPONENT_ABBREVIATIONS.append(('gda-training', 'gda-training', 'gda-training-config'))
 COMPONENT_ABBREVIATIONS.append(('sda', 'sda', 'uk.ac.diamond.sda.site'))
 COMPONENT_ABBREVIATIONS.append(('dsx', 'ida', 'uk.ac.diamond.dsx.site'))
