@@ -155,6 +155,7 @@ set_environment_step () {
             RETVAL=$?
             $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
             if [ "${RETVAL}" != "0" ]; then
+                # running under Jenkins at DLS, so write text to log so that job build description is set 
                 echo 'set-build-description: Failure on wget (probable network issue)'
                 return ${RETVAL}
             fi

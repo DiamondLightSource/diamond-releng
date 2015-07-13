@@ -91,13 +91,26 @@ install_buckminster () {
     director_zip_file=${buckminster_install_dir_temp}/director_latest.zip
     director_unzip_dir=${buckminster_install_dir_temp}/director_${datetime}
     mkdir -pv $(dirname ${director_zip_file})
+    set -x  # Turn on xtrace
     if tty -s; then
         # standard (verbose) output at the terminal
-        wget -O ${director_zip_file} "${director_download}"
+        wget --timeout=60 --tries=2 --no-cache -O ${director_zip_file} "${director_download}"
     else
         # non-verbose output in a batch job
-        wget -nv -O ${director_zip_file} "${director_download}"
+        echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
+        set +e  # Turn off errexit
+        wget --timeout=60 --tries=2 --no-cache -nv -O ${director_zip_file} "${director_download}"
+        RETVAL=$?
+        $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
+        if [ "${RETVAL}" != "0" ]; then
+            if [[ "${JENKINS_URL}" = *diamond.ac.uk* ]]; then
+                # running under Jenkins at DLS, so write text to log so that job build description is set 
+                echo 'set-build-description: Failure on wget (probable network issue)'
+            fi
+            return ${RETVAL}
+        fi
     fi
+    set +x  # Turn off xtrace
 
     rm -rf ${director_unzip_dir}
     unzip -q ${director_zip_file} -d ${director_unzip_dir}
