@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 ###
 ### Python Eclipse Workspace MAnager
@@ -142,7 +143,7 @@ class GitConfigParser(ConfigParser.SafeConfigParser):
     def readgit(self, filename):
         with open(filename, 'r') as config_file:
             text = config_file.read()
-        self.readfp(StringIO.StringIO(text.replace('\t','')), filename)
+        self.readfp(StringIO.StringIO(text.replace('\t', '')), filename)
 
 class PewmaException(Exception):
     """ Exception class to handle case when the setup does not support the requested operation. """
@@ -254,7 +255,7 @@ class PewmaManager(object):
             description="For more information, see the Infrastructure guide at http://www.opengda.org/documentation/")
         self.parser.disable_interspersed_args()
         self.parser.formatter.help_position = self.parser.formatter.max_help_position = 46  # improve look of help
-        if not os.environ.has_key('COLUMNS'):  # typically this is not passed from the shell to the child process (Python)
+        if 'COLUMNS' not in os.environ:  # typically this is not passed from the shell to the child process (Python)
             self.parser.formatter.width = 120  # so avoid the default of 80 and assume a wider terminal (improve look of help)
 
         group = optparse.OptionGroup(self.parser, "Workspace options")
@@ -370,7 +371,7 @@ class PewmaManager(object):
 
         org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
           'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
-        cquery_to_add = CQUERY_URI_PARENT.replace(':','\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
+        cquery_to_add = CQUERY_URI_PARENT.replace(':', '\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
         if not os.path.exists(org_eclipse_buckminster_ui_prefs_loc):
             # create a new org.eclipse.buckminster.ui.prefs file with the CQuery history
             with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
@@ -412,7 +413,7 @@ class PewmaManager(object):
             This is referenced in the launchers for GDA servers etc.
         '''
 
-        if component_name.startswith(('all-','core-', 'dls-', 'mt-', 'mx-')) or not component_name.endswith('-config'):
+        if component_name.startswith(('all-', 'core-', 'dls-', 'mt-', 'mx-')) or not component_name.endswith('-config'):
             return  # component name is not an instance config, so don't save it 
 
         org_eclipse_core_variables_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
@@ -475,7 +476,7 @@ class PewmaManager(object):
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
-                print text
+                print(text)
             raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (small enough to do in one chunk)
@@ -486,7 +487,7 @@ class PewmaManager(object):
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
-                print text
+                print(text)
             raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
@@ -766,7 +767,7 @@ class PewmaManager(object):
                 properties_file.write('download.location.common=%s\n' % (self.options.download_location,))
 
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
-        properties_text = '-P%s ' % (self.materialize_properties_path.replace('\\','/'),)  # convert \ to / in path on Windows (avoiding \ as escape character)
+        properties_text = '-P%s ' % (self.materialize_properties_path.replace('\\', '/'),)  # convert \ to / in path on Windows (avoiding \ as escape character)
         for keyval in self.options.system_property:
             properties_text += '-D%s ' % (keyval,)
         with open(self.script_file_path, 'w') as script_file:
@@ -806,7 +807,7 @@ class PewmaManager(object):
                     text += ' (probable network issue)'
                 else:
                     text = 'set-build-description: Failure (probable network issue)'
-                print text
+                print(text)
 
         self.add_cquery_to_history(cquery_to_use)
         self.add_config_to_strings(component_to_use)
@@ -833,14 +834,14 @@ class PewmaManager(object):
                 cquery_to_use = category_or_cquery
                 if len(arguments_part) > 1:
                     raise PewmaException('ERROR: No other options can follow the CQuery')
-                for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
+                for c, v, q, t, s in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
                     template_to_use = t
                     break
             elif category_or_cquery in CATEGORIES_AVAILABLE:
                 category_to_use = category_or_cquery
                 if len(arguments_part) > 1:
                     version = arguments_part[1].lower()
-                    for c,v,q,t,s in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
+                    for c, v, q, t, s in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
                         if version in s:
                             version_to_use = v
                             break
@@ -903,7 +904,7 @@ class PewmaManager(object):
         """ Processes command: gerrit-config
         """
 
-        NOT_REQUIRED, DONE, FAILED = range(3)  # possible status for various configure actions
+        NOT_REQUIRED, DONE, FAILED = list(range(3))  # possible status for various configure actions
         assert NOT_REQUIRED < DONE 
         assert DONE < FAILED                   # we record the highest status, which must therefore be FAILED
 
@@ -995,7 +996,7 @@ class PewmaManager(object):
                 action_type = 'switched_remote_to_gerrit' if 'remote.origin.url' in command else 'configured_for_eclipse'
                 status = DONE  # for dry run, pretend the operation succeeded
                 if not self.options.dry_run:
-                    retcode = subprocess.call(shlex.split(command), shell=False)
+                    retcode = subprocess.call(shlex.split(str(command)), shell=False)
                     if retcode:
                         self.logger.error('%sFAILED: rc=%s' % (self.log_prefix, retcode))
                         status = FAILED
@@ -1017,7 +1018,7 @@ class PewmaManager(object):
                 self.logger.debug('%scommit-msg hook copied to: %s' % (self.log_prefix, hooks_commit_msg_loc))
                 repo_status['hook_added'] = DONE
 
-            if all(status == NOT_REQUIRED for status in repo_status.itervalues()):
+            if all(status == NOT_REQUIRED for status in repo_status.values()):
                 self.logger.info('%sSkipped: already switched to Gerrit; configured for EGit/JGit and git: %s' % (self.log_prefix, git_dir))
             else:
                 for (action, message) in (('switched_remote_to_gerrit', 'switch remote.origin.url to Gerrit'),
@@ -1082,26 +1083,26 @@ class PewmaManager(object):
                 os.environ['PEWMA_PY_COMMAND'] = str(command)
                 os.environ['PEWMA_PY_DIRECTORY'] = str(directory)
                 process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, cwd=directory)
-                out,err = process.communicate()
-                out,err = out.rstrip(),err.rstrip()
+                out, err = process.communicate()
+                out, err = out.rstrip(), err.rstrip()
                 retcode = process.returncode
             except OSError:
-                raise PewmaException('ERROR: "%s" failed in %s: %s' % (command, directory, sys.exc_value,))
+                raise PewmaException('ERROR: "%s" failed in %s: %s' % (command, directory, sys.exc_info()[1],))
 
             if self.options.repo_prefix:
                 if len(out)!=0 or len(err)!=0:
-                    print prefix % os.path.basename(directory).strip(),
-                    if '\n' in out or '\r' in out: # if out is multiline
-                        print "..."                # start it on a new line
-                    elif '\n' in err or '\r' in err: # if err is multiline
-                        print "..."                # start it on a new line
+                    print(prefix % os.path.basename(directory).strip(), end='')
+                    if '\n' in out or '\r' in out:  # if out is multiline
+                        print("...")                # start it on a new line
+                    elif '\n' in err or '\r' in err:  # if err is multiline
+                        print("...")                  # start it on a new line
                 if len(err)!=0:
-                    print >> sys.stderr, err
+                    print(err, file=sys.stderr)
                 if len(out)!=0:
-                    print out
+                    print(out)
             else:
-                print >> sys.stderr, err
-                print out
+                print(err, file=sys.stderr)
+                print(out)
             sys.stderr.flush()
             sys.stdout.flush()
             if retcode:
@@ -1213,7 +1214,7 @@ class PewmaManager(object):
         """
 
         if len(self.arguments) > 1:
-            raise PewmaException('ERROR: site.p2%s command has too many arguments' % ('','.zip')[action_zip])
+            raise PewmaException('ERROR: site.p2%s command has too many arguments' % ('', '.zip')[action_zip])
 
         self.set_site_name(self.arguments and self.arguments[0])
         self.set_buckminster_properties_path(self.site_name)
@@ -1230,7 +1231,7 @@ class PewmaManager(object):
                 script_file.write('build --thorough\n')
             script_file.write('perform ' + properties_text)
             script_file.write('-Dtarget.os=* -Dtarget.ws=* -Dtarget.arch=* %(site_name)s#site.p2%(zip_action)s\n' %
-                              {'site_name': self.site_name, 'zip_action': ('','.zip')[action_zip]})
+                              {'site_name': self.site_name, 'zip_action': ('', '.zip')[action_zip]})
 
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
@@ -1260,7 +1261,7 @@ class PewmaManager(object):
             if (index != 0) or (not hasattr(self, 'site_name')) or (not self.site_name):
                 if arg == 'all':
                     all_platforms_specified = True
-                    for (p,a) in PLATFORMS_AVAILABLE:
+                    for (p, a) in PLATFORMS_AVAILABLE:
                         platforms.add(p)
                 else:
                     for (p, a) in PLATFORMS_AVAILABLE:
@@ -1312,7 +1313,7 @@ class PewmaManager(object):
             else:
                 raise PewmaException('ERROR: MacOSX 32-bit cannot be build for "%s"' % (self.site_name,))
 
-        self.logger.info('Product "%s" will be built for %d platform%s: %s' % (self.site_name, len(platforms), ('','s')[bool(len(platforms)>1)], platforms))
+        self.logger.info('Product "%s" will be built for %d platform%s: %s' % (self.site_name, len(platforms), ('', 's')[bool(len(platforms)>1)], platforms))
 
         self.set_buckminster_properties_path(self.site_name)
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
@@ -1460,11 +1461,11 @@ class PewmaManager(object):
                                 else:
                                     jgit_errors_general.append(error_summary)
                     if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
-                        print line,  # trailing comma so we don't add an extra newline
+                        print(line, end='')  # don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
                 retcode = process.returncode
             except OSError:
-                raise PewmaException('ERROR: Buckminster failed: %s' % (sys.exc_value,))
+                raise PewmaException('ERROR: Buckminster failed: %s' % (sys.exc_info()[1],))
             sys.stdout.flush()
             sys.stderr.flush()
             if retcode:
@@ -1516,11 +1517,11 @@ class PewmaManager(object):
             try:
                 process = subprocess.Popen(ant_command, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
                 for line in iter(process.stdout.readline, b''):
-                    print line,  # trailing comma so we don't add an extra newline
+                    print(line, end='')  # don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
                 retcode = process.returncode
             except OSError:
-                raise PewmaException('ERROR: Ant failed: %s' % (sys.exc_value,))
+                raise PewmaException('ERROR: Ant failed: %s' % (sys.exc_info()[1],))
             sys.stdout.flush()
             sys.stderr.flush()
             if retcode:
@@ -1546,7 +1547,7 @@ class PewmaManager(object):
             self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
-                print text
+                print(text)
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (small enough to do in one chunk)
@@ -1557,7 +1558,7 @@ class PewmaManager(object):
             self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
-                print text
+                print(text)
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
@@ -1594,30 +1595,30 @@ class PewmaManager(object):
         # print help if requested, or if no arguments
         if self.options.help or not positional_arguments:
             self.parser.print_help()
-            print '\nActions and Arguments:'
+            print('\nActions and Arguments:')
             for (_, _, help) in self.valid_actions_with_help:
                 if help:
-                     print '    %s' % (help[0])
+                     print('    %s' % (help[0]))
                      for line in help[1:]:
-                        print '      %s' % (line,)
+                        print('      %s' % (line,))
             return
 
         self.action = positional_arguments[0]
         self.arguments = positional_arguments[1:]
 
         # set the logging level and text for this program's logging
-        self.log_prefix = ("","(DRY_RUN) ")[self.options.dry_run]
+        self.log_prefix = ("", "(DRY_RUN) ")[self.options.dry_run]
         self.logging_console_handler.setLevel( logging._levelNames[self.options.log_level.upper()] )
 
         # validation of options and action
         self.validate_plugin_patterns()
         if self.options.delete and self.options.recreate:
             raise PewmaException('ERROR: you can specify at most one of --delete and --recreate')
-        if (self.action not in self.valid_actions.keys()):
+        if (self.action not in list(self.valid_actions.keys())):
             raise PewmaException('ERROR: action "%s" unrecognised (try --help)' % (self.action,))
         if self.options.keyring:
             self.options.keyring = os.path.realpath(os.path.abspath(os.path.expanduser(self.options.keyring)))
-            if ((os.path.sep + '.ssh' + os.path.sep) in self.options.keyring) or self.options.keyring.endswith(('id_rsa','id_rsa.pub')):
+            if ((os.path.sep + '.ssh' + os.path.sep) in self.options.keyring) or self.options.keyring.endswith(('id_rsa', 'id_rsa.pub')):
                 raise PewmaException('ERROR: --keyring "%s" appears to be an ssh key. This is **WRONG**, it should be an Eclipse keyring.' % (self.options.keyring,))
             if not os.path.isfile(self.options.keyring):
                 # sometimes, for reasons unknown, we temporarily can't see the file
@@ -1673,7 +1674,7 @@ class PewmaManager(object):
         # define proxy if not already defined  (proxy_name not in os.environ) or (not os.environ[proxy_name].strip())
         # note that Python looks for <protocol>_proxy environment variables in a case-independent manner
         if self.options.keep_proxy:
-            for env_name in ('http_proxy', 'https_proxy','no_proxy'):
+            for env_name in ('http_proxy', 'https_proxy', 'no_proxy'):
                 log_text = 'Using existing %s/%s = ' % (env_name, env_name.upper())
                 for variant in (env_name, env_name.upper()):
                     if variant not in os.environ:
@@ -1735,7 +1736,7 @@ class PewmaManager(object):
         if action_handler:
             exit_code = action_handler(target=self.action)
         else:
-            exit_code = getattr(self, 'action_'+self.action.replace('.','_').replace('-','_'))()
+            exit_code = getattr(self, 'action_'+self.action.replace('.', '_').replace('-', '_'))()
 
         end_time = datetime.datetime.now()
         run_time = end_time - start_time
@@ -1753,13 +1754,13 @@ if __name__ == '__main__':
     pewma = PewmaManager()
     try:
         sys.exit(pewma.main(sys.argv))
-    except PewmaException, e:
-        print e
+    except PewmaException as e:
+        print(e)
         sys.exit(3)
     except KeyboardInterrupt:
         if len(sys.argv) > 1:
-            print "\nOperation (%s) interrupted and will be abandoned." % ' '.join(sys.argv[1:])
+            print("\nOperation (%s) interrupted and will be abandoned." % ' '.join(sys.argv[1:]))
         else:
-            print "\nOperation interrupted and will be abandoned"
+            print("\nOperation interrupted and will be abandoned")
         sys.exit(3)
 
