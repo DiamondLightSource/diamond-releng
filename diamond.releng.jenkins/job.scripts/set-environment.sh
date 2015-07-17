@@ -149,7 +149,7 @@ set_environment_step () {
             wget --timeout=60 --tries=2 --no-cache -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
         else
             # non-verbose output in a batch job
-            echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
+            echo "Using environment proxy setting: $""http_proxy=${http_proxy} $""https_proxy=${https_proxy} $""no_proxy=${no_proxy}"
             set +e  # Turn off errexit
             wget --timeout=60 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
             RETVAL=$?
@@ -180,7 +180,7 @@ set_environment_step () {
             wget --timeout=60 --tries=2 --no-cache -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
         else
             # non-verbose output in a batch job
-            echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
+            echo "Using environment proxy setting: $""http_proxy=${http_proxy} $""https_proxy=${https_proxy} $""no_proxy=${no_proxy}"
             set +e  # Turn off errexit
             wget --timeout=60 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
             RETVAL=$?
