@@ -31,7 +31,7 @@ install_buckminster () {
 
     # buckminster version (same as an Eclipse version)
     if [[ -z "${buckminster_version}" ]]; then
-        buckminster_version=4.5
+        buckminster_version=4.4
     fi
 
     # install type
@@ -100,7 +100,7 @@ install_buckminster () {
         set +e  # Turn off errexit
         wget --timeout=60 --tries=2 --no-cache -nv -O ${director_zip_file} "${director_download}"
         RETVAL=$?
-        $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
+        set -e  # Turn errexit on
         if [ "${RETVAL}" != "0" ]; then
             if [[ "${JENKINS_URL}" = *diamond.ac.uk* ]]; then
                 # running under Jenkins at DLS, so write text to log so that job build description is set 
