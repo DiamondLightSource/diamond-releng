@@ -68,7 +68,6 @@ install_buckminster () {
 
     director_download="http://download.eclipse.org/tools/buckminster/products/director_latest.zip"
     repository_buckminster=http://download.eclipse.org/tools/buckminster/headless-${buckminster_version}
-    ## repository_cloudsmith=http://download.cloudsmith.com/buckminster/external-${buckminster_version}  (for Buckminster Subclipse, which we don't use any more)
 
     #==========================================================
     # report what we are doing
@@ -135,7 +134,6 @@ EOF
     # org.eclipse.buckminster.core.headless.feature : The Core functionality — this feature is required if you want to do anything with Buckminster except installing additional features.
     # org.eclipse.buckminster.pde.headless.feature : Headless PDE and JDT support. Required if you are working with Java based components.
     # org.eclipse.buckminster.git.headless.feature : Git
-    ## org.eclipse.buckminster.subclipse.headless.feature : Subclipse (we don't use Subversion any more)
 
     buckminster_command_temp=${buckminster_install_dir_temp}/buckminster
     for feature in org.eclipse.buckminster.core.headless.feature org.eclipse.buckminster.pde.headless.feature org.eclipse.buckminster.git.headless.feature; do
@@ -143,8 +141,8 @@ EOF
         ${buckminster_command_temp} install ${repository_buckminster} ${feature}
         echo "finished installing ${feature}"
     done
-    ## ${buckminster_command_temp} install ${repository_cloudsmith} org.eclipse.buckminster.subclipse.headless.feature
 
+    #==========================================================
     mv -v ${buckminster_install_dir_temp}/ ${buckminster_install_dir%/}/
     export buckminster_command=${buckminster_install_dir%/}/buckminster
 
