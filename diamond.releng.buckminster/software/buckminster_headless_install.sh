@@ -31,7 +31,7 @@ install_buckminster () {
 
     # buckminster version (same as an Eclipse version)
     if [[ -z "${buckminster_version}" ]]; then
-        buckminster_version=4.4
+        buckminster_version=4.5
     fi
 
     # install type
@@ -63,12 +63,12 @@ install_buckminster () {
         modules_dir=/dls_sw/apps/Modules/modulefiles/buckminster
     fi
 
-    # create a temporary directory name: %/ is used to remove any trailing slah
+    # create a temporary directory name: %/ is used to remove any trailing slash
     buckminster_install_dir_temp=${buckminster_install_dir%/}_install-in-progress
 
-    director_download="http://www.eclipse.org/downloads/download.php?file=/tools/buckminster/products/director_latest.zip&r=1"
+    director_download="http://download.eclipse.org/tools/buckminster/products/director_latest.zip"
     repository_buckminster=http://download.eclipse.org/tools/buckminster/headless-${buckminster_version}
-    repository_cloudsmith=http://download.cloudsmith.com/buckminster/external-${buckminster_version}
+    ## repository_cloudsmith=http://download.cloudsmith.com/buckminster/external-${buckminster_version}  (for Buckminster Subclipse, which we don't use any more)
 
     #==========================================================
     # report what we are doing
@@ -118,6 +118,7 @@ install_buckminster () {
     #==========================================================
     # install the base headless product, then delete the director
     ${director_unzip_dir}/director/director -repository ${repository_buckminster} -destination ${buckminster_install_dir_temp} -profile Buckminster -installIU org.eclipse.buckminster.cmdline.product
+    echo "finished installing org.eclipse.buckminster.cmdline.product"
     rm -rf ${director_unzip_dir}
     rm -f ${director_zip_file}
 
@@ -137,9 +138,11 @@ EOF
     ## org.eclipse.buckminster.subclipse.headless.feature : Subclipse (we don't use Subversion any more)
 
     buckminster_command_temp=${buckminster_install_dir_temp}/buckminster
-    ${buckminster_command_temp} install ${repository_buckminster} org.eclipse.buckminster.core.headless.feature
-    ${buckminster_command_temp} install ${repository_buckminster} org.eclipse.buckminster.pde.headless.feature
-    ${buckminster_command_temp} install ${repository_buckminster} org.eclipse.buckminster.git.headless.feature
+    for feature in org.eclipse.buckminster.core.headless.feature org.eclipse.buckminster.pde.headless.feature org.eclipse.buckminster.git.headless.feature; do
+        echo "doing ${buckminster_command_temp} install ${repository_buckminster} ${feature}"
+        ${buckminster_command_temp} install ${repository_buckminster} ${feature}
+        echo "finished installing ${feature}"
+    done
     ## ${buckminster_command_temp} install ${repository_cloudsmith} org.eclipse.buckminster.subclipse.headless.feature
 
     mv -v ${buckminster_install_dir_temp}/ ${buckminster_install_dir%/}/
