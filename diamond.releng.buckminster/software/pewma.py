@@ -322,7 +322,7 @@ class PewmaManager(object):
         group.add_option('-q', '--quiet', dest='log_level', action='store_const', const='WARNING', help='Shortcut for --log-level=WARNING')
         group.add_option('--log-level', dest='log_level', type='choice', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], metavar='<level>',
                                default='INFO', help='Logging level (default: %default)')
-        group.add_option('--keep-proxy', dest='keep_proxy', action='store_true', default=False, help='Never set the http_proxy[s] and no_proxy environment variables')
+        group.add_option('--skip-proxy-setup', dest='skip_proxy_setup', action='store_true', default=False, help='Don\'t define any proxy settings')
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Git options")
@@ -772,6 +772,8 @@ class PewmaManager(object):
         for keyval in self.options.system_property:
             properties_text += '-D%s ' % (keyval,)
         with open(self.script_file_path, 'w') as script_file:
+            if not self.options.skip_proxy_setup:
+                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             # set preferences
             if self.options.maxParallelMaterializations:
                 script_file.write('setpref maxParallelMaterializations=%s\n' % (self.options.maxParallelMaterializations,))
@@ -1137,6 +1139,8 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
+            if not self.options.skip_proxy_setup:
+                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             script_file.write('perform ' + properties_text)
             script_file.write('-Dtarget.os=* -Dtarget.ws=* -Dtarget.arch=* ')
             script_file.write('%(site_name)s#buckminster.clean\n' % {'site_name': self.site_name})
@@ -1161,6 +1165,8 @@ class PewmaManager(object):
 
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
         with open(self.script_file_path, 'w') as script_file:
+            if not self.options.skip_proxy_setup:
+                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if thorough:
                 script_file.write('build --thorough\n')
             else:
@@ -1228,6 +1234,8 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
+            if not self.options.skip_proxy_setup:
+                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if not self.options.assume_build:
                 script_file.write('build --thorough\n')
             script_file.write('perform ' + properties_text)
@@ -1324,6 +1332,8 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
+            if not self.options.skip_proxy_setup:
+                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if not self.options.assume_build:
                 script_file.write('build --thorough\n')
             script_file.write('perform ' + properties_text)
@@ -1423,7 +1433,9 @@ class PewmaManager(object):
         buckminster_command.extend(buckminster_args)
         # if debugging memory allocation, add this parameter: '-XX:+PrintFlagsFinal'
         if not self.isWindows:  # these extra options need to be removed on my Windows XP 32-bit / Java 1.7.0_25 machine
-            buckminster_command.extend(('-vmargs', '-Xms768m', '-Xmx1536m', '-XX:MaxPermSize=128m', '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=1000'))
+            buckminster_command.extend(('-vmargs', '-Xms768m', '-Xmx1536m', '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=1000'))
+        if self.java_proxy_system_properties:
+            buckminster_command.extend(self.java_proxy_system_properties)
         for keyval in self.options.jvmargs:
             buckminster_command.extend(('-D%s ' % (keyval,),))
 
@@ -1672,9 +1684,11 @@ class PewmaManager(object):
             if self.options.delete:
                 self.delete_directory(self.workspace_git_loc, "workspace_git directory")
 
-        # define proxy if not already defined  (proxy_name not in os.environ) or (not os.environ[proxy_name].strip())
-        # note that Python looks for <protocol>_proxy environment variables in a case-independent manner
-        if self.options.keep_proxy:
+        # Proxy handling is a bit of a mess. Python and Buckminster (java) can potentially access network resources, and they handle proxy settings differently.
+        # The technique used here seems to work (meaning it uses the procy when it is supposed to, and not when it isn't).
+        # Don't mess around with it; thungs that look like they should work, don't.
+        # The only way to know if this is doing the right thing is to test with a network tracong tool such as wireshark. 
+        if self.options.skip_proxy_setup:
             for env_name in ('http_proxy', 'https_proxy', 'no_proxy'):
                 log_text = 'Using existing %s/%s = ' % (env_name, env_name.upper())
                 for variant in (env_name, env_name.upper()):
@@ -1684,17 +1698,32 @@ class PewmaManager(object):
                         log_text += os.environ[variant]
                     log_text += '/'
                 self.logger.debug(log_text[:-1])  # drop trailing /
+            self.logger.debug('Note: Experiments suggest that no_proxy is ignored by Buckminster')
+            self.java_proxy_system_properties = ()
         else:
             fqdn = socket.getfqdn()
             if fqdn.endswith('.diamond.ac.uk'):
                 proxy_value = 'wwwcache.rl.ac.uk:8080'
                 no_proxy_value = '127.0.0.1/8,localhost,.diamond.ac.uk'
+                self.java_proxy_system_properties = (
+                    '-Dhttp.proxyHost=wwwcache.rl.ac.uk', '-Dhttp.proxyPort=8080',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
+                    '-Dhttps.proxyHost=wwwcache.rl.ac.uk', '-Dhttps.proxyPort=8080',
+                    '-Dftp.proxyHost=wwwcache.rl.ac.uk', '-Dftp.proxyPort=8080',
+                    '-Dhttp.nonProxyHosts="*.diamond.ac.uk\|localhost\|127.*\|[::1]"',  # applies to https as well
+                    '-Dftp.nonProxyHosts="*.diamond.ac.uk\|localhost\|127.*\|[::1]"')
             elif fqdn.endswith('.esrf.fr'):
                 proxy_value = 'proxy.esrf.fr:3128'
                 no_proxy_value = '127.0.0.1,localhost'
+                self.java_proxy_system_properties = (
+                    '-Dhttp.proxyHost=proxy.esrf.fr', '-Dhttp.proxyPort=3128',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
+                    '-Dhttps.proxyHost=proxy.esrf.fr', '-Dhttps.proxyPort=3128',
+                    '-Dftp.proxyHost=proxy.esrf.fr', '-Dftp.proxyPort=3128',
+                    '-Dhttp.nonProxyHosts="localhost\|127.*\|[::1]"',  # applies to https as well
+                    '-Dftp.nonProxyHosts="localhost\|127.*\|[::1]"')
             else:
                 proxy_value = ''
                 no_proxy_value = ''
+                self.java_proxy_system_properties = ()
             for env_name, env_value in (('http_proxy', 'http://'+proxy_value if proxy_value else ''),
                                         ('https_proxy', 'https://'+proxy_value if proxy_value else ''),
                                         ('no_proxy', no_proxy_value)):
