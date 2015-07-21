@@ -173,8 +173,8 @@ class PewmaManager(object):
         self.system = platform.system()
         self.isLinux = self.system == 'Linux'
         self.isWindows = self.system == 'Windows'
-        self.java_version_reported = False
-        self.executable_locations_reported = []
+        self.java_version_current = None
+        self.executable_locations = {}
 
         self.valid_actions_with_help = (
             # 1st item in tuple is the action verb
@@ -1373,11 +1373,15 @@ class PewmaManager(object):
 ###############################################################################
 
     def report_executable_location(self, executable_name):
-        """ Logs the path to an executable (an actual version number is not available)
+        """ Determines the path to an executable (used when no version nubmer is available)
+            Writes the path to the log
+            Returns the path string
         """
 
-        if (executable_name in self.executable_locations_reported) or (not self.isLinux):
-            return
+        if executable_name in self.executable_locations:
+            return self.executable_locations[executable_name]
+        if not self.isLinux:
+            return None  # where command only availabel on Linux
         loc = None
         try:
             whichrun = subprocess.Popen(('which', '-a', executable_name), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -1390,29 +1394,31 @@ class PewmaManager(object):
             self.logger.info('%s%s install that will be used: %s' % (self.log_prefix, executable_name, loc))
         else:
             self.logger.warn('%s%s install to be used could not be determined' % (self.log_prefix, executable_name))
-        self.executable_locations_reported.append(executable_name)
+        self.executable_locations[executable_name] = loc
+        return loc
 
 
     def report_java_version(self):
-        """ Logs the Java version number, something like 1.7.0_17
+        """ Determines the Java version number, something like 1.7.0_17
+            Writes the version number to the log
+            Returns the version number string
         """
 
-        if self.java_version_reported:
-            return
-        version = ''
+        if self.java_version_current:
+            return self.java_version_current
         try:
             javarun = subprocess.Popen(('java', '-version'), stderr=subprocess.PIPE)  #  java -version writes to stderr
             (stdout, stderr) = javarun.communicate(None)
             if not javarun.returncode:
                 if stderr.startswith('java version "'):
-                    version = stderr[len('java version "'):].partition('"')[0]
+                    self.java_version_current = stderr[len('java version "'):].partition('"')[0]
         except:
             pass
-        if version:
-            self.logger.info('%sJava version that will be used: %s' % (self.log_prefix, version))
+        if self.java_version_current:
+            self.logger.info('%sJava version that will be used: %s' % (self.log_prefix, self.java_version_current))
         else:
             self.logger.warn('%sJava version to use could not be determined' % (self.log_prefix,))
-        self.java_version_reported = True
+        return self.java_version_current
 
 
     def run_buckminster_in_subprocess(self, buckminster_args, return_JGit_errors=False):
@@ -1431,13 +1437,25 @@ class PewmaManager(object):
         buckminster_command.extend(('--loglevel', self.options.log_level.upper()))
         buckminster_command.extend(('-data', self.workspace_loc))  # do not quote the workspace name (it should not contain blanks)
         buckminster_command.extend(buckminster_args)
+
+        vmargs_to_add = []
+        # For Buckminster 4.5, need to specify UseSplitVerifier: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=471115
+        # Always specify UseSplitVerifier unless we are sure that this in not Buckminster 4.5
+        if not any(old_version in self.executable_locations.get('buckminster', '') for old_version in ('/dls_sw/apps/buckminster/64/4.4-', '/dls_sw/apps/buckminster/64/4.3-')):
+            if self.java_version_current and self.java_version_current.startswith('1.7'):
+                vmargs_to_add.append('-XX:-UseSplitVerifier')  # UseSplitVerifier exists in Java 7, but was removed in Java 8
+            else:
+                vmargs_to_add.append('-noverify')
         # if debugging memory allocation, add this parameter: '-XX:+PrintFlagsFinal'
         if not self.isWindows:  # these extra options need to be removed on my Windows XP 32-bit / Java 1.7.0_25 machine
-            buckminster_command.extend(('-vmargs', '-Xms768m', '-Xmx1536m', '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=1000'))
+            vmargs_to_add.extend(('-Xms768m', '-Xmx1536m', '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=1000'))
         if self.java_proxy_system_properties:
-            buckminster_command.extend(self.java_proxy_system_properties)
+            vmargs_to_add.extend(self.java_proxy_system_properties)
         for keyval in self.options.jvmargs:
-            buckminster_command.extend(('-D%s ' % (keyval,),))
+            vmargs_to_add.extend(('-D%s ' % (keyval,),))
+        if vmargs_to_add:
+            buckminster_command.append('-vmargs')
+            buckminster_command.extend(vmargs_to_add)
 
         buckminster_command = ' '.join(buckminster_command)
         self.logger.info('%sRunning: %s' % (self.log_prefix, buckminster_command))
