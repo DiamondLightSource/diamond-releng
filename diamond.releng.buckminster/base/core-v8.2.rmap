@@ -2224,8 +2224,6 @@
   -->
   <!-- ** Example ** -->
   <rm:locator pattern="^gda-training-config$" searchPathRef="gda_training_configurations"/>
-  <!-- ** Diamond ** -->
-  <rm:locator pattern="^.+-config$" searchPathRef="diamond_configurations-strip-suffix"/>
   <!--
        Component uk.ac.diamond.org.springframework, which bundles various org.springframework components
        These various components must never be materialized as individual bundles (see Jira GDA-4844)
@@ -2278,7 +2276,8 @@
   <rm:locator pattern="^org\.eclipse\.gemini\.blueprint\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^net\.sf\.cglib$" searchPathRef="tp_bioclipse"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^javax\.jms$" searchPathRef="eclipse_orbit_R20150519210750"/>
+  <rm:locator pattern="^javax\.(ejb|jms|xml\.rpc)$" searchPathRef="eclipse_orbit_R20150519210750"/>
+  <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_R20150519210750"/>
   <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_R20140525021250"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies -->
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="GDA_tp_bundles"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
@@ -3898,24 +3897,6 @@
     <rm:provider componentTypes="buckminster" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
       <rm:uri format="${repository.subversion.diamond.download.url}/trunk/configurations/{0}?moduleAfterBranch&amp;moduleAfterTag">
         <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- ***** -->
-  <rm:searchPath name="diamond_configurations-strip-suffix">
-    <rm:provider componentTypes="buckminster" readerType="local">
-      <rm:uri format="file://{0}/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:replace pattern="^(.+)-config$" replacement="$1">
-          <bc:propertyRef key="buckminster.component"/>
-        </bc:replace>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="buckminster" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
-      <rm:uri format="${repository.subversion.diamond.download.url}/trunk/configurations/diamond/{0}?moduleAfterBranch&amp;moduleAfterTag">
-        <bc:replace pattern="^(.+)-config$" replacement="$1">
-          <bc:propertyRef key="buckminster.component"/>
-        </bc:replace>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
