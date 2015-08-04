@@ -617,7 +617,7 @@ class PewmaManager(object):
                 if d.startswith('.') or d.endswith(('.feature', '.site')):
                     dirs.remove(d)
             if 'releng.ant' in files:
-                dirs = []  # plugins are never nested inside plugins, so no need to look beneath this directory
+                dirs[:] = []  # plugins are never nested inside plugins, so no need to look beneath this directory
                 bin_dir_path = os.path.join(root, 'classes' if os.path.basename(root) == 'uk.ac.gda.core' else 'bin')
                 if os.path.isdir(bin_dir_path):
                     # only include this plugin if it contains compiled code (in case the filesystem contains a repo, but the workspace did not import all the projects)
