@@ -1728,10 +1728,8 @@ class PewmaManager(object):
                 self.java_proxy_system_properties = (
                     '-Dhttp.proxyHost=wwwcache.rl.ac.uk', '-Dhttp.proxyPort=8080',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
                     '-Dhttps.proxyHost=wwwcache.rl.ac.uk', '-Dhttps.proxyPort=8080',
-                    '-Dftp.proxyHost=wwwcache.rl.ac.uk', '-Dftp.proxyPort=8080',
                     # please see Jira DASCTEST-317 for a discussion of proxy bypass specification
                     '-Dhttp.nonProxyHosts="dasc-git.diamond.ac.uk\|dawn.diamond.ac.uk\|gerrit.diamond.ac.uk\|jenkins.diamond.ac.uk\|svn.diamond.ac.uk\|172.16.0.0/12\|localhost\|127.*\|[::1]"',  # applies to https as well
-                    '-Dftp.nonProxyHosts="dasc-git.diamond.ac.uk\|dawn.diamond.ac.uk\|gerrit.diamond.ac.uk\|jenkins.diamond.ac.uk\|svn.diamond.ac.uk\|172.16.0.0/12\|localhost\|127.*\|[::1]"',
                     )
             elif fqdn.endswith('.esrf.fr'):
                 proxy_value = 'proxy.esrf.fr:3128'
@@ -1739,9 +1737,8 @@ class PewmaManager(object):
                 self.java_proxy_system_properties = (
                     '-Dhttp.proxyHost=proxy.esrf.fr', '-Dhttp.proxyPort=3128',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
                     '-Dhttps.proxyHost=proxy.esrf.fr', '-Dhttps.proxyPort=3128',
-                    '-Dftp.proxyHost=proxy.esrf.fr', '-Dftp.proxyPort=3128',
                     '-Dhttp.nonProxyHosts="localhost\|127.*\|[::1]"',  # applies to https as well
-                    '-Dftp.nonProxyHosts="localhost\|127.*\|[::1]"')
+                    )
             else:
                 proxy_value = ''
                 no_proxy_value = ''
