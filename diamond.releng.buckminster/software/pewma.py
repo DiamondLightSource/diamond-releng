@@ -1383,7 +1383,7 @@ class PewmaManager(object):
         if executable_name in self.executable_locations:
             return self.executable_locations[executable_name]
         if not self.isLinux:
-            return None  # where command only availabel on Linux
+            return None  # "which" command only available on Linux
         loc = None
         try:
             whichrun = subprocess.Popen(('which', '-a', executable_name), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -1443,7 +1443,7 @@ class PewmaManager(object):
         vmargs_to_add = []
         # For Buckminster 4.5, need to specify UseSplitVerifier: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=471115
         # Always specify UseSplitVerifier unless we are sure that this in not Buckminster 4.5
-        if not any(old_version in self.executable_locations.get('buckminster', '') for old_version in ('/dls_sw/apps/buckminster/64/4.4-', '/dls_sw/apps/buckminster/64/4.3-')):
+        if not any(old_version in (self.executable_locations['buckminster'] or ()) for old_version in ('/dls_sw/apps/buckminster/64/4.4-', '/dls_sw/apps/buckminster/64/4.3-')):
             if self.java_version_current and self.java_version_current.startswith('1.7'):
                 vmargs_to_add.append('-XX:-UseSplitVerifier')  # UseSplitVerifier exists in Java 7, but was removed in Java 8
             else:
