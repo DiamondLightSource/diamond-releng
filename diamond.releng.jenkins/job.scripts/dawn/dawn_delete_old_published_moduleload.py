@@ -100,8 +100,8 @@ def generate_cleanup_script():
                             products_kept += 1
                         else:
                             print('  : will delete  %s' % (productdir_path,))
-                            script_file.write('  #chmod -R u+w %s\n' % productdir_path)
-                            script_file.write('  #rm -rf       %s\n' % productdir_path)
+                            script_file.write('  chmod -R u+w %s\n' % productdir_path)
+                            script_file.write('  rm -rf       %s\n' % productdir_path)
                             products_deleted += 1
         script_file.write('\n  echo "set-build-description: ')
         if error_count:

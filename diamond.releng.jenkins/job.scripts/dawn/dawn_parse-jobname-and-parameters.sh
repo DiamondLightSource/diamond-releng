@@ -65,9 +65,6 @@ fi
 if [[ "${JOB_NAME:-noname}" =~ ^Dawn.+--publish-([a-z0-9]+)(~.+)*$ ]]; then
     publish_type=${BASH_REMATCH[1]}
 fi
-if [[ "${JOB_NAME:-noname}" =~ ^Dawn.+--publish-([a-z0-9]+)\.cleanup(~.+)*$ ]]; then
-    cleanup_type=${BASH_REMATCH[1]}
-fi
 
 echo "Dawn_flavour=${flavour:Error}" >> ${properties_filename}
 echo "Dawn_release=${release:Error}" >> ${properties_filename}
@@ -88,9 +85,6 @@ if [[ -n "${squish_platform_job_prefix}" ]]; then
 fi
 if [[ -n "${publish_type}" ]]; then
     echo "publish_type=${publish_type}" >> ${properties_filename}
-fi
-if [[ -n "${cleanup_type}" ]]; then
-    echo "cleanup_type=${cleanup_type}" >> ${properties_filename}
 fi
 
 # determine whether any publish_* parameter was set
