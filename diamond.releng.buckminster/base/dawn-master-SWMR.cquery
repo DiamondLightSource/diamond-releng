@@ -18,7 +18,7 @@
     <cq:advisorNode namePattern="^.*\.tests?$" filter="(skip_ALL_test_fragments=true)" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Set in Jenkins create.product jobs to speed build</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|org\.eclipse\.(dawnsci|richbeans)\.|uk\.ac\.diamond\.(scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|org\.eclipse\.dawnsci\.|uk\.ac\.diamond\.(scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(skip_GDA_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^org\.eclipse\.e4\..+$" filter="(|(e4.trial=true)(e4.trial.common=true))">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Do-nothing node which is just here to allow org.eclipse.e4.* when materializing for e4.
@@ -98,7 +98,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" useTargetPlatform="false" branchTagPath="SWMR-impl">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-workflow.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.(dawnsci|richbeans)\..+$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="SWMR-impl">
+    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci\..+$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="SWMR-impl">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawnsci.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.sda\.enthought(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
