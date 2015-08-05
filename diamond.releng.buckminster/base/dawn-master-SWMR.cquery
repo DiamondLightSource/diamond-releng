@@ -49,6 +49,9 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-doc.git repository branch</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.eclipse\.richbeans\..+$" allowCircularDependency="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-eclipse.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-fable.git repository branch</cq:documentation>
     </cq:advisorNode>

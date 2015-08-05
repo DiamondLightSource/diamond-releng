@@ -55,6 +55,9 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-doc.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-doc" value="true"/>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.eclipse\.richbeans\..+$" allowCircularDependency="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-eclipse.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-fable.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-fable" value="true"/>
