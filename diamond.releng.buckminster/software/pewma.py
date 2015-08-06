@@ -431,7 +431,7 @@ class PewmaManager(object):
                     if not line.startswith('org.eclipse.core.variables.valueVariables='):
                         replacement_lines += line
                     else:
-                        m = re.match(r'^org\.eclipse\.core\.variables\.valueVariables=(.+)<valueVariables>(.+)<valueVariable(.*) name\\="GDA_instance_config_name"(.*) value\\="([^"]+)"(.*)/>(.*)$', line)
+                        m = re.match(r'^org\.eclipse\.core\.variables\.valueVariables=(.+?)<valueVariables>(.+?)<valueVariable(.*?) name\\="GDA_instance_config_name"(.*?) value\\="([^"]+?)"(.*?)/>(.*)$', line)
                         if m:
                             assert not (variable_found or file_rewrite_required)
                             variable_found = True
