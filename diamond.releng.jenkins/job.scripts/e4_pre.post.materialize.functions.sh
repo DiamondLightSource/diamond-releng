@@ -1,4 +1,4 @@
-# The purpose of these functions is to rebase the SCI-5214 branch (called SCI-5214d, depending on the repo) on top of master
+# The purpose of these functions is to rebase the SCI-5214 branch (called SCI-5214d or SCI-5214e, depending on the repo) on top of master
 
 #------------------------------------#
 #------------------------------------#
