@@ -98,10 +98,10 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|isosurface(\..+)?|mapping\.ui|plotting(\..+)?|processing\.ui|slicing(\..+)?|spectrum\.ui))|uk\.ac\.diamond\.screenshot(\..+)?)$" useTargetPlatform="false" branchTagPath="SWMR-impl2">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" useTargetPlatform="false" branchTagPath="SWMR-impl">
+    <cq:advisorNode namePattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" useTargetPlatform="false" branchTagPath="SWMR-impl2">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-workflow.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci\..+$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="SWMR-impl">
+    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci\..+$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="SWMR-impl2">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawnsci.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.sda\.enthought(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -277,13 +277,13 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-2ddpr.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.arpes(\..+)?$" useTargetPlatform="false" branchTagPath="SWMR-impl">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.arpes(\..+)?$" useTargetPlatform="false" branchTagPath="SWMR-impl2">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-arpes.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.CBFlib$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-cbflib.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python))$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="SWMR-impl">
+    <cq:advisorNode namePattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python))$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="SWMR-impl2">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.icat.*$" useTargetPlatform="false">
