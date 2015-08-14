@@ -415,7 +415,7 @@
   </rm:propertyElement>
   <!-- ** (eclipse/)dawnsci *** -->
   <rm:propertyElement key="dawnsci.github.organization">
-    <bc:constant value="DawnScience"/>
+    <bc:constant value="eclipse"/>
   </rm:propertyElement>
   <rm:propertyElement key="dawnsci.github.authentication">
     <bc:constant value="${eclipse.github.authentication}"/>
