@@ -232,9 +232,13 @@ def write_script_file():
     if [[ "${submit_type}" == *REBASE_IF_NECESSARY* ]]; then
         # option - attempt to rebase the change with the main branch
         git checkout -f FETCH_HEAD
+        git show --oneline --no-patch $(git rev-parse FETCH_HEAD)
+        git show --oneline --no-patch $(git rev-parse HEAD)
         git rebase --verbose local-${JOB_NAME}
     else
         # option - attempt to merge the change with the (local version of the) main branch
+        git show --oneline --no-patch $(git rev-parse FETCH_HEAD)
+        git show --oneline --no-patch $(git rev-parse HEAD)
         git merge --verbose FETCH_HEAD
     fi
 
