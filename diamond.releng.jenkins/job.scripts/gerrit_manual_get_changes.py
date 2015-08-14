@@ -34,8 +34,7 @@ USE_DIGEST_AUTHENTICATION = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', '
 def get_http_username_password():
     ''' the token required to authenticate to Gerrit is stored in a file '''
     assert USE_DIGEST_AUTHENTICATION, "*** Internal Error: get_http_username_password called, but USE_DIGEST_AUTHENTICATION False"
-    username = 'dlshudson'
-    token_filename = '/home/dlshudson/passwords/http-password_Gerrit_for-REST.txt'
+    token_filename = os.path.abspath(os.path.expanduser('~/passwords/http-password_Gerrit_for-REST.txt'))
     assert os.path.isfile(token_filename)
     assert os.stat(token_filename).st_mode == stat.S_IRUSR + stat.S_IFREG  # permissions must be user-read + regular-file
     last_nonempty_line = ''
@@ -45,7 +44,7 @@ def get_http_username_password():
             if line:
                 last_nonempty_line = line
     if last_nonempty_line:
-        return (username, last_nonempty_line)
+        return last_nonempty_line.split(':', 1)
     raise Exception('File %s appears empty' % token_filename)
 
 def parse_changeinfo(changeinfo):
@@ -135,6 +134,7 @@ def write_script_file():
             print('*** Error: item %s does not exist (or is not visible to Jenkins)'  % (url.partition('?')[2].partition('&')[0],))
             errors_found = True
             continue
+        print('*** Info: querying item %s' % (url.partition('?')[2].partition('&')[0],))
         for ci in changeinfo:
             extracted_changeinfo = parse_changeinfo(ci)
             if not extracted_changeinfo:
@@ -143,6 +143,9 @@ def write_script_file():
             changes_to_fetch.append(extracted_changeinfo)
 
     if errors_found:
+        if changes_to_fetch:
+            print('*** Info: remaining changes specified that are eligible for testing:',
+                  ['%s/%s' % (change, current_revision_number) for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch])
         return 1
     if not changes_to_fetch:
         print('*** Error: no changes specified (you need to set the appropriate environment variables)')
