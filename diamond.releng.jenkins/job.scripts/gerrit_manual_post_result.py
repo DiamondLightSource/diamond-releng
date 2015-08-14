@@ -22,13 +22,17 @@ import urllib2
 
 CHANGE_LIST_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_tested.txt')))
 POST_FUNCTION_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive', 'gerrit_changes_post_result.sh')))
+TEST_MODE = False
 
 def write_script_file():
 
     # get whether this job failed or succeeded
-    request = urllib2.Request(os.environ['BUILD_URL'] + 'api/json/?tree=result')
-    jenkins_result_json = urllib2.urlopen(request).read()
-    jenkins_result = json.loads(jenkins_result_json)['result']  # possible values are SUCCESS, ABORTED, FAILURE
+    if TEST_MODE:
+        jenkins_result = 'SUCCESS'
+    else:
+        request = urllib2.Request(os.environ['BUILD_URL'] + 'api/json/?tree=result')
+        jenkins_result_json = urllib2.urlopen(request).read()
+        jenkins_result = json.loads(jenkins_result_json)['result']  # possible values are SUCCESS, ABORTED, FAILURE
 
     # get build parameter gerrit_verified_option, specified as a build parameter
     # the option will be one of these (defined in the main Jenkins configuration)
@@ -37,7 +41,10 @@ def write_script_file():
     #    post Gerrit VERIFIED=-1 ... if test job fails, otherwise no change
     #    leave Gerrit verified status unchanged, but post a comment with build result
     #    don't post anything to Gerrit
-    gerrit_verified_option = os.environ['gerrit_verified_option']
+    if TEST_MODE:
+        gerrit_verified_option = 'depending on whether test job passes/fails'
+    else:
+        gerrit_verified_option = os.environ['gerrit_verified_option']
 
     if "don't post anything" in gerrit_verified_option:
         print('Skipped: no script file written')
@@ -65,6 +72,7 @@ def write_script_file():
             ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')')
         script_file.write(generated_header + '\n\ngerrit_changes_post_result () {\n')
 
+        changes_to_post = 0
         for line in change_list_file:
             if line.startswith('#') or not line.rstrip():  # comment or empty line
                 continue
@@ -72,6 +80,9 @@ def write_script_file():
             # generate the commands necessary to post the test result for this change
             script_file.write('    ssh -p ${GERRIT_PORT} ${GERRIT_HOST} gerrit review %s,%s -p %s -n NONE %s %s\n'
                               % (change, current_revision_number, project, review_command_message, review_command_verified))
+            changes_to_post += 1
+        if not changes_to_post:
+            script_file.write('    echo "*** Error: no changes were tested, due to an error in the specification (see above)"\n')
 
         script_file.write('}\n\n')
 

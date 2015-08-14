@@ -18,6 +18,7 @@ if [[ "${gerrit_manual_test}" == "true" ]]; then
   script=gerrit_manual_get_changes.py
   echo "Running ${script}"
   python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
+  cat ${WORKSPACE}/artifacts_to_archive/gerrit_changes_tested.txt
   script=artifacts_to_archive/gerrit.manual_pre.post.materialize.functions.sh
   echo "Sourcing ${script}"
   . ${WORKSPACE}/${script}

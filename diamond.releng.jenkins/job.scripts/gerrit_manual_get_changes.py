@@ -10,7 +10,8 @@ Testing notes:
       export repo_default_BRANCH=gda-8.46
 '''
 
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
 import datetime
 import itertools
 import json
@@ -47,7 +48,7 @@ def get_http_username_password():
         return last_nonempty_line.split(':', 1)
     raise Exception('File %s appears empty' % token_filename)
 
-def parse_changeinfo(changeinfo):
+def parse_changeinfo(changeinfo, change_list_file):
     '''
     A Gerrit ChangeInfo entity contains information about a change
     This function parses a changeinfo, and either
@@ -62,10 +63,11 @@ def parse_changeinfo(changeinfo):
     expected_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
     status = str(changeinfo['status'])
     if change_branch != expected_branch:
-        print('*** Error: change %s branch ("%s") in %s does not match the branch used by this test job ("%s")' % (change, change_branch, project, expected_branch))
+        change_list_file.write('# Error: change %s branch ("%s") in %s does not match the branch used by this test job ("%s")\n' %
+                               (change, change_branch, project, expected_branch))
         return None
     if status not in ('NEW', 'DRAFT'):
-        print('*** Error: change %s is not eligible for testing: status is %s' % (change, status))
+        change_list_file.write('# Error: change %s is not eligible for testing: status is %s\n' % (change, status))
         return None
     change_id = changeinfo['change_id']
     current_revision = changeinfo['current_revision']
@@ -88,90 +90,92 @@ def write_script_file():
     urls_to_query = []  # list of Gerrit URLs to query to get change information
     errors_found = 0
 
-    # Build the query URL for each topic specified
-    for i, topic in ((i, os.environ.get('topic_%s' % i, '').strip()) for i in range(1, MAX_TOPICS+1)):
-        if not topic:
-            continue
-        url = 'http://gerrit.diamond.ac.uk:8080/'
-        if USE_DIGEST_AUTHENTICATION:
-            url += 'a/'
-        url += 'changes/?q=topic:{%s}&o=CURRENT_REVISION' % (urllib.quote(topic,''),)
-        urls_to_query.append(url)
+    with open(CHANGE_LIST_FILE_PATH, 'a') as change_list_file:
+        # Build the query URL for each topic specified
+        for i, topic in ((i, os.environ.get('topic_%s' % i, '').strip()) for i in range(1, MAX_TOPICS+1)):
+            if not topic:
+                continue
+            url = 'http://gerrit.diamond.ac.uk:8080/'
+            if USE_DIGEST_AUTHENTICATION:
+                url += 'a/'
+            url += 'changes/?q=topic:{%s}&o=CURRENT_REVISION' % (urllib.quote(topic,''),)
+            urls_to_query.append(url)
+            change_list_file.write('# build parameters specified testing of topic = %s\n' % (topic,))
 
-    # Build the query URL for each change number specified
-    for i, change in ((i, os.environ.get('change_%s' % i, '').strip()) for i in range(1, MAX_CHANGESETS+1)):
-        if not change:
-            continue
-        try:
-            assert str(int(change)) == change  # check that the change is numeric
-        except (ValueError, AssertionError):
-            print('*** Error: invalid change_%s: "%s"' % (i, change))
-            errors_found = True
-            continue
-        else:
-            change = int(change)
-        url = 'http://gerrit.diamond.ac.uk:8080/'
-        if USE_DIGEST_AUTHENTICATION:
-            url += 'a/'
-        url += 'changes/?q=change:%s&o=CURRENT_REVISION' % (change,)
-        urls_to_query.append(url)
-
-    changes_to_fetch = []
-    for url in urls_to_query:
-        request = urllib2.Request(url)
-        try:
-            changeinfo_json = urllib2.urlopen(request).read()
-        except (urllib2.HTTPError) as err:
-            print('*** Error: invalid response from Gerrit server reading %s: %s' % (url, err))
-            errors_found = True
-            continue
-        if not changeinfo_json.startswith(")]}'\n"):
-            print('*** Error: invalid response from Gerrit server reading %s: magic prefix line not found' % (url,))
-            errors_found = True
-            continue
-        changeinfo = json.loads(changeinfo_json[5:])  # need to strip off the magic prefix line returned by Gerrit
-        if len(changeinfo) == 0:
-            print('*** Error: item %s does not exist (or is not visible to Jenkins)'  % (url.partition('?')[2].partition('&')[0],))
-            errors_found = True
-            continue
-        print('*** Info: querying item %s' % (url.partition('?')[2].partition('&')[0],))
-        for ci in changeinfo:
-            extracted_changeinfo = parse_changeinfo(ci)
-            if not extracted_changeinfo:
+        # Build the query URL for each change number specified
+        for i, change in ((i, os.environ.get('change_%s' % i, '').strip()) for i in range(1, MAX_CHANGESETS+1)):
+            if not change:
+                continue
+            try:
+                assert str(int(change)) == change  # check that the change is numeric
+            except (ValueError, AssertionError):
+                change_list_file.write('# Error: invalid change_%s: "%s"\n' % (i, change))
                 errors_found = True
                 continue
-            changes_to_fetch.append(extracted_changeinfo)
+            else:
+                change = int(change)
+            url = 'http://gerrit.diamond.ac.uk:8080/'
+            if USE_DIGEST_AUTHENTICATION:
+                url += 'a/'
+            url += 'changes/?q=change:%s&o=CURRENT_REVISION' % (change,)
+            urls_to_query.append(url)
+            change_list_file.write('# build parameters specified testing of change = %s\n' % (change,))
 
-    if errors_found:
-        if changes_to_fetch:
-            print('*** Info: remaining changes specified that are eligible for testing:',
-                  ['%s/%s' % (change, current_revision_number) for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch])
-        return 1
-    if not changes_to_fetch:
-        print('*** Error: no changes specified (you need to set the appropriate environment variables)')
-        return 1
+        changes_to_fetch = []
+        for url in urls_to_query:
+            request = urllib2.Request(url)
+            try:
+                changeinfo_json = urllib2.urlopen(request).read()
+            except (urllib2.HTTPError) as err:
+                change_list_file.write('# Error: invalid response from Gerrit server reading %s: %s\n' % (url, err))
+                errors_found = True
+                continue
+            if not changeinfo_json.startswith(")]}'\n"):
+                change_list_file.write('# Error: invalid response from Gerrit server reading %s: magic prefix line not found\n' % (url,))
+                errors_found = True
+                continue
+            changeinfo = json.loads(changeinfo_json[5:])  # need to strip off the magic prefix line returned by Gerrit
+            if len(changeinfo) == 0:
+                change_list_file.write('# Error: item %s does not exist (or is not visible to Jenkins)\n' % (url.partition('?')[2].partition('&')[0],))
+                errors_found = True
+                continue
+            change_list_file.write('# Info: querying item %s\n' % (url.partition('?')[2].partition('&')[0],))
+            for ci in changeinfo:
+                extracted_changeinfo = parse_changeinfo(ci, change_list_file)
+                if not extracted_changeinfo:
+                    errors_found = True
+                    continue
+                changes_to_fetch.append(extracted_changeinfo)
+
+        if errors_found:
+            if changes_to_fetch:
+                change_list_file.write('# Info: remaining changes specified that are eligible for testing: ' + 
+                      str(['%s/%s' % (change, current_revision_number) for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch]) +
+                      '\n')
+            return 1
+        if not changes_to_fetch:
+            change_list_file.write('# Error: no changes specified (you need to set the appropriate environment variables)\n')
+            return 1
 
     # check that we didn't get any duplicated change numbers
     change_numbers = [change for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch]
     distinct_change_numbers = set(change_numbers)
     if len(change_numbers) != len(distinct_change_numbers):
-        print('*** Error: the following change numbers were specified more than once:',
-              sorted([c for c in distinct_change_numbers if change_numbers.count(c) > 1]))
+        change_list_file.write('# Error: the following change numbers were specified more than once: ' + 
+                               str(sorted([c for c in distinct_change_numbers if change_numbers.count(c) > 1])) +
+                               '\n')
         return 1
 
     # sort the changes to apply in order of project, and change ascending, and group changes in the same project
     changes_to_fetch.sort(key=operator.itemgetter(1))  # sort on secondary key, the change (a number)
     changes_to_fetch.sort()  # sort on primary key, the project (repository), taking advantage of the fact that sorts are stable
 
-    # write the change list file (a record of what changes we are testing)
+    # append to the change list file (a record of what changes we are testing)
     # write the pre_materialize stage1 function into the script file
-    generated_header = ('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') + 
-        ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')\n')
     gerrit_verified_option = os.environ.get('gerrit_verified_option', '')
 
-    with open(CHANGE_LIST_FILE_PATH, 'w') as change_list_file:
-      with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as script_file:
-        change_list_file.write(generated_header)
+    with open(CHANGE_LIST_FILE_PATH, 'a') as change_list_file:
+      with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'a') as script_file:
         script_file.write(generated_header)
         script_file.write('\n. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.materialize_checkout.standard.branches_function.sh\n\n')
         if "don't post anything" not in gerrit_verified_option:
@@ -180,7 +184,6 @@ def write_script_file():
         for (project, change, current_revision_number, change_id, refspec) in changes_to_fetch:
             repo_branch_env_var = 'repo_%s_BRANCH' % (os.path.basename(project).replace('.git', '').replace('-', '_'),)
             repo_branch = os.environ.get(repo_branch_env_var, os.environ.get('repo_default_BRANCH', '**not set in Jenkins environment**'))
-            print((project, change, current_revision_number, change_id, refspec, repo_branch))  # for the console log
 
             change_list_file.write('%s***%s***%s***%s***%s***%s***\n' % (project, change, current_revision_number, change_id, refspec, repo_branch))
             review_command_message = '--message \'"Build Started ' + os.environ.get('BUILD_URL','') + '"\''
@@ -254,10 +257,19 @@ def write_script_file():
 
 ''')
 
-    print('Done: wrote script file to', PRE_MATERIALIZE_FUNCTION_FILE_PATH)
-    print('Done: wrote report file to', CHANGE_LIST_FILE_PATH)
-
 if __name__ == '__main__':
+
+    # header line for files that we write
+    generated_header = ('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') + 
+        ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')\n')
+    with open(CHANGE_LIST_FILE_PATH, 'w') as change_list_file:
+        change_list_file.write(generated_header)
+    with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as script_file:
+        script_file.write(generated_header)
+
     return_code = write_script_file()
+    print('Done: wrote report file to', CHANGE_LIST_FILE_PATH)
+    print('Done: wrote script file to', PRE_MATERIALIZE_FUNCTION_FILE_PATH)
+
     sys.exit(return_code)
 
