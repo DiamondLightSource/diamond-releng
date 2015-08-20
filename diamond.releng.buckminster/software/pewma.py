@@ -56,6 +56,7 @@ COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms
     ('gda', 'master', 'gda-master.cquery', 'v2.10', ('master', 'trunk')),
     ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.9', ('masterhplc', 'hplc')),
+    ('gda', 'v8.48', 'gda-v8.48.cquery', 'v2.9', ('v8.48', '8.48', '848')),
     ('gda', 'v8.46', 'gda-v8.46.cquery', 'v2.9', ('v8.46', '8.46', '846')),
     ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844')),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842')),
