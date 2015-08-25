@@ -152,6 +152,7 @@ materialize_function () {
                 fi
                 if [[ "${RETVAL}" != "0" || "${ERRORS}" != "0" ]]; then
                     echo "Problems with structure or state of ${repo}, so deleting"
+                    ls -ld ${repo} || true
                     rm -rf ${repo}
                     export materialize_type=recreate
                 fi
