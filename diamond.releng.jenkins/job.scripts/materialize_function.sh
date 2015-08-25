@@ -136,7 +136,14 @@ materialize_function () {
     if [[ "${materialize_type}" == "update" || "${materialize_type}" == "recreate" ]]; then
         if [[ -d "${materialize_workspace_path}_git" ]]; then
             set +e  # Turn off errexit
-            for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d | sort); do
+            for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
+                if [[ ! -d "${repo}/.git" ]]; then
+                    echo "Problems with ${repo}; ${repo}/.git missing, so deleting"
+                    ls -ld ${repo} || true
+                    rm -rf ${repo}
+                    export materialize_type=recreate
+                    continue
+                fi
                 # unfortunately git fsck can have an exit code of zero even if errors as found, so we need to check stderr as well as the exit code
                 git -C ${repo} fsck --no-progress --full --strict 2>&1 | tee ${WORKSPACE}/git-fsck-temp.txt
                 RETVAL=${PIPESTATUS[0]}

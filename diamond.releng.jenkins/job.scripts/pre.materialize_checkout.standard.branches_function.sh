@@ -28,8 +28,14 @@ pre_materialize_function_stage1_checkout_standard_branches_function () {
 
         echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Switching all repos back to original branch if required ***\n  "
 
-        cd ${materialize_workspace_path}_git
-        for repo in $(find -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
+        for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
+            if [[ ! -d "${repo}/.git" ]]; then
+                echo "Problems with ${repo}; ${repo}/.git missing, so deleting"
+                ls -ld ${repo} || true
+                rm -rf ${repo}
+                export materialize_type=recreate
+                continue
+            fi
             # abort any prior failed operation
             git -C ${repo} rebase --abort || true
             git -C ${repo} merge --abort || true
