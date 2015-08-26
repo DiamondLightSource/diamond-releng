@@ -116,7 +116,7 @@ PLATFORMS_AVAILABLE =  (
 TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
 CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
 
-JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent checkout problem (network) with a particular repository
+JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent network problem causing a checkout failure (the affected repository is only sometimes identified)
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+\.git):\s*($|Connection refused|Connection timed out|verify: false)', 1),  # 1 = first match group is the repository
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (Connection reset|Short read of block\.)', 'Network error'),  # text = no specifc repository identified
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: \S+://\S+/([^ /\t\n\r\f\v]+\.git): unknown host', 1),  # 1 = first match group is the repository
@@ -124,6 +124,10 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent chec
     ('java.net.ConnectException: Connection timed out', 'Network error'),  # text = no specifc repository identified
     ('HttpComponents connection error response code (500|502|503)', 'Server error'),  # text = no specifc repository identified
     ('ERROR:? +No repository found at http://www\.opengda\.org/', 'Server error'),  # text = no specifc repository identified
+    )
+
+BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermittent Buckminster bug
+    ('ERROR\s+\[\d+\]\s:\sjava\.lang\.ArrayIndexOutOfBoundsException: -1', 'Buckminster intermittent bug - try rerunning'),  # https://bugs.eclipse.org/bugs/show_bug.cgi?id=372470
     )
 
 GERRIT_REPOSITORIES = (
@@ -789,18 +793,17 @@ class PewmaManager(object):
             script_file_path_to_pass = self.script_file_path
 
         # get buckminster to run the materialize
-        (rc, jgit_errors_repos, jgit_errors_general) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_JGit_errors=True)
+        (rc, jgit_errors_repos, jgit_errors_general, buckminster_bugs) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_Buckminster_errors=True)
         # sometimes JGit gets intermittent failures (network?) when cloning a repository
-        if jgit_errors_repos or jgit_errors_general:
+        # sometimes Buckminster hits an intermittent bug
+        if any((jgit_errors_repos, jgit_errors_general, buckminster_bugs)):
             rc = max(int(rc), 2)
             for repo in jgit_errors_repos:
                 self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
-            # Some jgit_errors_general have the same text (e.g "Server error"), but only log them once
-            already_seen = []
-            for error_summary in jgit_errors_general:
-                if error_summary not in already_seen:
-                    self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
-                    already_seen.append(error_summary)
+            for error_summary in set(jgit_errors_general):  # Use set, since multiple errors coukd have the same text, and only need logging once
+                self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
+            for error_summary in set(buckminster_bugs):  # Use set, since multiple errors coukd have the same text, and only need logging once
+                self.logger.error(error_summary)
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 if jgit_errors_repos:
                     text = 'set-build-description: Failure cloning '
@@ -809,8 +812,10 @@ class PewmaManager(object):
                     else:
                         text += str(len(jgit_errors_repos)) + ' repositories'
                     text += ' (probable network issue)'
-                else:
+                elif jgit_errors_general:
                     text = 'set-build-description: Failure (probable network issue)'
+                else:
+                    text = 'set-build-description: Failure (intermittent Buckminster bug)'
                 print(text)
 
         self.add_cquery_to_history(cquery_to_use)
@@ -1422,9 +1427,9 @@ class PewmaManager(object):
         return self.java_version_current
 
 
-    def run_buckminster_in_subprocess(self, buckminster_args, return_JGit_errors=False):
+    def run_buckminster_in_subprocess(self, buckminster_args, return_Buckminster_errors=False):
         """ Generates and runs the buckminster command
-            If return_JGit_errors, then returns a list of repositories that had errors when attempting to clone (for materialize)
+            If return_Buckminster_errors, then returns a list of repositories that had errors when attempting to clone (for materialize)
         """
 
         self.report_executable_location('buckminster')
@@ -1478,13 +1483,14 @@ class PewmaManager(object):
 
         jgit_errors_repos = []
         jgit_errors_general = []
+        buckminster_bugs = []
         if not self.options.dry_run:
             sys.stdout.flush()
             sys.stderr.flush()
             try:
                 process = subprocess.Popen(buckminster_command, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
                 for line in iter(process.stdout.readline, b''):
-                    if return_JGit_errors:
+                    if return_Buckminster_errors:
                         for (error_pattern, error_summary) in JGIT_ERROR_PATTERNS:
                             jgit_error = re.search(error_pattern, line)
                             if jgit_error:
@@ -1492,6 +1498,10 @@ class PewmaManager(object):
                                     jgit_errors_repos.append(os.path.basename(jgit_error.group(error_summary)))
                                 else:
                                     jgit_errors_general.append(error_summary)
+                        for (error_pattern, error_summary) in BUCKMINSTER_BUG_ERROR_PATTERNS:
+                            buckminster_bug = re.search(error_pattern, line)
+                            if buckminster_bug:
+                                buckminster_bugs.append(error_summary)
                     if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
                         print(line, end='')  # don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
@@ -1507,8 +1517,8 @@ class PewmaManager(object):
         else:
             retcode = 0
 
-        if return_JGit_errors:
-            return (retcode, jgit_errors_repos, jgit_errors_general)
+        if return_Buckminster_errors:
+            return (retcode, jgit_errors_repos, jgit_errors_general, buckminster_bugs)
         else:
             return retcode
 
