@@ -53,55 +53,60 @@ COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'dawn', 'uk.ac.diamond.dawn.site'
 COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 
 COMPONENT_CATEGORIES = (
-    # category, version, CQuery, template, version_synonyms
-    ('gda', 'master', 'gda-master.cquery', 'v2.10', ('master', 'trunk')),
-    ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.9', ('masterhplc', 'hplc')),
-    ('gda', 'v8.48', 'gda-v8.48.cquery', 'v2.9', ('v8.48', '8.48', '848')),
-    ('gda', 'v8.46', 'gda-v8.46.cquery', 'v2.9', ('v8.46', '8.46', '846')),
-    ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844')),
-    ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842')),
-    ('gda', 'v8.41-xas', 'gda-v8.41-xas.cquery', 'v2.6', ('v8.41-xas', '8.41-xas', '841xas')),
-    ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840')),
-    ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839')),
-    ('gda', 'v8.38', 'gda-v8.38.cquery', 'v2.6', ('v8.38', '8.38', '838')),
-    ('gda', 'v8.36', 'gda-v8.36.cquery', 'v2.5', ('v8.36', '8.36', '836')),
-    ('gda', 'v8.34', 'gda-v8.34.cquery', 'v2.4', ('v8.34', '8.34', '834')),
-    ('gda', 'v8.32', 'gda-v8.32.cquery', 'v2.4', ('v8.32', '8.32', '832')),
-    ('gda', 'v8.30', 'gda-v8.30.cquery', 'v2.4', ('v8.30', '8.30', '830')),
-    ('gda', 'v8.30-lnls', 'gda-v8.30-lnls.cquery', 'v2.4', ('v8.30-lnls', '8.30-lnls', '830-lnls')),
-    ('gda', 'v8.28', 'gda-v8.28.cquery', 'v2.4', ('v8.28', '8.28', '828')),
-    ('gda', 'v8.26', 'gda-v8.26.cquery', 'v2.3', ('v8.26', '8.26', '826')),
-    ('gda', 'v8.24', 'gda-v8.24.cquery', 'v2.3', ('v8.24', '8.24', '824')),
-    ('gda', 'v8.22', 'gda-v8.22.cquery', 'v2.2', ('v8.22', '8.22', '822')),
-    ('gda', 'v8.20', 'gda-v8.20.cquery', 'v2.2', ('v8.20', '8.20', '820')),
-    ('gda', 'v8.18', 'gda-v8.18.cquery', 'v1.0', ('v8.18', '8.18', '818')),
-    ('ida', 'master', 'ida-master.cquery', 'v2.8', ('master', 'trunk')),
-    ('ida', 'v2.20', 'ida-v2.20.cquery', 'v2.4', ('v2.20', '2.20', '220')),
-    ('ida', 'v2.19', 'ida-v2.19.cquery', 'v2.3', ('v2.19', '2.19', '219')),
-    ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218')),
-    ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217')),
-    ('dawn', 'master', 'dawn-master.cquery', 'v2.10', ('master', 'trunk')),
-    ('dawn', '1.9', 'dawn-v1.9.cquery', 'v2.9', ('v1.9', '1.9')),
-    ('dawn', '1.8', 'dawn-v1.8.cquery', 'v2.9', ('v1.8', '1.8')),
-    ('dawn', '1.7.1', 'dawn-v1.7.1.cquery', 'v2.7', ('v1.7.1', '1.7.1', '171')),
-    ('dawn', '1.7', 'dawn-v1.7.cquery', 'v2.7', ('v1.7', '1.7')),
-    ('dawn', '1.6', 'dawn-v1.6.cquery', 'v2.6', ('v1.6', '1.6')),
-    ('dawn', '1.5', 'dawn-v1.5.cquery', 'v2.6', ('v1.5', '1.5')),
-    ('dawn', '1.4.1', 'dawn-v1.4.1.cquery', 'v2.5', ('v1.4.1', '1.4.1')),
-    ('dawn', '1.4', 'dawn-v1.4.cquery', 'v2.5', ('v1.4', '1.4')),
-    ('dawn', 'v1.0', 'dawn-v1.0.cquery', 'v2.3', ('v1.0', '1.0')),
-    ('none', 'master', 'master.cquery', 'v2.3', ('master', 'trunk')),
-    ('training', 'master', 'training-trunk.cquery', 'v2.0', ('master', 'trunk')),
-    ('training', 'v8.16', 'training-v8.16.cquery', 'v2.0', ('v8.16', '8.16', '816')),
-    ('gda-training', 'v8.18', 'gda-training-v8.18.cquery', 'v1.0', ('v8.18', '8.18', '818')),
+    # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
+    ('gda', 'master', 'gda-master.cquery', 'v2.10', ('master', 'trunk'), ('1.8.0', '1.7.0',)),
+    ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.10', ('masterhplc', 'hplc'), ('1.8.0', '1.7.0',)),
+    ('gda', 'v8.48', 'gda-v8.48.cquery', 'v2.10', ('v8.48', '8.48', '848'), ('1.8.0', '1.7.0',)),
+    ('gda', 'v8.46', 'gda-v8.46.cquery', 'v2.9', ('v8.46', '8.46', '846'), ('1.7.0',)),
+    ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844'), ('1.7.0',)),
+    ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842'), ('1.7.0',)),
+    ('gda', 'v8.41-xas', 'gda-v8.41-xas.cquery', 'v2.6', ('v8.41-xas', '8.41-xas', '841xas'), ('1.7.0',)),
+    ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840'), ('1.7.0',)),
+    ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839'), ('1.7.0',)),
+    ('gda', 'v8.38', 'gda-v8.38.cquery', 'v2.6', ('v8.38', '8.38', '838'), ('1.7.0',)),
+    ('gda', 'v8.36', 'gda-v8.36.cquery', 'v2.5', ('v8.36', '8.36', '836'), ('1.7.0',)),
+    ('gda', 'v8.34', 'gda-v8.34.cquery', 'v2.4', ('v8.34', '8.34', '834'), ('1.7.0',)),
+    ('gda', 'v8.32', 'gda-v8.32.cquery', 'v2.4', ('v8.32', '8.32', '832'), None),
+    ('gda', 'v8.30', 'gda-v8.30.cquery', 'v2.4', ('v8.30', '8.30', '830'), None),
+    ('gda', 'v8.30-lnls', 'gda-v8.30-lnls.cquery', 'v2.4', ('v8.30-lnls', '8.30-lnls', '830-lnls'), None),
+    ('gda', 'v8.28', 'gda-v8.28.cquery', 'v2.4', ('v8.28', '8.28', '828'), None),
+    ('gda', 'v8.26', 'gda-v8.26.cquery', 'v2.3', ('v8.26', '8.26', '826'), None),
+    ('gda', 'v8.24', 'gda-v8.24.cquery', 'v2.3', ('v8.24', '8.24', '824'), None),
+    ('gda', 'v8.22', 'gda-v8.22.cquery', 'v2.2', ('v8.22', '8.22', '822'), None),
+    ('gda', 'v8.20', 'gda-v8.20.cquery', 'v2.2', ('v8.20', '8.20', '820'), None),
+    ('gda', 'v8.18', 'gda-v8.18.cquery', 'v1.0', ('v8.18', '8.18', '818'), None),
+    ('ida', 'master', 'ida-master.cquery', 'v2.8', ('master', 'trunk'), None),
+    ('ida', 'v2.20', 'ida-v2.20.cquery', 'v2.4', ('v2.20', '2.20', '220'), None),
+    ('ida', 'v2.19', 'ida-v2.19.cquery', 'v2.3', ('v2.19', '2.19', '219'), None),
+    ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218'), None),
+    ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217'), None),
+    ('dawn', 'master', 'dawn-master.cquery', 'v2.10', ('master', 'trunk'), ('1.8.0', '1.7.0',)),
+    ('dawn', '1.9', 'dawn-v1.9.cquery', 'v2.9', ('v1.9', '1.9'), ('1.7.0',)),
+    ('dawn', '1.8', 'dawn-v1.8.cquery', 'v2.9', ('v1.8', '1.8'), ('1.7.0',)),
+    ('dawn', '1.7.1', 'dawn-v1.7.1.cquery', 'v2.7', ('v1.7.1', '1.7.1', '171'), ('1.7.0',)),
+    ('dawn', '1.7', 'dawn-v1.7.cquery', 'v2.7', ('v1.7', '1.7'), ('1.7.0',)),
+    ('dawn', '1.6', 'dawn-v1.6.cquery', 'v2.6', ('v1.6', '1.6'), None),
+    ('dawn', '1.5', 'dawn-v1.5.cquery', 'v2.6', ('v1.5', '1.5'), None),
+    ('dawn', '1.4.1', 'dawn-v1.4.1.cquery', 'v2.5', ('v1.4.1', '1.4.1'), None),
+    ('dawn', '1.4', 'dawn-v1.4.cquery', 'v2.5', ('v1.4', '1.4'), None),
+    ('dawn', 'v1.0', 'dawn-v1.0.cquery', 'v2.3', ('v1.0', '1.0'), None),
+    ('none', 'master', 'master.cquery', 'v2.3', ('master', 'trunk'), None),
+    ('training', 'master', 'training-trunk.cquery', 'v2.0', ('master', 'trunk'), None),
+    ('training', 'v8.16', 'training-v8.16.cquery', 'v2.0', ('v8.16', '8.16', '816'), None),
+    ('gda-training', 'v8.18', 'gda-training-v8.18.cquery', 'v1.0', ('v8.18', '8.18', '818'), None),
     )
 
 CATEGORIES_AVAILABLE = []  # dedupe COMPONENT_CATEGORIES while preserving order
 for c in COMPONENT_CATEGORIES:
     if c[0] not in CATEGORIES_AVAILABLE:
         CATEGORIES_AVAILABLE.append(c[0])
-TEMPLATES_AVAILABLE = sorted(set(c[3] for c in COMPONENT_CATEGORIES))
-DEFAULT_TEMPLATE = TEMPLATES_AVAILABLE[-1]  # the most recent
+
+# template names must be of the form vx.y in order for us to sort them
+for c in COMPONENT_CATEGORIES:
+    assert c[3].startswith('v')
+    assert c[3].count('.') == 1
+TEMPLATES_AVAILABLE = sorted(set(c[3] for c in COMPONENT_CATEGORIES), key=lambda t: map(int, (t[1:].split('.'))))
+DEFAULT_TEMPLATE = TEMPLATES_AVAILABLE[-1]  # the highest number
 
 PLATFORMS_AVAILABLE =  (
     # os/ws/arch, acceptable abbreviations
@@ -179,6 +184,8 @@ class PewmaManager(object):
         self.isLinux = self.system == 'Linux'
         self.isWindows = self.system == 'Windows'
         self.java_version_current = None
+        self.java_version_current_logged = False
+        self.valid_java_versions = None
         self.executable_locations = {}
 
         self.valid_actions_with_help = (
@@ -710,6 +717,7 @@ class PewmaManager(object):
         if category_to_use and version_to_use:
             cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
             template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
+            self.valid_java_versions = self._get_java_for_category_version(category_to_use, version_to_use)
         if template_to_use:
             self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
 
@@ -756,6 +764,7 @@ class PewmaManager(object):
             if not cquery_to_use:
                 cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
             template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
+            self.valid_java_versions = self._get_java_for_category_version(category_to_use, version_to_use)
 
         assert template_to_use and cquery_to_use
 
@@ -843,14 +852,14 @@ class PewmaManager(object):
                 cquery_to_use = category_or_cquery
                 if len(arguments_part) > 1:
                     raise PewmaException('ERROR: No other options can follow the CQuery')
-                for c, v, q, t, s in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
+                for c, v, q, t, s, j in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
                     template_to_use = t
                     break
             elif category_or_cquery in CATEGORIES_AVAILABLE:
                 category_to_use = category_or_cquery
                 if len(arguments_part) > 1:
                     version = arguments_part[1].lower()
-                    for c, v, q, t, s in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
+                    for c, v, q, t, s, j in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
                         if version in s:
                             version_to_use = v
                             break
@@ -882,6 +891,17 @@ class PewmaManager(object):
         template_to_use_list = [cc[3] for cc in COMPONENT_CATEGORIES if cc[0] == category and cc[1] == version]
         assert len(template_to_use_list) == 1
         return template_to_use_list[0]
+
+
+    def _get_java_for_category_version(self, category, version):
+        """ Given a category and version, determine the java version(s) allowable
+            (on behalf of "setup" and "materialize" commands)
+        """
+
+        assert category and version
+        java_to_use_list = [cc[5] for cc in COMPONENT_CATEGORIES if cc[0] == category and cc[1] == version]
+        assert len(java_to_use_list) == 1
+        return java_to_use_list[0]
 
 
     def _get_git_directories(self):
@@ -1074,13 +1094,13 @@ class PewmaManager(object):
                     self.logger.info('%sSkipped: %s in %s (NO REMOTE DEFINED)' % (self.log_prefix, git_command, git_dir))
                     continue
 
-            retcode = self.action_one_git_repo(git_command, git_dir, prefix)
+            retcode = self._one_git_repo(git_command, git_dir, prefix)
             max_retcode = max(max_retcode, retcode)
 
         return max_retcode
 
 
-    def action_one_git_repo(self, command, directory, prefix):
+    def _one_git_repo(self, command, directory, prefix):
         self.logger.info('%sRunning: %s in %s' % (self.log_prefix, command, directory))
 
         if not self.options.dry_run:
@@ -1404,26 +1424,35 @@ class PewmaManager(object):
         return loc
 
 
-    def report_java_version(self):
+    def report_and_check_java_version(self):
         """ Determines the Java version number, something like 1.7.0_17
-            Writes the version number to the log
+            Writes the version number to the log (if it has not already been written)
             Returns the version number string
         """
 
-        if self.java_version_current:
-            return self.java_version_current
-        try:
-            javarun = subprocess.Popen(('java', '-version'), stderr=subprocess.PIPE)  #  java -version writes to stderr
-            (stdout, stderr) = javarun.communicate(None)
-            if not javarun.returncode:
-                if stderr.startswith('java version "'):
-                    self.java_version_current = stderr[len('java version "'):].partition('"')[0]
-        except:
-            pass
-        if self.java_version_current:
-            self.logger.info('%sJava version that will be used: %s' % (self.log_prefix, self.java_version_current))
-        else:
-            self.logger.warn('%sJava version to use could not be determined' % (self.log_prefix,))
+        if not self.java_version_current_logged:
+            try:
+                javarun = subprocess.Popen(('java', '-version'), stderr=subprocess.PIPE)  #  java -version writes to stderr
+                (stdout, stderr) = javarun.communicate(None)
+                if not javarun.returncode:
+                    if stderr.startswith('java version "'):
+                        self.java_version_current = stderr[len('java version "'):].partition('"')[0]
+            except:
+                pass
+            if self.java_version_current:
+                self.logger.info('%sJava version that will be used: %s' % (self.log_prefix, self.java_version_current))
+            else:
+                self.logger.warn('%sJava version to use could not be determined' % (self.log_prefix,))
+            self.java_version_current_logged = True
+
+        if self.java_version_current and self.valid_java_versions:  # if we know the java version, and the acceptable versions
+            for acceptable_version in self.valid_java_versions:
+                if self.java_version_current.startswith(acceptable_version):
+                    break
+            else:
+                raise PewmaException('ERROR: current java version is %s, but must start with one of %s' %
+                                     (self.java_version_current, self.valid_java_versions,))
+
         return self.java_version_current
 
 
@@ -1433,7 +1462,7 @@ class PewmaManager(object):
         """
 
         self.report_executable_location('buckminster')
-        self.report_java_version()
+        self.report_and_check_java_version()
 
         buckminster_command = ['buckminster']
 
@@ -1528,7 +1557,7 @@ class PewmaManager(object):
         """
 
         self.report_executable_location('ant')
-        self.report_java_version()
+        self.report_and_check_java_version()
 
         ant_command = ['ant']
         ant_command.extend(("-logger", "org.apache.tools.ant.NoBannerLogger"))
