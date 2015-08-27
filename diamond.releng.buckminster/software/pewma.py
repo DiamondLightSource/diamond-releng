@@ -375,7 +375,6 @@ class PewmaManager(object):
             self.logger.info('%sDeleting "%s"' % (self.log_prefix, template_zip,))
             if not self.options.dry_run:
                 os.remove(template_zip)
-            return self.run_buckminster_in_subprocess(('clean',))  # for some reason this must be done
 
 
     def add_cquery_to_history(self, cquery_to_use):
