@@ -228,7 +228,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mt" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((i02|i03|i04|i04-1|i23|i24|mx|all-mx)-config|uk\.ac\.(gda\.(beamline\.(i02|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec)(\..+)?|px(\..+)?|services(\.(common|impl)(\..+)?)?)|diamond\.(dna|stac)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^((i02|i03|i04|i04-1|i23|i24|mx|all-mx)-config|uk\.ac\.(gda\.(beamline\.(i02|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|px(\..+)?|services(\.(common|impl)(\..+)?)?)|diamond\.(dna|stac)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mx.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mx" value="true"/>
     </cq:advisorNode>
@@ -255,7 +255,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-video.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-video" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\..+)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-xas-core.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-xas-core" value="true"/>
     </cq:advisorNode>
