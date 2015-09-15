@@ -22,6 +22,8 @@ import sys
 import time
 import urllib2
 import urlparse
+import xml.etree.ElementTree as ET
+from xml.parsers.expat import ExpatError
 import zipfile
 
 COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, category, actual component name to use)
@@ -205,6 +207,10 @@ class PewmaManager(object):
                  'Version defaults to master',
                  'CQuery is only required if you need to override the computed value',
                  )),
+            ('get-branches-expected', None,
+                ('get-branches-expected <component> [<category> [<version>] | <cquery>]',
+                 'Determine the CQuery to use, and return from it a list of repositories and branches',
+                 )),
             ('gerrit-config', None, ('gerrit-config', 'Switch applicable repositories to origin Gerrit and configure for Eclipse',)),
             ('git', None, ('git <command>', 'Issue "git <command>" for all git clones',)),
             ('clean', None, ('clean', 'Clean the workspace',)),
@@ -294,6 +300,12 @@ class PewmaManager(object):
                          help='Override Buckminster default')
         group.add_option('--prepare-jenkins-build-description-on-materialize-error', dest='prepare_jenkins_build_description_on_materialize_error', action='store_true', default=False,
                  help=optparse.SUPPRESS_HELP)
+        self.parser.add_option_group(group)
+
+        group = optparse.OptionGroup(self.parser, "Get-branches-expected options")
+        group.add_option('--cquery.branches.file', dest='cquery_branches_file', type='string', metavar='<path>',
+                               default='cquery-branches-file.txt',
+                               help='Report file, relative to current directory if not absolute (default: %default)')
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Build/Product options")
@@ -711,7 +723,7 @@ class PewmaManager(object):
         if len(self.arguments) > 2:
             raise PewmaException('ERROR: setup command has too many arguments')
 
-        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments)
+        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments)
 
         if category_to_use and version_to_use:
             cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
@@ -728,44 +740,93 @@ class PewmaManager(object):
         return
 
 
+    def action_get_branches_expected(self):
+        """ Processes command: get-branches-expected <component> [<category> [<version>] | <cquery>]
+        """
+
+        (component_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_component_category_version_cquery()
+        source = CQUERY_URI_PARENT + cquery_to_use
+        if self.options.dry_run:
+            self.logger.info('%sDownloading "%s"' % (self.log_prefix, source))
+            return
+
+        cquery_branches_path = os.path.abspath(os.path.expanduser(self.options.cquery_branches_file))
+
+        # open the URL
+        try:
+            resp = urllib2.urlopen(source, timeout=30)
+        except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
+            self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
+            if self.options.prepare_jenkins_build_description_on_materialize_error:
+                text = 'set-build-description: Failure downloading CQuery (probable network issue)'
+                print(text)
+            raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
+
+        # read the data (it's small enough to do in one chunk)
+        self.logger.info('Downloading %s bytes from "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl()))
+        try:
+            cquerydata = resp.read()
+        except Exception as e:
+            self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
+            if self.options.prepare_jenkins_build_description_on_materialize_error:
+                text = 'set-build-description: Failure downloading CQuery (probable network issue)'
+                print(text)
+            raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
+        finally:
+            try:
+                resp.close()
+            except:
+                pass
+
+        # process all repositories in advisor nodes
+        root = ET.fromstring(cquerydata)
+        repos_branches = {}
+
+        cquery_namespace = "{http://www.eclipse.org/buckminster/CQuery-1.0}"
+        # we want all advisor nodes with a <documentation> sub-element
+        # Python 2.7+ only: for advisorNode in root.findall('{0}advisorNode[{0}documentation]'.format(cquery_namespace)):  # all advisor nodes with a <documentation> sub-element
+        for advisorNode in root.findall('{0}advisorNode'.format(cquery_namespace)):  # all advisor nodes
+            if advisorNode.find('{0}documentation'.format(cquery_namespace)) is None:
+                continue
+            documentation = advisorNode.find('{0}documentation'.format(cquery_namespace)).text.splitlines()[0]
+            if not documentation.endswith('.git repository branch'):
+                continue
+            repository = documentation[:-len('.git repository branch')]
+
+            # determine whether repository is not to be used
+            useMaterializationFalse = advisorNode.get('useMaterialization') == 'false'
+            useTargetPlatformFalse = advisorNode.get('useTargetPlatform') == 'false'
+            useWorkspaceFalse = advisorNode.get('useWorkspace') == 'false'
+            disallowPropertyTrue = False
+            disallow_key = None
+            for property in advisorNode.findall('{0}property'.format(cquery_namespace)):
+                if property.get('key', '') == 'disallow.repo.{0}'.format(repository):
+                    disallowPropertyTrue = True
+                    disallow_key = bool(property.get('value', ''))
+                    break
+            # print(repository, useMaterializationFalse, useTargetPlatformFalse, useWorkspaceFalse, disallowPropertyTrue, disallow_key)
+            if all((useMaterializationFalse, useTargetPlatformFalse, useWorkspaceFalse, disallowPropertyTrue, disallow_key)):
+                # repo not allowed in this CQuery
+                continue
+            if any((useMaterializationFalse, useWorkspaceFalse, disallowPropertyTrue)):
+                raise ValueError('Repository "{0}" has mismatched settings (useMaterializationFalse, useWorkspaceFalse, disallowPropertyTrue) = {1} ({2})'.format(repository, (useMaterializationFalse, useWorkspaceFalse), location))
+
+            branchTagPath = advisorNode.get('branchTagPath', None)
+            repos_branches[repository] = branchTagPath or 'master'  # if repo defined multiple times, use the last specified branch
+
+        self.logger.info('Writing expected branches to "%s"' % (cquery_branches_path,))
+        with open(cquery_branches_path, 'w') as expected_branches_file:
+            expected_branches_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                          ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
+            for repo in sorted(repos_branches):
+                expected_branches_file.write('%s=%s\n' % (repo, repos_branches[repo]))
+
+
     def action_materialize(self):
         """ Processes command: materialize <component> [<category> [<version>] | <cquery>]
         """
 
-        if len(self.arguments) < 1:
-            raise PewmaException('ERROR: materialize command has too few arguments')
-        if len(self.arguments) > 3:
-            raise PewmaException('ERROR: materialize command has too many arguments')
-
-        # translate an abbreviated component name to the real component name
-        component_to_use = self.arguments[0]
-        for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
-            if component_to_use == abbrev:
-                component_to_use = actual
-                category_implied = cat
-                break
-        else:
-            category_implied = None  # component name is specified verbatim
-
-        # interpret any (category / category version / cquery) arguments
-        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_context(self.arguments[1:])
-
-        if not category_to_use:
-            category_to_use = category_implied
-        elif category_implied and (category_implied != category_to_use):
-            # if a component abbreviation was provided, it implies a category. If a category was also specified, it must match the implied category 
-            raise PewmaException('ERROR: component "%s" is not consistent with category "%s"' % (component_to_use, category_to_use,))
-
-        if not (category_to_use or cquery_to_use):
-            raise PewmaException('ERROR: the category for component "%s" is missing (can be one of %s)' % (component_to_use, '/'.join(CATEGORIES_AVAILABLE)))
-
-        if category_to_use and version_to_use:
-            if not cquery_to_use:
-                cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
-            template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
-            self.valid_java_versions = self._get_java_for_category_version(category_to_use, version_to_use)
-
-        assert template_to_use and cquery_to_use
+        (component_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_component_category_version_cquery()
 
         # create the workspace if required
         self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
@@ -776,6 +837,8 @@ class PewmaManager(object):
 
         self.logger.info('Writing buckminster materialize properties to "%s"' % (self.materialize_properties_path,))
         with open(self.materialize_properties_path, 'w') as properties_file:
+            properties_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                                  ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             properties_file.write('component=%s\n' % (component_to_use,))
             if self.options.download_location:
                 properties_file.write('download.location.common=%s\n' % (self.options.download_location,))
@@ -785,6 +848,8 @@ class PewmaManager(object):
         for keyval in self.options.system_property:
             properties_text += '-D%s ' % (keyval,)
         with open(self.script_file_path, 'w') as script_file:
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                              ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             # set preferences
@@ -834,7 +899,50 @@ class PewmaManager(object):
         return rc
 
 
-    def _interpret_context(self, arguments_part):
+    def _interpret_component_category_version_cquery(self):
+        """ Processes this part of the arguments: <component> [<category> [<version>] | <cquery>]
+            (on behalf of "materialize" and "get_branches_expected" commands)
+        """
+
+        if len(self.arguments) < 1:
+            raise PewmaException('ERROR: %s command has too few arguments' % (self.action,))
+        if len(self.arguments) > 3:
+            raise PewmaException('ERROR: %s command has too many arguments' % (self.action,))
+
+        # translate an abbreviated component name to the real component name
+        component_to_use = self.arguments[0]
+        for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
+            if component_to_use == abbrev:
+                component_to_use = actual
+                category_implied = cat
+                break
+        else:
+            category_implied = None  # component name is specified verbatim
+
+        # interpret any (category / category version / cquery) arguments
+        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments[1:])
+
+        if not category_to_use:
+            category_to_use = category_implied
+        elif category_implied and (category_implied != category_to_use):
+            # if a component abbreviation was provided, it implies a category. If a category was also specified, it must match the implied category 
+            raise PewmaException('ERROR: component "%s" is not consistent with category "%s"' % (component_to_use, category_to_use,))
+
+        if not (category_to_use or cquery_to_use):
+            raise PewmaException('ERROR: the category for component "%s" is missing (can be one of %s)' % (component_to_use, '/'.join(CATEGORIES_AVAILABLE)))
+
+        if category_to_use and version_to_use:
+            if not cquery_to_use:
+                cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
+            template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
+            self.valid_java_versions = self._get_java_for_category_version(category_to_use, version_to_use)
+
+        assert template_to_use and cquery_to_use
+
+        return (component_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use)
+
+
+    def _interpret_category_version_cquery(self, arguments_part):
         """ Processes this part of the arguments: [<category> [<version>] | <cquery>]
             (on behalf of "setup" and "materialize" commands)
         """
@@ -1164,6 +1272,8 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                              ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             script_file.write('perform ' + properties_text)
@@ -1190,6 +1300,8 @@ class PewmaManager(object):
 
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
         with open(self.script_file_path, 'w') as script_file:
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                              ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if thorough:
@@ -1259,6 +1371,8 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                              ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if not self.options.assume_build:
@@ -1357,6 +1471,8 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                              ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if not self.options.assume_build:
@@ -1620,7 +1736,7 @@ class PewmaManager(object):
                 print(text)
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
 
-        # read the data (small enough to do in one chunk)
+        # read the data (it's small enough to do in one chunk)
         self.logger.debug('Downloading %s bytes from "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl()))
         try:
             commit_hook = resp.read()
@@ -1731,9 +1847,10 @@ class PewmaManager(object):
                 if parent_workspace:
                     raise PewmaException('ERROR: the workspace you specified ("' + self.workspace_loc + '") is inside what looks like another workspace ("' + parent_workspace + '")')
                 candidate = os.path.dirname(candidate)
-        elif not self.workspace_loc:
+        if self.workspace_loc:
+            self.workspace_git_loc = self.workspace_loc + '_git'
+        elif (self.action != 'get-branches-expected'):
             raise PewmaException('ERROR: the "--workspace" option must be specified, unless you run this script from an existing workspace')
-        self.workspace_git_loc = self.workspace_loc + '_git'
 
         # delete previous workspace as required
         if self.options.delete or self.options.recreate:
@@ -1809,13 +1926,14 @@ class PewmaManager(object):
                     else:
                         self.logger.debug('No new value found for %s (left null)' % (env_name,))
 
-        # get some file locations (even though they might not be needed) 
-        self.script_file_path = os.path.expanduser(self.options.script_file)
-        if not os.path.isabs(self.script_file_path):
-           self.script_file_path = os.path.abspath(os.path.join(self.workspace_loc, self.script_file_path))
-        self.materialize_properties_path = os.path.expanduser(self.options.materialize_properties_file)
-        if not os.path.isabs(self.materialize_properties_path):
-           self.materialize_properties_path = os.path.abspath(os.path.join(self.workspace_loc, self.materialize_properties_path))
+        # get some file locations (even though they might not be needed)
+        if self.workspace_loc:
+            self.script_file_path = os.path.expanduser(self.options.script_file)
+            if not os.path.isabs(self.script_file_path):
+               self.script_file_path = os.path.abspath(os.path.join(self.workspace_loc, self.script_file_path))
+            self.materialize_properties_path = os.path.expanduser(self.options.materialize_properties_file)
+            if not os.path.isabs(self.materialize_properties_path):
+               self.materialize_properties_path = os.path.abspath(os.path.join(self.workspace_loc, self.materialize_properties_path))
 
         # invoke funtion to perform the requested action
         action_handler = self.valid_actions[self.action]
