@@ -28,7 +28,7 @@ record_head_commits_function () {
     cd ${materialize_workspace_path}_git
     repositories_recorded=0
     echo "# List of HEAD commits in repositories in ${materialize_workspace_path}_git/"
-    echo "# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (Jenkins: ${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})"
+    echo "# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})"
     for repository in $(ls -1 | sort); do
         if [[ ! -f "${materialize_workspace_path}_git/${repository}/.git/config" ]]; then
             echo "# Skipping ${materialize_workspace_path}_git/${repository} since it does not appear to be a Git repository"
@@ -78,7 +78,7 @@ record_targetplatform_contents_function () {
     features_recorded=0
     plugins_recorded=0
     echo "# List of target platform contents in ${materialize_workspace_path}/tp/"
-    echo "# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (Jenkins: ${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})"
+    echo "# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})"
 
     # TODO - extract names and versions
 
@@ -120,7 +120,7 @@ record_workspace_projects_function () {
     cd ${materialize_workspace_path}/.metadata/.plugins/org.eclipse.core.resources/.projects
     projects_recorded=0
     echo "# List of projects imported from ${materialize_workspace_path}_git/"
-    echo "# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (Jenkins: ${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})"
+    echo "# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})"
     for project in $(ls -1 | sort); do
         if [[ -d "${project}" ]]; then
             if [[ ! -L "${project}" ]]; then

@@ -4,7 +4,7 @@ set +x  # Turn off xtrace
 properties_filename=${WORKSPACE}/job-specific-environment-variables.properties
 
 cat << EOF >> ${properties_filename}
-# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (Jenkins: ${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})
+# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})
 materialize_component=all-dls-config
 EOF
 

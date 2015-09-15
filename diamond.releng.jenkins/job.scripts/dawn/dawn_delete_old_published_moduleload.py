@@ -35,7 +35,7 @@ def generate_cleanup_script():
 
     with open(CLEANUP_SCRIPT_FILE_PATH, 'w') as script_file:
         script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
-                          ' (Jenkins ' + os.environ.get('BUILD_TAG','$BUILD_TAG:missing') + ' ' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n\n')
+                          ' (' + os.environ.get('BUILD_TAG','$BUILD_TAG:missing') + ' ' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n\n')
         script_file.write('cleanup_script ()  {\n')
 
         for parent_dir in PUBLISH_DIRECTORY_PARENTS:
