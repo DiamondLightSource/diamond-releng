@@ -50,7 +50,7 @@ junit_function () {
 
     set -x  # Turn on xtrace
 
-    echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Running JUnit tests ***\n  "
+    echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` Running JUnit tests ***\n  "
 
     # Create a file whose content signals Jenkins that this build is to be marked UNSTABLE.
     # After the tests are run, clear the content if no problems are found.
@@ -61,20 +61,20 @@ junit_function () {
     # The purpose of this process is to identify the case where a test fails in such a way that no JUnit test report XML is written, and the exit code is zero.
     # This scenario, though very unusual, can happen (and has occurred previously in testing), and results in the build being incorrectly marked as SUCCESS.
     #
-    echo "$`date +"%a %d/%b/%Y %H:%M:%S"` (start of job) MARK_BUILD_AS_UNSTABLE (this text will be cleared if no problems found)" > ${WORKSPACE}/post_build_status_marker.txt
+    echo "$`date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (start of job) MARK_BUILD_AS_UNSTABLE (this text will be cleared if no problems found)" > ${WORKSPACE}/post_build_status_marker.txt
 
     # Run JUnit tests
     ${pewma_py} -w ${materialize_workspace_path} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} ${GDALargeTestFilesLocation_param:-} all-tests
 
     # If we get this far, clear the signal that tells Jenkins that this build is to be marked UNSTABLE
-    echo "`date +"%a %d/%b/%Y %H:%M:%S"` (after build and tests) no need for Jenkins Text-finder plugin to override the build status" > ${WORKSPACE}/post_build_status_marker.txt
+    echo "`date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (after build and tests) no need for Jenkins Text-finder plugin to override the build status" > ${WORKSPACE}/post_build_status_marker.txt
 
     # If any JVM abended, write text to console log (for reporting) and create the status file (so that Jenkins will mark the build as unstable)
     set +e  # Turn off errexit
     python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/check_if_JVM_abend.py ${materialize_workspace_path}_git
     RETVAL=$?
     if [ "${RETVAL}" != "0" ]; then
-      echo -e "`date +"%a %d/%b/%Y %H:%M:%S"` (after build and tests) MARK_BUILD_AS_UNSTABLE (set by check_if_JVM_abend.py)" > ${WORKSPACE}/post_build_status_marker.txt
+      echo -e "`date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (after build and tests) MARK_BUILD_AS_UNSTABLE (set by check_if_JVM_abend.py)" > ${WORKSPACE}/post_build_status_marker.txt
     fi
 
     $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script

@@ -9,7 +9,6 @@ Testing notes:
 '''
 
 from __future__ import print_function
-import datetime
 import itertools
 import json
 import operator
@@ -17,6 +16,7 @@ import os
 import os.path
 import stat
 import sys
+import time
 import urllib
 import urllib2
 
@@ -68,8 +68,8 @@ def write_script_file():
     # generate and write the artifact file (a record of what changes we are testing) and the bash script (which actually fetches the changes to test)
     with open(CHANGE_LIST_FILE_PATH, 'r') as change_list_file:
      with open(POST_FUNCTION_FILE_PATH, 'w') as script_file:
-        generated_header = ('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') + 
-            ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')')
+        generated_header = ('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                            ' (Jenkins ' + os.environ.get('BUILD_TAG','$BUILD_TAG:missing') + ' ' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')')
         script_file.write(generated_header + '\n\ngerrit_changes_post_result () {\n')
 
         changes_to_post = 0

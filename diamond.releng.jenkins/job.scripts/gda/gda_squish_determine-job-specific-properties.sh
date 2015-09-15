@@ -35,6 +35,7 @@ case "${GDA_beamline}" in
 esac
 
 cat << EOF >> ${properties_filename}
+# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (Jenkins: ${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})
 config_dir_basename=${config_dir_basename}
 gda_server_test_options=${gda_server_test_options}
 additional_objectserver_profile=${additional_objectserver_profile}

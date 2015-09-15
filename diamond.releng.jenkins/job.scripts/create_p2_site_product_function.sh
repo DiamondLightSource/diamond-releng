@@ -56,7 +56,7 @@ create_p2_site_product_function () {
 
     set -x  # Turn on xtrace
 
-    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Creating product(s) ***\n"
+    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` Creating product(s) ***\n"
     rm -rf ${buckminster_root_prefix} || return 3
     # product for all requested platforms (or just site.p2)
     if [ -n "${dawn_action}" ]; then
@@ -68,7 +68,7 @@ create_p2_site_product_function () {
     fi
 
     if [[ "${p2_site}" == "true" || "${publish_p2_site}" == "true" ]]; then
-        echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` Zipping p2 site ***\n"
+        echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` Zipping p2 site ***\n"
         ${pewma_py} ${log_level_option} -w ${materialize_workspace_path} --buckminster.root.prefix=${buckminster_root_prefix} --assume-build --buckminster.properties.file=${buckminster_properties_filename} ${product_options_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} site.p2.zip ${product_site} || return 1
 
         # move zipped p2 site to directory for archiving

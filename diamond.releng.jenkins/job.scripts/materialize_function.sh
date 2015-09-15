@@ -174,7 +174,7 @@ materialize_function () {
         ${fname}
     done
 
-    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` materialize_type=${materialize_type} ***\n"
+    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` materialize_type=${materialize_type} ***\n"
 
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         rm -rf $(dirname ${materialize_workspace_path})/buckminster-runtime-areas

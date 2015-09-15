@@ -10,7 +10,7 @@ pre_materialize_function_stage2_gerrit_single () {
         repo_branch=${repo_default_BRANCH}
     fi
 
-    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` getting Gerrit patch ${GERRIT_PROJECT} ${GERRIT_REFSPEC} (branch ${repo_branch}) ***\n"
+    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` getting Gerrit patch ${GERRIT_PROJECT} ${GERRIT_REFSPEC} (branch ${repo_branch}) ***\n"
 
     if [[ ! -d "${repo}" ]]; then
         mkdir -pv ${materialize_workspace_path}_git

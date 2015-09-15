@@ -12,7 +12,6 @@ Testing notes:
 
 from __future__ import absolute_import, division, print_function
 
-import datetime
 import itertools
 import json
 import operator
@@ -20,6 +19,7 @@ import os
 import os.path
 import stat
 import sys
+import time
 import urllib
 import urllib2
 
@@ -260,8 +260,8 @@ def write_script_file():
 if __name__ == '__main__':
 
     # header line for files that we write
-    generated_header = ('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') + 
-        ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')\n')
+    generated_header = ('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                        ' (Jenkins ' + os.environ.get('BUILD_TAG','$BUILD_TAG:missing') + ' ' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
     with open(CHANGE_LIST_FILE_PATH, 'w') as change_list_file:
         change_list_file.write(generated_header)
     with open(PRE_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as script_file:

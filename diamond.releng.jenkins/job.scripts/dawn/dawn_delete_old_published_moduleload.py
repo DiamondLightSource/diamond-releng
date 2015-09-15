@@ -17,6 +17,7 @@ import datetime
 import os
 import stat
 import sys
+import time
 
 PUBLISH_DIRECTORY_PARENTS = ('/dls_sw/apps/DawnDiamond', '/dls_sw/apps/DawnVanilla')
 
@@ -33,8 +34,8 @@ def generate_cleanup_script():
     config = ConfigParser.SafeConfigParser()
 
     with open(CLEANUP_SCRIPT_FILE_PATH, 'w') as script_file:
-        script_file.write('### File generated at ' + datetime.datetime.now().strftime('%a, %Y/%m/%d %H:%M') +
-                          ' in Jenkins ' + os.environ.get('BUILD_TAG','<build_tag>') + ' (' + os.environ.get('BUILD_URL','<build_url>') + ')\n\n')
+        script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+                          ' (Jenkins ' + os.environ.get('BUILD_TAG','$BUILD_TAG:missing') + ' ' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n\n')
         script_file.write('cleanup_script ()  {\n')
 
         for parent_dir in PUBLISH_DIRECTORY_PARENTS:

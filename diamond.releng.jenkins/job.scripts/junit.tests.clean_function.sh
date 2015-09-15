@@ -29,7 +29,7 @@ junit_tests_clean_function () {
     
         set -x  # Turn on xtrace
 
-        echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S"` Attempting to clean previous JUnit test results ***\n  "
+        echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` Attempting to clean previous JUnit test results ***\n  "
 
         for dir in test-reports test-scratch; do
             echo "Found $(find ${materialize_workspace_path}_git -type d -name "${dir}" | wc -l) \"${dir}\" directories to delete"

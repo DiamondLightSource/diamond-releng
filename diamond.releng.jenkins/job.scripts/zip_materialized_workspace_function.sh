@@ -36,7 +36,7 @@ zip_materialized_workspace_function () {
     zip_materialized_workspace=$(echo ${zip_materialized_workspace:-false} | tr '[:upper:]' '[:lower:]')
     set -x  # Turn on xtrace
     if [[ "${zip_materialized_workspace}" == "true" ]]; then
-        echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S"` zipping materialized workspace ***\n"
+        echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` zipping materialized workspace ***\n"
         cd $(dirname ${materialize_workspace_path})
         zip -qr ${WORKSPACE}/materialized_workspace.zip ${materialize_workspace_name}
         zip -qr ${WORKSPACE}/materialized_workspace.zip ${materialize_workspace_name}_git -x "*/.git/*"
