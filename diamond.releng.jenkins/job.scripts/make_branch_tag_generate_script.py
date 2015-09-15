@@ -79,7 +79,7 @@ git branch -a'''
 
     # generate the bash script to branch the Git repositories
     print('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
-          ' (' + os.environ.get('BUILD_TAG','$BUILD_TAG:missing') + ' ' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n###')
+          ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n###')
     for name in (
     'repository_names_to_include_pattern',
     'repository_names_to_exclude_pattern',

@@ -44,7 +44,7 @@ EOF
 fi
 
 cat << EOF >> ${properties_filename}
-# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})
+# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_URL:-\$BUILD_URL:missing})
 materialize_component=${materialize_component}
 materialize_properties_extra='-Dskip_ALL_test_fragments=true'
 build_options_extra=--suppress-compile-warnings

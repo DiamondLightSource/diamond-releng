@@ -5,7 +5,7 @@ properties_filename=${WORKSPACE}/job-specific-environment-variables.properties
 
 if [[ "${download_public:false}" == "true" ]]; then
     cat << EOF >> ${properties_filename}
-# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_TAG:-\$BUILD_TAG:missing} ${BUILD_URL:-\$BUILD_URL:missing})
+# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_URL:-\$BUILD_URL:missing})
 pewma_py_use_public_version=true
 buckminster_headless_use_public_version=true
 materialize_location_option=--location=public
