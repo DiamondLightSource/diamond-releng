@@ -750,8 +750,6 @@ class PewmaManager(object):
             self.logger.info('%sDownloading "%s"' % (self.log_prefix, source))
             return
 
-        cquery_branches_path = os.path.abspath(os.path.expanduser(self.options.cquery_branches_file))
-
         # open the URL
         try:
             resp = urllib2.urlopen(source, timeout=30)
@@ -814,9 +812,10 @@ class PewmaManager(object):
             branchTagPath = advisorNode.get('branchTagPath', None)
             repos_branches[repository] = branchTagPath or 'master'  # if repo defined multiple times, use the last specified branch
 
+        cquery_branches_path = os.path.abspath(os.path.expanduser(self.options.cquery_branches_file))
         self.logger.info('Writing expected branches to "%s"' % (cquery_branches_path,))
         with open(cquery_branches_path, 'w') as expected_branches_file:
-            expected_branches_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+            expected_branches_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                           ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             for repo in sorted(repos_branches):
                 expected_branches_file.write('%s=%s\n' % (repo, repos_branches[repo]))
@@ -837,7 +836,7 @@ class PewmaManager(object):
 
         self.logger.info('Writing buckminster materialize properties to "%s"' % (self.materialize_properties_path,))
         with open(self.materialize_properties_path, 'w') as properties_file:
-            properties_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+            properties_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                                   ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             properties_file.write('component=%s\n' % (component_to_use,))
             if self.options.download_location:
@@ -848,7 +847,7 @@ class PewmaManager(object):
         for keyval in self.options.system_property:
             properties_text += '-D%s ' % (keyval,)
         with open(self.script_file_path, 'w') as script_file:
-            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
@@ -1202,13 +1201,14 @@ class PewmaManager(object):
                     continue
 
             retcode = self._one_git_repo(git_command, git_dir, prefix)
+            print()  # empty line after each repo to make the output more human-readable 
             max_retcode = max(max_retcode, retcode)
 
         return max_retcode
 
 
     def _one_git_repo(self, command, directory, prefix):
-        self.logger.info('%sRunning: %s in %s' % (self.log_prefix, command, directory))
+        print('%s%s Running: %s in %s' % (self.log_prefix, time.strftime("%a, %Y/%m/%d %H:%M:%S %z"), command, directory.strip()))
 
         if not self.options.dry_run:
             sys.stdout.flush()
@@ -1237,7 +1237,8 @@ class PewmaManager(object):
                 if len(out)!=0:
                     print(out)
             else:
-                print(err, file=sys.stderr)
+                if err:
+                    print(err, file=sys.stderr)
                 print(out)
             sys.stderr.flush()
             sys.stdout.flush()
@@ -1272,7 +1273,7 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
-            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
@@ -1300,7 +1301,7 @@ class PewmaManager(object):
 
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
         with open(self.script_file_path, 'w') as script_file:
-            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
@@ -1371,7 +1372,7 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
-            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
@@ -1471,7 +1472,7 @@ class PewmaManager(object):
         if self.options.buckminster_root_prefix:
             properties_text += '-Dbuckminster.root.prefix=%s ' % (os.path.abspath(self.options.buckminster_root_prefix),)
         with open(self.script_file_path, 'w') as script_file:
-            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             if not self.options.skip_proxy_setup:
                 script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
