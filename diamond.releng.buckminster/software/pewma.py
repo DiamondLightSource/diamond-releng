@@ -343,7 +343,7 @@ class PewmaManager(object):
         group.add_option('-s', '--script-file', dest='script_file', type='string', metavar='<path>',
                                default='pewma-script.txt',
                                help='Script file, relative to workspace if not absolute (default: %default)')
-        group.add_option('-q', '--quiet', dest='log_level', action='store_const', const='WARNING', help='Shortcut for --log-level=WARNING')
+        group.add_option('-q', '--quiet', dest='quiet', action='store_true', default=False, help='Be less verbose')
         group.add_option('--log-level', dest='log_level', type='choice', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], metavar='<level>',
                                default='INFO', help='Logging level (default: %default)')
         group.add_option('--skip-proxy-setup', dest='skip_proxy_setup', action='store_true', default=False, help='Don\'t define any proxy settings')
@@ -1201,14 +1201,16 @@ class PewmaManager(object):
                     continue
 
             retcode = self._one_git_repo(git_command, git_dir, prefix)
-            print()  # empty line after each repo to make the output more human-readable 
+            if not self.options.quiet:
+                print()  # empty line after each repo to make the output more human-readable 
             max_retcode = max(max_retcode, retcode)
 
         return max_retcode
 
 
     def _one_git_repo(self, command, directory, prefix):
-        print('%s%s Running: %s in %s' % (self.log_prefix, time.strftime("%a, %Y/%m/%d %H:%M:%S %z"), command, directory.strip()))
+        if not self.options.quiet:
+            self.logger.info('%sRunning: %s in %s' % (self.log_prefix, command, directory))
 
         if not self.options.dry_run:
             sys.stdout.flush()
@@ -1948,7 +1950,8 @@ class PewmaManager(object):
         seconds = (run_time.days * 86400) + run_time.seconds
         hours, remainder = divmod(seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
-        self.logger.info('%sTotal run time was %02d:%02d:%02d' % (self.log_prefix, hours, minutes, seconds))
+        if not self.options.quiet:
+            self.logger.info('%sTotal run time was %02d:%02d:%02d' % (self.log_prefix, hours, minutes, seconds))
         return exit_code
 
 ###############################################################################
