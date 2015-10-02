@@ -19,7 +19,7 @@
     <cq:advisorNode namePattern="^.*\.tests?$" filter="(skip_ALL_test_fragments=true)" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Set in Jenkins create.product jobs to speed build</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(beamline\.i05\.dashboard|bimorph|dls\.client\.test)$" filter="(download.location=public)" componentType="osgi.bundle" skipComponent="true">
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(beamline\.i05\.dashboard|bimorph|dls\.client\.test|devices\.hidenrga(\..+)?)$" filter="(|(download.location=public)(download.location.common=public))" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Exclude certain components that are not mirrored externally to Diamond Light Source.
 Used for public downloads.</cq:documentation>
     </cq:advisorNode>
