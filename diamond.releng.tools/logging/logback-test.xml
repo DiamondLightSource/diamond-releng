@@ -11,6 +11,7 @@
     <!-- Some GDA test helper code issues WARN messages, which can be ignored when we actually testing -->
     <logger name="gda.rcp.views.JythonTerminalView" level="ERROR" />
     <logger name="gda.jython.InterfaceProvider" level="ERROR" />
+    <logger name='gda.data.metadata.GDAMetadataProvider' level='ERROR' />
 
     <root>
         <level value="INFO"/>
