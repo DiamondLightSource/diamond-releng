@@ -204,7 +204,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-legacy.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-legacy" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((b16|b24|i06|i07|i10|i15|i16|mt|all-mt)-(config|shared)|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^((b16|b24|i06|i07|i10|i15|i15-1|i16|mt|all-mt)-(config|shared)|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mt" value="true"/>
     </cq:advisorNode>
