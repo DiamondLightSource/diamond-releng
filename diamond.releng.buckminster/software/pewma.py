@@ -1104,7 +1104,7 @@ class PewmaManager(object):
                (urlparse.urlunsplit((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '', '', '')) in origin_url)):
                 pass  # remote is GitHub, or remote is Gerrit with anonymous checkout, so leave the origin unchanged
             else:
-                config_changes = +(
+                config_changes += (
                     # section         , option                    , name                   , required_value             , use_replace
                     ('remote "origin"', 'url'                     , 'remote.origin.url'    , gerrit_repo_url            , True),)
 
