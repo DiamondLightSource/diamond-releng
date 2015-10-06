@@ -137,19 +137,19 @@ BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermitten
     ('ERROR\s+\[\d+\]\s:\sjava\.lang\.ArrayIndexOutOfBoundsException: -1', 'Buckminster intermittent bug - try rerunning'),  # https://bugs.eclipse.org/bugs/show_bug.cgi?id=372470
     )
 
-GERRIT_REPOSITORIES = (
-    # repositories whose origin can be switched to Gerrit when gerrit-config is run
-    'gda-core.git',
-    'gda-dls-beamlines-xas.git',
-    'gda-epics.git',
-    'gda-pes.git',
-    'gda-xas-core.git',
-    'training-gerrit-1.git',
+GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
+    # repository                  Gerrit URL  
+    ('gda-core.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-core.git'),
+    ('gda-dls-beamlines-xas.git', 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-dls-beamlines-xas.git'),
+    ('gda-epics.git'            , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-epics.git'),
+    ('gda-pes.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-pes.git'),
+    ('gda-xas-core.git'         , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-xas-core.git'),
+    ('training-gerrit-1.git'    , 'ssh://gerrit.diamond.ac.uk:29418/training/training-gerrit-1.git'),
     )
-GERRIT_SCHEME = 'ssh'
-GERRIT_SCHEME_ANON = 'http'
-GERRIT_NETLOC = 'gerrit.diamond.ac.uk:29418'
+
+GERRIT_SCHEME_ANON = 'http'                          # anonymous clone from Gerrit
 GERRIT_NETLOC_ANON = 'gerrit.diamond.ac.uk:8080'
+GERRIT_MIRROR_HOST = 'github.com'                    # mirror of Gerrit-hosted repo, not managed by Gerrit
 
 class GitConfigParser(ConfigParser.SafeConfigParser):
     """ Subclass of the regular SafeConfigParser that handles the leading tab characters in .git/config files """
@@ -1040,8 +1040,8 @@ class PewmaManager(object):
         """
 
         NOT_REQUIRED, DONE, FAILED = list(range(3))  # possible status for various configure actions
-        assert NOT_REQUIRED < DONE 
-        assert DONE < FAILED                   # we record the highest status, which must therefore be FAILED
+        assert NOT_REQUIRED < DONE                   # )
+        assert DONE < FAILED                         # ) we record the highest status, which must therefore be FAILED
 
         if check_arguments and self.arguments:
             raise PewmaException('ERROR: gerrit-config command does not take any arguments')
@@ -1057,7 +1057,10 @@ class PewmaManager(object):
         prefix= "%%%is: " % max([len(os.path.basename(x)) for x in git_directories]) if self.options.repo_prefix else ""
 
         for git_dir in sorted(git_directories):
-            if os.path.basename(git_dir) not in GERRIT_REPOSITORIES:
+            for (gerrit_repo_name, gerrit_repo_url) in GERRIT_REPOSITORIES:
+                if os.path.basename(git_dir) == gerrit_repo_name:
+                    break
+            else:
                 self.logger.debug('%sSkipped: not in Gerrit: %s' % (self.log_prefix, git_dir))
                 continue
             config_file_loc = os.path.join(git_dir, '.git', 'config')
@@ -1090,19 +1093,20 @@ class PewmaManager(object):
                     break
 
             git_config_commands = []
-            new_url = urlparse.urlunsplit((GERRIT_SCHEME, GERRIT_NETLOC) + urlparse.urlsplit(origin_url)[2:])
-            if urlparse.urlunsplit((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '', '', '')) in origin_url:
-                config_changes = ()  # if already pointing at Gerrit, but with anonymous checkout, leave the origin unchanged
-            else:
-                config_changes = (
-                    ('remote "origin"', 'url'                 , 'remote.origin.url'    , new_url                    , True),)
-
-            config_changes += (
+            config_changes = (
                 # section         , option                    , name                   , required_value             , use_replace
                 ('gerrit'         , 'createchangeid'          , 'gerrit.createchangeid', 'true'                     , True),
                 ('remote "origin"', 'fetch'                   , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*', False),
-                ('remote "origin"', 'pushurl'                 , 'remote.origin.pushurl', new_url                    , False),
+                ('remote "origin"', 'pushurl'                 , 'remote.origin.pushurl', gerrit_repo_url            , False),
                 ('remote "origin"', 'push'                    , 'remote.origin.push'   , 'HEAD:refs/for/master'     , False))
+
+            if ((GERRIT_MIRROR_HOST in origin_url) or
+               (urlparse.urlunsplit((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '', '', '')) in origin_url)):
+                pass  # remote is GitHub, or remote is Gerrit with anonymous checkout, so leave the origin unchanged
+            else:
+                config_changes = +(
+                    # section         , option                    , name                   , required_value             , use_replace
+                    ('remote "origin"', 'url'                     , 'remote.origin.url'    , gerrit_repo_url            , True),)
 
             for (section, option, name, required_value, use_replace) in config_changes:
                 self.logger.debug('%sGetting: %s' % (self.log_prefix, (section, option, name, required_value, use_replace)))
