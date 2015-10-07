@@ -812,6 +812,8 @@ class PewmaManager(object):
         """
 
         (component_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_component_category_version_cquery()
+        if not component_to_use:
+            raise PewmaException('ERROR: materialize command requires the name of the component to materialize')
 
         # create the workspace if required
         self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
@@ -895,17 +897,22 @@ class PewmaManager(object):
             raise PewmaException('ERROR: %s command has too many arguments' % (self.action,))
 
         # translate an abbreviated component name to the real component name
-        component_to_use = self.arguments[0]
-        for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
-            if component_to_use == abbrev:
-                component_to_use = actual
-                category_implied = cat
-                break
+        if not self.arguments[0].endswith('.cquery'):
+            component_to_use = self.arguments[0]
+            for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
+                if component_to_use == abbrev:
+                    component_to_use = actual
+                    category_implied = cat
+                    break
+            else:
+                category_implied = None  # component name is specified verbatim
+            # interpret any (category / category version / cquery) arguments
+            (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments[1:])
         else:
-            category_implied = None  # component name is specified verbatim
-
-        # interpret any (category / category version / cquery) arguments
-        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments[1:])
+            component_to_use = None
+            category_implied = None
+            # interpret any (category / category version / cquery) arguments
+            (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments)
 
         if not category_to_use:
             category_to_use = category_implied
