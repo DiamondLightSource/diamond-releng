@@ -897,7 +897,7 @@ class PewmaManager(object):
             raise PewmaException('ERROR: %s command has too many arguments' % (self.action,))
 
         # translate an abbreviated component name to the real component name
-        if not self.arguments[0].endswith('.cquery'):
+        if (self.arguments[0] not in CATEGORIES_AVAILABLE) and (not self.arguments[0].endswith('.cquery')):
             component_to_use = self.arguments[0]
             for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
                 if component_to_use == abbrev:
