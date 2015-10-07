@@ -804,7 +804,7 @@ class PewmaManager(object):
                           ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
             expected_branches_file.write('# branches as specified by cquery=%s\n' % (cquery_to_use,))
             for repo in sorted(repos_branches):
-                expected_branches_file.write('%s=%s\n' % (repo, repos_branches[repo]))
+                expected_branches_file.write('%s.git=%s\n' % (repo, repos_branches[repo]))
 
 
     def action_materialize(self):
