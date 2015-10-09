@@ -176,6 +176,9 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^((all-)?dls-config|uk\.ac\.gda\.(beamline\.all-dls|diamond|dls)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-diamond.git repository branch</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-b23.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^(i09(-1|-2)?-config|uk\.ac\.gda\.(beamline\.i09(-1|-2)?(\..+)?|sisa\.client))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i09.git repository branch</cq:documentation>
     </cq:advisorNode>
@@ -190,6 +193,9 @@ If you materialize, and then materialize again, the second materialize can fail.
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(i19(.|-).+|uk\.ac\.gda\.beamline\.i19((.|-).+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i19.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^(i21-config|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i21.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-xas.git repository branch</cq:documentation>
