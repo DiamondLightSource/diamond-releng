@@ -30,7 +30,6 @@ COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, category, actual compone
 
 COMPONENT_ABBREVIATIONS.append(('logpanel', 'gda', ' uk.ac.gda.client.logpanel.site'))
 COMPONENT_ABBREVIATIONS.append(('gda-training', 'gda-training', 'gda-training-config'))
-COMPONENT_ABBREVIATIONS.append(('sda', 'sda', 'uk.ac.diamond.sda.site'))
 COMPONENT_ABBREVIATIONS.append(('dsx', 'ida', 'uk.ac.diamond.dsx.site'))
 COMPONENT_ABBREVIATIONS.append(('wychwood', 'ida', 'uk.ac.diamond.dsx.site'))
 COMPONENT_ABBREVIATIONS.append(('idabuilder', 'ida', 'uk.ac.diamond.ida.product.site'))
@@ -87,6 +86,9 @@ CATEGORIES_AVAILABLE = []  # dedupe COMPONENT_CATEGORIES while preserving order
 for c in COMPONENT_CATEGORIES:
     if c[0] not in CATEGORIES_AVAILABLE:
         CATEGORIES_AVAILABLE.append(c[0])
+
+for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
+    assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
 
 # template names must be of the form vx.y in order for us to sort them
 for c in COMPONENT_CATEGORIES:
@@ -905,7 +907,11 @@ class PewmaManager(object):
                     category_implied = cat
                     break
             else:
-                category_implied = None  # component name is specified verbatim
+                # component name is specified verbatim
+                if component_to_use.endswith('-config') or component_to_use.startswith('uk.ac.gda.beamline.'):
+                    category_implied = 'gda'  # must be a GDA project
+                else:
+                    category_implied = None
             # interpret any (category / category version / cquery) arguments
             (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments[1:])
         else:
