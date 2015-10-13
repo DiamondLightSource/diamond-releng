@@ -2229,7 +2229,7 @@
   <!-- ** beamlines *** -->
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- ** dawn- *** -->
-  <rm:locator pattern="^org\.dawnsci\.(commandserver|slice\.server)(\..+)?$" searchPathRef="dawn_commandserver"/>
+  <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.diamond\.org\.apache\.activemq)$" searchPathRef="dawn_commandserver"/>
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|jgoogleanalytics|macro|persistence|processing\.python|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
   <rm:locator pattern="^org\.eclipse\.richbeans\..+$" searchPathRef="dawn_eclipse"/>

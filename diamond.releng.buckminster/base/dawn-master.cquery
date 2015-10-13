@@ -38,7 +38,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^org\.openscience\.cdk\..+" branchTagPath="sda-master">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">bioclipse repositories branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawnsci\.(commandserver|slice\.server)(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.diamond\.org\.apache\.activemq)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-commandserver.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|jgoogleanalytics|macro|persistence|processing\.python|python.rpc)(\..+)?)$" useTargetPlatform="false">
