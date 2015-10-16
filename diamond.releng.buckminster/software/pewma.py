@@ -1134,9 +1134,12 @@ class PewmaManager(object):
                 action_type = 'switched_remote_to_gerrit' if 'remote.origin.url' in command else 'configured_for_eclipse'
                 status = DONE  # for dry run, pretend the operation succeeded
                 if not self.options.dry_run:
-                    retcode = subprocess.call(shlex.split(str(command)), shell=False)
+                    if not self.isWindows:
+                        retcode = subprocess.call(shlex.split(str(command)), shell=False)
+                    else:
+                        retcode = subprocess.call(command, shell=True)
                     if retcode:
-                        self.logger.error('%sFAILED: rc=%s' % (self.log_prefix, retcode))
+                        self.logger.error('%sFAILED: rc=%s attempting "%s' % (self.log_prefix, retcode, command))
                         status = FAILED
                 repo_status[action_type] = max(repo_status[action_type], status)  # FAILED is the highest status, sicne we want to know if _any_ failed
 
