@@ -1527,16 +1527,16 @@ class PewmaManager(object):
 
         if executable_name in self.executable_locations:
             return self.executable_locations[executable_name]
-        if not self.isLinux:
-            return None  # "which" command only available on Linux
         loc = None
-        try:
-            whichrun = subprocess.Popen(('which', '-a', executable_name), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            (stdout, stderr) = whichrun.communicate(None)
-            if not whichrun.returncode:
-                loc = stdout.strip()
-        except:
-            pass
+        if self.isLinux:
+            # "which" command only available on Linux
+            try:
+                whichrun = subprocess.Popen(('which', '-a', executable_name), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                (stdout, stderr) = whichrun.communicate(None)
+                if not whichrun.returncode:
+                    loc = stdout.strip()
+            except:
+                pass
         if loc:
             self.logger.info('%s%s install that will be used: %s' % (self.log_prefix, executable_name, loc))
         else:
@@ -1597,18 +1597,23 @@ class PewmaManager(object):
         vmargs_to_add = []
         # For Buckminster 4.5, need to specify UseSplitVerifier: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=471115
         # Always specify UseSplitVerifier unless we are sure that this in not Buckminster 4.5
-        if not any(old_version in (self.executable_locations['buckminster'] or ()) for old_version in ('/dls_sw/apps/buckminster/64/4.4-', '/dls_sw/apps/buckminster/64/4.3-')):
-            if self.java_version_current and self.java_version_current.startswith('1.7'):
-                vmargs_to_add.append('-XX:-UseSplitVerifier')  # UseSplitVerifier exists in Java 7, but was removed in Java 8
-            else:
-                vmargs_to_add.append('-noverify')
+        possibly_bucky_4point5_plus = True
+        if self.executable_locations['buckminster']:
+            for old_version in ('/dls_sw/apps/buckminster/64/4.4-', '/dls_sw/apps/buckminster/64/4.3-'):
+                if old_version in self.executable_locations['buckminster']:
+                    possibly_bucky_4point5_plus = False
+                    break
+        if possibly_bucky_4point5_plus and self.java_version_current and self.java_version_current.startswith('1.7'):
+            vmargs_to_add.append('-XX:-UseSplitVerifier')  # UseSplitVerifier exists in Java 7, but was removed in Java 8
+        else:
+            vmargs_to_add.append('-noverify')
         # if debugging memory allocation, add this parameter: '-XX:+PrintFlagsFinal'
         if not self.isWindows:  # these extra options need to be removed on my Windows XP 32-bit / Java 1.7.0_25 machine
             vmargs_to_add.extend(('-Xms768m', '-Xmx1536m', '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=1000'))
         if self.java_proxy_system_properties:
             vmargs_to_add.extend(self.java_proxy_system_properties)
         for keyval in self.options.jvmargs:
-            vmargs_to_add.extend(('-D%s ' % (keyval,),))
+            vmargs_to_add.extend(('"-D%s" ' % (keyval,),))
         if vmargs_to_add:
             buckminster_command.append('-vmargs')
             buckminster_command.extend(vmargs_to_add)
@@ -1886,18 +1891,18 @@ class PewmaManager(object):
                 proxy_value = 'wwwcache.rl.ac.uk:8080'
                 no_proxy_value = 'dasc-git.diamond.ac.uk,dawn.diamond.ac.uk,gerrit.diamond.ac.uk,jenkins.diamond.ac.uk,svn.diamond.ac.uk,172.16.0.0/12,localhost,127.*,[::1]'
                 self.java_proxy_system_properties = (
-                    '-Dhttp.proxyHost=wwwcache.rl.ac.uk', '-Dhttp.proxyPort=8080',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
-                    '-Dhttps.proxyHost=wwwcache.rl.ac.uk', '-Dhttps.proxyPort=8080',
+                    '"-Dhttp.proxyHost=wwwcache.rl.ac.uk"', '"-Dhttp.proxyPort=8080"',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
+                    '"-Dhttps.proxyHost=wwwcache.rl.ac.uk"', '"-Dhttps.proxyPort=8080"',
                     # please see Jira DASCTEST-317 for a discussion of proxy bypass specification
-                    '-Dhttp.nonProxyHosts="dasc-git.diamond.ac.uk\|dawn.diamond.ac.uk\|gerrit.diamond.ac.uk\|jenkins.diamond.ac.uk\|svn.diamond.ac.uk\|172.16.0.0/12\|localhost\|127.*\|[::1]"',  # applies to https as well
+                    '"-Dhttp.nonProxyHosts=dasc-git.diamond.ac.uk\|dawn.diamond.ac.uk\|gerrit.diamond.ac.uk\|jenkins.diamond.ac.uk\|svn.diamond.ac.uk\|172.16.0.0/12\|localhost\|127.*\|[::1]"',  # applies to https as well
                     )
             elif fqdn.endswith('.esrf.fr'):
                 proxy_value = 'proxy.esrf.fr:3128'
                 no_proxy_value = '127.0.0.1,localhost'
                 self.java_proxy_system_properties = (
-                    '-Dhttp.proxyHost=proxy.esrf.fr', '-Dhttp.proxyPort=3128',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
-                    '-Dhttps.proxyHost=proxy.esrf.fr', '-Dhttps.proxyPort=3128',
-                    '-Dhttp.nonProxyHosts="localhost\|127.*\|[::1]"',  # applies to https as well
+                    '"-Dhttp.proxyHost=proxy.esrf.fr"', '"-Dhttp.proxyPort=3128"',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
+                    '"-Dhttps.proxyHost=proxy.esrf.fr"', '"-Dhttps.proxyPort=3128"',
+                    '"-Dhttp.nonProxyHosts=localhost\|127.*\|[::1]"',  # applies to https as well
                     )
             else:
                 proxy_value = ''
