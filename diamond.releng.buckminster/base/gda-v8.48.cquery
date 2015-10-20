@@ -13,9 +13,10 @@
     <cq:property key="target.os" value="*"/>
     <cq:property key="target.ws" value="*"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^(?!.*-config$).*" filter="(only_..-config=true)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^(.*i23.*)$" filter="(skip_i23=true)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^uk.ac.gda.px.test$" filter="(materialize_skip_list=*px.test*)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(?!.*-config$).*" filter="(only_..-config=true)" skipComponent="true"/>
     <cq:advisorNode namePattern="^.*\.tests?$" filter="(skip_ALL_test_fragments=true)" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Set in Jenkins create.product jobs to speed build</cq:documentation>
     </cq:advisorNode>

@@ -55,7 +55,7 @@ materialize_function () {
       keyring_option=
     fi
 
-    # set materialize_properties_base and materialize_properties_extra
+    # set materialize_properties_base, materialize_properties_extra, materialize_skip_list
     if [[ "${materialize_properties_base}" == "none" || -z "${materialize_properties_base+arbitrary}" ]]; then
         export materialize_properties_base=
     else
@@ -65,6 +65,11 @@ materialize_function () {
         export materialize_properties_extra=
     else
         export materialize_properties_extra
+    fi
+    if [[ "${materialize_skip_list}" == "none" || -z "${materialize_skip_list+arbitrary}" ]]; then
+        export materialize_skip_list_property=
+    else
+        export materialize_skip_list_property="-Dmaterialize_skip_list=${materialize_skip_list}"
     fi
 
     ###
@@ -184,9 +189,9 @@ materialize_function () {
             workspace_delete_option=--recreate
         fi
         if [[ -z "${materialize_cquery}" ]]; then
-            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
+            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
         else
-            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
+            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
         fi
     fi
 
