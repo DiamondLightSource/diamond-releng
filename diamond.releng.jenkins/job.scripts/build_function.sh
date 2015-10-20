@@ -39,7 +39,7 @@ build_function () {
         return 100
     fi
 
-    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` workspace_build_type=${workspace_build_type} ***\n"
+    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` workspace_build_type=${workspace_build_type} ***\n"
 
     set -x  # Turn on xtrace
 

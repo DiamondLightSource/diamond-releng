@@ -78,7 +78,7 @@ git branch -a'''
     github_authenticated_prefix = 'git@github.com:'
 
     # generate the bash script to branch the Git repositories
-    print('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+    print('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
           ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n###')
     for name in (
     'repository_names_to_include_pattern',

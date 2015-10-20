@@ -260,7 +260,7 @@ def write_script_file():
 if __name__ == '__main__':
 
     # header line for files that we write
-    generated_header = ('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S UTC%z") +
+    generated_header = ('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                         ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
     with open(CHANGE_LIST_FILE_PATH, 'w') as change_list_file:
         change_list_file.write(generated_header)

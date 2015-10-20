@@ -26,7 +26,7 @@ pre_materialize_function_stage1_checkout_standard_branches_function () {
 
         set -x  # Turn on xtrace
 
-        echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` Switching all repos back to original branch if required ***\n  "
+        echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S %z"` Switching all repos back to original branch if required ***\n  "
 
         for repo in $(find ${materialize_workspace_path}_git -mindepth 1 -maxdepth 1 -type d -name "*.git" | sort); do
             if [[ ! -d "${repo}/.git" ]]; then

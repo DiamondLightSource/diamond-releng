@@ -5,7 +5,7 @@ set +x  # Turn off xtrace
 
 properties_filename=${WORKSPACE}/parsed-jobname-and-parameters.properties
 rm -fv ${properties_filename}
-echo "# Written `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` (${BUILD_URL:-\$BUILD_URL:missing})" >> ${properties_filename}
+echo "# Written `date +"%a %d/%b/%Y %H:%M:%S %z"` (${BUILD_URL:-\$BUILD_URL:missing})" >> ${properties_filename}
 
 # The jobname must start with "DawnDiamond." or "DawnVanilla.",
 # followed by the release, followed by "-" (something like "master-" or "1.8-")

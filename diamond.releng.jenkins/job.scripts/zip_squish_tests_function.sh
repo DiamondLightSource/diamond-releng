@@ -37,7 +37,7 @@ zip_squish_tests_function () {
     export zip_squish_tests=$(echo ${zip_squish_tests:-false} | tr '[:upper:]' '[:lower:]')
     set -x  # Turn on xtrace
     if [[ "${zip_squish_tests}" == "true" ]]; then
-        echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S UTC%z"` zipping squish tests ***\n"
+        echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` zipping squish tests ***\n"
         for squish_test_location in $( (set -o posix ; set) | grep 'squish_tests_locations_' | sort | cut -f 1 -d '='); do
             cd ${!squish_test_location}/..
             zip -qr ${WORKSPACE}/squish_tests.zip $(basename ${!squish_test_location})
