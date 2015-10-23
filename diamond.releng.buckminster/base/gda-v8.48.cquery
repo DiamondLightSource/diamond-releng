@@ -13,7 +13,9 @@
     <cq:property key="target.os" value="*"/>
     <cq:property key="target.ws" value="*"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(.*(i02|i03|i04|i23|i24|all-mx-config).*)$" filter="(materialize_skip_list=*allmx*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(.*i24.*)$" filter="(materialize_skip_list=*i24*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^uk.ac.gda.px.test$" filter="(materialize_skip_list=*px.test*)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
     <cq:advisorNode namePattern="^(?!.*-config$).*" filter="(only_..-config=true)" skipComponent="true"/>
