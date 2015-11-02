@@ -41,7 +41,6 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
     ('gda', 'master', 'gda-master.cquery', 'v2.10', ('master', 'trunk'), ('1.8.0',)),
-    ('gda', 'masterhplc', 'gda-masterhplc.cquery', 'v2.10', ('masterhplc', 'hplc'), ('1.8.0', '1.7.0',)),
     ('gda', 'v8.50', 'gda-v8.50.cquery', 'v2.10', ('v8.50', '8.50', '850'), ('1.8.0',)),
     ('gda', 'v8.48', 'gda-v8.48.cquery', 'v2.10', ('v8.48', '8.48', '848'), ('1.8.0', '1.7.0',)),
     ('gda', 'v8.46', 'gda-v8.46.cquery', 'v2.9', ('v8.46', '8.46', '846'), ('1.7.0',)),
