@@ -128,6 +128,7 @@ BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermitten
 
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
     # repository                  Gerrit URL  
+    ('daq-eclipse.git'             , 'ssh://gerrit.diamond.ac.uk:29418/dls/daq-eclipse.git'),
     ('gda-core.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-core.git'),
     ('gda-dls-beamlines-xas.git', 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-dls-beamlines-xas.git'),
     ('gda-epics.git'            , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-epics.git'),
