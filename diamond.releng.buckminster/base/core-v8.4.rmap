@@ -2384,6 +2384,8 @@
   <rm:locator pattern="^org\.apache\.commons\.(math|configuration)" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^uk\.ac\.diamond\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.eclipse\.gemini\.blueprint\..+" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.eclipse\.swtbot(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0"/>
+  <rm:locator pattern="^org\.eclipse\.remote(\..+)?$" searchPathRef="eclipse_ptp_2.0.0"/>
   <rm:locator pattern="^net\.sf\.cglib$" searchPathRef="tp_bioclipse"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javax\.(ejb|jms|xml\.rpc)$" searchPathRef="eclipse_orbit_R20150519210750"/>
@@ -4258,6 +4260,20 @@
   <!--
        Target Platform (Eclipse)
   -->
+  <rm:searchPath name="eclipse_swtbot_2.3.0">  <!-- SWTBot -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/technology/swtbot/releases/2.3.0/"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_ptp_2.0.0">  <!-- PTP -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/tools/ptp/builds/remote/2.0.0/"/>
+    </rm:provider>
+  </rm:searchPath>
   <rm:searchPath name="eclipse_orbit_R20150519210750">  <!-- Mars -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
