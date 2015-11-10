@@ -257,6 +257,10 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-sdcp-common.git repository branch</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Opt-ID.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.Opt-ID" value="true"/>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^net\.sf\.py4j(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">py4j.git repository branch</cq:documentation>
     </cq:advisorNode>

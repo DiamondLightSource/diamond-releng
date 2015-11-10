@@ -1600,6 +1600,16 @@
   <rm:propertyElement key="gphl.sdcp.common.git.url">
     <bc:constant value="${gphl.sdcp.common.${gphl.sdcp.common.git.location.translated}.url}/gphl-sdcp-common.git"/>
   </rm:propertyElement>
+  <!-- ** Opt-ID *** -->
+  <rm:propertyElement key="opt.id.github.organization">
+    <bc:constant value="DiamondLightSource"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="opt.id.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="opt.id.git.url">
+    <bc:constant value="${github.${opt.id.github.authentication}.url}${opt.id.github.organization}/Opt-ID.git"/>
+  </rm:propertyElement>
   <!-- ** py4j *** -->
   <rm:propertyElement key="py4j.github.organization">
     <bc:constant value="DawnScience"/>
@@ -2282,6 +2292,8 @@
   <rm:locator pattern="^com\.globalphasing\.sdcp\.abstract_beamline$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
   <rm:locator pattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" searchPathRef="gphl_sdcp_common"/>
+  <!-- ** Opt-ID *** -->
+  <rm:locator pattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" searchPathRef="opt_id"/>
   <!-- ** py4j *** -->
   <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j"/>
   <!-- ** scisoft- *** -->
@@ -3739,6 +3751,24 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(disallow.repo.gphl-sdcp-common=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gphl-sdcp-common.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!--
+       Opt-ID- repository
+  -->
+  <rm:searchPath name="opt_id">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.Opt-ID=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${opt.id.git.url}"/>
+      <rm:uri format="{0}/Opt-ID.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.Opt-ID=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from Opt-ID.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
