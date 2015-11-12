@@ -191,33 +191,14 @@
     <bc:constant value="${diamond.dascgit.url}/beamlines/b22-rsync.git"/>
   </rm:propertyElement>
   <!-- ** daq- *** -->
-  <rm:propertyElement key="daq.eclipse.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.eclipse.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="daq.eclipse.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.eclipse.dascgerrit.authentication">
-    <bc:constant value="${dascgerrit.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.eclipse.dascgerrit.url">
-    <bc:constant value="${diamond.dascgerrit.${daq.eclipse.dascgerrit.authentication}.url}/dls"/>
-  </rm:propertyElement>
   <rm:propertyElement key="daq.eclipse.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
   <rm:propertyElement key="daq.eclipse.github.authentication">
     <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="daq.eclipse.github.url">
-    <bc:constant value="${github.${daq.eclipse.github.authentication}.url}${daq.eclipse.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="daq.eclipse.git.url">
-    <bc:constant value="${daq.eclipse.${daq.eclipse.git.location.translated}.url}/daq-eclipse.git"/>
+    <bc:constant value="${github.${daq.eclipse.github.authentication}.url}${daq.eclipse.github.organization}/daq-eclipse.git"/>
   </rm:propertyElement>
   <!-- ** dawn- *** -->
   <rm:propertyElement key="dawn.commandserver.github.organization">
