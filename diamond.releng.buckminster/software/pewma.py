@@ -498,7 +498,7 @@ class PewmaManager(object):
                 print(text)
             if self.build_description_path:
                 with open(build_description_path, "a") as build_description:
-                    build_description.write('Failure downloading template workspace (probable network issue)')
+                    build_description.write('build_description=Failure downloading template workspace (probable network issue)\n')
             raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (small enough to do in one chunk)
@@ -512,7 +512,7 @@ class PewmaManager(object):
                 print(text)
             if self.build_description_path:
                 with open(build_description_path, "a") as build_description:
-                    build_description.write('Failure downloading template workspace (probable network issue)')
+                    build_description.write('build_description=Failure downloading template workspace (probable network issue)\n')
             raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
@@ -761,7 +761,7 @@ class PewmaManager(object):
                 print(text)
             if self.build_description_path:
                 with open(build_description_path, "a") as build_description:
-                    build_description.write('Failure downloading CQuery (probable network issue)')
+                    build_description.write('build_description=Failure downloading CQuery (probable network issue)\n')
             raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (it's small enough to do in one chunk)
@@ -775,7 +775,7 @@ class PewmaManager(object):
                 print(text)
             if self.build_description_path:
                 with open(build_description_path, "a") as build_description:
-                    build_description.write('Failure downloading CQuery (probable network issue)')
+                    build_description.write('build_description=Failure downloading CQuery (probable network issue)\n')
             raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
@@ -902,7 +902,7 @@ class PewmaManager(object):
                     print('set-build-description: ' + text)
                 if self.build_description_path:
                     with open(build_description_path, "a") as build_description:
-                        build_description.write(text)
+                        build_description.write('build_description=' + text + '\n')
         self.add_cquery_to_history(cquery_to_use)
         self.add_config_to_strings(component_to_use)
 
@@ -1773,7 +1773,7 @@ class PewmaManager(object):
                 print(text)
             if self.build_description_path:
                 with open(build_description_path, "a") as build_description:
-                    build_description.write('Failure downloading Gerrit commit hook (probable network issue)')
+                    build_description.write('build_description=Failure downloading Gerrit commit hook (probable network issue)\n')
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (it's small enough to do in one chunk)
@@ -1787,7 +1787,7 @@ class PewmaManager(object):
                 print(text)
             if self.build_description_path:
                 with open(build_description_path, "a") as build_description:
-                    build_description.write('Failure downloading Gerrit commit hook (probable network issue)')
+                    build_description.write('build_description=Failure downloading Gerrit commit hook (probable network issue)\n')
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
