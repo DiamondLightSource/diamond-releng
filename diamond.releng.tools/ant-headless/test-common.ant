@@ -108,8 +108,8 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	</condition>
 	<path id="tp.swt.path">
 		<fileset dir="${workspace.loc}/tp/plugins">
-			<include name="org.eclipse.swt.${eclipse.window.os}.${eclipse.arch}_*.jar" />  <!-- the platform-independent jar -->
-			<include name="org.eclipse.swt_*.jar" />  <!-- the platform-dependent jar -->
+			<include name="org.eclipse.swt_*.jar" />                                       <!-- the platform-independent jar -->
+			<include name="org.eclipse.swt.${eclipse.window.os}.${eclipse.arch}_*.jar" />  <!-- the platform-dependent jar -->
 		</fileset>
 	</path>
 
