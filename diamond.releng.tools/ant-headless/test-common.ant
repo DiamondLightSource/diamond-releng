@@ -96,9 +96,36 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		</fileset>
 	</path>
 
+	<!-- SWT platform-specific path -->
+	<condition property="eclipse.window.os" value="gtk.linux">
+		<equals arg1="${eclipse.os}" arg2="linux" />
+	</condition>
+	<condition property="eclipse.window.os" value="win32.win32">
+		<equals arg1="${eclipse.os}" arg2="win32" />
+	</condition>
+	<condition property="eclipse.window.os" value="cocoa.macosx">
+		<equals arg1="${eclipse.os}" arg2="macosx" />
+	</condition>
+	<path id="tp.swt.path">
+		<fileset dir="${workspace.loc}/tp/plugins">
+			<include name="org.eclipse.swt.${eclipse.window.os}.${eclipse.arch}_*.jar" />  <!-- the platform-independent jar -->
+			<include name="org.eclipse.swt_*.jar" />  <!-- the platform-dependent jar -->
+		</fileset>
+	</path>
+
+	<!-- Target platform, with a few exclusions -->
+	<path id="tp.path">
+		<fileset dir="${workspace.loc}/tp/plugins">
+			<include name="*.jar" />
+			<exclude name="*.source_*" />
+			<exclude name="org.eclipse.swt.*" />  <!-- Use tp.swt.path if you need SWT -->
+			<exclude name="org.apache.batik*" />  <!-- org.apache.batik.pdf has it's own copy of org.apache.commons.io so exclude it -->
+		</fileset>
+	</path>
+
 	<!-- ======================================================================
-	       Testing
-	     ====================================================================== -->
+		   Testing
+		 ====================================================================== -->
 
 	<!-- set path for platform- and OS-dependent libraries -->
 	<target name="set-context" depends="_set-context-Linux, _set-context-Windows">
