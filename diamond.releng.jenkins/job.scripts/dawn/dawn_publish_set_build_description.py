@@ -24,13 +24,13 @@ try:
     if os.environ['publish_p2_site'] == 'true':
         build_description_line_2 += r', p2 site'
     if build_description_line_2:
-        print 'set-build-description: %s --> %s' % (build_description_line_1, build_description_line_2[2:])
+        print 'append-build-description: %s --> %s' % (build_description_line_1, build_description_line_2[2:])
     else:
-        print 'set-build-description: %s (not published anywhere)' % (build_description_line_1,)
+        print 'append-build-description: %s (not published anywhere)' % (build_description_line_1,)
     set_build_description_done = True
 
 except Exception as fault:
     print os.path.basename(__file__), 'got exception:', fault
 
 if not set_build_description_done:
-    print 'set-build-description: internal error: publish details not determined'
+    print 'append-build-description: internal error: publish details not determined'

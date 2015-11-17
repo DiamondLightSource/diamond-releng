@@ -7,37 +7,36 @@ if [[ -n "${GDA_release}" ]]; then
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
 
-if [[ "${gerrit_single_test}" == "true" ]]; then
-  script=gerrit.single_pre.post.materialize.functions.sh
-  echo "Sourcing ${script}"
-  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
-fi
-
-if [[ "${gerrit_manual_test}" == "true" ]]; then
-  mkdir -pv ${WORKSPACE}/artifacts_to_archive
-
-  script=gerrit_manual_get_changes.py
-  echo "Running ${script}"
-  set +e  # Turn off errexit
-  python ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
-  RETVAL=$?
-  set -e  # Turn on errexit
-  cat ${WORKSPACE}/artifacts_to_archive/gerrit_changes_tested.txt
-  if [[ "${RETVAL}" != "0" ]]; then
-      echo "Problems with specification of changes to test, so exiting"
-      exit 1
-  fi
-
-  script=artifacts_to_archive/gerrit.manual_pre.post.materialize.functions.sh
-  echo "Sourcing ${script}"
-  . ${WORKSPACE}/${script}
-fi
-
 if [[ "${JOB_NAME}" == *~*e4* ]]; then
   script=e4_pre.post.materialize.functions.sh
   echo "Sourcing ${script}"
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
+
+
+#------------------------------------#
+#------------------------------------#
+
+pre_materialize_function_stage1_dawnsci () {
+
+    dawnsci_config=${materialize_workspace_path}_git/dawnsci.git/.git/config
+    if [ -f "${dawnsci_config}" ]; then
+        if [[ "${materialize_dawnsci_from_DawnScience}" == "true" ]]; then
+            if grep -q "/DawnScience/dawnsci.git" ${dawnsci_config}; then
+                : nothing to do, the existing repo is from the correct location
+            else
+                rm -rf ${materialize_workspace_path}_git/dawnsci.git
+            fi
+        else
+            if grep -q "/eclipse/dawnsci.git" ${dawnsci_config}; then
+                : nothing to do, the existing repo is from the correct location
+            else
+                rm -rf ${materialize_workspace_path}_git/dawnsci.git
+            fi
+        fi
+    fi
+
+}
 
 #------------------------------------#
 #------------------------------------#

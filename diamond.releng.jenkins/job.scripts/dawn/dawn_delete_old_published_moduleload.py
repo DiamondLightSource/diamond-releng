@@ -104,7 +104,7 @@ def generate_cleanup_script():
                             script_file.write('  chmod -R u+w %s\n' % productdir_path)
                             script_file.write('  rm -rf       %s\n' % productdir_path)
                             products_deleted += 1
-        script_file.write('\n  echo "set-build-description: ')
+        script_file.write('\n  echo "append-build-description: ')
         if error_count:
             script_file.write('ERRORS: %s; ' % (error_count,))
         script_file.write('%s directories deleted, %s kept"\n' % (products_deleted, products_kept,))

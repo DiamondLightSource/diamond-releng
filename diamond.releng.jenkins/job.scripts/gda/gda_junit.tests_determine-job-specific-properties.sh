@@ -8,11 +8,11 @@ cat << EOF >> ${properties_filename}
 materialize_component=all-dls-config
 EOF
 
-if [[ "${gerrit_single_test}" == "true" || "${gerrit_manual_test}" == "true" ]]; then
+if [[ "${JOB_NAME:-noname}" == *gerrit* ]]; then
   cat << EOF >> ${properties_filename}
 build_options_extra=--suppress-compile-warnings
 EOF
 fi
 
-echo "[gda_create.product_determine-job-specific-properties.sh] wrote ${properties_filename} --->"
+echo "[gda_junit.tests_determine-job-specific-properties.sh] wrote ${properties_filename} --->"
 cat ${properties_filename}

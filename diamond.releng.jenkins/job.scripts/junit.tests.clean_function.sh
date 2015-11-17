@@ -31,11 +31,15 @@ junit_tests_clean_function () {
 
         echo -e "\n  *** `date +"%a %d/%b/%Y %H:%M:%S %z"` Attempting to clean previous JUnit test results ***\n  "
 
-        for dir in test-reports test-scratch; do
-            echo "Found $(find ${materialize_workspace_path}_git -type d -name "${dir}" | wc -l) \"${dir}\" directories to delete"
-            find ${materialize_workspace_path}_git -type d -name "${dir}"
-            find ${materialize_workspace_path}_git -depth -type d -name "${dir}" -exec rm -rf {} \;
-        done
+        # Process multiple repositories in parallel (xargs spawns separate processes; fail if any of them fails)
+        set +e  # Turn off errexit
+        find ${materialize_workspace_path}_git -type d -name "test-reports" -o -name "test-scratch" -print0 | sort --zero-terminated | xargs --null --no-run-if-empty -I % -L 1 --max-procs 20 -n 1 bash -c 'rm -rf "$@"' _
+        RETVAL=$?
+        set -e  # Restore errexit
+        if [[ "${RETVAL}" != "0" ]]; then
+            echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` delete of \"test-reports\" or \"test-scratch\" failed in some case(s); abandoning ***\n"
+            return ${RETVAL}
+        fi
 
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
         $([ "$olderrexit" == "1" ]) && set +e || true  # Turn errexit off if it was off at the top of this script

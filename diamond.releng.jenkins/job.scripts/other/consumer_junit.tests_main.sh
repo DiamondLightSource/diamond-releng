@@ -17,7 +17,6 @@ fi
 fi
 
 materialized_info_path=${WORKSPACE}/artifacts_to_archive
-mkdir -pv ${materialized_info_path}/
 
 materialize_function
 

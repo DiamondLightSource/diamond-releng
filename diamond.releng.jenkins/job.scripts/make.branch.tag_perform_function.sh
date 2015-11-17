@@ -36,7 +36,7 @@ make_branch_tag_action_perform_function () {
         echo "*** Script to perform tag or branch action generated, but will not be run"
         build_description_start="saved <a href=\"/job/${JOB_NAME}/${BUILD_NUMBER}/artifact/artifacts_to_archive/\">script</a> to"
     fi
-    echo "set-build-description: ${build_description_start} ${action_text} as at build <a href=\"/job/${job_name_specifying_branch_point}/${copyartifact_build_number}/\">${copyartifact_build_number}</a> of <a href=\"/job/${job_name_specifying_branch_point}/\">${job_name_specifying_branch_point}</a>"
+    echo "append-build-description: ${build_description_start} ${action_text} as at build <a href=\"/job/${job_name_specifying_branch_point}/${copyartifact_build_number}/\">${copyartifact_build_number}</a> of <a href=\"/job/${job_name_specifying_branch_point}/\">${job_name_specifying_branch_point}</a>"
 
 }
 
