@@ -288,13 +288,8 @@ class PewmaManager(object):
                          help='Override Buckminster default')
         group.add_option('--maxParallelResolutions', dest='maxParallelResolutions', type='int', metavar='<value>',
                          help='Override Buckminster default')
-        # below is the old way of reporting the error (to the log)
         group.add_option('--prepare-jenkins-build-description-on-materialize-error', dest='prepare_jenkins_build_description_on_materialize_error', action='store_true', default=False,
-                            help=optparse.SUPPRESS_HELP)
-        # below is the new way of reporting the error (to a file)
-        group.add_option('--build-description.file', dest='build_description_file', type='string', metavar='<path>',
-                            default='',
-                            help=optparse.SUPPRESS_HELP)
+                         help=optparse.SUPPRESS_HELP)
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Get-branches-expected options")
@@ -496,9 +491,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
-            if self.build_description_path:
-                with open(build_description_path, "a") as build_description:
-                    build_description.write('build_description=Failure downloading template workspace (probable network issue)\n')
             raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (small enough to do in one chunk)
@@ -510,9 +502,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
-            if self.build_description_path:
-                with open(build_description_path, "a") as build_description:
-                    build_description.write('build_description=Failure downloading template workspace (probable network issue)\n')
             raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
@@ -759,9 +748,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
-            if self.build_description_path:
-                with open(build_description_path, "a") as build_description:
-                    build_description.write('build_description=Failure downloading CQuery (probable network issue)\n')
             raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (it's small enough to do in one chunk)
@@ -773,9 +759,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
-            if self.build_description_path:
-                with open(build_description_path, "a") as build_description:
-                    build_description.write('build_description=Failure downloading CQuery (probable network issue)\n')
             raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
@@ -886,7 +869,7 @@ class PewmaManager(object):
                 self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
             for error_summary in set(buckminster_bugs):  # Use set, since multiple errors coukd have the same text, and only need logging once
                 self.logger.error(error_summary)
-            if self.options.prepare_jenkins_build_description_on_materialize_error or self.build_description_path:
+            if self.options.prepare_jenkins_build_description_on_materialize_error:
                 if jgit_errors_repos:
                     text = 'Failure cloning '
                     if len(jgit_errors_repos) == 1:
@@ -898,11 +881,7 @@ class PewmaManager(object):
                     text = 'Failure (probable network issue)'
                 else:
                     text = 'Failure (intermittent Buckminster bug)'
-                if self.options.prepare_jenkins_build_description_on_materialize_error:
-                    print('set-build-description: ' + text)
-                if self.build_description_path:
-                    with open(build_description_path, "a") as build_description:
-                        build_description.write('build_description=' + text + '\n')
+                print('set-build-description: ' + text)
         self.add_cquery_to_history(cquery_to_use)
         self.add_config_to_strings(component_to_use)
 
@@ -1771,9 +1750,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
-            if self.build_description_path:
-                with open(build_description_path, "a") as build_description:
-                    build_description.write('build_description=Failure downloading Gerrit commit hook (probable network issue)\n')
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
 
         # read the data (it's small enough to do in one chunk)
@@ -1785,9 +1761,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_materialize_error:
                 text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
-            if self.build_description_path:
-                with open(build_description_path, "a") as build_description:
-                    build_description.write('build_description=Failure downloading Gerrit commit hook (probable network issue)\n')
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
             try:
@@ -1977,12 +1950,6 @@ class PewmaManager(object):
             self.materialize_properties_path = os.path.expanduser(self.options.materialize_properties_file)
             if not os.path.isabs(self.materialize_properties_path):
                self.materialize_properties_path = os.path.abspath(os.path.join(self.workspace_loc, self.materialize_properties_path))
-        if self.options.build_description_file:
-            # it's best if the user specifies an absolute file path, rather than relying on the current directory
-            # note that this file does not normally go in the Eclipse Buckminster workspace
-            self.build_description_path = os.path.abspath(os.path.expanduser(self.options.build_description_file))
-        else:
-            self.build_description_path = None
 
         # invoke funtion to perform the requested action
         action_handler = self.valid_actions[self.action]
