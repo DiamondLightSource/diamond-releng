@@ -1582,6 +1582,29 @@ class PewmaManager(object):
         return self.java_version_current
 
 
+    def Xvfb_display_number_calculate(self):
+        """ Tests are sometimes run without a GUI (X-Server), e.g. when running in a Jenkins slave started from the command line.
+            However, certain tests require a GUI. The answer is to start a simulated X-server, using Xvfb (X virtual frame buffer) and attach it to a $DISPLAY.
+            If more than one test job is run in parallel, each job should get its own Xvfb simulated display.
+            This routine simply determines what the display number should be.
+        """
+
+        if "linux" in platform.system().lower():
+            if os.environ.get("EXECUTOR_NUMBER"):
+                jenkins_executor = os.environ.get("EXECUTOR_NUMBER")
+                try:
+                    return 9123 + int(jenkins_executor) + 1
+                except (ValueError, TypeError):
+                    return 9123
+            else:
+                try:
+                    return 9200 + int(("00%s" % os.getpid())[-2:])  # base on last 2 digits of PID
+                except (ValueError, TypeError):
+                    return 9223
+        else:
+            return None
+
+
     def run_buckminster_in_subprocess(self, buckminster_args, return_Buckminster_errors=False):
         """ Generates and runs the buckminster command
             If return_Buckminster_errors, then returns a list of repositories that had errors when attempting to clone (for materialize)
@@ -1705,6 +1728,11 @@ class PewmaManager(object):
                     ant_command.extend(("-DGDALargeTestFilesLocation=%s%s" % (loc, os.sep),))
             else:
                 raise PewmaException('ERROR: --GDALargeTestFilesLocation=%s does not exist. If any tests require this, they will fail.\n' % (loc,))
+
+        display_number = self.Xvfb_display_number_calculate()
+        if display_number:
+            ant_command.extend(("-DXvfb-display-number=%s" % display_number,))  # used by diamond.releng.tools/ant-headless/test-common.ant
+
         for keyval in self.options.system_property:
             ant_command.extend(("-D%s " % (keyval,),))
 
