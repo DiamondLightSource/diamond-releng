@@ -1581,6 +1581,16 @@
   <rm:propertyElement key="gphl.sdcp.common.git.url">
     <bc:constant value="${gphl.sdcp.common.${gphl.sdcp.common.git.location.translated}.url}/gphl-sdcp-common.git"/>
   </rm:propertyElement>
+  <!-- ** jeromq *** -->
+  <rm:propertyElement key="jeromq.github.organization">
+    <bc:constant value="DawnScience"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="jeromq.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="jeromq.git.url">
+    <bc:constant value="${github.${jeromq.github.authentication}.url}${jeromq.github.organization}/jeromq.git"/>
+  </rm:propertyElement>
   <!-- ** Opt-ID *** -->
   <rm:propertyElement key="opt.id.github.organization">
     <bc:constant value="DiamondLightSource"/>
@@ -2283,6 +2293,8 @@
   <rm:locator pattern="^com\.globalphasing\.sdcp\.abstract_beamline$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
   <rm:locator pattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" searchPathRef="gphl_sdcp_common"/>
+  <!-- ** jeromq *** -->
+  <rm:locator pattern="^org.zeromq$" searchPathRef="jeromq"/>
   <!-- ** org.eclipse.launchbar *** -->
   <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
   <!-- ** Opt-ID *** -->
@@ -3748,6 +3760,23 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(disallow.repo.gphl-sdcp-common=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gphl-sdcp-common.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!--
+       JEROMQ- repository
+  -->
+  <rm:searchPath name="jeromq">
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.jeromq=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${jeromq.git.url}"/>
+      <rm:uri format="{0}/jeromq.git">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(disallow.repo.jeromq=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from jeromq.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
