@@ -113,6 +113,22 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		</fileset>
 	</path>
 
+	<!-- Location of latest versions of hamcrest jars -->
+	<path id="hamcrest.tp.path">
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="org.hamcrest.core_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="org.hamcrest.library_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
+	</path>
+
 	<!-- Target platform, with a few exclusions -->
 	<path id="tp.path">
 		<fileset dir="${workspace.loc}/tp/plugins">
