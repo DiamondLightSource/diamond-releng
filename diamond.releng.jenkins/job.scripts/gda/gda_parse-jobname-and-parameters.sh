@@ -35,6 +35,11 @@ else
     download_public=false
 fi
 
+# if this is a gerrit-trigger job, work out the name of the downstream job (the junit.tests-gerrit job)
+if [[ "${JOB_NAME:-noname}" == *-gerrit-trigger* ]]; then
+    gerrit_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-gerrit-trigger/-junit.tests-gerrit/')
+fi
+
 groupbeamlinesuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*beamline-')
 if [[ "${groupbeamlinesuffixindex}" != "0" ]]; then
     groupbeamlinesuffix=${JOB_NAME:groupbeamlinesuffixindex}
@@ -65,6 +70,9 @@ if [[ -n "${beamline}" ]]; then
 fi
 if [[ -n "${squish_job_to_trigger}" ]]; then
     echo "GDA_squish_job_to_trigger=${squish_job_to_trigger}" >> ${properties_filename}
+fi
+if [[ -n "${gerrit_job_to_trigger}" ]]; then
+    echo "GDA_gerrit_job_to_trigger=${gerrit_job_to_trigger}" >> ${properties_filename}
 fi
 if [[ -n "${upstream_product_job}" ]]; then
     echo "GDA_upstream_product_job=${upstream_product_job}" >> ${properties_filename}
