@@ -2076,28 +2076,6 @@
     <bc:constant value="${target_platform.download.url.selected}/tp_noneclipse/${target_platform.diamond.noneclipse.release}"/>
   </rm:propertyElement>
   <!--
-       Target Platform (Bioclipse) URLs
-  -->
-  <rm:propertyElement key="target_platform.bioclipse.p2.location">
-    <bc:replace>
-      <bc:constant value="${download.location.common}"/>
-      <bc:match pattern="^ *diamond *$" replacement="diamond"/>
-      <bc:match pattern="^(?! *diamond *$).*$" replacement="opengda"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.bioclipse.p2.url.diamond">
-    <bc:constant value="${diamond.p2.url}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.bioclipse.p2.url.opengda">
-    <bc:constant value="http://www.opengda.org"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.bioclipse.p2.url.selected">
-    <bc:constant value="${target_platform.bioclipse.p2.url.${target_platform.bioclipse.p2.location}}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.bioclipse.p2.url">
-    <bc:constant value="${target_platform.bioclipse.p2.url.selected}/target/bioclipse"/>
-  </rm:propertyElement>
-  <!--
        Target Platform (PyDev) URLs
   -->
   <rm:propertyElement key="pydev.provider">  <!-- pydev.provider can be "pydev" (standard PyDev release), "dls" (DLS tailored release), or "private" (your own) -->
@@ -2325,16 +2303,6 @@
   <!-- ** wychwood *** -->
   <rm:locator pattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" searchPathRef="wychwood"/>
   <!--
-       Bioclipse components
-  -->
-  <rm:locator pattern="^net\.bioclipse\.(core|platform).*_(feature|site)$" searchPathRef="bioclipse_core_features"/>
-  <rm:locator pattern="^net\.bioclipse\.(cdk|chem(o?)informatics).*_(feature|site)$" searchPathRef="bioclipse_cheminformatics_features"/>
-  <rm:locator pattern="^net\.bioclipse\.(cdk|chem(o?)informatics|jmol)(\..+)?" searchPathRef="bioclipse_cheminformatics_plugins"/>
-  <rm:locator pattern="^net\.bioclipse\.org\.cmlxom$" searchPathRef="tp_bioclipse"/>
-  <rm:locator pattern="^net\.bioclipse\..+" searchPathRef="bioclipse_core_plugins"/>
-  <rm:locator pattern="^org\.openscience\.cdk\.swt\..+" searchPathRef="bioclipse_cheminformatics_plugins"/>
-  <rm:locator pattern="^org\.openscience\.cdk\..+" searchPathRef="bioclipse_core_externals"/>
-  <!--
        GDA components for specific beamlines
   -->
   <!-- ** Example ** -->
@@ -2380,12 +2348,10 @@
   <rm:locator pattern="^com\.fasterxml\.jackson\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="DAWB_p2" failOnError="false"/>
-  <rm:locator pattern="^com\.springsource\..+" searchPathRef="tp_bioclipse" failOnError="false"/>
   <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.objenesis" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.springframework\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
-  <rm:locator pattern="^org\.springframework\..+" searchPathRef="tp_bioclipse" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.commons\.(math|configuration)" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^uk\.ac\.diamond\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.eclipse\.gemini\.blueprint\..+" searchPathRef="GDA_tp_bundles"/>
@@ -2393,7 +2359,6 @@
   <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.log4j(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.remote(\..+)?$" searchPathRef="eclipse_ptp_2.0.0"/>
-  <rm:locator pattern="^net\.sf\.cglib$" searchPathRef="tp_bioclipse"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javax\.(ejb|jms|xml\.rpc)$" searchPathRef="eclipse_orbit_R20150519210750"/>
   <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_R20150519210750"/>
@@ -2522,62 +2487,6 @@
   <!--######################################################################-->
   <!--# Git Search Paths (keep in sorted order of repository name)         #-->
   <!--######################################################################-->
-  <!--
-       Bioclipse repositories
-  -->
-  <rm:searchPath name="bioclipse_core_externals">
-    <rm:provider componentTypes="osgi.bundle" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${bioclipse.core.git.url}"/>
-      <rm:uri format="{0}/bioclipse.core.git,externals/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="bioclipse_core_features">
-    <rm:provider componentTypes="eclipse.feature" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${bioclipse.core.git.url}"/>
-      <rm:uri format="{0}/bioclipse.core.git,features/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="bioclipse_core_plugins">
-    <rm:provider componentTypes="osgi.bundle" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${bioclipse.core.git.url}"/>
-      <rm:uri format="{0}/bioclipse.core.git,plugins/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="bioclipse_cheminformatics_features">
-    <rm:provider componentTypes="eclipse.feature" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${bioclipse.cheminformatics.git.url}"/>
-      <rm:uri format="{0}/bioclipse.cheminformatics.git,features/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="bioclipse_cheminformatics_plugins">
-    <rm:provider componentTypes="osgi.bundle" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${bioclipse.cheminformatics.git.url}"/>
-      <rm:uri format="{0}/bioclipse.cheminformatics.git,plugins/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
   <!--
        Beamline repositories
   -->
@@ -4255,13 +4164,6 @@
   <!--
        Target Platform (published from thirdparty/)
   -->
-  <rm:searchPath name="tp_bioclipse">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${target_platform.bioclipse.p2.url}"/>
-    </rm:provider>
-  </rm:searchPath>
   <rm:searchPath name="GDA_tp_bundles">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
