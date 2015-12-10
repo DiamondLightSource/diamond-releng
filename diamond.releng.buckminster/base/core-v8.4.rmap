@@ -2344,6 +2344,7 @@
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <rm:locator pattern="^org\.eclipse\.nebula\..+$" searchPathRef="eclipse_nebula"/>
   <!-- -->
+  <rm:locator pattern="^com\.github\.tschoonj\.xraylib$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^com\.isencia\.sherpa\.commons\.reduced$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^com\.fasterxml\.jackson\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
