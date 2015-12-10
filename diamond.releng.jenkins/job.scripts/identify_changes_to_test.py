@@ -59,6 +59,7 @@ PRE_MATERIALIZE_FUNCTION_FILE_PATH        = os.path.join(artifacts_to_archive_DI
 POST_MATERIALIZE_FUNCTION_FILE_PATH       = os.path.join(artifacts_to_archive_DIR_PATH, 'gerrit_post.materialize.function.sh')
 NOTIFY_GERRIT_AT_START_FUNCTION_FILE_PATH = os.path.join(artifacts_to_archive_DIR_PATH, 'notify_to_gerrit_at_start.sh')
 NOTIFY_GERRIT_AT_END_FUNCTION_FILE_PATH   = os.path.join(artifacts_to_archive_DIR_PATH, 'notify_to_gerrit_at_end.sh')
+CHANGE_OWNER_EMAIL_ADDRESSES_FILE_PATH    = os.path.join(artifacts_to_archive_DIR_PATH, 'change_owners_emails.txt')
 
 GERRIT_HOST = 'gerrit.diamond.ac.uk'
 GERRIT_HTTP_PORT = ':8080'
@@ -81,6 +82,7 @@ def setup_logging():
 class RequestedChangesProcessor():
 
     def __init__(self):
+        setup_logging()
         self.errors_found = False
         self.logger = logger
         self.gerrit_url_base = 'http://' + GERRIT_HOST + GERRIT_HTTP_PORT + '/'  # when using the REST API, this is the base URL to use
@@ -132,7 +134,7 @@ class RequestedChangesProcessor():
         last_nonempty_line = ''
         with open(token_filename, 'r') as token_file:
             for line in token_file:  # standard OS terminator is converted to \n
-                line = line.rstrip('\n') # remove trailing newline
+                line = line.rstrip('\n')  # remove trailing newline
                 if line:
                     last_nonempty_line = line
         if last_nonempty_line:
@@ -189,6 +191,8 @@ class RequestedChangesProcessor():
                                          (i, repo_parms))
                         self.errors_found = True
                         continue
+                if any(repo_parms.itervalues()) and not repo_parms['action']:  # at least one, but not all, specified
+                    repo_parms['action'] = 'checkout'  # if the action not specified, default to "checkout"
                 if all(repo_parms.itervalues()):  # all specified
                     if repo_parms['name'] not in self.cquery_branches:  # something has gone wrong somewhere
                         self.logger.critical('Internal error with repo naming: ' + repo_parms['name'] + ' not in ' + str(sorted(self.cquery_branches.keys())))
@@ -238,6 +242,14 @@ class RequestedChangesProcessor():
         except:
             return ''
 
+    def get_change_owner_email(self, ci):
+        ''' Return the email address associated with a change owner
+        '''
+        try:
+            return ci['owner']['email']
+        except:
+            return ''
+
     def get_changes_from_gerrit(self):
         ''' Queries Gerrit to get a list of ChangeInfo records for the changes to be tested
         '''
@@ -251,7 +263,7 @@ class RequestedChangesProcessor():
             build_param_value = os.environ.get(build_param_name, '').strip()
             if not build_param_value:
                 continue
-            url = 'changes/?q=topic:{%s}&o=CURRENT_REVISION' % (urllib.quote(build_param_value),)
+            url = 'changes/?q=topic:{%s}&o=CURRENT_REVISION&o=DETAILED_ACCOUNTS' % (urllib.quote(build_param_value),)
             changeinfos = self.gerrit_REST_api(url)
             if (not changeinfos) or (len(changeinfos) == 0):
                 self.logger.error('Item "%s" does not exist (or is not visible to Jenkins)' % (url.partition('?')[2].partition('&')[0],))
@@ -285,7 +297,7 @@ class RequestedChangesProcessor():
                 self.logger.error('Build parameter %s=%s invalid (not numeric)' % (build_param_name, build_param_value))
                 self.errors_found = True
                 continue
-            url = 'changes/?q=change:%s&o=CURRENT_REVISION' % (urllib.quote(build_param_value),)
+            url = 'changes/?q=change:%s&o=CURRENT_REVISION&o=DETAILED_ACCOUNTS' % (urllib.quote(build_param_value),)
             changeinfos = self.gerrit_REST_api(url)  # there will be just one changeinfo for a single change
             if (not changeinfos) or (len(changeinfos) == 0):
                 self.logger.error('Build parameter %s=%s, but item "%s" does not exist (or is not visible to Jenkins)' %
@@ -310,7 +322,7 @@ class RequestedChangesProcessor():
 
         if not self.changes_to_test:
             if self.errors_found:
-                self.logger.error('Errors were found in the list of Gerrit changes to test - abandoning')
+                self.logger.error('Errors were found in the specification of the Gerrit changes to test - abandoning')
             else:
                 self.logger.info('No changes from Gerrit were specified for testing')
 
@@ -333,8 +345,9 @@ class RequestedChangesProcessor():
                 duplicated_change_numbers.append(change_number)
         assert len(self.changes_to_test) == len(changes_to_test_deduped) + len(duplicated_change_numbers)
         if duplicated_change_numbers:
-            self.logger.error('The following change numbers were specified more than once: ' + 
+            self.logger.error('The following change numbers were specified more than once: ' +
                               str(sorted(duplicated_change_numbers, key=int)))
+            self.errors_found = True
             self.changes_to_test = changes_to_test_deduped
 
         # check that the changes to test are not already merged or abandoned
@@ -344,10 +357,9 @@ class RequestedChangesProcessor():
                 self.logger.error('Change "%s" in repository "%s" is not eligible for testing: status is "%s"' % (ci['_number'], os.path.basename(ci['project']), status))
                 self.errors_found = True
 
-        # if we have multiple changes specified in the same project (repository)
-        #    check that they are on a branch compatible with this test job
-        #    check that they are all on the same branch
-        #    check that an override branch was not specified (the branch is determined by the Gerrit change, so must not be specified as an override as well) 
+        # check that all changes are on a branch compatible with this test job
+        # if we have multiple changes specified in the same project (repository), check that they are all on the same branch
+        # check that an override branch was not specified (the branch is determined by the Gerrit change, so must not be specified as an override as well)
         per_project_branches = {}  # this is a dictionary of project:set(branchnames)
         per_project_changes = {}  # this is a dictionary of project:list[ChangeInfos]
         for ci in self.changes_to_test:
@@ -428,7 +440,7 @@ class RequestedChangesProcessor():
             related_change_patch_numbers = [(cr['_change_number'], cr['_revision_number']) for cr in unmerged_all_related_changes]
             if len(change_patch_numbers_to_test) > 1:
                 if not set(change_patch_numbers_to_test) <= set(related_change_patch_numbers):
-                    self.logger.error('Multiple changes in "' + os.path.basename(project) + '" were specified, but from unrelated commits ' + 
+                    self.logger.error('Multiple changes in "' + os.path.basename(project) + '" were specified, but from unrelated commits ' +
                                       '(all commits to be tested must be from a single chain)')
                     self.errors_found = True
                     break  # only need to report this error once per repository
@@ -450,7 +462,7 @@ class RequestedChangesProcessor():
                                                  related_changes_implicitly_tested,  # a list of relatedchange records
                                                  requested_changes_implicitly_tested])  # a list of relatedchange records
                         assert len(self.changes_to_fetch[-1][0]) == 1  # there should be exactly one changeinfo record
-                        self.changes_to_fetch[-1][0] = self.changes_to_fetch[-1][0][0]  # so no need to have a list of one element 
+                        self.changes_to_fetch[-1][0] = self.changes_to_fetch[-1][0][0]  # so no need to have a list of one element
                         self.logger.info('In "' + os.path.basename(project) +
                                          '", change to fetch is "' + str('%s/%s' % (self.changes_to_fetch[-1][0]['_number'], self.changes_to_fetch[-1][0]['revisions'].values()[0]['_number'])) +
                                          '" (newest commit from changes ' + str(sorted(change_numbers_to_test_for_repo, key=int)) + ')' +
@@ -472,7 +484,7 @@ class RequestedChangesProcessor():
                                  '" (newest commit from changes ' + str(sorted(change_numbers_to_test_for_repo, key=int)) + ')')
 
         if self.errors_found:  # we have finished all parameter validation
-            self.logger.error('Errors were found in the list of Gerrit changes to test - abandoning')
+            self.logger.error('Errors were found in the details of the Gerrit changes to test - abandoning')
             return 1
 
         # self.changes_to_fetch is a list of [ChangeInfo, [RelatedChangeAndCommitInfos], [RelatedChangeAndCommitInfos]]
@@ -499,13 +511,13 @@ pre_materialize_function_stage2_gerrit () {
         olderrexit=0
     else
         olderrexit=1
-    fi    
+    fi
     set -e  # Turn on errexit
 
 ''')
             if self.get_override_branch_for_repo(None):
                 # post_materialize_script_file only written if we have non-Gerrit repos in which we are switching branches
-                with open(POST_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as post_materialize_script_file: 
+                with open(POST_MATERIALIZE_FUNCTION_FILE_PATH, 'w') as post_materialize_script_file:
                     post_materialize_script_file.write(self.generated_header)
                     post_materialize_script_file.write('''\
 post_materialize_function_gerrit () {
@@ -515,7 +527,7 @@ post_materialize_function_gerrit () {
         olderrexit=0
     else
         olderrexit=1
-    fi    
+    fi
     set -e  # Turn on errexit
 
 ''')
@@ -652,7 +664,7 @@ post_materialize_function_gerrit () {
                     with open(POST_MATERIALIZE_FUNCTION_FILE_PATH, 'a') as post_materialize_script_file:
                         post_materialize_script_file.write('''\
     echo -e "\\n=========================================================================================================================================="
-    echo -e "*** `date +"%%a %%d/%%b/%%Y %%H:%%M:%%S"` post-materialize attempt: switching %(REPO)s to head %(ALTERNATE_HEAD)s ***\\n"
+    echo -e "*** `date +"%%a %%d/%%b/%%Y %%H:%%M:%%S"` post-materialize attempt: switching %(REPO)s to head %(ALTERNATE_HEAD)s (if not already done in pre-materialize) ***\\n"
     if [[ "${repo_switched_to_alternate_head_%(REPO_TRANSLATED)s}" != "true" ]]; then
         repo=${materialize_workspace_path}_git/%(REPO)s.git
         cd ${repo}
@@ -806,7 +818,6 @@ post_materialize_function_gerrit () {
             finished_script_file.write('}\n\n')
 
     def process_requested_changes(self):
-        setup_logging()
         self.logger.info(self.generated_header.rstrip())
         self.get_expected_branch_for_repo(None)  # initial setup
         self.get_override_branch_for_repo(None)  # initial setup
@@ -821,7 +832,7 @@ post_materialize_function_gerrit () {
         if return_code:
             return return_code  # error in changes requested
         if not (self.changes_to_test or self.get_override_branch_for_repo(None)):
-            return 0 # no changes requested
+            return 0  # no changes requested
         self.write_pre_post_materialize_functions()
         self.generate_gerrit_ssh_command()
         self.write_gerrit_at_start_function()
@@ -831,6 +842,5 @@ post_materialize_function_gerrit () {
 if __name__ == '__main__':
 
     return_code = RequestedChangesProcessor().process_requested_changes()
-    
     sys.exit(return_code)
 
