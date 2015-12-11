@@ -489,7 +489,7 @@ class PewmaManager(object):
         except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure downloading template workspace (probable network issue)'
+                text = 'append-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
             raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
 
@@ -500,7 +500,7 @@ class PewmaManager(object):
         except Exception as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure downloading template workspace (probable network issue)'
+                text = 'append-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
             raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
@@ -746,7 +746,7 @@ class PewmaManager(object):
         except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure downloading CQuery (probable network issue)'
+                text = 'append-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
             raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
 
@@ -757,7 +757,7 @@ class PewmaManager(object):
         except Exception as e:
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure downloading CQuery (probable network issue)'
+                text = 'append-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
             raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
@@ -881,7 +881,7 @@ class PewmaManager(object):
                     text = 'Failure (probable network issue)'
                 else:
                     text = 'Failure (intermittent Buckminster bug)'
-                print('set-build-description: ' + text)
+                print('append-build-description: ' + text)
         self.add_cquery_to_history(cquery_to_use)
         self.add_config_to_strings(component_to_use)
 
@@ -1776,7 +1776,7 @@ class PewmaManager(object):
         except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
             self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
+                text = 'append-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
 
@@ -1787,7 +1787,7 @@ class PewmaManager(object):
         except Exception as e:
             self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
             if self.options.prepare_jenkins_build_description_on_materialize_error:
-                text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
+                text = 'append-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
             raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
         finally:
