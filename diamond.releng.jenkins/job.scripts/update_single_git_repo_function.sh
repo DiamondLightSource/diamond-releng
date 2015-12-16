@@ -57,7 +57,7 @@ update_single_git_repo_function () {
         RETVAL=$?
     fi
     if [[ "${RETVAL}" == "0" ]]; then
-        git -C ${repo_path} fetch --prune
+        git -C ${repo_path} fetch --prune |& sed "s/^/[${repo_name}] /"
         RETVAL=$?
     fi
     if [[ "${RETVAL}" != "0" || "${ERRORS}" != "0" ]]; then
