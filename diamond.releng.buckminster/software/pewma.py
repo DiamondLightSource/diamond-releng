@@ -119,6 +119,7 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent netw
     ('org\.eclipse\.jgit\.api\.errors\.InvalidRemoteException: Invalid remote: origin', 'Network error'),  # text = no specifc repository identified
     ('org\.apache\.http\.conn\.HttpHostConnectException: Connection to .+ refused', 'Connection refused'),  # text = no specifc repository identified
     ('java.net.ConnectException: Connection timed out', 'Network error'),  # text = no specifc repository identified
+    ('java.net.SocketTimeoutException: Read timed out', 'Network error'),  # text = no specifc repository identified
     ('HttpComponents connection error response code (500|502|503)', 'Server error'),  # text = no specifc repository identified
     ('ERROR:? +No repository found at http://www\.opengda\.org/', 'Server error'),  # text = no specifc repository identified
     )
