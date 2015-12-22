@@ -3,6 +3,8 @@
 #------------------------------------#
 #------------------------------------#
 
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/write.cquery_branches_file.sh
+
 materialize_function () {
 
     # Save xtrace state (1=was not set, 0=was set)
@@ -124,11 +126,7 @@ materialize_function () {
     set -x  # Turn on xtrace
 
     # from the CQuery, extract the standard branch names for whatever we are about to materialize
-    if [[ -z "${materialize_cquery}" ]]; then
-        ${pewma_py} ${log_level_option} --cquery.branches.file=${WORKSPACE}/artifacts_to_archive/cquery-branches-file.txt get-branches-expected ${materialize_component} ${materialize_category} ${materialize_version}
-    else
-        ${pewma_py} ${log_level_option} --cquery.branches.file=${WORKSPACE}/artifacts_to_archive/cquery-branches-file.txt get-branches-expected ${materialize_component} ${materialize_cquery} 
-    fi
+    write_cquery_branches_file_function
 
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "recreate" ]]; then
         rm -rf ${materialize_workspace_path}
