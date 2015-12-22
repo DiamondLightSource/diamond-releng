@@ -33,7 +33,7 @@ junit_tests_clean_function () {
 
         # Process multiple repositories in parallel (xargs spawns separate processes; fail if any of them fails)
         set +e  # Turn off errexit
-        find ${materialize_workspace_path}_git -type d -name "test-reports" -o -name "test-scratch" -print0 | sort --zero-terminated | xargs --null --no-run-if-empty -I % -L 1 --max-procs 20 -n 1 bash -c 'rm -rf "$@"' _
+        find ${materialize_workspace_path}_git -type d \( -name "test-reports" -o -name "test-scratch" \) -print0 | sort --zero-terminated | xargs --null --no-run-if-empty -I % -L 1 --max-procs 20 -n 1 bash -c 'rm -rf "$@"' _
         RETVAL=$?
         set -e  # Restore errexit
         if [[ "${RETVAL}" != "0" ]]; then
