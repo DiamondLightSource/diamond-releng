@@ -289,7 +289,11 @@ class PewmaManager(object):
                          help='Override Buckminster default')
         group.add_option('--maxParallelResolutions', dest='maxParallelResolutions', type='int', metavar='<value>',
                          help='Override Buckminster default')
-        group.add_option('--prepare-jenkins-build-description-on-error', dest='prepare_jenkins_build_description_on_error', action='store_true', default=False,
+        group.add_option('--prepare-jenkins-build-description-on-materialize-error',  # old name for option; can eventually be deleted
+                         dest='prepare_jenkins_build_description_on_error', action='store_true', default=False,
+                         help=optparse.SUPPRESS_HELP)
+        group.add_option('--prepare-jenkins-build-description-on-error',
+                         dest='prepare_jenkins_build_description_on_error', action='store_true', default=False,
                          help=optparse.SUPPRESS_HELP)
         self.parser.add_option_group(group)
 
