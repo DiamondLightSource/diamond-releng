@@ -48,15 +48,16 @@ update_single_git_repo_function () {
     fi    
     set -o pipefail  # Turn on pipefail
 
-    # if a previous job left any git repository in an inconsistent state (e.g. due to network problems), delete the repository
-    # unfortunately git fsck can have an exit code of zero even if errors as found, so we need to check stderr as well as the exit code (next 2 lines require pipefail)
+    # If a previous job left any git repository in an inconsistent state (e.g. due to network problems), delete the repository
+    # Unfortunately git fsck can have an exit code of zero even if errors as found, so we need to check stderr as well as the exit code (next 2 lines require pipefail)
+    # Note: gda-xas-core.git always fails the fsck test (for reasons not properly understood); this has always been the case
     ERRORS=$(git -C ${repo_path} fsck --no-progress --full --strict 2>&1 | wc -l | cut -d ' ' -f 1)
     RETVAL=$?
     if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
         git -C ${repo_path} reset --quiet --hard HEAD && git -C ${repo_path} clean -fdxq
         RETVAL=$?
     fi
-    if [[ "${RETVAL}" == "0" ]]; then
+    if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
         git -C ${repo_path} fetch --prune |& sed "s/^/[${repo_name}] /"
         RETVAL=$?
     fi
