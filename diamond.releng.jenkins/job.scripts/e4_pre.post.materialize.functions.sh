@@ -5,7 +5,7 @@
 
 pre_materialize_function_stage1_e4 () {
 
-    repo_list="dawn-product.git dawn-third.git dawn-ui.git embl-cca.git scisoft-ui.git"
+    repo_list="dawn-product.git dawn-third.git dawn-ui.git embl-cca.git gda-core.git scisoft-ui.git wychwood.git"
     for repo in ${repo_list}; do
         rm -rf ${materialize_workspace_path}_git/${repo}
     done
@@ -17,7 +17,7 @@ pre_materialize_function_stage1_e4 () {
 
 post_materialize_function_e4 () {
 
-    repo_list="dawn-product.git dawn-third.git dawn-ui.git embl-cca.git scisoft-ui.git"
+    repo_list="dawn-product.git dawn-third.git dawn-ui.git embl-cca.git gda-core.git scisoft-ui.git wychwood.git"
 
     # check that we are on the expected branch
     for repo in ${repo_list}; do
