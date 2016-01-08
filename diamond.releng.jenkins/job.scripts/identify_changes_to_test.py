@@ -82,13 +82,20 @@ def setup_logging():
 class RequestedChangesProcessor():
 
     def __init__(self):
+        self.generated_header = ('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +  # header line for files that we write
+                                 ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
         setup_logging()
-        self.errors_found = False
         self.logger = logger
+        self.logger.info(self.generated_header.rstrip())
+
         self.gerrit_url_base = 'http://' + GERRIT_HOST + GERRIT_HTTP_PORT + '/'  # when using the REST API, this is the base URL to use
         self.gerrit_url_browser = self.gerrit_url_base  # when generating links, this is the base URL to use
         self.gerrit_ssh_command = 'ssh -p %s %s' % (self.get_gerrit_ssh_port(self.gerrit_url_base), GERRIT_HOST)
         self.use_digest_authentication = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
+        self.gerrit_verified_option = os.environ.get('gerrit_verified_option', 'don\'t post anything to Gerrit').strip().lower()
+        self.gerrit_verify_ancestors = os.environ.get('gerrit_verify_ancestors', 'false').strip().lower() == 'true'
+        self.errors_found = False
+
         if self.use_digest_authentication:
             self.logger.debug('Digest Authentication will be used to access the Gerrit REST API')
             # If the Gerrit REST API has been secured, then we need to use digest authentication.
@@ -99,14 +106,6 @@ class RequestedChangesProcessor():
             urllib2.install_opener(opener)
         else:
             self.logger.debug('No authentication will be used to access the Gerrit REST API')
-        # header line for files that we write
-        self.generated_header = ('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
-                        ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
-        self.get_expected_branch_for_repo(None)  # initial setup
-        self.get_override_branch_for_repo(None)  # initial setup
-
-        self.gerrit_verified_option = os.environ.get('gerrit_verified_option', 'don\'t post anything to Gerrit').strip().lower()
-        self.gerrit_verify_ancestors = os.environ.get('gerrit_verify_ancestors', 'false').strip().lower() == 'true'
 
     @staticmethod
     def get_gerrit_ssh_port(gerrit_url):
@@ -173,6 +172,9 @@ class RequestedChangesProcessor():
         """
 
         if not hasattr(self, 'override_branches'):
+            if repo is not None:
+                # first call must always be the initialize call
+                raise Exception('first call to get_override_branch_for_repo was for a specific repository (%s)' % repo)
             self.override_branches = {}
             # get any branch overrides specified (passed in environment variables - these are created by Jenkins from the build parameters)
             for i in range(1, MAX_HEAD_OVERRIDES+1):
@@ -818,7 +820,6 @@ post_materialize_function_gerrit () {
             finished_script_file.write('}\n\n')
 
     def process_requested_changes(self):
-        self.logger.info(self.generated_header.rstrip())
         self.get_expected_branch_for_repo(None)  # initial setup
         self.get_override_branch_for_repo(None)  # initial setup
         self.get_changes_from_gerrit()
