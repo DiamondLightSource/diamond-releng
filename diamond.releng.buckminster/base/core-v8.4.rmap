@@ -2052,7 +2052,7 @@
     <bc:constant value="${target_platform.download.url.${target_platform.download.location}}"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.bundles.release">
-    <bc:constant value="${target_platform.diamond.release}"/>
+    <bc:constant value="8.52plus"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.css.release">
     <bc:constant value="v3_201311"/>
