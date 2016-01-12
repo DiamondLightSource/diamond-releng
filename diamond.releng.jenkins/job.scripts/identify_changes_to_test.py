@@ -77,6 +77,7 @@ def setup_logging():
     logging_file_handler.setFormatter(formatter)
     logger.addHandler(logging_file_handler)
     logger.setLevel(logging.INFO)
+    # logger.setLevel(logging.DEBUG)
 
 
 class RequestedChangesProcessor():
@@ -217,7 +218,7 @@ class RequestedChangesProcessor():
         '''
 
         url = self.gerrit_url_base + relative_url
-        request = urllib2.Request(url, headers={'Accept': 'application/json'})  # header specifies compact json, which is more efficient
+        request = urllib2.Request(url, headers={'Accept': 'application/json', 'Accept-Charset': 'utf-8'})  # header specifies compact json, which is more efficient
         self.logger.debug('gerrit_REST_api retrieving: %s' % (url,))
         try:
             rest_json = urllib2.urlopen(request).read()
@@ -227,10 +228,11 @@ class RequestedChangesProcessor():
                 return None
             self.logger.critical('Invalid response from Gerrit server reading %s: %s' % (url, err))
             return None
-        if not rest_json.startswith(")]}'\n"):
+        gerrit_magic_prefix_line = ")]}'\n"
+        if not rest_json[:len(gerrit_magic_prefix_line)] == gerrit_magic_prefix_line:
             self.logger.critical('Invalid response from Gerrit server reading %s: magic prefix line not found' % (url,))
             return None
-        standard_json = json.loads(rest_json[5:])  # strip off the magic prefix line returned by Gerrit
+        standard_json = json.loads(rest_json[len(gerrit_magic_prefix_line):])  # strip off the magic prefix line returned by Gerrit
         # self.logger.debug(json.dumps(standard_json, indent=2))
         return standard_json
 
