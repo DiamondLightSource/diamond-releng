@@ -200,7 +200,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(i21-config|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i21.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-xas.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" useTargetPlatform="false">
@@ -242,7 +242,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^uk\.ac\.gda\.video(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-video.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?)$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="gda-8.40-i24">
+    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.daq\.microfocus.api|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="gda-8.40-i24">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-xas-core.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^com\.globalphasing\.sdcp\.abstract_beamline$" useTargetPlatform="false" branchTagPath="gda-master">

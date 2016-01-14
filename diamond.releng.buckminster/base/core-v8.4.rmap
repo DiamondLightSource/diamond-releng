@@ -2252,7 +2252,7 @@
   <rm:locator pattern="^(i13(i|j)-config|uk\.ac\.gda\.beamline\.i13(i|j)(\..+)?)$" searchPathRef="gda_dls_beamlines_i13x"/>
   <rm:locator pattern="^(i19(.|-).+|uk\.ac\.gda\.beamline\.i19((.|-).+)?)$" searchPathRef="gda_dls_beamlines_i19"/>
   <rm:locator pattern="^(i21-config|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" searchPathRef="gda_dls_beamlines_i21"/>
-  <rm:locator pattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" searchPathRef="gda_dls_beamlines_xas"/>
+  <rm:locator pattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" searchPathRef="gda_dls_beamlines_xas"/>
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
   <rm:locator pattern="^uk\.ac\.gda\.epics(\.(adviewer|client|test))?$" searchPathRef="gda_epics"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
@@ -2266,7 +2266,7 @@
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
   <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
-  <rm:locator pattern="^uk\.ac\.gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?)$" searchPathRef="gda_xas_core"/>
+  <rm:locator pattern="^uk\.ac\.(diamond\.daq\.microfocus.api|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" searchPathRef="gda_xas_core"/>
   <!-- ** gphl *** -->
   <rm:locator pattern="^com\.globalphasing\.sdcp\.abstract_beamline$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
