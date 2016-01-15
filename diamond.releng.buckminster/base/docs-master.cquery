@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-latest.rmap" shortDesc="CQuery for the master version of documentation">
+<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-e3-latest.rmap" shortDesc="CQuery for the master version of documentation">
     <cq:rootRequest name="${component}"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
     <cq:advisorNode namePattern="^diffcalc$" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
