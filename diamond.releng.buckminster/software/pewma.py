@@ -8,6 +8,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import ConfigParser
 import datetime
+import errno
 import fnmatch
 import logging
 import optparse
@@ -1140,13 +1141,22 @@ class PewmaManager(object):
                 action_type = 'switched_remote_to_gerrit' if 'remote.origin.url' in command else 'configured_for_eclipse'
                 status = DONE  # for dry run, pretend the operation succeeded
                 if not self.options.dry_run:
-                    if not self.isWindows:
-                        retcode = subprocess.call(shlex.split(str(command)), shell=False)
-                    else:
-                        retcode = subprocess.call(command, shell=True)
-                    if retcode:
-                        self.logger.error('%sFAILED: rc=%s attempting "%s' % (self.log_prefix, retcode, command))
+                    try:
+                        if not self.isWindows:
+                            retcode = subprocess.call(shlex.split(str(command)), shell=False)
+                        else:
+                            retcode = subprocess.call(command, shell=True)
+                    except (OSError,) as e:
+                        if e.errno == errno.ENOENT:
+                            possible_cause = ' (does the "git" command exist?)'
+                        else:
+                            possible_cause = ''
+                        self.logger.error('%sError "%s" %s' % (self.log_prefix, e, possible_cause))
                         status = FAILED
+                    else:
+                        if retcode:
+                            self.logger.error('%sError rc=%s attempting "%s"' % (self.log_prefix, retcode, command))
+                            status = FAILED
                 repo_status[action_type] = max(repo_status[action_type], status)  # FAILED is the highest status, sicne we want to know if _any_ failed
 
             #############################################################################
