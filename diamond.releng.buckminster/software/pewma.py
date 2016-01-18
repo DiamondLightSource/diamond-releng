@@ -41,11 +41,9 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
     ('gda', 'master', 'gda-master.cquery', 'v2.10', ('master', 'trunk'), ('1.8.0',)),
-    ('gda', 'v8.master-i24', 'gda-v8.master-i24.cquery', 'v2.10', ('v8.master-i24', '8.master-i24'), ('1.8.0',)),
     ('gda', 'v8.50', 'gda-v8.50.cquery', 'v2.10', ('v8.50', '8.50', '850'), ('1.8.0',)),
     ('gda', 'v8.48', 'gda-v8.48.cquery', 'v2.10', ('v8.48', '8.48', '848'), ('1.8.0', '1.7.0',)),
     ('gda', 'v8.46', 'gda-v8.46.cquery', 'v2.9', ('v8.46', '8.46', '846'), ('1.7.0',)),
-    ('gda', 'v8.44-i24', 'gda-v8.44-i24.cquery', 'v2.9', ('v8.44-i24', '8.44-i24', '844-i24'), ('1.7.0',)),
     ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844'), ('1.7.0',)),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842'), ('1.7.0',)),
     ('gda', 'v8.41-xas', 'gda-v8.41-xas.cquery', 'v2.6', ('v8.41-xas', '8.41-xas', '841xas'), ('1.7.0',)),
