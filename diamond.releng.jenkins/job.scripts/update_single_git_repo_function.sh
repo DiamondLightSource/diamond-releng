@@ -26,7 +26,7 @@ update_single_git_repo_function () {
         olderrexit=0
     else
         olderrexit=1
-    fi    
+    fi
     set -e  # Turn on errexit
 
     if [[ ! -d "${repo_path}/.git" ]]; then
@@ -45,12 +45,19 @@ update_single_git_repo_function () {
         oldpipefail=0
     else
         oldpipefail=1
-    fi    
+    fi
     set -o pipefail  # Turn on pipefail
 
     # If a previous job left any git repository in an inconsistent state (e.g. due to network problems), delete the repository
-    # Unfortunately git fsck can have an exit code of zero even if errors as found, so we need to check stderr as well as the exit code (next 2 lines require pipefail)
-    # Note: gda-xas-core.git always fails the fsck test (for reasons not properly understood); this has always been the case
+    # Prior to git 2.6.0, git fsck could have an exit code of zero even if errors were found, so check stderr as well as the exit code (next 2 lines require pipefail)
+    # As of git 2.6.0+, this was supposed to have been fixed, but retain the check of stderr anyhow
+
+    # As of git 2.6.0+, git fsck can be told to ignore certain errors. Our convention is that to use this, we put a file called .git.fsck.skiplist in the repo root directory
+    if [[ -f "${repo_path}/.git.fsck.skiplist" ]]; then
+        git -C ${repo_path} config fsck.skiplist ".git.fsck.skiplist"
+        git -C ${repo_path} config --list | grep fsck
+    fi
+
     ERRORS=$(git -C ${repo_path} fsck --no-progress --full --strict 2>&1 | wc -l | cut -d ' ' -f 1)
     RETVAL=$?
     if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
