@@ -41,7 +41,7 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
-    ('gda', 'master', 'gda-master.cquery', 'v2.10', ('master', 'trunk'), ('1.8.0',)),
+    ('gda', 'master', 'gda-master.cquery', 'v2.11', ('master', 'trunk'), ('1.8.0',)),
     ('gda', 'v8.50', 'gda-v8.50.cquery', 'v2.10', ('v8.50', '8.50', '850'), ('1.8.0',)),
     ('gda', 'v8.48', 'gda-v8.48.cquery', 'v2.10', ('v8.48', '8.48', '848'), ('1.8.0', '1.7.0',)),
     ('gda', 'v8.46', 'gda-v8.46.cquery', 'v2.9', ('v8.46', '8.46', '846'), ('1.7.0',)),
@@ -67,7 +67,7 @@ COMPONENT_CATEGORIES = (
     ('ida', 'v2.19', 'ida-v2.19.cquery', 'v2.3', ('v2.19', '2.19', '219'), None),
     ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218'), None),
     ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217'), None),
-    ('dawn', 'master', 'dawn-master.cquery', 'v2.10', ('master', 'trunk'), ('1.8.0', '1.7.0',)),
+    ('dawn', 'master', 'dawn-master.cquery', 'v2.11', ('master', 'trunk'), ('1.8.0', '1.7.0',)),
     ('dawn', '1.10', 'dawn-v1.10.cquery', 'v2.10', ('v1.10', '1.10'), ('1.8.0',)),
     ('dawn', '1.9', 'dawn-v1.9.cquery', 'v2.9', ('v1.9', '1.9'), ('1.7.0',)),
     ('dawn', '1.8', 'dawn-v1.8.cquery', 'v2.9', ('v1.8', '1.8'), ('1.7.0',)),
