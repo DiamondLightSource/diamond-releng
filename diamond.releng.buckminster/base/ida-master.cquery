@@ -206,7 +206,7 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-hrpd.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-hrpd" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.eclipse\.selene\.api|uk\.ac\.(diamond\.dataacq\.malcolm(\..+)?|gda\.((client\.)?mapping(\.api)?|scan\.nxsscan(\..+)?)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(mapping-config|uk\.ac\.(diamond\.daq\.(analysis|arpes|common|core|dawnsci|deprecated|devices|mapping|nexus|queues|scannable|scanning|scisoftpy|server|thirdparty)(\..+)?|diamond\.dataacq\.xcen(\..+)?|gda\.example\.mapping\.feature|gda\.scan\.nxsscan(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-incubation.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-incubation" value="true"/>
     </cq:advisorNode>
