@@ -58,8 +58,10 @@ update_single_git_repo_function () {
         git -C ${repo_path} config --list | grep fsck
     fi
 
+    set +e  # Continue if fsck gives a non-zero exit code 
     ERRORS=$(git -C ${repo_path} fsck --no-progress --full --strict 2>&1 | wc -l | cut -d ' ' -f 1)
     RETVAL=$?
+    set -e  # Turn errexit back on
     if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
         git -C ${repo_path} reset --quiet --hard HEAD && git -C ${repo_path} clean -fdxq
         RETVAL=$?
