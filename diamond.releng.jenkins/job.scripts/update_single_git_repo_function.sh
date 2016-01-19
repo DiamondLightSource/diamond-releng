@@ -55,7 +55,7 @@ update_single_git_repo_function () {
     # As of git 2.6.0+, git fsck can be told to ignore certain errors. Our convention is that to use this, we put a file called .git.fsck.skiplist in the repo root directory
     if [[ -f "${repo_path}/.git.fsck.skiplist" ]]; then
         git -C ${repo_path} config fsck.skiplist ".git.fsck.skiplist"
-        git -C ${repo_path} config --list | grep fsck
+        git -C ${repo_path} config --list | grep fsck | sed "s/^/[${repo_name}] /"
     fi
 
     set +e  # Continue if fsck gives a non-zero exit code 
