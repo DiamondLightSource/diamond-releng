@@ -10,7 +10,7 @@ echo "# Written `date +"%a %d/%b/%Y %H:%M:%S %z"` (${BUILD_URL:-\$BUILD_URL:miss
 # The jobname must start with "DawnDiamond." or "DawnVanilla.",
 # followed by the release, followed by "-" (something like "master-" or "1.8-")
 # followed by anything
-# optionally terminated by "~" and a variant name (something like "~java8")
+# optionally terminated by "~" and a variant name (something like "~e4")
 
 if [[ "${JOB_NAME:0:12}" == "DawnDiamond." || "${JOB_NAME:0:12}" == "DawnVanilla." ]]; then
     flavour=${JOB_NAME:4:7}

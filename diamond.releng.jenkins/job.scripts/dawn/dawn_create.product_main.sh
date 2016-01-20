@@ -26,7 +26,6 @@ done
 record_workspace_projects_function > ${materialized_info_path}/materialized_project_names.txt
 record_targetplatform_contents_function > ${materialized_info_path}/materialized_targetplatform_contents.txt
 
-
 if [[ "$(type -t pre_build_function)" == "function" ]]; then
     pre_build_function
 fi
@@ -39,4 +38,3 @@ create_p2_site_product_function
 
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/dawn/dawn_create.product_save-product-version-number.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/create.product_set-build-description.sh
-

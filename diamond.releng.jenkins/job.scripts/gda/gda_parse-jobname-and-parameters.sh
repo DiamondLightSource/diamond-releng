@@ -10,6 +10,7 @@ echo "# Written `date +"%a %d/%b/%Y %H:%M:%S %z"` (${BUILD_URL:-\$BUILD_URL:miss
 # The jobname must start with "GDA.", followed by the release (e.g. master, 8.42), followed by a dash (-)
 # IF the jobname contains ".beamline-GROUP-", it must be followed by <beamline name> (which may contain a -), optionally followed by -download.public
 # OTHERWISE group and beamline do not apply
+# optionally terminated by "~" and a variant name (something like "~e4")
 
 if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
     releasesuffixindex=$(expr index "${JOB_NAME}" '-')
