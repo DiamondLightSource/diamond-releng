@@ -2107,10 +2107,10 @@
        Target Platform (Eclipse) URLs
   -->
   <rm:propertyElement key="e4.trial">  <!-- defined here in case it is not defined in the CQuery -->
-    <bc:constant value="false"/>
+    <bc:constant value="true"/>
   </rm:propertyElement>
   <rm:propertyElement key="e4.trial.common">
-    <bc:constant value="${e4.trial}"/>
+    <bc:constant value="true"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.release">
     <bc:constant value="4.5"/>
