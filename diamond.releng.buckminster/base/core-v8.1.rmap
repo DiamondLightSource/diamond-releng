@@ -622,12 +622,15 @@
   <rm:propertyElement key="gda.bimorph.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.bimorph.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.bimorph.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.bimorph.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.bimorph.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.bimorph.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.bimorph.github.organization">
     <bc:constant value="openGDA"/>
@@ -674,12 +677,15 @@
   <rm:propertyElement key="gda.common.rcp.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.common.rcp.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.common.rcp.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.common.rcp.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.common.rcp.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.common.rcp.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.common.rcp.github.organization">
     <bc:constant value="openGDA"/>
@@ -755,12 +761,15 @@
   <rm:propertyElement key="gda.devices.cirrus.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.devices.cirrus.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.cirrus.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.devices.cirrus.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.devices.cirrus.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.devices.cirrus.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.devices.cirrus.github.organization">
     <bc:constant value="openGDA"/>
@@ -781,12 +790,15 @@
   <rm:propertyElement key="gda.devices.mythen.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.devices.mythen.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.mythen.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.devices.mythen.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.devices.mythen.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.devices.mythen.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.devices.mythen.github.organization">
     <bc:constant value="openGDA"/>
@@ -807,12 +819,15 @@
   <rm:propertyElement key="gda.devices.pco.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.devices.pco.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.pco.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.devices.pco.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.devices.pco.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.devices.pco.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.devices.pco.github.organization">
     <bc:constant value="openGDA"/>
@@ -833,12 +848,15 @@
   <rm:propertyElement key="gda.devices.peem.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.devices.peem.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.peem.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.devices.peem.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.devices.peem.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.devices.peem.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.devices.peem.github.organization">
     <bc:constant value="openGDA"/>
@@ -859,12 +877,15 @@
   <rm:propertyElement key="gda.devices.pixium.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.devices.pixium.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.pixium.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.devices.pixium.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.devices.pixium.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.devices.pixium.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.devices.pixium.github.organization">
     <bc:constant value="openGDA"/>
@@ -885,12 +906,15 @@
   <rm:propertyElement key="gda.devices.prosilica.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.devices.prosilica.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.prosilica.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.devices.prosilica.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.devices.prosilica.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.devices.prosilica.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.devices.prosilica.github.organization">
     <bc:constant value="openGDA"/>
@@ -911,12 +935,15 @@
   <rm:propertyElement key="gda.diamond.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.diamond.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.diamond.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.diamond.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.diamond.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.diamond.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.diamond.github.organization">
     <bc:constant value="openGDA"/>
@@ -1093,12 +1120,15 @@
   <rm:propertyElement key="gda.dls.excalibur.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.dls.excalibur.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.excalibur.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.dls.excalibur.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.dls.excalibur.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.dls.excalibur.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.dls.excalibur.github.organization">
     <bc:constant value="openGDA"/>
@@ -1148,12 +1178,15 @@
   <rm:propertyElement key="gda.hrpd.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.hrpd.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.hrpd.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.hrpd.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.hrpd.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.hrpd.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.hrpd.github.organization">
     <bc:constant value="openGDA"/>
@@ -1333,12 +1366,15 @@
   <rm:propertyElement key="gda.tango.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.tango.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.tango.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.tango.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.tango.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.tango.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.tango.github.organization">
     <bc:constant value="openGDA"/>
@@ -1385,12 +1421,15 @@
   <rm:propertyElement key="gda.video.git.location.translated">
     <bc:replace>
       <bc:propertyRef key="gda.video.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.video.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.video.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.video.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.video.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.video.github.organization">
     <bc:constant value="openGDA"/>

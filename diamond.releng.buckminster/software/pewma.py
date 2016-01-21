@@ -132,10 +132,23 @@ BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermitten
 
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
     # repository                  Gerrit URL  
+    ('gda-bimorph.git'          , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-core.git'),
+    ('gda-common-rcp.git'       , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-common-rcp.git'),
     ('gda-core.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-core.git'),
+    ('gda-devices-cirrus.git'   , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-cirrus.git'),
+    ('gda-devices-mythen.git'   , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-mythen.git'),
+    ('gda-devices-pco.git'      , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-pco.git'),
+    ('gda-devices-peem.git'     , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-peem.git'),
+    ('gda-devices-pixium.git'   , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-pixium.git'),
+    ('gda-devices-prosilica.git', 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-prosilica.git'),
+    ('gda-diamond.git'          , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-diamond.git'),
     ('gda-dls-beamlines-xas.git', 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-dls-beamlines-xas.git'),
+    ('gda-dls-excalibur.git'    , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-dls-excalibur.git'),
     ('gda-epics.git'            , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-epics.git'),
+    ('gda-hrpd.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-hrpd.git'),
     ('gda-pes.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-pes.git'),
+    ('gda-tango.git'            , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-tango.git'),
+    ('gda-video.git'            , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-video.git'),
     ('gda-xas-core.git'         , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-xas-core.git'),
     ('training-gerrit-1.git'    , 'ssh://gerrit.diamond.ac.uk:29418/training/training-gerrit-1.git'),
     )
