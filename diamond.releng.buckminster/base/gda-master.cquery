@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-e3-latest.rmap" properties="file:${user.home}/.gda-master.cquery.properties" shortDesc="CQuery for GDA master">
+    <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-e4-latest.rmap" properties="file:${user.home}/.gda-master.cquery.properties" shortDesc="CQuery for GDA master">
     <cq:rootRequest name="${component}"/>
     <cq:property key="dascgerrit.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
     <cq:property key="download.location" value="Default is 'diamond'. Change this to 'public' if required."/>
-    <cq:property key="e4.trial" value="false"/>
     <cq:property key="github.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required (access control is by SSH key pair)."/>
     <cq:property key="only_..-config" value="false"/>
     <cq:property key="skip_DAWN_test_fragments" value="true"/>
@@ -26,16 +25,6 @@ Used for public downloads.</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|org\.eclipse\.dawnsci\.|uk\.ac\.diamond\.(scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(skip_GDA_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^org\.eclipse\.e4\..+$" filter="(|(e4.trial=true)(e4.trial.common=true))">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Do-nothing node which is just here to allow org.eclipse.e4.* when materializing for e4.
-Matches ahead of the next node, and is required only because negative conditions on advisor node filters do not seem to work.</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.e4\..+$" skipComponent="true">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">The only requirement on org.eclipse.e4.* components is an optional dependency from org.python.pydev.
-There is only one place that it is used, in PydevPlugin, where a bug try/catch protects the code. 
-It does mean you need e4 to compile, but not to run.
-As e4 is not required at runtime, we don't need to materialize it.</cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.apache\.commons\.codec\.source$" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">This is to avoid what appear to be a Buckminster bug (noticed 2014/02/06 using Eclipse 4.3.1).
 If you materialize, and then materialize again, the second materialize can fail. See DASCTEST-211.</cq:documentation>
@@ -91,14 +80,8 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-test.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-test" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(com\.amd\.aparapi|ncsa\.hdf|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" filter="(|(e4.trial=true)(e4.trial.common=true))" useTargetPlatform="false" branchTagPath="SCI-5214k">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-third.git repository branch</cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^(com\.amd\.aparapi|ncsa\.hdf|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-third.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|isosurface(\..+)?|mapping\.ui(\..+)?|plotting(\..+)?|processing\.ui|slicing(\..+)?|spectrum\.ui))|uk\.ac\.diamond\.screenshot(\..+)?)$" filter="(|(e4.trial=true)(e4.trial.common=true))" useTargetPlatform="false" branchTagPath="SCI-5214k">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|isosurface(\..+)?|mapping\.ui(\..+)?|plotting(\..+)?|processing\.ui|slicing(\..+)?|spectrum\.ui))|uk\.ac\.diamond\.screenshot(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-ui.git repository branch</cq:documentation>
@@ -148,9 +131,6 @@ If you materialize, and then materialize again, the second materialize can fail.
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common-rcp.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^(core-config|documentation\.gda|example-config|uk\.ac\.(diamond\.scisoft\.gda\.feature|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\..+)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" filter="(|(e4.trial=true)(e4.trial.common=true))" useTargetPlatform="false" branchTagPath="SCI-5214k">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(core-config|documentation\.gda|example-config|uk\.ac\.(diamond\.scisoft\.gda\.feature|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\..+)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
@@ -303,9 +283,6 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-spectroscopy.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" filter="(|(e4.trial=true)(e4.trial.common=true))" useTargetPlatform="false" branchTagPath="SCI-5214k">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ui.git repository branch</cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
@@ -322,9 +299,6 @@ If you materialize, and then materialize again, the second materialize can fail.
     </cq:advisorNode>
     <cq:advisorNode namePattern="^training\.gerrit\.(feature|plugin1|plugin2)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training-gerrit-1.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" filter="(|(e4.trial=true)(e4.trial.common=true))" useTargetPlatform="false" branchTagPath="SCI-5214k">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">wychwood.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">wychwood.git repository branch</cq:documentation>
