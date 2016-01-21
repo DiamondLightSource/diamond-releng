@@ -132,7 +132,7 @@ BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermitten
 
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
     # repository                  Gerrit URL  
-    ('gda-bimorph.git'          , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-core.git'),
+    ('gda-bimorph.git'          , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-bimorph.git'),
     ('gda-common-rcp.git'       , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-common-rcp.git'),
     ('gda-core.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-core.git'),
     ('gda-devices-cirrus.git'   , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-cirrus.git'),
