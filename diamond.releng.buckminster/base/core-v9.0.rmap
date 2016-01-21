@@ -2113,7 +2113,7 @@
     <bc:constant value="${e4.trial}"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.release">
-    <bc:constant value="3.8"/>
+    <bc:constant value="4.5"/>
   </rm:propertyElement>
   <rm:propertyElement key="rap.release">
     <bc:constant value="2.1"/>
