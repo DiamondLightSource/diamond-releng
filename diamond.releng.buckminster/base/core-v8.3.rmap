@@ -47,9 +47,9 @@
     <bc:constant value="ssh://dascgitolite@${diamond.dascgit.host.port}"/>
   </rm:propertyElement>
   <!-- -->
-  <!--                                                              -->
-  <!-- Properties for Git repositories managed by Gerrit at Diamond -->
-  <!--                                                              -->
+  <!--                                                           -->
+  <!-- Properties for Gerrit-managed git repositories at Diamond -->
+  <!--                                                           -->
   <!-- dascgerrit.authentication.common normally defaults "ssh", but can be overridden (for example, for Jenkins test jobs).
        The shadow property name in the CQuery is "dascgerrit.authentication". -->
   <!-- dascgerrit.username.common normally defaults to the current username, but can be overridden (for example, for Jenkins test jobs).
@@ -83,21 +83,7 @@
   <rm:propertyElement key="dascgerrit.username.common">
     <bc:constant value="${dascgerrit.username.from.cquery.translated}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="dascgerrit.username.final">  <!-- if authentication is anonymous, ignore any username that was specified-->
-    <bc:replace>
-      <bc:constant value="${dascgerrit.authentication.common}--${dascgerrit.username.common}"/>
-      <bc:match pattern="^anonymous--.*$" replacement="remove-username"/>
-      <bc:match pattern="^ssh--" replacement="remove-prefix"/>  <!-- we do it this way because Buckminster does not allow an empty replacement -->
-    </bc:replace>
-  </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dascgerrit.scheme">
-    <bc:replace>
-      <bc:constant value="${dascgerrit.authentication.common}"/>
-      <bc:match pattern="anonymous" replacement="http"/>
-      <bc:match pattern="^(?! *(ssh|http) *$).*$" replacement="unrecognised.dascgerrit.authentication.common"/>
-    </bc:replace>
-  </rm:propertyElement>
   <rm:propertyElement key="diamond.dascgerrit.http.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
     <bc:constant value="gerrit.diamond.ac.uk:8080"/>
   </rm:propertyElement>
@@ -105,17 +91,19 @@
     <bc:constant value="gerrit.diamond.ac.uk:29418"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="diamond.dascgerrit.url.pass1">
+  <rm:propertyElement key="diamond.dascgerrit.ssh.url">
     <bc:replace>
-      <bc:constant value="${dascgerrit.scheme}://${dascgerrit.username.final}@${diamond.dascgerrit.${dascgerrit.scheme}.host.port}"/>
-      <bc:match pattern="//remove-prefix" replacement="//"/>  <!-- we do it this way because Buckminster does not allow an empty replacement -->
+      <bc:constant value="ssh://${dascgerrit.username.common}@${diamond.dascgerrit.ssh.host.port}"/>
+      <bc:match pattern="//remove-username@" replacement="//"/>  <!-- we do it this way because Buckminster does not allow an empty replacement -->
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.dascgerrit.anonymous.url">
+    <bc:replace>
+      <bc:constant value="http://${diamond.dascgerrit.http.host.port}"/>
     </bc:replace>
   </rm:propertyElement>
   <rm:propertyElement key="diamond.dascgerrit.url">
-    <bc:replace>
-      <bc:constant value="${diamond.dascgerrit.url.pass1}"/>
-      <bc:match pattern="//remove-username@" replacement="//"/>  <!-- we do it this way because Buckminster does not allow an empty replacement -->
-    </bc:replace>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}"/>
   </rm:propertyElement>
   <!-- -->
   <!--                                                  -->
