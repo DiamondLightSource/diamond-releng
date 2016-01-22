@@ -310,6 +310,9 @@ class PewmaManager(object):
         group.add_option('--prepare-jenkins-build-description-on-error',
                          dest='prepare_jenkins_build_description_on_error', action='store_true', default=False,
                          help=optparse.SUPPRESS_HELP)
+        group.add_option('--sjvc', '--skip-java-version-check',
+                         dest='skip_java_version_check', action='store_true', default=False,
+                         help=optparse.SUPPRESS_HELP)
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Get-branches-expected options")
@@ -1600,13 +1603,14 @@ class PewmaManager(object):
                 self.logger.warn('%sJava version to use could not be determined' % (self.log_prefix,))
             self.java_version_current_logged = True
 
-        if self.java_version_current and self.valid_java_versions:  # if we know the java version, and the acceptable versions
-            for acceptable_version in self.valid_java_versions:
-                if self.java_version_current.startswith(acceptable_version):
-                    break
-            else:
-                raise PewmaException('ERROR: current java version is %s, but must start with one of %s' %
-                                     (self.java_version_current, self.valid_java_versions,))
+        if not self.options.skip_java_version_check:
+            if self.java_version_current and self.valid_java_versions:  # if we know the java version, and the acceptable versions
+                for acceptable_version in self.valid_java_versions:
+                    if self.java_version_current.startswith(acceptable_version):
+                        break
+                else:
+                    raise PewmaException('ERROR: current java version is %s, but must start with one of %s' %
+                                         (self.java_version_current, self.valid_java_versions,))
 
         return self.java_version_current
 
