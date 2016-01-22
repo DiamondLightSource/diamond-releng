@@ -2373,6 +2373,7 @@
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_R20150124073747" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_R20150124073747" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.(camel|httpcomponents|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
@@ -4282,6 +4283,13 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/"/>
+    </rm:provider>
+  </rm:searchPath>
+    <rm:searchPath name="eclipse_jetty9">  <!-- Eclipse 4 -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.2.13.v20150730/"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_orbit_R20140525021250">  <!-- Luna, Luna SR1 -->
