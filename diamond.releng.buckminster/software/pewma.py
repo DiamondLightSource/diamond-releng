@@ -68,7 +68,7 @@ COMPONENT_CATEGORIES = (
     ('ida', 'v2.19', 'ida-v2.19.cquery', 'v2.3', ('v2.19', '2.19', '219'), None),
     ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218'), None),
     ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217'), None),
-    ('dawn', 'master', 'dawn-master.cquery', 'v2.11', ('master', '2.master', 'v2.master'), ('1.8.0', '1.7.0',)),
+    ('dawn', 'master', 'dawn-master.cquery', 'v2.11', ('master', '2.master', 'v2.master'), ('1.8.0',)),
     ('dawn', '1.master', 'dawn-v1.master.cquery', 'v2.11', ('1.master', 'v1.master'), ('1.8.0', '1.7.0',)),
     ('dawn', '1.10', 'dawn-v1.10.cquery', 'v2.10', ('v1.10', '1.10'), ('1.8.0',)),
     ('dawn', '1.9', 'dawn-v1.9.cquery', 'v2.9', ('v1.9', '1.9'), ('1.7.0',)),
@@ -1118,11 +1118,11 @@ class PewmaManager(object):
 
             git_config_commands = []
             config_changes = (
-                # section         , option                    , name                   , required_value             , use_replace
-                ('gerrit'         , 'createchangeid'          , 'gerrit.createchangeid', 'true'                     , True),
-                ('remote "origin"', 'fetch'                   , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*', False),
-                ('remote "origin"', 'pushurl'                 , 'remote.origin.pushurl', gerrit_repo_url            , False),
-                ('remote "origin"', 'push'                    , 'remote.origin.push'   , 'HEAD:refs/for/master'     , False))
+                # section         , option                    , name                   , required_value                   , use_replace
+                ('gerrit'         , 'createchangeid'          , 'gerrit.createchangeid', 'true'                           , True),
+                ('remote "origin"', 'fetch'                   , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*'      , False),
+                ('remote "origin"', 'pushurl'                 , 'remote.origin.pushurl', gerrit_repo_url                  , False),
+                ('remote "origin"', 'push'                    , 'remote.origin.push'   , 'HEAD:refs/for/' + current_branch, False))
 
             if ((GERRIT_MIRROR_HOST in origin_url) or
                (urlparse.urlunsplit((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '', '', '')) in origin_url)):
