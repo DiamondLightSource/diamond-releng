@@ -387,32 +387,6 @@
     <bc:constant value="${github.${dawnsci.github.authentication}.url}${dawnsci.github.organization}/dawnsci.git"/>
   </rm:propertyElement>
   <!-- ** diamond- *** -->
-  <rm:propertyElement key="diamond.enthought.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.enthought.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="diamond.enthought.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.enthought.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/diamond"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.enthought.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.enthought.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.enthought.github.url">
-    <bc:constant value="${github.${diamond.enthought.github.authentication}.url}${diamond.enthought.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.enthought.git.url">
-    <bc:constant value="${diamond.enthought.${diamond.enthought.git.location.translated}.url}/diamond-enthought.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="diamond.jacorb.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -2265,7 +2239,6 @@
   <!-- ** dawnsci *** -->
   <rm:locator pattern="^org\.eclipse\.dawnsci\..+$" searchPathRef="dawnsci"/>
   <!-- ** diamond- *** -->
-  <rm:locator pattern="^uk\.ac\.diamond\.sda\.enthought(\..+)?$" searchPathRef="diamond_enthought"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.jacorb$" searchPathRef="diamond_jacorb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.jython$" searchPathRef="diamond_jython"/>
   <rm:locator pattern="^org\.dawnsci\.miniconda(\..+)?$" searchPathRef="diamond_miniconda"/>
@@ -2425,12 +2398,10 @@
        DAWB components
   -->
   <rm:locator pattern="^com\.isencia\..+" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^activation$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^com\.microstar$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^diva$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^ptolemy\..+" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.quartz$" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^mail$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.apache\.log4j$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(dbcp|math|net|pool)$" searchPathRef="DAWB_p2"/>
@@ -2851,22 +2822,6 @@
   <!--
        DIAMOND- repositories
   -->
-  <rm:searchPath name="diamond_enthought">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.diamond-enthought=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${diamond.enthought.git.url}"/>
-      <rm:uri format="{0}/diamond-enthought.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.diamond-enthought=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from diamond-enthought.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
   <rm:searchPath name="diamond_jacorb">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.diamond-jacorb=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
