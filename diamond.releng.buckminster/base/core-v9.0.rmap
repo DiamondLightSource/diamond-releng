@@ -37,6 +37,27 @@
   <rm:propertyElement key="training.repository.user">  <!-- used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide) -->
     <bc:constant value="template"/>
   </rm:propertyElement>
+  <!--                                    -->
+  <!-- Target Platform version properties -->
+  <!--                                    -->
+  <rm:propertyElement key="eclipse.release">
+    <bc:constant value="4.5"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="rap.release">
+    <bc:constant value="2.1"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="use.eclipse.rap">  <!-- defined here in case it is not defined in the CQuery -->
+    <bc:constant value="no"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="eclipse.orbit.p2.version">  <!-- version of Eclipse Orbit p2 repository to use -->
+    <bc:constant value="R20151221205849"/>  <!-- Mars.2 -->
+  </rm:propertyElement>
+  <rm:propertyElement key="eclipse.orbit.p2.version.BATIK160">  <!-- version of Eclipse Orbit p2 repository to use to get batik 1.6.0 (required) -->
+    <bc:constant value="R20150124073747"/>  <!-- Luna SR2 -->
+  </rm:propertyElement>
+  <rm:propertyElement key="eclipse.jetty9.p2.version">  <!-- version of Eclipse Jetty 9 p2 repository to use -->
+    <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars depends on -->
+  </rm:propertyElement>
   <!--                                                             -->
   <!-- Properties for Gitolite-managed git repositories at Diamond -->
   <!--                                                             -->
@@ -2129,21 +2150,6 @@
   <!--
        Target Platform (Eclipse) URLs
   -->
-  <rm:propertyElement key="e4.trial">  <!-- defined here in case it is not defined in the CQuery -->
-    <bc:constant value="true"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="e4.trial.common">
-    <bc:constant value="true"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.release">
-    <bc:constant value="4.5"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="rap.release">
-    <bc:constant value="2.1"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="use.eclipse.rap">  <!-- defined here in case it is not defined in the CQuery -->
-    <bc:constant value="no"/>
-  </rm:propertyElement>
   <!-- eclipse.download.location can be "diamond" (DLS internal servers) [default], "public" (opengda.org), or "eclipse (eclipse.org)" -->
   <!-- Use of "eclipse" is NOT recommended, since we don't know if/when that gets changed - use our internal or opengda mirror instead -->
   <rm:propertyElement key="eclipse.download.location">
@@ -2165,9 +2171,6 @@
     <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
   </rm:propertyElement>
   <rm:propertyElement key="gef.download.url">
-    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="graphiti.download.url">
     <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
   </rm:propertyElement>
   <rm:propertyElement key="nattable.download.url">
@@ -2358,10 +2361,11 @@
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_R20150124073747" failOnError="false"/>
-  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9" failOnError="false"/>
+  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
+  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2_BATIK160"/>
+  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_R20150124073747" failOnError="false"/>
+  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.(camel|httpcomponents|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <rm:locator pattern="^org\.eclipse\.nebula\..+$" searchPathRef="eclipse_nebula"/>
@@ -2381,11 +2385,10 @@
   <rm:locator pattern="^org\.eclipse\.swtbot(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0"/>
   <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.log4j(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0" failOnError="false"/>
-  <rm:locator pattern="^org\.eclipse\.remote(\..+)?$" searchPathRef="eclipse_ptp_2.0.0"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^javax\.(ejb|jms|xml\.rpc)$" searchPathRef="eclipse_orbit_R20150519210750"/>
-  <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_R20150519210750"/>
-  <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_R20140525021250"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies -->
+  <rm:locator pattern="^javax\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>  <!-- if not found, will look in release and platform repos -->
+  <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_p2"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies -->
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="GDA_tp_bundles"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javassist$" searchPathRef="GDA_tp_bundles"/>
@@ -2411,19 +2414,10 @@
        Target Platform components: Eclipse Orbit (which contains third-party jars which have passed Eclipse IP checks, and been turned in OSGI bundles)
        Some Eclipse components are published both as part of the platform release, and separately. Put the platform release last so we can get a newer release.
   -->
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_rap" failOnError="false"/>
-  <!-- If we are running with e4.trial.common=true or eclipse.release=4.5, then Eclipse uses Jetty 9 -->
-  <!-- We still need to be able to materialize Jetty 8, since its used by org.dawnsci.commandserver.* -->
-  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_3.8_platform" failOnError="false"/>
-  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_3.8_release" failOnError="false"/>
-  <rm:locator pattern="^org\.eclipse\.(emf|xsd)(\..+)?" searchPathRef="eclipse_emf_emf" failOnError="false"/>
-  <rm:locator pattern="^org\.eclipse.(draw2d|gef|zest)(\..+)?" searchPathRef="eclipse_gef"/>
-  <rm:locator pattern="^org\.eclipse\.graphiti(\..+)?" searchPathRef="eclipse_graphiti"/>
+  <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_rap" failOnError="false"/>
   <!-- patterns for eclipse repositories are there to speed up failure if we fall through (in case of error, or when looking for source bundles) -->
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.8_platform" failOnError="false"/>
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.8_release" failOnError="false"/>
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.5_platform" failOnError="false"/>
-  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_4.5_release" failOnError="false"/>
+  <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_4.5_platform" failOnError="false"/>
+  <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_4.5_release" failOnError="false"/>
   <!--                                                                      -->
   <!--######################################################################-->
   <!--# Search Paths                                                       #-->
@@ -4250,77 +4244,25 @@
       <rm:uri format="http://download.eclipse.org/technology/swtbot/releases/2.3.0/"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_ptp_2.0.0">  <!-- PTP -->
+  <rm:searchPath name="eclipse_orbit_p2">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/tools/ptp/builds/remote/2.0.0/"/>
+      <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version}/repository/"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_orbit_R20150519210750">  <!-- Mars -->
+  <rm:searchPath name="eclipse_orbit_p2_BATIK160">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/"/>
+      <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version.BATIK160}/repository/"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_orbit_R20150124073747">  <!-- Luna SR2 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/"/>
-    </rm:provider>
-  </rm:searchPath>
-    <rm:searchPath name="eclipse_jetty9">  <!-- Eclipse 4 -->
+  <rm:searchPath name="eclipse_jetty9_p2">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.2.13.v20150730/"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_orbit_R20140525021250">  <!-- Luna, Luna SR1 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_emf_emf">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/modeling/emf/updates/releases/"/>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(e4.trial.common=true))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${emf.emf.download.url}/modeling/emf/emf/updates/releases_20140212"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_gef">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/tools/gef/updates/releases/"/>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(e4.trial.common=true))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${gef.download.url}/tools/gef/updates/releases"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_graphiti">
-    <!-- provider for version 0.11.2, can be used together with the Eclipse versions 4.4 (Luna) and 4.3 (Kepler) -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(e4.trial.common=true)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/graphiti/updates/0.11.2"/>
-    </rm:provider>
-    <!-- provider for version 0.10.0, can be used together with the Eclipse versions 4.3 (Kepler) and 4.2/3.8 (Juno) -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(e4.trial.common=true))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${graphiti.download.url}/graphiti/updates/0.10.0"/>
+      <rm:uri format="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/${eclipse.jetty9.p2.version}/"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nattable">
@@ -4367,20 +4309,6 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_3.8_platform">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(|(eclipse.release=3.8)(buckminster.component=org.eclipse.jetty*))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.download.url}/eclipse/updates/3.8"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_3.8_release">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(|(eclipse.release=3.8)(buckminster.component=org.eclipse.jetty*))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.download.url}/releases/juno"/>  <!-- yes this is correct, 3.8 is Juno -->
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_4.5_platform">
