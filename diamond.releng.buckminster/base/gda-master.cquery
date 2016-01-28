@@ -16,7 +16,6 @@
     <cq:advisorNode namePattern="^(.*i11-1.*)$" filter="(materialize_skip_list=*i11-1*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i24.*)$" filter="(materialize_skip_list=*i24*)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^uk.ac.gda.px.test$" filter="(materialize_skip_list=*px.test*)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
     <cq:advisorNode namePattern="^(?!.*-config$).*" filter="(only_..-config=true)" skipComponent="true"/>
     <cq:advisorNode namePattern="^.*\.tests?$" filter="(skip_ALL_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
@@ -292,7 +291,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ws.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.scisoft-ws" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|sda(\.bioclipse\.jmol\.feature)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|scisoft\.applications|sda(\.bioclipse\.jmol\.feature)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">sda.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.sda" value="true"/>
     </cq:advisorNode>
