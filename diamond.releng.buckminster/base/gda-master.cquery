@@ -23,7 +23,7 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Exclude certain components that are not mirrored externally to Diamond Light Source.
 Used for public downloads.</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|org\.eclipse\.dawnsci\.|uk\.ac\.diamond\.(scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.(?!nexus)|org\.eclipse\.dawnsci\.(?!nexus)|uk\.ac\.diamond\.(scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(skip_GDA_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^org\.apache\.commons\.codec\.source$" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">This is to avoid what appear to be a Buckminster bug (noticed 2014/02/06 using Eclipse 4.3.1).
