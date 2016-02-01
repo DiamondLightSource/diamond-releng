@@ -2364,6 +2364,7 @@
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2_BATIK160"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
+  <rm:locator pattern="^org\.apache\.commons\.codec(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.(camel|httpcomponents|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
