@@ -15,7 +15,7 @@ EOF
 fi
 
 # only for selected releases (master), the post-build should scan for compiler warnings, and for open tasks
-if [[ "${GDA_release}" == "master" ]]; then
+if [[ "${DAWN_release}" == "master" ]]; then
     cat << EOF >> ${properties_filename}
 postbuild_scan_for_compiler_warnings=true
 postbuild_scan_for_open_tasks=true
@@ -27,5 +27,5 @@ postbuild_scan_for_open_tasks=false
 EOF
 fi
 
-echo "[gda_junit.tests_determine-job-specific-properties.sh] wrote ${properties_filename} --->"
+echo "[dawn_junit.tests_determine-job-specific-properties.sh] wrote ${properties_filename} --->"
 cat ${properties_filename}
