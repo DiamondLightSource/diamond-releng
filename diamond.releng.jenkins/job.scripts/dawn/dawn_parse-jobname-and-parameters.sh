@@ -25,6 +25,17 @@ if [[ -z "${flavour}" || -z "${release}" ]]; then
     exit 2
 fi
 
+# only for selected jobs (DawnDiamond junit) and releases (master), the post-build should scan for compiler warnings, and for open tasks
+if [[ "${JOB_NAME:-noname}" == *junit* ]]; then
+    if [[ "${JOB_NAME:-noname}" == *DawnDiamond* && "${JOB_NAME:-noname}" != *gerrit* && "${GDA_release}" == "master" ]]; then
+        postbuild_scan_for_compiler_warnings=true
+        postbuild_scan_for_open_tasks=true
+    else
+        postbuild_scan_for_compiler_warnings=false
+        postbuild_scan_for_open_tasks=false
+    fi
+fi
+
 if [[ "${JOB_NAME:-noname}" == *~* ]]; then
     job_variant=$(echo "${JOB_NAME}" | sed 's/^.*~/~/')
 else
@@ -67,10 +78,10 @@ if [[ "${JOB_NAME:-noname}" =~ ^Dawn.+--publish-([a-z0-9]+)(~.+)*$ ]]; then
     publish_type=${BASH_REMATCH[1]}
 fi
 
+echo "download_public=${download_public:Error}" >> ${properties_filename}
 echo "DAWN_flavour=${flavour:Error}" >> ${properties_filename}
 echo "DAWN_release=${release:Error}" >> ${properties_filename}
 echo "DAWN_job_variant=${job_variant:Error}" >> ${properties_filename}
-echo "download_public=${download_public:Error}" >> ${properties_filename}
 if [[ -n "${publish_snapshot_job_to_trigger}" ]]; then
     echo "DAWN_publish_snapshot_job_to_trigger=${publish_snapshot_job_to_trigger}" >> ${properties_filename}
 fi
@@ -105,6 +116,12 @@ for var in $(compgen -A variable trigger_squish_); do
     fi
 done
 echo "at_least_one_trigger_squish_parameter_selected=${at_least_one_trigger_squish_parameter_selected}" >> ${properties_filename}
+if [[ -n "${postbuild_scan_for_compiler_warnings}" ]]; then
+    echo "postbuild_scan_for_compiler_warnings=${postbuild_scan_for_compiler_warnings}" >> ${properties_filename}
+fi
+if [[ -n "${postbuild_scan_for_open_tasks}" ]]; then
+    echo "postbuild_scan_for_open_tasks=${postbuild_scan_for_open_tasks}" >> ${properties_filename}
+fi
 
 echo "[dawn_parse-jobname-and-parameters.sh] wrote ${properties_filename} --->"
 cat ${properties_filename}

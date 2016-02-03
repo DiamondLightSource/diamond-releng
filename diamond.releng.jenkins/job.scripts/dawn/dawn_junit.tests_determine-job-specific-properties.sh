@@ -14,18 +14,5 @@ build_options_extra=--suppress-compile-warnings
 EOF
 fi
 
-# only for selected releases (master), the post-build should scan for compiler warnings, and for open tasks
-if [[ "${DAWN_release}" == "master" ]]; then
-    cat << EOF >> ${properties_filename}
-postbuild_scan_for_compiler_warnings=true
-postbuild_scan_for_open_tasks=true
-EOF
-else
-    cat << EOF >> ${properties_filename}
-postbuild_scan_for_compiler_warnings=false
-postbuild_scan_for_open_tasks=false
-EOF
-fi
-
 echo "[dawn_junit.tests_determine-job-specific-properties.sh] wrote ${properties_filename} --->"
 cat ${properties_filename}

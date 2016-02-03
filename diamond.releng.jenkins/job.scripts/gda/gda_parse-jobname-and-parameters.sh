@@ -1,5 +1,5 @@
 # Parse the Jenkins jobname and extract certain information from it
-# Write the information from the jobname into a temporary file in the form of name=value pairs
+# Write the information from the jobname into a temporary file in the form of name=value pairs (note: must be simple text values)
 # The next step in the Jenkins job is "Inject Environment Variables" which sets the name=value pairs as environment variables for the remainder of the job
 set +x  # Turn off xtrace
 
@@ -60,6 +60,18 @@ if [[ "${groupbeamlinesuffixindex}" != "0" ]]; then
     fi
 fi
 
+# only for selected jobs (junit) and releases (master), the post-build should scan for compiler warnings, and for open tasks
+if [[ "${JOB_NAME:-noname}" == *junit* ]]; then
+    if [[ "${JOB_NAME:-noname}" != *gerrit* && "${GDA_release}" == "master" ]]; then
+        postbuild_scan_for_compiler_warnings=true
+        postbuild_scan_for_open_tasks=true
+    else
+        postbuild_scan_for_compiler_warnings=false
+        postbuild_scan_for_open_tasks=false
+    fi
+fi
+
+echo "download_public=${download_public:Error}" >> ${properties_filename}
 echo "GDA_release=${release:Error}" >> ${properties_filename}
 echo "GDA_job_variant=${job_variant:Error}" >> ${properties_filename}
 
@@ -78,7 +90,12 @@ fi
 if [[ -n "${upstream_product_job}" ]]; then
     echo "GDA_upstream_product_job=${upstream_product_job}" >> ${properties_filename}
 fi
-echo "download_public=${download_public:Error}" >> ${properties_filename}
+if [[ -n "${postbuild_scan_for_compiler_warnings}" ]]; then
+    echo "postbuild_scan_for_compiler_warnings=${postbuild_scan_for_compiler_warnings}" >> ${properties_filename}
+fi
+if [[ -n "${postbuild_scan_for_open_tasks}" ]]; then
+    echo "postbuild_scan_for_open_tasks=${postbuild_scan_for_open_tasks}" >> ${properties_filename}
+fi
 
 echo "[gda_parse-jobname-and-parameters.sh] wrote ${properties_filename} --->"
 cat ${properties_filename}
