@@ -5,7 +5,6 @@ properties_filename=${WORKSPACE}/job-specific-environment-variables.properties
 
 cat << EOF >> ${properties_filename}
 # Written `date +"%a %d/%b/%Y %H:%M:%S %z"` (${BUILD_URL:-\$BUILD_URL:missing})
-materialize_component=all-dls-config
 EOF
 
 if [[ "${JOB_NAME:-noname}" == *gerrit* ]]; then
