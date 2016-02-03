@@ -27,7 +27,7 @@ fi
 
 # only for selected jobs (DawnDiamond junit) and releases (master), the post-build should scan for compiler warnings, and for open tasks
 if [[ "${JOB_NAME:-noname}" == *junit* ]]; then
-    if [[ "${JOB_NAME:-noname}" == *DawnDiamond* && "${JOB_NAME:-noname}" != *gerrit* && "${GDA_release}" == "master" ]]; then
+    if [[ "${JOB_NAME:-noname}" == *DawnDiamond* && "${JOB_NAME:-noname}" != *gerrit* && "${release}" == "master" ]]; then
         postbuild_scan_for_compiler_warnings=true
         postbuild_scan_for_open_tasks=true
     else
