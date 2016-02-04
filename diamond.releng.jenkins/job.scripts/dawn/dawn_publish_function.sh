@@ -25,17 +25,8 @@ dawn_publish_function () {
     ### Determine options
     ###
 
-    export publish_type=$(echo ${publish_type:-notset} | tr '[:upper:]' '[:lower:]')
-
-    # translate the long publish_type text to something shorter, for display
-    if [[ "${publish_type}" == *snapshot* ]]; then
-       export publish_type=snapshot
-    elif [[ "${publish_type}" == *beta* ]]; then
-       export publish_type=beta
-    elif [[ "${publish_type}" == *stable* ]]; then
-       export publish_type=stable
-    else
-        echo "Unrecognised value $""{publish_type}=${publish_type}, so terminating"
+    if [[ -z "${name_to_publish_as}" ]]; then
+        echo "ERROR: $""{name_to_publish_as} not set, so terminating"
         return 100
     fi
 
@@ -44,9 +35,7 @@ dawn_publish_function () {
     export publish_webserver_diamond_zip_remove_old_versions=$(echo ${publish_webserver_diamond_zip_remove_old_versions:-false} | tr '[:upper:]' '[:lower:]')
     export publish_webserver_opengda_zip_remove_old_versions=$(echo ${publish_webserver_opengda_zip_remove_old_versions:-false} | tr '[:upper:]' '[:lower:]')
     export publish_webserver_opengda_zip=$(echo ${publish_webserver_opengda_zip:-false} | tr '[:upper:]' '[:lower:]')
-    export platform_linux32=$(echo ${platform_linux32:-false} | tr '[:upper:]' '[:lower:]')
     export platform_linux64=$(echo ${platform_linux64:-false} | tr '[:upper:]' '[:lower:]')
-    export platform_windows32=$(echo ${platform_windows32:-false} | tr '[:upper:]' '[:lower:]')
     export platform_windows64=$(echo ${platform_windows64:-false} | tr '[:upper:]' '[:lower:]')
     export platform_mac64=$(echo ${platform_mac64:-false} | tr '[:upper:]' '[:lower:]')
     export publish_p2_site=$(echo ${publish_p2_site:-false} | tr '[:upper:]' '[:lower:]')
@@ -73,7 +62,7 @@ dawn_publish_function () {
     export product_version_number=$(head -q -n 1 artifacts_to_publish/product_version_number.txt)
     export platforms_requested=0
     if [[ "${publish_module_load}" == "true" || "${publish_webserver_diamond_zip}" == "true" || "${publish_webserver_opengda_zip}" == "true" ]]; then
-        for platform in linux32 linux64 windows32 windows64 mac64; do
+        for platform in linux64 windows64 mac64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 (( platforms_requested += 1 ))
@@ -101,19 +90,17 @@ dawn_publish_function () {
         if [[ "${initialize_module_load}" == "true" ]]; then
             if [[ $(uname -m) == "x86_64" ]]; then
                 running_platform=linux64
-            elif [[ $(uname -m) == "i686" ]]; then
-                running_platform=linux32
             else
                 running_platform=unknown
             fi
         fi
-        for platform in linux32 linux64 windows32 windows64 mac64; do
+        for platform in linux64 windows64 mac64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to module load for ${platform} ***\n"
-                publish_module_load_directory_for_type=${publish_module_load_directory_parent}/builds-${publish_type}
+                publish_module_load_directory_for_type=${publish_module_load_directory_parent}/builds
                 publish_module_load_directory_name=$(basename ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip .zip)
-                publish_module_load_link_name=${publish_type}-${platform}
+                publish_module_load_link_name=${name_to_publish_as}-${platform}
                 publish_module_load_directory=${publish_module_load_directory_for_type}/${publish_module_load_directory_name}
                 publish_module_load_link=${publish_module_load_directory_for_type}/${publish_module_load_link_name}
                 if [[ -e "${publish_module_load_directory}" ]]; then
@@ -152,15 +139,15 @@ dawn_publish_function () {
     export publish_webserver_diamond_zip_platforms_skipped=0
     if [[ "${publish_webserver_diamond_zip}" == "true" ]]; then
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing .zip to diamond webserver ***\n"
-        for platform in linux32 linux64 windows32 windows64 mac64; do
+        for platform in linux64 windows64 mac64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to diamond webserver of .zip for ${platform} ***\n"
-                ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${publish_type}
+                ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}
                 (( publish_webserver_zip_download_platforms_updated += 1 ))
                 # optionally delete any old versions for this platform
                 if [[ "${publish_webserver_diamond_zip_remove_old_versions}" == "true" ]]; then
-                    ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' --delete ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${publish_type}
+                    ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' --delete ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}
                 fi
             fi
         done
@@ -173,15 +160,15 @@ dawn_publish_function () {
     export publish_webserver_opengda_zip_platforms_skipped=0
     if [[ "${publish_webserver_opengda_zip}" == "true" ]]; then
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing .zip to opengda webserver ***\n"
-        for platform in linux32 linux64 windows32 windows64 mac64; do
+        for platform in linux64 windows64 mac64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to opengda webserver of .zip for ${platform} ***\n"
-                ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${publish_type}
+                ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}
                 (( publish_webserver_zip_download_platforms_updated += 1 ))
                 # optionally delete any old versions for this platform
                 if [[ "${publish_webserver_opengda_zip_remove_old_versions}" == "true" ]]; then
-                    ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' --delete ${WORKSPACE}/artifacts_to_publish/. ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${publish_type}
+                    ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' --delete ${WORKSPACE}/artifacts_to_publish/. ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}
                 fi
             fi
         done
@@ -196,9 +183,9 @@ dawn_publish_function () {
         ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*site*.zip -d ${p2_site_unzipped}/
 
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing p2 site ***\n"
-        ${rsync} -e "${publish_p2_rsync_options}" -ilprtDOv ${p2_site_unzipped}/ ${publish_p2_server}:${publish_p2_directory_parent}/${publish_type}_${temp_suffix}/
+        ${rsync} -e "${publish_p2_rsync_options}" -ilprtDOv ${p2_site_unzipped}/ ${publish_p2_server}:${publish_p2_directory_parent}/${name_to_publish_as}_${temp_suffix}/
         # once rsync complete, rename directory
-        ssh ${publish_p2_ssh_options} ${publish_p2_server} "rm -rf ${publish_p2_directory_parent}/${publish_type}/; mv -v ${publish_p2_directory_parent}/${publish_type}_${temp_suffix}/ ${publish_p2_directory_parent}/${publish_type}/"
+        ssh ${publish_p2_ssh_options} ${publish_p2_server} "rm -rf ${publish_p2_directory_parent}/${name_to_publish_as}/; mv -v ${publish_p2_directory_parent}/${name_to_publish_as}_${temp_suffix}/ ${publish_p2_directory_parent}/${name_to_publish_as}/"
     else
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Skipping publish of p2 site to diamond webserver ***\n"
     fi

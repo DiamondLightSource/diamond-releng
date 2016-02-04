@@ -54,12 +54,8 @@ if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
     squish_trigger_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--squish.trigger/')
 
 # if this is any publish job, work out the name of the upstream job (the create.product job)
-elif [[ "${JOB_NAME:-noname}" == *--publish-snapshot* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-snapshot/-create.product/')
-elif [[ "${JOB_NAME:-noname}" == *--publish-beta* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-beta/-create.product/')
-elif [[ "${JOB_NAME:-noname}" == *--publish-stable* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish-stable/-create.product/')
+elif [[ "${JOB_NAME:-noname}" == *--publish* ]]; then
+    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish[^~]*/-create.product/')
 
 # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
 elif [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
@@ -72,10 +68,6 @@ elif [[ "${JOB_NAME:-noname}" == *-squish-subset.* ]]; then
     upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish-subset.[^~]*/-create.product/')
 elif [[ "${JOB_NAME:-noname}" == *-squish.* ]]; then
     upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.[^~]*/-create.product/')
-fi
-
-if [[ "${JOB_NAME:-noname}" =~ ^Dawn.+--publish-([a-z0-9]+)(~.+)*$ ]]; then
-    publish_type=${BASH_REMATCH[1]}
 fi
 
 echo "download_public=${download_public:Error}" >> ${properties_filename}
@@ -94,9 +86,6 @@ fi
 if [[ -n "${squish_platform_job_prefix}" ]]; then
     echo "DAWN_squish_platform_job_prefix=${squish_platform_job_prefix}" >> ${properties_filename}
     echo "DAWN_squish_platform_job_suffix=${squish_platform_job_suffix}" >> ${properties_filename}
-fi
-if [[ -n "${publish_type}" ]]; then
-    echo "publish_type=${publish_type}" >> ${properties_filename}
 fi
 
 # determine whether any publish_* parameter was set
