@@ -82,9 +82,8 @@
   <rm:propertyElement key="dascgerrit.authentication.from.cquery.translated">
     <bc:replace>
       <bc:constant value="${dascgerrit.authentication}"/>
-      <bc:match pattern="^[Dd]efault.*$" replacement="ssh"/>
-      <bc:match pattern="^ *ssh *$" replacement="ssh"/>
-      <bc:match pattern="^ *anonymous *$" replacement="anonymous"/>
+      <bc:match pattern="^[Dd]efault.*?ssh.*?anonymous.*$" replacement="ssh"/>
+      <bc:match pattern="^[Dd]efault.*?anonymous.*?ssh.*$" replacement="anonymous"/>
       <bc:match pattern="^(?! *(ssh|anonymous) *$).*$" replacement="unrecognised.dascgerrit.authentication"/>
     </bc:replace>
   </rm:propertyElement>

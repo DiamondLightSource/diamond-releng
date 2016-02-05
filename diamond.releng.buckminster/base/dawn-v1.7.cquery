@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-v7.8.rmap" properties="file:${user.home}/.dawn-1.7.cquery.properties" shortDesc="CQuery for DAWN 1.7">
     <cq:rootRequest name="${component}"/>
-    <cq:property key="dascgerrit.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
+    <cq:property key="dascgerrit.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required."/>
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
     <cq:property key="disallow.scisoft.deprecated" value="true"/>
     <cq:property key="download.location" value="Default is 'diamond'. Change this to 'public' if required."/>
