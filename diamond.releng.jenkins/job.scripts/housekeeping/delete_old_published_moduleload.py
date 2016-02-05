@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 ###
-### Generate a shell script to delete old published versions of the Dawn product
+### Generate a shell script to delete old published versions of various products
 ###
 ### Old versions are deleted, subject to the following rules:
 ### (1) only delete versions that are in a directory that contains a "cleanup.config" file (such directories must not be nested)
@@ -14,18 +14,27 @@
 from __future__ import absolute_import, division, print_function, unicode_literals  # make it easier if we ever move to Python 3
 import ConfigParser
 import datetime
+import optparse
 import os
 import stat
 import sys
 import time
 
-PUBLISH_DIRECTORY_PARENTS = ('/dls_sw/apps/DawnDiamond', '/dls_sw/apps/DawnVanilla')
-
 CLEANUP_SCRIPT_FILE_PATH = os.environ.get('CLEANUP_SCRIPT_FILE_PATH', '')  # optionally specify in an environment variable, otherwise defaults
 if not CLEANUP_SCRIPT_FILE_PATH:
-    CLEANUP_SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], os.environ.get('CLEANUP_SCRIPT_NAME', 'dawn_delete_old_published_moduleload.sh'))))
+    CLEANUP_SCRIPT_FILE_PATH = os.path.abspath(os.path.expanduser(os.path.join(os.environ.get('WORKSPACE',''), os.environ.get('CLEANUP_SCRIPT_NAME', 'delete_old_published_moduleload.sh'))))
 
-def generate_cleanup_script():
+
+    def define_parser():
+        """ Define all the command line options and how they are handled. """
+
+        parser = optparse.OptionParser(usage='usage: %prog -d /path/to/parent1 -d /path/to/parent2',
+            description='Deletes old versions "module load" products below one or more directories')
+        parser.add_option('-d', '--directory', dest='directories', action='append')
+        return parser
+
+
+def generate_cleanup_script(parent_directories_to_cleanup):
     # generate the shell commands required to delete old backups
 
     products_deleted = 0
@@ -33,12 +42,18 @@ def generate_cleanup_script():
     error_count = 0
     config = ConfigParser.SafeConfigParser()
 
+    print('Writing cleanup script to ' + CLEANUP_SCRIPT_FILE_PATH)
     with open(CLEANUP_SCRIPT_FILE_PATH, 'w') as script_file:
         script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                           ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n\n')
         script_file.write('cleanup_script ()  {\n')
 
-        for parent_dir in PUBLISH_DIRECTORY_PARENTS:
+        for parent_dir in parent_directories_to_cleanup:
+            print('Analyzing ' + parent_dir + ' ...')
+            if not os.path.isabs(parent_dir):
+                print('*** Error: directory %s not absolute' % (parent_dir,))
+                error_count += 1
+                continue
             if (not os.path.isdir(parent_dir)) or os.path.islink(parent_dir):
                 print('*** Error: directory %s not found' % (parent_dir,))
                 error_count += 1
@@ -49,7 +64,7 @@ def generate_cleanup_script():
                     continue
                 if not 'cleanup.config' in files:
                     continue
-    
+
                 dirs[:] = []  # directories with a cleanup.config for processing (or ignoring) are never nested, so no need to look beneath this directory
                 config.readfp(open(os.path.join(root, 'cleanup.config')))
                 if not config.getboolean('DEFAULT', 'process_this_directory'):
@@ -62,7 +77,7 @@ def generate_cleanup_script():
                     possible_symlink_stat = os.lstat(possible_symlink_path)
                     if stat.S_ISLNK(possible_symlink_stat.st_mode):
                         targets_of_symbolic_links.setdefault(os.readlink(possible_symlink_path), []).append(possible_symlink)
-    
+
                 # for each product directory, there is a minimum number of versions to keep
                 try:
                     minimum_number_of_versions_per_platform_to_keep = config.getint('DEFAULT', 'minimum_number_of_versions_per_platform_to_keep')
@@ -75,7 +90,7 @@ def generate_cleanup_script():
                     print('*** Error: directory %s has invalid cleanup.config: minimum number and days to keep must be non-zero' % (root,))
                     error_count += 1
                     continue  # skip this directory, and continue
-    
+
                 today_date = datetime.date.today()
                 for platform in ('linux32', 'linux64', 'mac32', 'mac64', 'windows32', 'windows64'):  # note that mac32 exists in old releases
                     products_kept_for_platform = 0
@@ -115,5 +130,10 @@ def generate_cleanup_script():
 ###############################################################################
 
 if __name__ == '__main__':
-    generate_cleanup_script()
+    parser = define_parser()
+    (options, positional_arguments) = parser.parse_args(sys.argv[1:])
+    if (not options.directories) or (positional_arguments):
+        parser.print_help()
+        sys.exit()
+    generate_cleanup_script(options.directories)
 
