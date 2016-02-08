@@ -143,6 +143,7 @@ dawn_publish_function () {
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to diamond webserver of .zip for ${platform} ***\n"
+                ssh ${webserver_diamond_ssh_options} ${webserver_diamond_name} mkdir -pv ${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}/
                 ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}
                 (( publish_webserver_zip_download_platforms_updated += 1 ))
                 # optionally delete any old versions for this platform
@@ -164,6 +165,7 @@ dawn_publish_function () {
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to opengda webserver of .zip for ${platform} ***\n"
+                ssh ${webserver_opengda_ssh_options} ${webserver_opengda_name} mkdir -pv ${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}/
                 ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}
                 (( publish_webserver_zip_download_platforms_updated += 1 ))
                 # optionally delete any old versions for this platform
@@ -183,6 +185,7 @@ dawn_publish_function () {
         ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*site*.zip -d ${p2_site_unzipped}/
 
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing p2 site ***\n"
+        ssh ${publish_p2_ssh_options} ${publish_p2_server} mkdir -pv ${publish_p2_directory_parent}/
         ${rsync} -e "${publish_p2_rsync_options}" -ilprtDOv ${p2_site_unzipped}/ ${publish_p2_server}:${publish_p2_directory_parent}/${name_to_publish_as}_${temp_suffix}/
         # once rsync complete, rename directory
         ssh ${publish_p2_ssh_options} ${publish_p2_server} "rm -rf ${publish_p2_directory_parent}/${name_to_publish_as}/; mv -v ${publish_p2_directory_parent}/${name_to_publish_as}_${temp_suffix}/ ${publish_p2_directory_parent}/${name_to_publish_as}/"
