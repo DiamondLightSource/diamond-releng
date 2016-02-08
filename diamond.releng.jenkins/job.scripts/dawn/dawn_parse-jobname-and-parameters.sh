@@ -55,7 +55,8 @@ if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
 
 # if this is any publish job, work out the name of the upstream job (the create.product job)
 elif [[ "${JOB_NAME:-noname}" == *--publish* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish[^~]*/-create.product/')
+    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish[^~]*-download.public\(.*\)/-create.product-download.public\1/')
+    upstream_product_job=$(echo "${upstream_product_job}" | sed 's/--publish[^~]*/-create.product/')
 
 # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
 elif [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
@@ -65,9 +66,9 @@ elif [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
 
 # if this is any squish job, work out the name of the upstream job (the create.product job)
 elif [[ "${JOB_NAME:-noname}" == *-squish-subset.* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish-subset.[^~]*/-create.product/')
+    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish-subset.[^~]*(!?-download.public)/-create.product/')
 elif [[ "${JOB_NAME:-noname}" == *-squish.* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.[^~]*/-create.product/')
+    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.[^~]*(!?-download.public)/-create.product/')
 fi
 
 echo "download_public=${download_public:Error}" >> ${properties_filename}
