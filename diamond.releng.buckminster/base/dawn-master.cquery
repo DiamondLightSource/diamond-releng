@@ -256,6 +256,9 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^org.zeromq$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">jeromq.git repository branch</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^^org\.eclipse\.launchbar(\..+)?$$" useTargetPlatform="false" branchTagPath="dawn">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">org.eclipse.launchbar.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Opt-ID.git repository branch</cq:documentation>
     </cq:advisorNode>

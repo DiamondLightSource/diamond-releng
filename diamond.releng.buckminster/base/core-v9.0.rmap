@@ -3723,7 +3723,7 @@
        org.eclipse.launchbar - repository
   -->
   <rm:searchPath name="org_eclipse_launchbar">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
       <rm:uri format="{0}/org.eclipse.launchbar.git,bundles/{1}">
@@ -3731,7 +3731,7 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
+    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
       <rm:uri format="{0}/org.eclipse.launchbar.git,features/{1}">
@@ -3739,7 +3739,7 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
       <rm:uri format="{0}/org.eclipse.launchbar.git,tests/{1}">

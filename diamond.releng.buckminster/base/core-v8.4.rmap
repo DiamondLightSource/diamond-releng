@@ -1648,16 +1648,6 @@
   <rm:propertyElement key="opt.id.git.url">
     <bc:constant value="${github.${opt.id.github.authentication}.url}${opt.id.github.organization}/Opt-ID.git"/>
   </rm:propertyElement>
-  <!-- ** org.eclipse.launchbar *** -->
-  <rm:propertyElement key="org.eclipse.launchbar.github.organization">
-    <bc:constant value="Itema-as"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="org.eclipse.launchbar.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="org.eclipse.launchbar.git.url">
-    <bc:constant value="${github.${org.eclipse.launchbar.github.authentication}.url}${org.eclipse.launchbar.github.organization}/org.eclipse.launchbar.git"/>
-  </rm:propertyElement>
   <!-- ** py4j *** -->
   <rm:propertyElement key="py4j.github.organization">
     <bc:constant value="DawnScience"/>
@@ -2319,8 +2309,6 @@
   <rm:locator pattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" searchPathRef="gphl_sdcp_common"/>
   <!-- ** jeromq *** -->
   <rm:locator pattern="^org.zeromq$" searchPathRef="jeromq"/>
-  <!-- ** org.eclipse.launchbar *** -->
-  <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
   <!-- ** Opt-ID *** -->
   <rm:locator pattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" searchPathRef="opt_id"/>
   <!-- ** py4j *** -->
@@ -3751,40 +3739,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.Opt-ID=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from Opt-ID.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       org.eclipse.launchbar - repository
-  -->
-  <rm:searchPath name="org_eclipse_launchbar">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
-      <rm:uri format="{0}/org.eclipse.launchbar.git,bundles/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
-      <rm:uri format="{0}/org.eclipse.launchbar.git,features/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
-      <rm:uri format="{0}/org.eclipse.launchbar.git,tests/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.org.eclipse.launchbar=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from org.eclipse.launchbar.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
