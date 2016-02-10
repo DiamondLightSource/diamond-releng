@@ -220,6 +220,35 @@
   <rm:propertyElement key="daq.eclipse.git.url">
     <bc:constant value="${github.${daq.eclipse.github.authentication}.url}${daq.eclipse.github.organization}/daq-eclipse.git"/>
   </rm:propertyElement>
+  <!-- -->
+  <rm:propertyElement key="daq.platform.git.location">
+    <bc:constant value="${gda.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="daq.platform.git.location.translated">
+    <bc:replace>
+      <bc:constant value="${daq.platform.git.location}"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
+      <bc:match pattern="^public$" replacement="github"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="daq.platform.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="daq.platform.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${daq.platform.dascgerrit.authentication}.url}/gda"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="daq.platform.github.organization">
+    <bc:constant value="openGDA"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="daq.platform.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="daq.platform.github.url">
+    <bc:constant value="${github.${daq.platform.github.authentication}.url}${daq.platform.github.organization}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="daq.platform.git.url">
+    <bc:constant value="${daq.platform.${daq.platform.git.location.translated}.url}/gda-bimorph.git"/>
+  </rm:propertyElement>
   <!-- ** dawn- *** -->
   <rm:propertyElement key="dawn.commandserver.github.organization">
     <bc:constant value="DawnScience"/>
@@ -2234,6 +2263,7 @@
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- ** daq- *** -->
   <rm:locator pattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector|org\.apache\.activemq)(\..+)?)$" searchPathRef="daq_eclipse"/>
+  <rm:locator pattern="^(uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|server(\..+)?))$" searchPathRef="daq_platform"/>
   <!-- ** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|jgoogleanalytics|macro|nexus|persistence|processing\.python|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
@@ -2298,7 +2328,7 @@
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
   <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
-  <rm:locator pattern="^uk\.ac\.(diamond\.daq\.(client\.microfocus(\..+)?|microfocus\.api)|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" searchPathRef="gda_xas_core"/>
+  <rm:locator pattern="^uk\.ac\.(diamond\.daq\.(client\.microfocus(\..+)?|microfocus\.api|xas\.server\.feature)|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" searchPathRef="gda_xas_core"/>
   <!-- ** gphl *** -->
   <rm:locator pattern="^com\.globalphasing\.sdcp\.abstract_beamline$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
@@ -2545,6 +2575,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.daq-eclipse=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from daq-eclipse.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="daq_platform">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.daq-platform=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${daq.platform.git.url}"/>
+      <rm:uri format="{0}/daq-platform.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.daq-platform=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from daq-platform.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>

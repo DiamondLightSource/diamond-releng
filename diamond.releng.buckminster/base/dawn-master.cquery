@@ -24,6 +24,10 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector|org\.apache\.activemq)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^(uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|server(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-platform.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.daq-platform" value="true"/>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-commandserver.git repository branch</cq:documentation>
     </cq:advisorNode>
@@ -237,7 +241,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-video.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-video" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.daq\.(client\.microfocus(\..+)?|microfocus\.api)|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.daq\.(client\.microfocus(\..+)?|microfocus\.api|xas\.server\.feature)|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-xas-core.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-xas-core" value="true"/>
     </cq:advisorNode>
@@ -256,7 +260,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^org.zeromq$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">jeromq.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^^org\.eclipse\.launchbar(\..+)?$$" useTargetPlatform="false" branchTagPath="dawn">
+    <cq:advisorNode namePattern="^org\.eclipse\.launchbar(\..+)?$" useTargetPlatform="false" branchTagPath="dawn">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">org.eclipse.launchbar.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" useTargetPlatform="false">
