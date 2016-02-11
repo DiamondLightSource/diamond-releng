@@ -124,6 +124,7 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent netw
     ('java.net.SocketTimeoutException: Read timed out', 'Network error'),  # text = no specifc repository identified
     ('HttpComponents connection error response code (500|502|503)', 'Server error'),  # text = no specifc repository identified
     ('ERROR:? +No repository found at http://www\.opengda\.org/', 'Server error'),  # text = no specifc repository identified
+    ('org.eclipse.equinox.p2.core.ProvisionException: No repository found at ', 'Network error'),  # text = no specifc repository identified
     )
 
 BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermittent Buckminster bug
