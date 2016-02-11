@@ -52,11 +52,8 @@
   <rm:propertyElement key="eclipse.orbit.p2.version">  <!-- version of Eclipse Orbit p2 repository to use -->
     <bc:constant value="R20151221205849"/>  <!-- Mars.2 -->
   </rm:propertyElement>
-  <rm:propertyElement key="eclipse.orbit.p2.version.BATIK160">  <!-- version of Eclipse Orbit p2 repository to use to get batik 1.6.0 (required) -->
-    <bc:constant value="R20150124073747"/>  <!-- Luna SR2 -->
-  </rm:propertyElement>
   <rm:propertyElement key="eclipse.jetty9.p2.version">  <!-- version of Eclipse Jetty 9 p2 repository to use -->
-    <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars depends on -->
+    <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars SR2 depends on -->
   </rm:propertyElement>
   <!--                                                             -->
   <!-- Properties for Gitolite-managed git repositories at Diamond -->
@@ -2402,8 +2399,7 @@
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2_BATIK160"/>
+  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.codec(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
@@ -4307,13 +4303,6 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version}/repository/"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_orbit_p2_BATIK160">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version.BATIK160}/repository/"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_jetty9_p2">
