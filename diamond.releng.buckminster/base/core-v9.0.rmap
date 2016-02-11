@@ -232,7 +232,7 @@
     <bc:constant value="${dascgerrit.authentication.common}"/>
   </rm:propertyElement>
   <rm:propertyElement key="daq.platform.dascgerrit.url">
-    <bc:constant value="${diamond.dascgerrit.${daq.platform.dascgerrit.authentication}.url}/gda"/>
+    <bc:constant value="${diamond.dascgerrit.${daq.platform.dascgerrit.authentication}.url}/daq"/>
   </rm:propertyElement>
   <rm:propertyElement key="daq.platform.github.organization">
     <bc:constant value="openGDA"/>
@@ -244,7 +244,7 @@
     <bc:constant value="${github.${daq.platform.github.authentication}.url}${daq.platform.github.organization}"/>
   </rm:propertyElement>
   <rm:propertyElement key="daq.platform.git.url">
-    <bc:constant value="${daq.platform.${daq.platform.git.location.translated}.url}/gda-bimorph.git"/>
+    <bc:constant value="${daq.platform.${daq.platform.git.location.translated}.url}/daq-platform.git"/>
   </rm:propertyElement>
   <!-- ** dawn- *** -->
   <rm:propertyElement key="dawn.commandserver.github.organization">

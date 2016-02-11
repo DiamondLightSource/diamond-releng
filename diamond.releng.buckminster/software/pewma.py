@@ -29,7 +29,8 @@ import zipfile
 
 COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, category, actual component name to use)
 
-COMPONENT_ABBREVIATIONS.append(('logpanel', 'gda', ' uk.ac.gda.client.logpanel.site'))
+COMPONENT_ABBREVIATIONS.append(('gdaserver', 'gda', 'uk.ac.diamond.daq.server.site'))
+COMPONENT_ABBREVIATIONS.append(('logpanel', 'gda', 'uk.ac.gda.client.logpanel.site'))
 COMPONENT_ABBREVIATIONS.append(('gda-training', 'gda-training', 'gda-training-config'))
 COMPONENT_ABBREVIATIONS.append(('dsx', 'ida', 'uk.ac.diamond.dsx.site'))
 COMPONENT_ABBREVIATIONS.append(('wychwood', 'ida', 'uk.ac.diamond.dsx.site'))
@@ -132,7 +133,8 @@ BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermitten
     )
 
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
-    # repository                  Gerrit URL  
+    # repository                  Gerrit URL
+    ('daq-platform.git'          , 'ssh://gerrit.diamond.ac.uk:29418/daq/daq-platform.git'),
     ('gda-bimorph.git'          , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-bimorph.git'),
     ('gda-common.git'           , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-common.git'),
     ('gda-common-rcp.git'       , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-common-rcp.git'),
