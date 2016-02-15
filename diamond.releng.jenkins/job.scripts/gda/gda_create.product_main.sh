@@ -1,5 +1,8 @@
 # specify the environment
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/set-environment.sh GDA.${GDA_release}-environment-variables.properties
+if [[ -n "${non_beamline_product}" ]]; then
+    . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/properties/GDA.${GDA_release}-product-${non_beamline_product}.properties
+fi
 
 # source functions that we will use
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/pre.post.materialize_functions.sh
