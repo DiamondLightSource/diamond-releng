@@ -8,8 +8,8 @@ rm -fv ${properties_filename}
 echo "# Written `date +"%a %d/%b/%Y %H:%M:%S %z"` (${BUILD_URL:-\$BUILD_URL:missing})" >> ${properties_filename}
 
 # The jobname must start with "GDA.", followed by the release (e.g. master, 8.42), followed by a dash (-)
-# IF the jobname contains ".beamline-GROUP-", it must be followed by <beamline name> (which may contain a -), optionally followed by -download.public
-# OTHERWISE group and beamline do not apply
+# IF the jobname contains "create.product.beamline-<SITE>-", it must be followed by <beamline name> (which may contain a -), optionally followed by -download.public
+# OTHERWISE site and beamline do not apply
 # optionally terminated by "~" and a variant name (something like "~e4")
 
 if [[ "${JOB_NAME:0:4}" == "GDA." ]]; then
@@ -41,13 +41,13 @@ if [[ "${JOB_NAME:-noname}" == *-gerrit-trigger* ]]; then
     gerrit_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-gerrit-trigger/-junit.tests-gerrit/')
 fi
 
-groupbeamlinesuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*beamline-')
-if [[ "${groupbeamlinesuffixindex}" != "0" ]]; then
-    groupbeamlinesuffix=${JOB_NAME:groupbeamlinesuffixindex}
-    dash=$(expr index ${groupbeamlinesuffix} '-') || true
+sitebeamlinesuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*beamline-')
+if [[ "${sitebeamlinesuffixindex}" != "0" ]]; then
+    sitebeamlinesuffix=${JOB_NAME:sitebeamlinesuffixindex}
+    dash=$(expr index ${sitebeamlinesuffix} '-') || true
     if [[ "${dash}" != "0" ]]; then
-        group=${groupbeamlinesuffix:0:${dash}-1}
-        beamlinesuffix=${groupbeamlinesuffix:${dash}}
+        site=${sitebeamlinesuffix:0:${dash}-1}
+        beamlinesuffix=${sitebeamlinesuffix:${dash}}
         beamline=${beamlinesuffix%%-download.public}
         # if this is a create.product job, work out the name of the downstream job (the squish job)
         if [[ "${JOB_NAME:-noname}" == *-create.product.beamline* ]]; then
@@ -56,6 +56,18 @@ if [[ "${groupbeamlinesuffixindex}" != "0" ]]; then
         # if this is a squish job, work out the name of the upstream job (the create.product job)
         if [[ "${JOB_NAME:-noname}" == *-squish.beamline* ]]; then
             upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.beamline/-create.product.beamline/')
+        fi
+    fi
+else
+    # if it's a create.product job, but not a create.product.beamline job, get the product name
+    createproductsuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*create.product-')
+    if [[ "${createproductsuffixindex}" != "0" ]]; then
+        createproductsuffix=${JOB_NAME:createproductsuffixindex}
+        dash=$(expr index ${createproductsuffix} '-') || true
+        if [[ "${dash}" != "0" ]]; then
+            nonbeamlineproduct=${createproductsuffix:0:${dash}-1}
+        else
+            nonbeamlineproduct=${createproductsuffix}
         fi
     fi
 fi
@@ -75,11 +87,14 @@ echo "download_public=${download_public:Error}" >> ${properties_filename}
 echo "GDA_release=${release:Error}" >> ${properties_filename}
 echo "GDA_job_variant=${job_variant:Error}" >> ${properties_filename}
 
-if [[ -n "${group}" ]]; then
-    echo "GDA_group=${group}" >> ${properties_filename}
+if [[ -n "${site}" ]]; then
+    echo "beamline_site=${site}" >> ${properties_filename}
 fi
 if [[ -n "${beamline}" ]]; then
     echo "GDA_beamline=${beamline}" >> ${properties_filename}
+fi
+if [[ -n "${nonbeamlineproduct}" ]]; then
+    echo "non_beamline_product=${nonbeamlineproduct}" >> ${properties_filename}
 fi
 if [[ -n "${squish_job_to_trigger}" ]]; then
     echo "GDA_squish_job_to_trigger=${squish_job_to_trigger}" >> ${properties_filename}

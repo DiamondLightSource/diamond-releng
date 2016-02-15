@@ -3,35 +3,45 @@ set +x  # Turn off xtrace
 
 properties_filename=${WORKSPACE}/job-specific-environment-variables.properties
 
-if [[ "${GDA_beamline}" == "logpanel" || "${GDA_beamline}" == "synoptic" ]]; then
-    materialize_component=uk.ac.gda.client.${GDA_beamline}.site
+if [[ "${non_beamline_product}" == "logpanel" || "${non_beamline_product}" == "synoptic" ]]; then
+    product_site=uk.ac.gda.client.${GDA_beamline}.site
+    materialize_component=${product_site}
+elif [[ "${non_beamline_product}" == "gdaserver" ]]; then
+    product_site=uk.ac.diamond.daq.server.site
+    materialize_component=${product_site}
 else
-    materialize_component=${GDA_beamline:-internal_error}-config
-fi
 
-if [[ "${GDA_group}" == "DLS" ]]; then
-    if [[ "${GDA_beamline}" == "excalibur" || "${GDA_beamline}" == "synoptic" ]]; then
-        product_site=uk.ac.gda.client.${GDA_beamline}.site
-    elif [[ "${GDA_beamline}" == "i20-1" ]]; then
-        product_site=uk.ac.gda.beamline.i20_1.site
+    # pre 8.52, logpanel and synoptic were reported as GDA_beamline (subsequently reported as non_beamline_product)
+    if [[ "${GDA_beamline}" == "logpanel" || "${GDA_beamline}" == "synoptic" ]]; then
+        materialize_component=uk.ac.gda.client.${GDA_beamline}.site
     else
-        product_site=uk.ac.gda.beamline.${GDA_beamline}.site
+        materialize_component=${GDA_beamline:-internal_error}-config
     fi
-elif [[ "${GDA_group}" == "GDA" ]]; then
-    if [[ "${GDA_beamline}" == "logpanel" ]]; then
-        product_site=uk.ac.gda.client.${GDA_beamline}.site
+
+    if [[ "${beamline_site}" == "DLS" ]]; then
+        if [[ "${GDA_beamline}" == "excalibur" || "${GDA_beamline}" == "synoptic" ]]; then
+            product_site=uk.ac.gda.client.${GDA_beamline}.site
+        elif [[ "${GDA_beamline}" == "i20-1" ]]; then
+            product_site=uk.ac.gda.beamline.i20_1.site
+        else
+            product_site=uk.ac.gda.beamline.${GDA_beamline}.site
+        fi
+    elif [[ "${beamline_site}" == "GDA" ]]; then
+        if [[ "${GDA_beamline}" == "logpanel" ]]; then
+            product_site=uk.ac.gda.client.${GDA_beamline}.site
+        else
+            product_site=uk.ac.gda.${GDA_beamline}.site
+        fi
+    elif [[ "${beamline_site}" == "APS" ]]; then
+        product_site=gov.aps.gda.beamline.${GDA_beamline}.site
+    elif [[ "${beamline_site}" == "ESRF" ]]; then
+        product_site=fr.esrf.gda.beamline.${GDA_beamline}.site
+    elif [[ "${beamline_site}" == "RAL" ]]; then
+        product_site=uk.ac.rl.gda.${GDA_beamline}.site
     else
-        product_site=uk.ac.gda.${GDA_beamline}.site
+        echo "internal error determining product_site"
+        exit 2
     fi
-elif [[ "${GDA_group}" == "APS" ]]; then
-    product_site=gov.aps.gda.beamline.${GDA_beamline}.site
-elif [[ "${GDA_group}" == "ESRF" ]]; then
-    product_site=fr.esrf.gda.beamline.${GDA_beamline}.site
-elif [[ "${GDA_group}" == "RAL" ]]; then
-    product_site=uk.ac.rl.gda.${GDA_beamline}.site
-else
-    echo "internal error determining product_site"
-    exit 2
 fi
 
 if [[ "${download_public:false}" == "true" ]]; then
@@ -53,7 +63,7 @@ product_options_extra=--suppress-compile-warnings
 EOF
 
 # the example beamline .properties filenames are different from the standard names defined in GDA.<release>-environment-variables.properties
-if [[ "${GDA_group}" == "GDA" && "${GDA_beamline}" == "example" ]]; then
+if [[ "${beamline_site}" == "GDA" && "${GDA_beamline}" == "example" ]]; then
     cat << EOF >> ${properties_filename}
 buckminster_properties_filename=buckminster.diamond.jenkins.properties
 EOF
