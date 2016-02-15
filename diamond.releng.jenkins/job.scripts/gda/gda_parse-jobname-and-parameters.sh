@@ -55,7 +55,7 @@ if [[ "${sitebeamlinesuffixindex}" != "0" ]]; then
         fi
         # if this is a squish job, work out the name of the upstream job (the create.product job)
         if [[ "${JOB_NAME:-noname}" == *-squish.beamline* ]]; then
-            upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.beamline/-create.product.beamline/')
+            upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.beamline/-create.product.beamline/')
         fi
     fi
 else
@@ -102,8 +102,8 @@ fi
 if [[ -n "${gerrit_job_to_trigger}" ]]; then
     echo "GDA_gerrit_job_to_trigger=${gerrit_job_to_trigger}" >> ${properties_filename}
 fi
-if [[ -n "${upstream_product_job}" ]]; then
-    echo "GDA_upstream_product_job=${upstream_product_job}" >> ${properties_filename}
+if [[ -n "${upstream_create_product_job}" ]]; then
+    echo "upstream_create_product_job=${upstream_create_product_job}" >> ${properties_filename}
 fi
 if [[ -n "${postbuild_scan_for_compiler_warnings}" ]]; then
     echo "postbuild_scan_for_compiler_warnings=${postbuild_scan_for_compiler_warnings}" >> ${properties_filename}

@@ -2,7 +2,7 @@ import os
 
 set_build_description_done = False
 try:
-    product_build_job = os.environ['DAWN_upstream_product_job']
+    product_build_job = os.environ['upstream_create_product_job']
     if '.master-' in product_build_job:
         product_build_job_short = product_build_job.replace('.master-', '-', 1)
     elif product_build_job.startswith('DawnDiamond.'):

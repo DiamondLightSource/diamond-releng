@@ -3,16 +3,8 @@ set +x  # Turn off xtrace
 
 properties_filename=${WORKSPACE}/job-specific-environment-variables.properties
 
-if [[ "${non_beamline_product}" == "logpanel" || "${non_beamline_product}" == "synoptic" ]]; then
-    product_site=uk.ac.gda.client.${GDA_beamline}.site
-    materialize_component=${product_site}
-elif [[ "${non_beamline_product}" == "gdaserver" ]]; then
-    product_site=uk.ac.diamond.daq.server.site
-    materialize_component=${product_site}
-else
-
-    # pre 8.52, logpanel and synoptic were reported as GDA_beamline (subsequently reported as non_beamline_product)
-    if [[ "${GDA_beamline}" == "logpanel" || "${GDA_beamline}" == "synoptic" ]]; then
+if [[ -z "${non_beamline_product}" ]]; then
+    if [[ "${GDA_beamline}" == "synoptic" ]]; then
         materialize_component=uk.ac.gda.client.${GDA_beamline}.site
     else
         materialize_component=${GDA_beamline:-internal_error}-config

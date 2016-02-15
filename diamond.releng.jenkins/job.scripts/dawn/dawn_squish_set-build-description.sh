@@ -7,7 +7,7 @@ if [[ "${product_origin}" == *"Upload a .zip file"* ]]; then
 elif [[ "${product_origin}" == *"already on the test machine"* ]]; then
     echo "append-build-description: testing product .zip already on the test machine"
 elif [ -n "${copyartifact_build_number}" ]; then
-    echo "append-build-description: testing <a href=\"/job/${DAWN_upstream_product_job}/\">create-product</a> build <a href=\"/job/${DAWN_upstream_product_job}/${copyartifact_build_number}/\">${copyartifact_build_number}</a>"
+    echo "append-build-description: testing <a href=\"/job/${upstream_create_product_job}/\">create-product</a> build <a href=\"/job/${upstream_create_product_job}/${copyartifact_build_number}/\">${copyartifact_build_number}</a>"
 else
     echo "append-build-description: Internal error: could not determine what was tested"
 fi

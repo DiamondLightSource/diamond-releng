@@ -55,24 +55,24 @@ if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
 
 # if this is any publish job, work out the name of the upstream job (the create.product job)
 elif [[ "${JOB_NAME:-noname}" == *--publish* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--publish[^~]*-download.public\(.*\)/-create.product-download.public\1/')
-    upstream_product_job=$(echo "${upstream_product_job}" | sed 's/--publish[^~]*/-create.product/')
+    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/--publish[^~]*-download.public\(.*\)/-create.product-download.public\1/')
+    upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/--publish[^~]*/-create.product/')
 
 # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
 elif [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
+    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
     squish_platform_job_prefix=$(echo "${JOB_NAME}" | sed 's/--squish.trigger.*$/-squish./')
     squish_platform_job_suffix=$(echo "${JOB_NAME}" | sed 's/^.*--squish.trigger//')
 
 # if this is any squish job, work out the name of the upstream job (the create.product job)
 elif [[ "${JOB_NAME:-noname}" == *-squish-subset.* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish-subset.[^~]*-download.public\(.*\)/-create.product-download.public\1/')
-    upstream_product_job=$(echo "${upstream_product_job}" | sed 's/-squish-subset.[^~]*/-create.product/')
+    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/-squish-subset.[^~]*-download.public\(.*\)/-create.product-download.public\1/')
+    upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/-squish-subset.[^~]*/-create.product/')
     
 elif [[ "${JOB_NAME:-noname}" == *-squish.* ]]; then
-    upstream_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.[^~]*-download.public\(.*\)/-create.product-download.public\1/')
-    upstream_product_job=$(echo "${upstream_product_job}" | sed 's/-squish.[^~]*/-create.product/')
-    echo $upstream_product_job
+    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.[^~]*-download.public\(.*\)/-create.product-download.public\1/')
+    upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/-squish.[^~]*/-create.product/')
+    echo $upstream_create_product_job
 fi
 
 echo "download_public=${download_public:Error}" >> ${properties_filename}
@@ -80,17 +80,17 @@ echo "DAWN_flavour=${flavour:Error}" >> ${properties_filename}
 echo "DAWN_release=${release:Error}" >> ${properties_filename}
 echo "DAWN_job_variant=${job_variant:Error}" >> ${properties_filename}
 if [[ -n "${publish_snapshot_job_to_trigger}" ]]; then
-    echo "DAWN_publish_snapshot_job_to_trigger=${publish_snapshot_job_to_trigger}" >> ${properties_filename}
+    echo "publish_snapshot_job_to_trigger=${publish_snapshot_job_to_trigger}" >> ${properties_filename}
 fi
 if [[ -n "${squish_trigger_job_to_trigger}" ]]; then
-    echo "DAWN_squish_trigger_job_to_trigger=${squish_trigger_job_to_trigger}" >> ${properties_filename}
+    echo "squish_trigger_job_to_trigger=${squish_trigger_job_to_trigger}" >> ${properties_filename}
 fi
-if [[ -n "${upstream_product_job}" ]]; then
-    echo "DAWN_upstream_product_job=${upstream_product_job}" >> ${properties_filename}
+if [[ -n "${upstream_create_product_job}" ]]; then
+    echo "upstream_create_product_job=${upstream_create_product_job}" >> ${properties_filename}
 fi
 if [[ -n "${squish_platform_job_prefix}" ]]; then
-    echo "DAWN_squish_platform_job_prefix=${squish_platform_job_prefix}" >> ${properties_filename}
-    echo "DAWN_squish_platform_job_suffix=${squish_platform_job_suffix}" >> ${properties_filename}
+    echo "squish_platform_job_prefix=${squish_platform_job_prefix}" >> ${properties_filename}
+    echo "squish_platform_job_suffix=${squish_platform_job_suffix}" >> ${properties_filename}
 fi
 
 # determine whether any publish_* parameter was set
