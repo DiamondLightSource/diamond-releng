@@ -48,9 +48,9 @@ else
     download_public=false
 fi
 
-# if this is a create.product job, work out the name of the two downstream jobs (the publish-snapshot job, and the squish trigger job)
+# if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
 if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
-    publish_snapshot_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--publish-snapshot/')
+    publish_snapshot_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--publish.snapshot/')
     squish_trigger_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--squish.trigger/')
 
 # if this is any publish job, work out the name of the upstream job (the create.product job)
