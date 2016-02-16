@@ -50,19 +50,19 @@ fi
 
 # if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
 if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
-    publish_snapshot_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--publish.snapshot/')
-    squish_trigger_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/--squish.trigger/')
+    publish_snapshot_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/-publish.snapshot/')
+    squish_trigger_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/-squish.trigger/')
 
 # if this is any publish job, work out the name of the upstream job (the create.product job)
-elif [[ "${JOB_NAME:-noname}" == *--publish* ]]; then
-    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/--publish[^~]*-download.public\(.*\)/-create.product-download.public\1/')
-    upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/--publish[^~]*/-create.product/')
+elif [[ "${JOB_NAME:-noname}" == *-publish* ]]; then
+    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/-publish[^~]*-download.public\(.*\)/-create.product-download.public\1/')
+    upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/-publish[^~]*/-create.product/')
 
 # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
-elif [[ "${JOB_NAME:-noname}" == *--squish.trigger* ]]; then
-    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/--squish.trigger/-create.product/')
-    squish_platform_job_prefix=$(echo "${JOB_NAME}" | sed 's/--squish.trigger.*$/-squish./')
-    squish_platform_job_suffix=$(echo "${JOB_NAME}" | sed 's/^.*--squish.trigger//')
+elif [[ "${JOB_NAME:-noname}" == *-squish.trigger* ]]; then
+    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.trigger/-create.product/')
+    squish_platform_job_prefix=$(echo "${JOB_NAME}" | sed 's/-squish.trigger.*$/-squish./')
+    squish_platform_job_suffix=$(echo "${JOB_NAME}" | sed 's/^.*-squish.trigger//')
 
 # if this is any squish job, work out the name of the upstream job (the create.product job)
 elif [[ "${JOB_NAME:-noname}" == *-squish-subset.* ]]; then
