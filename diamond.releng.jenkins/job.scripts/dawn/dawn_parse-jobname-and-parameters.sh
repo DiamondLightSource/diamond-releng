@@ -78,7 +78,7 @@ fi
 echo "download_public=${download_public:Error}" >> ${properties_filename}
 echo "DAWN_flavour=${flavour:Error}" >> ${properties_filename}
 echo "DAWN_release=${release:Error}" >> ${properties_filename}
-echo "DAWN_job_variant=${job_variant:Error}" >> ${properties_filename}
+echo "job_variant=${job_variant:Error}" >> ${properties_filename}
 if [[ -n "${publish_snapshot_job_to_trigger}" ]]; then
     echo "publish_snapshot_job_to_trigger=${publish_snapshot_job_to_trigger}" >> ${properties_filename}
 fi

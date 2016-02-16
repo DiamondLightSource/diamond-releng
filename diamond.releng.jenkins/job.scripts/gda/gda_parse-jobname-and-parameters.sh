@@ -85,7 +85,7 @@ fi
 
 echo "download_public=${download_public:Error}" >> ${properties_filename}
 echo "GDA_release=${release:Error}" >> ${properties_filename}
-echo "GDA_job_variant=${job_variant:Error}" >> ${properties_filename}
+echo "job_variant=${job_variant:Error}" >> ${properties_filename}
 
 if [[ -n "${site}" ]]; then
     echo "beamline_site=${site}" >> ${properties_filename}
