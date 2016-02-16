@@ -18,8 +18,8 @@ record_head_commits_function > ${materialized_info_path}/materialized_head_commi
 for extra_repo in "dawn-test.git"; do
     if ! grep -q "${extra_repo}" ${materialized_info_path}/materialized_head_commits.txt; then
         echo -n "repository=${extra_repo}***URL=git://github.com/DawnScience/${extra_repo}***" >> ${materialized_info_path}/materialized_head_commits.txt
-        echo -n "HEAD=$(git ls-remote git@github.com:DawnScience/${extra_repo} refs/heads/master | cut -f 1)***" >> ${materialized_info_path}/materialized_head_commits.txt
-        echo "BRANCH=master***" >> ${materialized_info_path}/materialized_head_commits.txt
+        echo -n "HEAD=$(git ls-remote git@github.com:DawnScience/${extra_repo} refs/heads/${materialize_version} | cut -f 1)***" >> ${materialized_info_path}/materialized_head_commits.txt
+        echo "BRANCH=${materialize_version}***" >> ${materialized_info_path}/materialized_head_commits.txt
         echo "Appended to materialized_head_commits.txt: $(tail -n 1 ${materialized_info_path}/materialized_head_commits.txt)"
     fi
 done
