@@ -3,6 +3,11 @@ set +x  # Turn off xtrace
 
 properties_filename=${WORKSPACE}/job-specific-environment-variables.properties
 
+# Below required for GDA 8.50, which does not set non_beamline_product since the GDA 8.50 jobname contains the string "beamline"
+if [[ "${GDA_beamline}" == "logpanel" ]]; then
+    materialize_component=uk.ac.gda.client.${GDA_beamline}.site
+fi
+
 if [[ -z "${non_beamline_product}" ]]; then
     if [[ "${GDA_beamline}" == "synoptic" ]]; then
         materialize_component=uk.ac.gda.client.${GDA_beamline}.site
