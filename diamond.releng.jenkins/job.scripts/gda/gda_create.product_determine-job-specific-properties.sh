@@ -34,6 +34,15 @@ if [[ -z "${non_beamline_product}" ]]; then
         echo "internal error determining product_site"
         exit 2
     fi
+elif [[ "${non_beamline_product}" == "gdaserver" ]]; then
+    materialize_component=uk.ac.diamond.daq.server.site
+    product_site=${materialize_component}
+elif [[ "${non_beamline_product}" == "logpanel" ]]; then
+    materialize_component=uk.ac.gda.client.logpanel.site
+    product_site=${materialize_component}
+else
+    echo "internal error determining materialize_component and product_site"
+    exit 2
 fi
 
 if [[ "${download_public:false}" == "true" ]]; then
@@ -47,10 +56,10 @@ fi
 
 cat << EOF >> ${properties_filename}
 # Written `date +"%a %d/%b/%Y %H:%M:%S %z"` (${BUILD_URL:-\$BUILD_URL:missing})
-materialize_component=${materialize_component}
+materialize_component=${materialize_component:-internal_error in gda_create.product_determine-job-specific-properties.sh}
 materialize_properties_extra='-Dskip_ALL_test_fragments=true'
 build_options_extra=--suppress-compile-warnings
-product_site=${product_site:-internal_error}
+product_site=${product_site:-internal_error in gda_create.product_determine-job-specific-properties.sh}
 product_options_extra=--suppress-compile-warnings
 EOF
 
