@@ -17,10 +17,10 @@
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i24.*)$" filter="(materialize_skip_list=*i24*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
-    <cq:advisorNode namePattern="^(?!.*-config$).*" filter="(only_..-config=true)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^.*\.tests?$" filter="(skip_ALL_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.(?!nexus)|org\.eclipse\.dawnsci\.(?!nexus)|uk\.ac\.diamond\.(daq\.activemq\.connector|scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(skip_GDA_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(?!.*-config$).*" filter="(|(only_..-config=true)(only_..-config.common=true))" skipComponent="true"/>
+    <cq:advisorNode namePattern="^.*\.tests?$" filter="(|(skip_ALL_test_fragments=true)(skip_ALL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.(?!nexus)|org\.eclipse\.dawnsci\.(?!nexus)|uk\.ac\.diamond\.(daq\.activemq\.connector|scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(|(skip_DAWN_test_fragments=true)(skip_DAWN_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(|(skip_GDA_test_fragments=true)(skip_GDA_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(beamline\.i05\.dashboard|bimorph|dls\.client\.test|devices\.hidenrga(\..+)?)$" filter="(|(download.location=public)(download.location.common=public))" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Exclude certain components that are not mirrored externally to Diamond Light Source.
 Used for public downloads.</cq:documentation>
