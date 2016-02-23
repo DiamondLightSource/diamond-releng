@@ -15,12 +15,17 @@ materialize_function
 
 record_head_commits_function > ${materialized_info_path}/materialized_head_commits.txt
 # also record the current head in repos that might not have been materialized, but we still need to branch when making a release
-for extra_repo in "dawn-test.git"; do
-    if ! grep -q "${extra_repo}" ${materialized_info_path}/materialized_head_commits.txt; then
-        echo -n "repository=${extra_repo}***URL=git://github.com/DawnScience/${extra_repo}***" >> ${materialized_info_path}/materialized_head_commits.txt
-        echo -n "HEAD=$(git ls-remote git@github.com:DawnScience/${extra_repo} refs/heads/${materialize_version} | cut -f 1)***" >> ${materialized_info_path}/materialized_head_commits.txt
-        echo "BRANCH=${materialize_version}***" >> ${materialized_info_path}/materialized_head_commits.txt
-        echo "Appended to materialized_head_commits.txt: $(tail -n 1 ${materialized_info_path}/materialized_head_commits.txt)"
+for extra_repo in "dawn-test"; do
+    if ! grep -q "${extra_repo}.git" ${materialized_info_path}/materialized_head_commits.txt; then
+        extra_repo_branch=$(grep ${extra_repo} ${materialized_info_path}//cquery-branches-file.txt  | cut -d = -f 2)
+        if [[ -n "${extra_repo_branch}" ]]; then
+            echo -n "repository=${extra_repo}.git***URL=git://github.com/DawnScience/${extra_repo}.git***" >> ${materialized_info_path}/materialized_head_commits.txt
+            echo -n "HEAD=$(git ls-remote git@github.com:DawnScience/${extra_repo}.git refs/heads/${extra_repo_branch} | cut -f 1)***" >> ${materialized_info_path}/materialized_head_commits.txt
+            echo "BRANCH=${materialize_version}***" >> ${materialized_info_path}/materialized_head_commits.txt
+            echo "Appended to materialized_head_commits.txt: $(tail -n 1 ${materialized_info_path}/materialized_head_commits.txt)"
+        else
+            echo "ERROR in determining branch name for ${extra_repo}.git, so could not determine HEAD commit"
+        fi
     fi
 done
 record_workspace_projects_function > ${materialized_info_path}/materialized_project_names.txt
