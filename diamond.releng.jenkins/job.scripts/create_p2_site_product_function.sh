@@ -40,14 +40,14 @@ create_p2_site_product_function () {
 
     if [ "${platform_list}" != " " ]; then
         if [[ "${product_zip}" == "true" ]]; then
-            dawn_action=product.zip
+            buckminster_action=product.zip
         else
-            dawn_action=product
+            buckminster_action=product
         fi
     elif [[ "${p2_site}" == "true" || "${publish_p2_site}" == "true" ]]; then
-        dawn_action=site.p2
+        buckminster_action=site.p2
     else
-        dawn_action=
+        buckminster_action=
     fi
 
     ###
@@ -59,8 +59,8 @@ create_p2_site_product_function () {
     echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Creating product(s) ***\n"
     rm -rf ${buckminster_root_prefix} || return 3
     # product for all requested platforms (or just site.p2)
-    if [ -n "${dawn_action}" ]; then
-        ${pewma_py} ${log_level_option} -w ${materialize_workspace_path} --buckminster.root.prefix=${buckminster_root_prefix} --assume-build --buckminster.properties.file=${buckminster_properties_filename} ${product_options_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} ${dawn_action} ${product_site} ${platform_list} || return 1
+    if [ -n "${buckminster_action}" ]; then
+        ${pewma_py} ${log_level_option} -w ${materialize_workspace_path} --buckminster.root.prefix=${buckminster_root_prefix} --assume-build --buckminster.properties.file=${buckminster_properties_filename} ${product_options_extra} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} ${buckminster_action} ${product_site} ${platform_list} || return 1
         export platforms_built=$(find ${buckminster_root_prefix}/products/ -mindepth 1 -maxdepth 1 -type d ! -name '*.zip' ! -name '*squish*' -name '*.v[0-9]*' | wc -l)
     else
         echo "No platforms were specified, and no p2 site was requested, so skipping action"
