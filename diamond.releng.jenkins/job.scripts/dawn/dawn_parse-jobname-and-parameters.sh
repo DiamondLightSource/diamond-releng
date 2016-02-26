@@ -110,6 +110,7 @@ for var in $(compgen -A variable trigger_squish_); do
     fi
 done
 echo "at_least_one_trigger_squish_parameter_selected=${at_least_one_trigger_squish_parameter_selected}" >> ${properties_filename}
+
 if [[ -n "${postbuild_scan_for_compiler_warnings}" ]]; then
     echo "postbuild_scan_for_compiler_warnings=${postbuild_scan_for_compiler_warnings}" >> ${properties_filename}
 fi

@@ -41,34 +41,26 @@ if [[ "${JOB_NAME:-noname}" == *-gerrit-trigger* ]]; then
     gerrit_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-gerrit-trigger/-junit.tests-gerrit/')
 fi
 
-sitebeamlinesuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*beamline-')
-if [[ "${sitebeamlinesuffixindex}" != "0" ]]; then
-    sitebeamlinesuffix=${JOB_NAME:sitebeamlinesuffixindex}
-    dash=$(expr index ${sitebeamlinesuffix} '-') || true
+# if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
+if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
+    publish_snapshot_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/-publish.snapshot/')
+    squish_trigger_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product/-squish.trigger/')
+
+# if this is any publish job, work out the name of the upstream job (the create.product job)
+elif [[ "${JOB_NAME:-noname}" == *-publish* ]]; then
+    upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/-publish[^~]*-download.public\(.*\)/-create.product-download.public\1/')
+    upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/-publish[^~]*/-create.product/')
+fi
+
+# if it's a create.product job, but not a create.product.beamline job, get the product name
+createproductsuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*create.product-')
+if [[ "${createproductsuffixindex}" != "0" ]]; then
+    createproductsuffix=${JOB_NAME:createproductsuffixindex}
+    dash=$(expr index ${createproductsuffix} '-') || true
     if [[ "${dash}" != "0" ]]; then
-        site=${sitebeamlinesuffix:0:${dash}-1}
-        beamlinesuffix=${sitebeamlinesuffix:${dash}}
-        beamline=${beamlinesuffix%%-download.public}
-        # if this is a create.product job, work out the name of the downstream job (the squish job)
-        if [[ "${JOB_NAME:-noname}" == *-create.product.beamline* ]]; then
-            squish_job_to_trigger=$(echo "${JOB_NAME}" | sed 's/-create.product.beamline/-squish.beamline/')
-        fi
-        # if this is a squish job, work out the name of the upstream job (the create.product job)
-        if [[ "${JOB_NAME:-noname}" == *-squish.beamline* ]]; then
-            upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/-squish.beamline/-create.product.beamline/')
-        fi
-    fi
-else
-    # if it's a create.product job, but not a create.product.beamline job, get the product name
-    createproductsuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*create.product-')
-    if [[ "${createproductsuffixindex}" != "0" ]]; then
-        createproductsuffix=${JOB_NAME:createproductsuffixindex}
-        dash=$(expr index ${createproductsuffix} '-') || true
-        if [[ "${dash}" != "0" ]]; then
-            nonbeamlineproduct=${createproductsuffix:0:${dash}-1}
-        else
-            nonbeamlineproduct=${createproductsuffix}
-        fi
+        nonbeamlineproduct=${createproductsuffix:0:${dash}-1}
+    else
+        nonbeamlineproduct=${createproductsuffix}
     fi
 fi
 
@@ -105,6 +97,25 @@ fi
 if [[ -n "${upstream_create_product_job}" ]]; then
     echo "upstream_create_product_job=${upstream_create_product_job}" >> ${properties_filename}
 fi
+
+# determine whether any publish_* parameter was set
+at_least_one_publish_parameter_selected=false
+for var in $(compgen -A variable publish_); do
+    if [[ "${!var:false}" == "true" ]]; then
+        at_least_one_publish_parameter_selected=true
+    fi
+done
+echo "at_least_one_publish_parameter_selected=${at_least_one_publish_parameter_selected}" >> ${properties_filename}
+
+# determine whether any trigger_squish_* parameter was set
+at_least_one_trigger_squish_parameter_selected=false
+for var in $(compgen -A variable trigger_squish_); do
+    if [[ "${!var:false}" == "true" ]]; then
+        at_least_one_trigger_squish_parameter_selected=true
+    fi
+done
+echo "at_least_one_trigger_squish_parameter_selected=${at_least_one_trigger_squish_parameter_selected}" >> ${properties_filename}
+
 if [[ -n "${postbuild_scan_for_compiler_warnings}" ]]; then
     echo "postbuild_scan_for_compiler_warnings=${postbuild_scan_for_compiler_warnings}" >> ${properties_filename}
 fi
