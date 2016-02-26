@@ -49,7 +49,7 @@ if [[ "${JOB_NAME:-noname}" == *create.product* ]]; then
 # if this is any publish job, work out the name of the upstream job (the create.product job)
 elif [[ "${JOB_NAME:-noname}" == *-publish* ]]; then
     upstream_create_product_job=$(echo "${JOB_NAME}" | sed 's/-publish[^~]*-download.public\(.*\)/-create.product-download.public\1/')
-    upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/-publish[^~]*/-create.product/')
+    upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/-publish[^~-]*/-create.product/')
 fi
 
 # if it's a create.product job, but not a create.product.beamline job, get the product name
