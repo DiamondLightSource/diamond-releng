@@ -52,7 +52,7 @@ elif [[ "${JOB_NAME:-noname}" == *-publish* ]]; then
     upstream_create_product_job=$(echo "${upstream_create_product_job}" | sed 's/-publish[^~-]*/-create.product/')
 fi
 
-# if it's a create.product job, but not a create.product.beamline job, get the product name
+# if it's a create.product job, but not a create.product.beamline job; or a publish job, get the product name
 createproductsuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*create.product-')
 if [[ "${createproductsuffixindex}" != "0" ]]; then
     createproductsuffix=${JOB_NAME:createproductsuffixindex}
@@ -61,6 +61,17 @@ if [[ "${createproductsuffixindex}" != "0" ]]; then
         nonbeamlineproduct=${createproductsuffix:0:${dash}-1}
     else
         nonbeamlineproduct=${createproductsuffix}
+    fi
+else
+    publishtypesuffixindex=$(expr match "${JOB_NAME:-noname}" 'GDA\..*publish[^-]*-')
+    if [[ "${publishtypesuffixindex}" != "0" ]]; then
+        publishtypesuffix=${JOB_NAME:publishtypesuffixindex}
+        dash=$(expr index ${publishtypesuffix} '-') || true
+        if [[ "${dash}" != "0" ]]; then
+            nonbeamlineproduct=${publishtypesuffix:0:${dash}-1}
+        else
+            nonbeamlineproduct=${publishtypesuffix}
+        fi
     fi
 fi
 
