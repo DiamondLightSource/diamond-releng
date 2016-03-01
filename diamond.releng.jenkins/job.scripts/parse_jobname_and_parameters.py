@@ -81,7 +81,7 @@ def parse_jenkins_jobname(jobname):
             beamline = m.group('GDA_beamline')
             parse_result.append(('GDA_beamline', beamline))
             if beamline == 'synoptic':
-                materialize_component = uk.ac.gda.client.synoptic.site
+                materialize_component = 'uk.ac.gda.client.synoptic.site'
             else:
                 materialize_component = beamline + '-config'
             if site == 'DLS':
@@ -169,10 +169,10 @@ def parse_jenkins_jobname(jobname):
     if 'create.product' in jobname:
         at_least_one_publish_parameter_selected = False
         at_least_one_trigger_squish_parameter_selected = False
-        for (k,v) in os.environ.iteritems():
-            if k.startswith('publish_') and (v.lower == 'true'):
+        for (k, v) in os.environ.iteritems():
+            if k.startswith('publish_') and (v.lower() == 'true'):
                 at_least_one_publish_parameter_selected = True
-            if k.startswith('trigger_squish_') and (v.lower == 'true'):
+            if k.startswith('trigger_squish_') and (v.lower() == 'true'):
                 at_least_one_trigger_squish_parameter_selected = True
             if at_least_one_publish_parameter_selected and at_least_one_trigger_squish_parameter_selected:
                 break
