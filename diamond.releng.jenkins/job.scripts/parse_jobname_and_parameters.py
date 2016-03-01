@@ -67,7 +67,7 @@ def parse_jenkins_jobname(jobname):
         job_subname = m.group(2)
 
         # if this is a gerrit-trigger job, work out the name of the downstream job (the junit.tests-gerrit job)
-        if '-gerrit-trigger' in job_subname:
+        if 'gerrit-trigger' in job_subname:
             parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerrit-trigger', '-junit.tests-gerrit')))
 
         if 'junit' in jobname:
@@ -367,6 +367,15 @@ def test_parse_jenkins_jobname():
     write_parse_result(p, output)
 
     # Tests for GDA master branch
+    p = parse_jenkins_jobname('GDA.master-gerrit-trigger')
+    assert p == [
+        ('download.public', False),
+        ('GDA_release', 'master'),
+        ('job_variant', None),
+        ('gerrit_job_to_trigger', 'GDA.master-junit.tests-gerrit'),
+        ]
+    write_parse_result(p, output)
+
     p = parse_jenkins_jobname('GDA.master-junit.tests')
     assert p == [
         ('download.public', False),
