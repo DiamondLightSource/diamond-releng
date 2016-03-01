@@ -118,7 +118,19 @@ def parse_jenkins_jobname(jobname):
         else:
             m = re.match('^create.product-(?P<product_name>.+)(-download\.public)?(~(?P<job_variant>.+))?$', job_subname)
             if m:
-                parse_result.append(('non_beamline_product', m.group('product_name')))
+                product_name = m.group('product_name')
+                if product_name == 'gdaserver':
+                    materialize_component = 'uk.ac.diamond.daq.server.site'
+                    product_site = materialize_component
+                elif product_name == 'logpanel':
+                    materialize_component = 'uk.ac.gda.client.logpanel.site'
+                    product_site = materialize_component
+                parse_result.append(('non_beamline_product', product_name))
+                parse_result.append(('materialize_component', materialize_component))
+                parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))
+                parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
+                parse_result.append(('product_site', product_site))
+                parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
                 parse_result.append(('publish_snapshot_job_to_trigger', jobname.replace('-create.product', '-publish.snapshot')))
                 parse_result.append(('squish_trigger_job_to_trigger', jobname.replace('-create.product', '-squish.trigger')))
 
@@ -462,6 +474,11 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('non_beamline_product', 'gdaserver'),
+        ('materialize_component', 'uk.ac.diamond.daq.server.site'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
+        ('build_options_extra', '--suppress-compile-warnings'),
+        ('product_site', 'uk.ac.diamond.daq.server.site'),
+        ('product_options_extra', '--suppress-compile-warnings'),
         ('publish_snapshot_job_to_trigger', 'GDA.master-publish.snapshot-gdaserver'),
         ('squish_trigger_job_to_trigger', 'GDA.master-squish.trigger-gdaserver'),
         ('at_least_one_publish_parameter_selected', False),
