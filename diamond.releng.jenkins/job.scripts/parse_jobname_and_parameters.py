@@ -32,7 +32,7 @@ def parse_jenkins_jobname(jobname):
 
         # if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
         if 'create.product' in jobname:
-            parse_result.append(('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"))
+            parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))
             parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
             parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
             parse_result.append(('publish_snapshot_job_to_trigger', jobname.replace('-create.product', '-publish.snapshot')))
@@ -103,7 +103,7 @@ def parse_jenkins_jobname(jobname):
             elif site == 'RAL':
                 product_site = 'uk.ac.rl.gda.' + beamline + '.site'
             parse_result.append(('materialize_component', materialize_component))
-            parse_result.append(('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"))
+            parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))
             parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
             parse_result.append(('product_site', product_site))
             parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
@@ -199,7 +199,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', '1.11'),
         ('job_variant', None),
-        ('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
         ('publish_snapshot_job_to_trigger', 'DawnDiamond.1.11-publish.snapshot'),
@@ -237,7 +237,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', '1.master'),
         ('job_variant', None),
-        ('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
         ('publish_snapshot_job_to_trigger', 'DawnDiamond.1.master-publish.snapshot'),
@@ -275,7 +275,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', 'master'),
         ('job_variant', None),
-        ('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
         ('publish_snapshot_job_to_trigger', 'DawnDiamond.master-publish.snapshot'),
@@ -305,7 +305,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Vanilla'),
         ('DAWN_release', 'master'),
         ('job_variant', None),
-        ('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
         ('publish_snapshot_job_to_trigger', 'DawnVanilla.master-publish.snapshot-download.public'),
@@ -346,7 +346,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', 'master'),
         ('job_variant', 'neweclipse'),
-        ('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
         ('publish_snapshot_job_to_trigger', 'DawnDiamond.master-publish.snapshot~neweclipse'),
@@ -395,7 +395,7 @@ def test_parse_jenkins_jobname():
         ('job_variant', None),
         ('GDA_beamline', 'example'),
         ('materialize_component', 'example-config'),
-        ('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.gda.example.site'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -417,7 +417,7 @@ def test_parse_jenkins_jobname():
         ('job_variant', None),
         ('GDA_beamline', 'example'),
         ('materialize_component', 'example-config'),
-        ('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.gda.example.site'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -436,7 +436,7 @@ def test_parse_jenkins_jobname():
         ('job_variant', None),
         ('GDA_beamline', 'b16'),
         ('materialize_component', 'b16-config'),
-        ('materialize_properties_extra', "'-Dskip_ALL_test_fragments=true'"),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.gda.beamline.b16.site'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -465,7 +465,7 @@ def test_parse_jenkins_jobname():
     print('*** Completed: test_parse_jenkins_jobname()')
 
 if __name__ == '__main__':
-    test_parse_jenkins_jobname()
+    # test_parse_jenkins_jobname()
     p = parse_jenkins_jobname(os.environ['JOB_NAME'])
     write_parse_result(p)
 
