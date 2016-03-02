@@ -81,8 +81,8 @@ def parse_jenkins_jobname(jobname):
             site = m.group('GDA_site')
             beamline = m.group('GDA_beamline')
             parse_result.append(('GDA_beamline', beamline))
-            if beamline == 'synoptic':
-                materialize_component = 'uk.ac.gda.client.synoptic.site'
+            if beamline in ('logpanel', 'synoptic'):
+                materialize_component = 'uk.ac.gda.client.' + beamline + '.site'
             else:
                 materialize_component = beamline + '-config'
             if site == 'DLS':
