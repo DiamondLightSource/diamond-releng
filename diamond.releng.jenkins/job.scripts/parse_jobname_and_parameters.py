@@ -54,8 +54,7 @@ def parse_jenkins_jobname(jobname):
         # if this is any squish job, work out the name of the upstream job (the create.product job)
         elif '-squish' in jobname:
             m = re.match('^(?P<prefix>.+)-squish(-subset)?(?P<suffix>.+)$', jobname)
-            parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product' + m.group('suffix')))
-
+            parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product'))
 
     #########################
     # Parsing for GDA jobs #
@@ -305,6 +304,16 @@ def test_parse_jenkins_jobname():
     write_parse_result(p, output)
 
     p = parse_jenkins_jobname('DawnDiamond.master-publish.snapshot')
+    assert p == [
+        ('download.public', False),
+        ('DAWN_flavour', 'Diamond'),
+        ('DAWN_release', 'master'),
+        ('job_variant', None),
+        ('upstream_create_product_job', 'DawnDiamond.master-create.product'),
+        ]
+    write_parse_result(p, output)
+
+    p = parse_jenkins_jobname('DawnDiamond.master-squish.RedHat6-DLS')
     assert p == [
         ('download.public', False),
         ('DAWN_flavour', 'Diamond'),
