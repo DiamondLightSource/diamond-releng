@@ -35,6 +35,7 @@ def parse_jenkins_jobname(jobname):
             parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))
             parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
             parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
+            parse_result.append(('buckminster_properties_filename', 'buckminster.diamond.jenkins.properties'))
             parse_result.append(('publish_snapshot_job_to_trigger', jobname.replace('-create.product', '-publish.snapshot')))
             parse_result.append(('squish_trigger_job_to_trigger', jobname.replace('-create.product', '-squish.trigger')))
 
@@ -107,9 +108,11 @@ def parse_jenkins_jobname(jobname):
             parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
             parse_result.append(('product_site', product_site))
             parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
-            # the example beamline .properties filenames are different from the standard names defined in GDA.<release>-environment-variables.properties
+            # the example beamline .properties filenames are different from the standard
             if (site == 'GDA') and (beamline == 'example'):
                 parse_result.append(('buckminster_properties_filename', 'buckminster.diamond.jenkins.properties'))
+            else:
+                parse_result.append(('buckminster_properties_filename', 'buckminster.jenkins.properties'))
             parse_result.append(('publish_snapshot_job_to_trigger', jobname.replace('-create.product.beamline', '-publish.snapshot')))
             parse_result.append(('squish_trigger_job_to_trigger' ,jobname.replace('-create.product.beamline', '-squish.trigger')))
 
@@ -131,6 +134,7 @@ def parse_jenkins_jobname(jobname):
                 parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
                 parse_result.append(('product_site', product_site))
                 parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
+                parse_result.append(('buckminster_properties_filename', 'buckminster.jenkins.properties'))
                 parse_result.append(('publish_snapshot_job_to_trigger', jobname.replace('-create.product', '-publish.snapshot')))
                 parse_result.append(('squish_trigger_job_to_trigger', jobname.replace('-create.product', '-squish.trigger')))
 
@@ -214,6 +218,7 @@ def test_parse_jenkins_jobname():
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.diamond.jenkins.properties'),
         ('publish_snapshot_job_to_trigger', 'DawnDiamond.1.11-publish.snapshot'),
         ('squish_trigger_job_to_trigger', 'DawnDiamond.1.11-squish.trigger'),
         ('at_least_one_publish_parameter_selected', False),
@@ -252,6 +257,7 @@ def test_parse_jenkins_jobname():
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.diamond.jenkins.properties'),
         ('publish_snapshot_job_to_trigger', 'DawnDiamond.1.master-publish.snapshot'),
         ('squish_trigger_job_to_trigger', 'DawnDiamond.1.master-squish.trigger'),
         ('at_least_one_publish_parameter_selected', False),
@@ -290,6 +296,7 @@ def test_parse_jenkins_jobname():
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.diamond.jenkins.properties'),
         ('publish_snapshot_job_to_trigger', 'DawnDiamond.master-publish.snapshot'),
         ('squish_trigger_job_to_trigger', 'DawnDiamond.master-squish.trigger'),
         ('at_least_one_publish_parameter_selected', False),
@@ -320,6 +327,7 @@ def test_parse_jenkins_jobname():
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.diamond.jenkins.properties'),
         ('publish_snapshot_job_to_trigger', 'DawnVanilla.master-publish.snapshot-download.public'),
         ('squish_trigger_job_to_trigger', 'DawnVanilla.master-squish.trigger-download.public'),
         ('at_least_one_publish_parameter_selected', False),
@@ -361,6 +369,7 @@ def test_parse_jenkins_jobname():
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.diamond.jenkins.properties'),
         ('publish_snapshot_job_to_trigger', 'DawnDiamond.master-publish.snapshot~neweclipse'),
         ('squish_trigger_job_to_trigger', 'DawnDiamond.master-squish.trigger~neweclipse'),
         ('at_least_one_publish_parameter_selected', False),
@@ -461,6 +470,7 @@ def test_parse_jenkins_jobname():
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.gda.beamline.b16.site'),
         ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.jenkins.properties'),
         ('publish_snapshot_job_to_trigger', 'GDA.master-publish.snapshot-DLS-b16'),
         ('squish_trigger_job_to_trigger', 'GDA.master-squish.trigger-DLS-b16'),
         ('at_least_one_publish_parameter_selected', False),
@@ -479,6 +489,7 @@ def test_parse_jenkins_jobname():
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.diamond.daq.server.site'),
         ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.jenkins.properties'),
         ('publish_snapshot_job_to_trigger', 'GDA.master-publish.snapshot-gdaserver'),
         ('squish_trigger_job_to_trigger', 'GDA.master-squish.trigger-gdaserver'),
         ('at_least_one_publish_parameter_selected', False),
