@@ -149,8 +149,8 @@ def parse_jenkins_jobname(jobname):
 
         # if this is any publish job, work out the name of the upstream job (the create.product job), and where to publish to
         if '-publish.' in jobname:
-            m = re.match('^(?P<prefix>.+)-publish.[a-z]+(?P<suffix>.+)$', jobname)
-            parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product' + m.group('suffix')))
+            m = re.match('^(?P<prefix>.+)-publish.[a-z]+-(?P<product_name>.+)(?P<suffix>.?)$', jobname)
+            parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product-' + m.group('product_name') + m.group('suffix')))
             # use /dls/science/ (which is not backed up) snapshot builds, and /dls_sw/apps/ for release builds
             if 'master' in jm.group('GDA_release'):
                 publish_parent = '/dls/science/groups/daq/'
@@ -528,6 +528,16 @@ def test_parse_jenkins_jobname():
         ('squish_trigger_job_to_trigger', 'GDA.master-squish.trigger-gdaserver'),
         ('at_least_one_publish_parameter_selected', False),
         ('at_least_one_trigger_squish_parameter_selected', False),
+        ]
+    write_parse_result(p, output)
+
+    p = parse_jenkins_jobname('GDA.master-publish.testing-gdaserver')
+    assert p == [
+        ('download.public', False),
+        ('GDA_release', 'master'),
+        ('job_variant', None),
+        ('upstream_create_product_job', 'GDA.master-create.product-gdaserver'),
+        ('publish_module_load_directory_parent', '/dls/science/groups/daq/gdaserver/master/'),
         ]
     write_parse_result(p, output)
 
