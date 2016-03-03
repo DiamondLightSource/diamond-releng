@@ -25,10 +25,10 @@ def parse_jenkins_jobname(jobname):
     # Parsing for Dawn jobs #
     #########################
 
-    m = re.match('^Dawn(?P<DAWN_flavour>Diamond|Vanilla)\.(?P<DAWN_release>[^-]+)-.+?(-download\.public)?(~(?P<job_variant>.+))?$', jobname)
-    if m:
+    jm = re.match('^Dawn(?P<DAWN_flavour>Diamond|Vanilla)\.(?P<DAWN_release>[^-]+)-.+?(?P<download_public>-download\.public)?(?P<job_variant>~.+)?$', jobname)
+    if jm:
         for part in ('DAWN_flavour', 'DAWN_release', 'job_variant'):
-            parse_result.append((part, m.groupdict()[part]))
+            parse_result.append((part, jm.groupdict()[part]))
 
         # if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
         if 'create.product' in jobname:
@@ -39,10 +39,20 @@ def parse_jenkins_jobname(jobname):
             parse_result.append(('publish_snapshot_job_to_trigger', jobname.replace('-create.product', '-publish.snapshot')))
             parse_result.append(('squish_trigger_job_to_trigger', jobname.replace('-create.product', '-squish.trigger')))
 
-        # if this is any publish job, work out the name of the upstream job (the create.product job)
+        # if this is any publish job, work out the name of the upstream job (the create.product job), and where to publish to
         elif '-publish.' in jobname:
             m = re.match('^(?P<prefix>.+)-publish\.[a-z]+(?P<suffix>.*?)$', jobname)
             parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product' + m.group('suffix')))
+            # use /dls/science/ (which is not backed up) snapshot builds, and /dls_sw/apps/ for release builds
+            if 'master' in jm.group('DAWN_release'):
+                publish_parent = '/dls/science/groups/scisoft/'
+            else:
+                publish_parent = '/dls_sw/apps/'
+            publish_parent = os.path.join(publish_parent,
+                                          'Dawn' + jm.group('DAWN_flavour'),
+                                          jm.group('DAWN_release') + (jm.group('job_variant') or ''),
+                                          '')
+            parse_result.append(('publish_module_load_directory_parent', publish_parent))
 
         # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
         elif '-squish.trigger' in jobname:
@@ -60,14 +70,14 @@ def parse_jenkins_jobname(jobname):
     # Parsing for GDA jobs #
     #########################
 
-    m = re.match('^GDA\.(?P<GDA_release>[^-]+)-(.+?)(-download\.public)?(~(?P<job_variant>.+))?$', jobname)
-    if m:
+    jm = re.match('^GDA\.(?P<GDA_release>[^-]+)-(.+?)(?P<download_public>-download\.public)?(?P<job_variant>~.+)?$', jobname)
+    if jm:
         for part in ('GDA_release', 'job_variant'):
-            parse_result.append((part, m.groupdict()[part]))
-        job_subname = m.group(2)
+            parse_result.append((part, jm.groupdict()[part]))
+        job_subname = jm.group(2)
 
         # if this is a gerrit-trigger job, work out the name of the downstream job (the junit.tests-gerrit job)
-        if 'gerrit-trigger' in job_subname:
+        if 'gerrit-trigger' in jobname:
             parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerrit-trigger', '-junit.tests-gerrit')))
 
         if 'junit' in jobname:
@@ -118,7 +128,7 @@ def parse_jenkins_jobname(jobname):
         # GDA create.product (other than client) jobs
         # if it's a create.product job, but not a create.product.beamline job; or a publish job, get the product name
         else:
-            m = re.match('^create.product-(?P<product_name>.+)(-download\.public)?(~(?P<job_variant>.+))?$', job_subname)
+            m = re.match('^create.product-(?P<product_name>.+)(?P<download_public>-download\.public)?(?P<job_variant>~.+)?$', job_subname)
             if m:
                 product_name = m.group('product_name')
                 if product_name == 'gdaserver':
@@ -137,10 +147,20 @@ def parse_jenkins_jobname(jobname):
                 parse_result.append(('publish_snapshot_job_to_trigger', jobname.replace('-create.product', '-publish.snapshot')))
                 parse_result.append(('squish_trigger_job_to_trigger', jobname.replace('-create.product', '-squish.trigger')))
 
-        # if this is any publish job, work out the name of the upstream job (the create.product job)
+        # if this is any publish job, work out the name of the upstream job (the create.product job), and where to publish to
         if '-publish.' in jobname:
             m = re.match('^(?P<prefix>.+)-publish.[a-z]+(?P<suffix>.+)$', jobname)
             parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product' + m.group('suffix')))
+            # use /dls/science/ (which is not backed up) snapshot builds, and /dls_sw/apps/ for release builds
+            if 'master' in jm.group('GDA_release'):
+                publish_parent = '/dls/science/groups/daq/'
+            else:
+                publish_parent = '/dls_sw/apps/'
+            publish_parent = os.path.join(publish_parent,
+                                          m.group('product_name'),
+                                          jm.group('GDA_release') + (jm.group('job_variant') or ''),
+                                          '')
+            parse_result.append(('publish_module_load_directory_parent', publish_parent))
 
         # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
         elif '-squish.trigger' in jobname:
@@ -232,6 +252,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_release', '1.11'),
         ('job_variant', None),
         ('upstream_create_product_job', 'DawnDiamond.1.11-create.product'),
+        ('publish_module_load_directory_parent', '/dls_sw/apps/DawnDiamond/1.11/'),
         ]
     write_parse_result(p, output)
 
@@ -271,6 +292,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_release', '1.master'),
         ('job_variant', None),
         ('upstream_create_product_job', 'DawnDiamond.1.master-create.product'),
+        ('publish_module_load_directory_parent', '/dls/science/groups/scisoft/DawnDiamond/1.master/'),
         ]
     write_parse_result(p, output)
 
@@ -310,6 +332,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_release', 'master'),
         ('job_variant', None),
         ('upstream_create_product_job', 'DawnDiamond.master-create.product'),
+        ('publish_module_load_directory_parent', '/dls/science/groups/scisoft/DawnDiamond/master/'),
         ]
     write_parse_result(p, output)
 
@@ -354,6 +377,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_release', 'master'),
         ('job_variant', None),
         ('upstream_create_product_job', 'DawnVanilla.master-create.product-download.public'),
+        ('publish_module_load_directory_parent', '/dls/science/groups/scisoft/DawnVanilla/master/'),
         ]
     write_parse_result(p, output)
 
@@ -363,7 +387,7 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', 'master'),
-        ('job_variant', 'neweclipse'),
+        ('job_variant', '~neweclipse'),
         ('postbuild_scan_for_compiler_warnings', True),
         ('postbuild_scan_for_open_tasks', True),
         ]
@@ -374,7 +398,7 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', 'master'),
-        ('job_variant', 'neweclipse'),
+        ('job_variant', '~neweclipse'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -391,8 +415,9 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', 'master'),
-        ('job_variant', 'neweclipse'),
+        ('job_variant', '~neweclipse'),
         ('upstream_create_product_job', 'DawnDiamond.master-create.product~neweclipse'),
+        ('publish_module_load_directory_parent', '/dls/science/groups/scisoft/DawnDiamond/master~neweclipse/'),
         ]
     write_parse_result(p, output)
 
