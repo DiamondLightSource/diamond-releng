@@ -16,6 +16,7 @@ import logging
 import operator
 import os
 import os.path
+import smtplib
 import stat
 import sys
 import time
@@ -161,17 +162,23 @@ PLEASE CONSIDER EITHER:
                             self.emails,
                             key=lambda email_addr: '.'.join(operator.itemgetter(2,0)(email_addr.partition('@')[0].lower().partition('.')))
                         ) if '@' in committer]
+        message['CC'] = ('matthew.webber@diamond.ac.uk',)
         message.set_content(body)
 
         email_expires_days = 5
         if email_expires_days:
             message['Expiry-Date'] = (datetime.datetime.utcnow() + datetime.timedelta(days=email_expires_days)).strftime("%a, %d %b %Y %H:%M:%S +0000")
+
+        logging.info("Sending email ...")
+        with smtplib.SMTP('localhost') as smtp:
+            smtp.send_message(message)
+
         return message
 
 if __name__ == '__main__':
-
     scp = SubmittableChangesProcessor()
     scp.get_submittable_changes_from_gerrit()
-    print(scp.make_email())
+    message = scp.make_email()
+    print(message)
     sys.exit(0)
 
