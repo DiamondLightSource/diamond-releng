@@ -10,6 +10,7 @@ import ConfigParser
 import datetime
 import errno
 import fnmatch
+import grp
 import logging
 import optparse
 import os
@@ -18,6 +19,7 @@ import re
 import shlex
 import socket
 import StringIO
+import stat
 import subprocess
 import sys
 import time
@@ -205,6 +207,14 @@ class PewmaManager(object):
         self.valid_java_versions = None
         self.executable_locations = {}
 
+        # when running at DLS, we might want to set the Linux group to "dls_dasc" on directories that we create
+        self.group_dls_dasc_gid = None  # the numeric group id for group dls_dasc
+        if self.isLinux:
+            try:
+                self.group_dls_dasc_gid = grp.getgrnam('dls_dasc').gr_gid  # the numeric group id for group dls_dasc
+            except (KeyError) as e:
+                pass  # group name 
+
         self.valid_actions_with_help = (
             # 1st item in tuple is the action verb
             # 2nd item in tuple is the action special handler (either "ant" or None)
@@ -302,6 +312,10 @@ class PewmaManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Materialize options")
+        if self.isLinux:
+            group.add_option('--directories.groupname', dest='directories_groupname', type='string', metavar='<groupname>',
+                             default='dls_dasc' if self.group_dls_dasc_gid else None,
+                             help='Linux group to set on directories that are created (default: %default)')
         group.add_option('-l', '--location', dest='download_location', choices=('diamond', 'public'), metavar='<location>',
                          help='Download location ("diamond" or "public")')
         group.add_option('-k', '--keyring', dest='keyring', type='string', metavar='<path>',
@@ -397,11 +411,17 @@ class PewmaManager(object):
             self.logger.info('%sCreating workspace directory "%s"' % (self.log_prefix, self.workspace_loc,))
             if not self.options.dry_run:
                 os.makedirs(self.workspace_loc)
+                self._set_linux_group(self.workspace_loc)
 
         if self.workspace_git_loc and os.path.isdir(self.workspace_git_loc):
             git_count_at_start = len(self._get_git_directories())
             if git_count_at_start:
                 self.logger.info('Using %s existing .git repositories (which will not be updated) found in "%s"' % (git_count_at_start, self.workspace_git_loc,))
+        else:
+            self.logger.info('%sCreating workspace_git directory "%s"' % (self.log_prefix, self.workspace_git_loc,))
+            if not self.options.dry_run:
+                os.mkdir(self.workspace_git_loc)
+                self._set_linux_group(self.workspace_git_loc)
 
         if expand_template_required:
             template_zip = os.path.join( self.workspace_loc, self.template_name )
@@ -746,6 +766,24 @@ class PewmaManager(object):
 ###############################################################################
 #  Actions                                                                    #
 ###############################################################################
+
+    def _set_linux_group(self, directory):
+        """ Optionally, change the Linux group (like chgrp) and set the groupid bit (like chmod g+s)
+            on a directory. Done if option --directories.groupname set (or defaults, at DLS).
+        """
+
+        if not self.options.directories_groupname:
+            return
+        assert directory and os.path.isabs(directory)
+        assert self.isLinux
+        assert self.gid
+
+        self.logger.debug('Changing owning group to %s (%s) on %s' % (self.gid, self.options.directories_groupname, directory))
+        os.chown(directory, -1, self.gid)
+        imode_old  = os.stat(directory).st_mode  # get existing access
+        imode_new = imode_old + stat.S_ISGID
+        self.logger.debug('Changing permissions from 0x%04o to 0x%04o on %s' % (imode_old & 07777, imode_new & 07777, directory))
+        os.chmod(directory, imode_new)
 
     def action_setup(self):
         """ Processes command: setup [<category> [<version>] | <cquery>]
@@ -1968,6 +2006,15 @@ class PewmaManager(object):
             self.workspace_git_loc = self.workspace_loc + '_git'
         elif (self.action != 'get-branches-expected'):
             raise PewmaException('ERROR: the "--workspace" option must be specified, unless you run this script from an existing workspace')
+
+        # validate --directories_groupname
+        if self.options.directories_groupname == 'dls_dasc' and self.group_dls_dasc_gid:
+            self.gid = self.group_dls_dasc_gid  # the numeric group id for group dls_dasc
+        elif self.options.directories_groupname:
+            try:
+                self.gid = grp.getgrnam(self.options.directories_groupname).gr_gid  # the numeric group id for the group
+            except (KeyError) as e:
+                raise PewmaException('ERROR: Linux group ' + self.options.directories_groupname + ' does not exist')
 
         # delete previous workspace as required
         if self.options.delete or self.options.recreate:
