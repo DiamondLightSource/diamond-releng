@@ -768,7 +768,7 @@ class PewmaManager(object):
 ###############################################################################
 
     def _set_linux_group(self, directory):
-        """ Optionally, change the Linux group (like chgrp) and set the groupid bit (like chmod g+s)
+        """ Optionally, change the Linux group (like chgrp) and permission (like chmod g+rwxs o+rx)
             on a directory. Done if option --directories.groupname set (or defaults, at DLS).
         """
 
@@ -778,11 +778,11 @@ class PewmaManager(object):
         assert self.isLinux
         assert self.gid
 
-        self.logger.debug('Changing owning group to %s (%s) on %s' % (self.gid, self.options.directories_groupname, directory))
+        self.logger.info('Changing owning group to %s (%s) on %s' % (self.gid, self.options.directories_groupname, directory))
         os.chown(directory, -1, self.gid)
-        imode_old  = os.stat(directory).st_mode  # get existing access
-        imode_new = imode_old + stat.S_ISGID
-        self.logger.debug('Changing permissions from 0x%04o to 0x%04o on %s' % (imode_old & 07777, imode_new & 07777, directory))
+        imode_old  = stat.S_IMODE(os.stat(directory).st_mode)  # get existing permissions
+        imode_new = imode_old | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_ISGID | stat.S_IROTH | stat.S_IXOTH
+        self.logger.info('Changing permissions from 0x%04o to 0x%04o on %s' % (imode_old, imode_new, directory))
         os.chmod(directory, imode_new)
 
     def action_setup(self):
