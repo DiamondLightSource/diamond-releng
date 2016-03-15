@@ -2139,7 +2139,7 @@
     <bc:constant value="v3_201311"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.logging.release">
-    <bc:constant value="${target_platform.diamond.release}"/>
+    <bc:constant value="8.52plus"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.release">
     <bc:constant value="8.52plus"/>
