@@ -55,13 +55,13 @@ git branch -a'''
 
     BASH_GIT_TAG = \
 '''# make tag at specified commit
-git checkout master
+git checkout %(BRANCH)s
 git tag -a -m "%(tag_commitmsg)s" %(tag_name)s %(HEAD)s
 git push --verbose --tags'''
 
     BASH_GIT_BRANCH = \
 '''# make branch at specified commit
-git checkout master
+git checkout %(BRANCH)s
 git checkout -b %(branch_name)s %(HEAD)s
 git status
 git push --verbose -u origin %(branch_name)s
@@ -159,9 +159,16 @@ git branch -a'''
             repos_to_action[repo_name]['URL'] = github_authenticated_prefix + repos_to_action[repo_name]['URL'][len(github_anonymous_prefix):]  # convert URL from anonymous clone to authenticated
         print(BASH_GIT_PREAMBLE % {'repository': repo_name, 'URL': repos_to_action[repo_name]['URL']})
         if tag_name and tag_commitmsg:
-            print(BASH_GIT_TAG % {'tag_name': tag_name, 'tag_commitmsg': tag_commitmsg, 'HEAD': repos_to_action[repo_name]['HEAD']})
+            print(BASH_GIT_TAG % {'tag_name': tag_name,
+                                  'tag_commitmsg': tag_commitmsg,
+                                  'HEAD': repos_to_action[repo_name]['HEAD'],
+                                  'BRANCH': repos_to_action[repo_name]['BRANCH'],  # this is the original branch name (usually master)
+                                  })
         if branch_name:
-            print(BASH_GIT_BRANCH % {'branch_name': branch_name, 'HEAD': repos_to_action[repo_name]['HEAD']})
+            print(BASH_GIT_BRANCH % {'branch_name': branch_name,  # this is the new branch name
+                                     'HEAD': repos_to_action[repo_name]['HEAD'],
+                                     'BRANCH': repos_to_action[repo_name]['BRANCH'],  # this is the original branch name (usually master)
+                                     })
         action_count += 1
 
     print('\n# generated action for %s repositories' % (action_count,))
