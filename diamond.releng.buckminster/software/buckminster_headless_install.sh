@@ -18,7 +18,6 @@
 
 # The install is described in Appendix A of the "Bucky Book" (see Documentation link on http://www.eclipse.org/buckminster/)
 
-
 install_buckminster () {
 
     set -o errexit  # exit on any error
@@ -31,7 +30,7 @@ install_buckminster () {
 
     # buckminster version (same as an Eclipse version)
     if [[ -z "${buckminster_version}" ]]; then
-        buckminster_version=4.4
+        buckminster_version=4.5
     fi
 
     # install type
@@ -59,7 +58,7 @@ install_buckminster () {
         fi
         install_parent=/dls_sw/apps/buckminster
         install_suffix=${buckminster_version}-${datetime}
-        buckminster_install_dir=${install_parent}/64/${install_suffix}
+        buckminster_install_dir=${install_parent}/${install_suffix}
         modules_dir=/dls_sw/apps/Modules/modulefiles/buckminster
     fi
 
@@ -122,11 +121,11 @@ install_buckminster () {
     rm -f ${director_zip_file}
 
     #==========================================================
-    # ensure that Buckminster is only run under Java 7 or higher
+    # ensure that Buckminster is only run under Java 8 or higher
     cat << EOF >> ${buckminster_install_dir_temp}/eclipse.ini
 -vmargs
 -Dfile.encoding=UTF-8
--Dosgi.requiredJavaVersion=1.7
+-Dosgi.requiredJavaVersion=1.8
 EOF
 
     #==========================================================
@@ -134,9 +133,10 @@ EOF
     # org.eclipse.buckminster.core.headless.feature : The Core functionality — this feature is required if you want to do anything with Buckminster except installing additional features.
     # org.eclipse.buckminster.pde.headless.feature : Headless PDE and JDT support. Required if you are working with Java based components.
     # org.eclipse.buckminster.git.headless.feature : Git
+    # org.eclipse.buckminster.maven.headless.feature : Maven support
 
     buckminster_command_temp=${buckminster_install_dir_temp}/buckminster
-    for feature in org.eclipse.buckminster.core.headless.feature org.eclipse.buckminster.pde.headless.feature org.eclipse.buckminster.git.headless.feature; do
+    for feature in org.eclipse.buckminster.core.headless.feature org.eclipse.buckminster.pde.headless.feature org.eclipse.buckminster.git.headless.feature org.eclipse.buckminster.maven.headless.feature; do
         echo "doing ${buckminster_command_temp} install ${repository_buckminster} ${feature}"
         ${buckminster_command_temp} install ${repository_buckminster} ${feature}
         echo "finished installing ${feature}"
@@ -163,13 +163,7 @@ proc ModulesHelp { } {
 
 module-whatis "Sets the Eclipse Buckminster Headless environment"
 
-set mach \$tcl_platform(machine)
-
-if {[string  compare  \$mach  "x86_64"] == 0} {
-    append-path PATH ${install_parent}/64/${install_suffix}
-} else {
-    append-path PATH ${install_parent}/32/4.3-2014-01-17
-}
+append-path PATH ${install_parent}/${install_suffix}
 
 END_OF_MODULE_FILE
 
