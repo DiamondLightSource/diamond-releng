@@ -95,7 +95,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" useTargetPlatform="false" branchTagPath="dawn-1.11">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-workflow.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci\..+$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="dawn-1.11">
+    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci\..+$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="gda-8.52">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawnsci.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.sda\.enthought(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -118,7 +118,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" branchTagPath="gda-8.52">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-springframework.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^diffcalc$" useTargetPlatform="false" branchTagPath="gda-8.52">
+    <cq:advisorNode namePattern="^diffcalc$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diffcalc.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.embl\.cca\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
