@@ -71,6 +71,7 @@ install_buckminster () {
     #==========================================================
     # report what we are doing
     echo "Installing Buckminster headless ${buckminster_version} to ${buckminster_install_dir_temp}"
+    set +o nounset  # allow variables not to exist
     echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
 
     set -o nounset  # variables must exist
@@ -95,7 +96,9 @@ install_buckminster () {
         wget --timeout=60 --tries=2 --no-cache -O ${director_zip_file} "${director_download}"
     else
         # non-verbose output in a batch job
+        set +o nounset  # allow variables not to exist
         echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
+        set -o nounset  # variables must exist
         set +e  # Turn off errexit
         wget --timeout=60 --tries=2 --no-cache -nv -O ${director_zip_file} "${director_download}"
         RETVAL=$?
