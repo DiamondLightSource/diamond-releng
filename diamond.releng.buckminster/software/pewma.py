@@ -552,7 +552,7 @@ class PewmaManager(object):
                 # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
-            raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
+            raise PewmaException('Workspace template download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (small enough to do in one chunk)
         self.logger.info('Downloading %s bytes from "%s" to "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl(), destination))
@@ -567,7 +567,7 @@ class PewmaManager(object):
                 # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                 text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
-            raise PewmaException('Workspace template download failed (network error, proxy failure, or proxy not set): please retry')
+            raise PewmaException('Workspace template download failed (network or proxy error, possibly transient): please retry')
         finally:
             try:
                 resp.close()
@@ -835,7 +835,7 @@ class PewmaManager(object):
                 # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                 text = 'set-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
-            raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
+            raise PewmaException('CQuery download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (it's small enough to do in one chunk)
         self.logger.info('Downloading %s bytes from "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl()))
@@ -850,7 +850,7 @@ class PewmaManager(object):
                 # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                 text = 'set-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
-            raise PewmaException('CQuery download failed (network error, proxy failure, or proxy not set): please retry')
+            raise PewmaException('CQuery download failed (network or proxy error, possibly transient): please retry')
         finally:
             try:
                 resp.close()
@@ -1889,7 +1889,7 @@ class PewmaManager(object):
                 # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                 text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
-            raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
+            raise PewmaException('Gerrit commit hook download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (it's small enough to do in one chunk)
         self.logger.debug('Downloading %s bytes from "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl()))
@@ -1904,7 +1904,7 @@ class PewmaManager(object):
                 # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                 text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
-            raise PewmaException('Gerrit commit hook download failed (network error, proxy failure, or proxy not set): please retry')
+            raise PewmaException('Gerrit commit hook download failed (network or proxy error, possibly transient): please retry')
         finally:
             try:
                 resp.close()
@@ -2045,14 +2045,20 @@ class PewmaManager(object):
         else:
             fqdn = socket.getfqdn()
             if fqdn.endswith('.diamond.ac.uk'):
-                proxy_value = 'wwwcache.rl.ac.uk:8080'
-                no_proxy_value = 'dasc-git.diamond.ac.uk,dawn.diamond.ac.uk,gerrit.diamond.ac.uk,jenkins.diamond.ac.uk,svn.diamond.ac.uk,172.16.0.0/12,localhost,127.*,[::1]'
-                self.java_proxy_system_properties = (
-                    '"-Dhttp.proxyHost=wwwcache.rl.ac.uk"', '"-Dhttp.proxyPort=8080"',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
-                    '"-Dhttps.proxyHost=wwwcache.rl.ac.uk"', '"-Dhttps.proxyPort=8080"',
-                    # please see Jira DASCTEST-317 for a discussion of proxy bypass specification
-                    '"-Dhttp.nonProxyHosts=dasc-git.diamond.ac.uk\|dawn.diamond.ac.uk\|gerrit.diamond.ac.uk\|jenkins.diamond.ac.uk\|svn.diamond.ac.uk\|172.16.0.0/12\|localhost\|127.*\|[::1]"',  # applies to https as well
-                    )
+                ### 17/Mar/2016 all proxy settings commented out, since DLS/STFC moved to a transparent proxy ###
+                #===============================================================
+                # proxy_value = 'wwwcache.rl.ac.uk:8080'
+                # no_proxy_value = 'dasc-git.diamond.ac.uk,dawn.diamond.ac.uk,gerrit.diamond.ac.uk,jenkins.diamond.ac.uk,svn.diamond.ac.uk,172.16.0.0/12,localhost,127.*,[::1]'
+                # self.java_proxy_system_properties = (
+                #     '"-Dhttp.proxyHost=wwwcache.rl.ac.uk"', '"-Dhttp.proxyPort=8080"',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
+                #     '"-Dhttps.proxyHost=wwwcache.rl.ac.uk"', '"-Dhttps.proxyPort=8080"',
+                #     # please see Jira DASCTEST-317 for a discussion of proxy bypass specification
+                #     '"-Dhttp.nonProxyHosts=dasc-git.diamond.ac.uk\|dawn.diamond.ac.uk\|gerrit.diamond.ac.uk\|jenkins.diamond.ac.uk\|svn.diamond.ac.uk\|172.16.0.0/12\|localhost\|127.*\|[::1]"',  # applies to https as well
+                #     )
+                #===============================================================
+                proxy_value = ''
+                no_proxy_value = ''
+                self.java_proxy_system_properties = ()
             elif fqdn.endswith('.esrf.fr'):
                 proxy_value = 'proxy.esrf.fr:3128'
                 no_proxy_value = '127.0.0.1,localhost'
