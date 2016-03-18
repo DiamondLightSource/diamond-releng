@@ -71,8 +71,6 @@ install_buckminster () {
     #==========================================================
     # report what we are doing
     echo "Installing Buckminster headless ${buckminster_version} to ${buckminster_install_dir_temp}"
-    set +o nounset  # allow variables not to exist
-    echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
 
     set -o nounset  # variables must exist
 
@@ -93,20 +91,17 @@ install_buckminster () {
     set -x  # Turn on xtrace
     if tty -s; then
         # standard (verbose) output at the terminal
-        wget --timeout=60 --tries=2 --no-cache -O ${director_zip_file} "${director_download}"
+        wget --timeout=180 --tries=2 --no-cache -O ${director_zip_file} "${director_download}"
     else
         # non-verbose output in a batch job
-        set +o nounset  # allow variables not to exist
-        echo "Using environment proxy setting: $""http_proxy=${http_proxy}"
-        set -o nounset  # variables must exist
         set +e  # Turn off errexit
-        wget --timeout=60 --tries=2 --no-cache -nv -O ${director_zip_file} "${director_download}"
+        wget --timeout=180 --tries=2 --no-cache -nv -O ${director_zip_file} "${director_download}"
         RETVAL=$?
         set -e  # Turn errexit on
         if [ "${RETVAL}" != "0" ]; then
             if [[ "${JENKINS_URL}" = *diamond.ac.uk* ]]; then
                 # running under Jenkins at DLS, so write text to log so that job build description is set 
-                echo 'set-build-description: Failure on wget (probable network issue)'
+                echo "set-build-description: Failure on wget from $(echo ${director_download} | awk -F/ '{print $3}') (probable network issue)"
             fi
             return ${RETVAL}
         fi
