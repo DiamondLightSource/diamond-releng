@@ -2275,7 +2275,7 @@
   <rm:locator pattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" searchPathRef="dawn_tango"/>
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
   <rm:locator pattern="^(com\.amd\.aparapi|ncsa\.hdf|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
-  <rm:locator pattern="^(org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.ui(\..+)?|plotting(\..+)?|processing\.ui|slicing(\..+)?|spectrum\.ui|volumerender(\..+)?))|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
+  <rm:locator pattern="^(org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.ui(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.ui|slicing(\..+)?|spectrum\.ui|volumerender(\..+)?))|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
   <rm:locator pattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" searchPathRef="dawn_workflow"/>
   <!-- ** dawnsci *** -->
   <rm:locator pattern="^org\.eclipse\.dawnsci\..+$" searchPathRef="dawnsci"/>
