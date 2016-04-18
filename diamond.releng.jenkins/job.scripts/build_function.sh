@@ -62,6 +62,7 @@ build_function () {
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
         if [[ "${retcode}" != "0" ]]; then
             if [[ "${do_not_fail_on_compile_errors:-false}" != "true" ]]; then
+                echo 'append-build-description: Failure - compile errors'
                 return 1
             fi
             echo -e "\n*** Compile failed, but continuing test job, since \${do_not_fail_on_compile_errors}=true ***\n"

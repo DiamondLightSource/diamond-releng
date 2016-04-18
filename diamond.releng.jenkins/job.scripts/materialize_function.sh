@@ -170,6 +170,7 @@ materialize_function () {
                 set -e  # Restore errexit
                 if [[ "${RETVAL}" != "0" ]]; then
                     echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` update_single_git_repo_function failed for some repo(s); abandoning ***\n"
+                    echo 'append-build-description: Failure updating existing repos (probable network issue)'
                     return ${RETVAL}
                 fi
             fi

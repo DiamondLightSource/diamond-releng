@@ -184,7 +184,7 @@ set_environment_step () {
             RETVAL=$?
             $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
             if [ "${RETVAL}" != "0" ]; then
-                echo 'append-build-description: Failure on wget from opengda.org from opengda.org (probable network issue)'
+                echo 'append-build-description: Failure on wget from opengda.org (probable network issue)'
                 return ${RETVAL}
             fi
         fi

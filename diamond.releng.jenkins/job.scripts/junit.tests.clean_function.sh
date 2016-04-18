@@ -38,6 +38,7 @@ junit_tests_clean_function () {
         set -e  # Restore errexit
         if [[ "${RETVAL}" != "0" ]]; then
             echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` delete of \"test-reports\" or \"test-scratch\" failed in some case(s); abandoning ***\n"
+            echo 'append-build-description: Failure cleaning up previous run (probable system issue)'
             return ${RETVAL}
         fi
 
