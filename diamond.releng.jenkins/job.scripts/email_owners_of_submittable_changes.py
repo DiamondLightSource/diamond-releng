@@ -81,7 +81,7 @@ class SubmittableChangesProcessor():
         raise Exception('File %s appears empty' % token_filename)
 
     def gerrit_REST_api(self, relative_url, accept404=False):
-        ''' Call the Jenkins REST API
+        ''' Call the Gerrit REST API
         '''
 
         url = self.gerrit_url_base + relative_url
