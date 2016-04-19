@@ -51,7 +51,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	<!-- Location of junit .jar -->
 	<path id="junitjar.loc.id">
 		<first count="1"><sort>
-			<fileset dir="${workspace.loc}/tp/plugins" includes="org.junit4_*/junit.jar org.junit_4*/junit.jar" />
+			<fileset dir="${workspace.loc}/tp/plugins" includes="org.junit_*/junit.jar" />
 			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
 				<name/>  <!-- 'name' inherits reverse's namespace -->
 			</reverse>
@@ -71,7 +71,6 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		</path>
 		<property name="jythonjar.loc" refid="jythonjar.loc.id" />  <!-- turn the path into a property -->
 	</target>
-
 
 	<!-- Paths useful for compiling javadocs, running tests etc. -->
 	<target name="_set-libsjars-path">
@@ -140,8 +139,13 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<fileset dir="${workspace.loc}/tp/plugins">
 			<include name="*.jar" />
 			<exclude name="*.source_*" />
-			<exclude name="org.eclipse.swt.*" />  <!-- Use tp.swt.path if you need SWT -->
-			<exclude name="org.apache.batik*" />  <!-- org.apache.batik.pdf has it's own copy of org.apache.commons.io so exclude it -->
+			<exclude name="org.apache.ant*" />
+			<exclude name="org.eclipse.ant*" />
+			<exclude name="org.junit*" />              <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
+			<exclude name="org.eclipse.jdt.junit*" />  <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
+			<exclude name="org.hamcrest.*" />          <!-- Use hamcrest.tp.path if you need Hamcrest -->
+			<exclude name="org.eclipse.swt.*" />       <!-- Use tp.swt.path if you need SWT -->
+			<exclude name="org.apache.batik*" />       <!-- org.apache.batik.pdf has it's own copy of org.apache.commons.io so exclude it -->
 		</fileset>
 	</path>
 

@@ -1821,6 +1821,8 @@ class PewmaManager(object):
         self.report_and_check_java_version()
 
         ant_command = ['ant']
+        ant_command.extend(("-nouserlib",))    # Run ant without using the jar files from ${user.home}/.ant/lib
+        ant_command.extend(("-noclasspath",))  # Run ant without using CLASSPATH (avoids putting jars from ANT_HOME/lib on the classpath)
         ant_command.extend(("-logger", "org.apache.tools.ant.NoBannerLogger"))
         ant_command.extend(('-buildfile', os.path.join(self.workspace_git_loc, 'diamond-releng.git/diamond.releng.tools/ant-headless/ant-driver.ant')))
 
