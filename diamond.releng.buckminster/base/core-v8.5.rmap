@@ -2391,7 +2391,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.eclipse\.gemini\.blueprint\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.eclipse\.swtbot(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0"/>
-  <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0" failOnError="false"/>
+  <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_orbit_R20150519210750" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.log4j(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.remote(\..+)?$" searchPathRef="eclipse_ptp_2.0.0"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
