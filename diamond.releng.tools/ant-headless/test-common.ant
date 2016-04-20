@@ -119,7 +119,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	</path>
 
 	<!-- Location of latest versions of hamcrest jars -->
-	<path id="hamcrest.tp.path">
+	<path id="tp.hamcrest.path">
 		<first count="1"><sort>
 			<fileset dir="${workspace.loc}/tp/plugins" includes="org.hamcrest.core_*.jar" />
 			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
