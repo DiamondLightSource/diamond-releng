@@ -282,19 +282,58 @@ class PewmaManager(object):
 
         self.valid_actions = dict((action, handler) for (action, handler, help) in self.valid_actions_with_help)
 
-        # if the current directory, or any or its parents, is a workspace, make that the default workspace
-        # otherwise, if the directory the script is being run from is within a workspace, make that the default workspace
-        self.workspace_loc = None
-        candidate = os.getcwd()
-        while candidate != os.path.dirname(candidate):  # if we are not at the filesystem root (this is a platform independent check)
-            if not candidate.endswith('_git'):
-                self.workspace_loc = (os.path.isdir( os.path.join( candidate, '.metadata')) and candidate)
-            else:
-                self.workspace_loc = (os.path.isdir( os.path.join( candidate[:-4], '.metadata')) and candidate[:-4])
-            if self.workspace_loc:
-                break
-            candidate = os.path.dirname(candidate)
+        # If possible, determine a default workspace location, using the following tests in order:
+        # (1) if the is no current directory, do not set a default
+        # (2) if the current directory, or any or its parents, is an Eclipse workspace, make that the default
+        #     (if the current directory, or any or its parents, is named .*_git, ignore the _git part)
+        # (3) if the current directory is called "workspace", and is empty, make it the default
+        # (4) if the current directory is called "workspace", and is not empty, do not set a default
+        # (5) if the current directory contains a subdirectory called "workspace" that is an Eclipse workspace, make that the default
+        # (6) if the current directory contains a subdirectory called "workspace" that is empty, make that the default
+        # (7) if the current directory contains a subdirectory called "workspace", do not set a default
+        # (8) if the current directory does not contain a subdirectory called "workspace", use new directory <cwd>/workspace as the default
+        # (9) Don't have a default workspace location
+        # Note: all this will be irrelevant if the user explicitly specifies -w/--workspace on the command line
 
+        self.workspace_loc = None
+
+        try:
+            candidate = cwd = os.getcwd()
+        except (OSError) as e:
+            # Case 1 - no current directory
+            self.logger.warn('Current working directory invalid')
+        else:
+            while candidate != os.path.dirname(candidate):  # if we are not at the filesystem root (this is a platform independent check)
+                if not candidate.endswith('_git'):
+                    self.workspace_loc = (os.path.isdir( os.path.join( candidate, '.metadata')) and candidate or None)
+                else:
+                    self.workspace_loc = (os.path.isdir( os.path.join( candidate[:-4], '.metadata')) and candidate[:-4] or None)
+                if self.workspace_loc:
+                    # Case 2 - current directory, or a parent, is an Eclipse workspace
+                    break
+                candidate = os.path.dirname(candidate)
+            else:
+                if (os.path.basename(cwd) == 'workspace'):
+                    # Case 3; Case 4 - current directory is named "workspace"
+                    if not os.listdir(cwd):
+                        # Case 3 - current directory is named "workspace" and is empty
+                        self.workspace_loc = cwd
+                    else:
+                        pass  # Case 4 - current directory is named "workspace" and is not empty
+                else:
+                    candidate = os.path.join(cwd, 'workspace')
+                    if os.path.isdir(candidate):
+                        # Case 5; Case 6; Case 7; Case 8 - current directory contains a subdirectory "workspace"
+                        if os.path.isdir( os.path.join( candidate, '.metadata')):
+                            self.workspace_loc = candidate  # Case 5 - subdirectory "workspace" is an Eclipse workspace
+                        elif not os.listdir(candidate):
+                            self.workspace_loc = candidate  # Case 6 - subdirectory "workspace" is empty
+                        else:
+                            pass #  Case 7 - subdirectory "workspace" is not empty
+                    else:
+                        # Case 8 - subdirectory "workspace" does not exist
+                        self.workspace_loc = candidate
+        assert (self.workspace_loc is None) or os.path.isabs(self.workspace_loc)
 
     def define_parser(self):
         """ Define all the command line options and how they are handled. """
