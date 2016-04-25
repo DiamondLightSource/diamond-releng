@@ -2049,6 +2049,7 @@ class PewmaManager(object):
                 candidate = os.path.dirname(candidate)
         if self.workspace_loc:
             self.workspace_git_loc = self.workspace_loc + '_git'
+            self.logger.info('%sWorkspace directory specified: "%s"' % (self.log_prefix, self.workspace_loc,))
         elif (self.action != 'get-branches-expected'):
             raise PewmaException('ERROR: the "--workspace" option must be specified, unless you run this script from an existing workspace')
 
@@ -2063,11 +2064,34 @@ class PewmaManager(object):
 
         # delete previous workspace as required
         if self.options.delete or self.options.recreate:
+            # Check that the workspace location (specified by the user, or by default) is not obviously wrong.
+            # A common mistake is to specify the workspace as a point higher in the directory tree than was actually intended.
+            # If we proceed in that case, we would end up deleting files that the user actually expected to be kept.
+            # So, if the specified workspace directory contains a workspace within it, or some git repositories,
+            # we should abandon without deleting anything.
+            if os.path.isdir(self.workspace_loc):
+                for root, dirs, files in os.walk(self.workspace_loc):
+                    if any((# if there is any directory called "workspace" BELOW the workspace directory, it's probably wrong
+                            'workspace' in dirs,
+                            # .metadata ok immediately below specified workspace directory, but not any deeper
+                            '.metadata' in dirs if root != self.workspace_loc else False,
+                            # if there is any directory called "*_git" BELOW the workspace directory, it's probably wrong
+                            [d for d in dirs if d.endswith('_git')],
+                            # if there is any directory called ".git" BELOW the workspace directory, it's probably wrong
+                            '.git' in dirs,
+                            )):
+                        error_message = ('ERROR: You asked for workspace "' + self.workspace_loc +
+                                        '" to be deleted, but it contains a workspace or git repositories within it')
+                        if root != self.workspace_loc:
+                            error_message += ' (in ' + root + ')'
+                        raise PewmaException(error_message + '. Abandoning.')
+
             self.delete_directory(self.workspace_loc, "workspace directory")
             if self.options.delete:
                 self.delete_directory(self.workspace_git_loc, "workspace_git directory")
 
-        # Proxy handling is a bit of a mess. Python and Buckminster (java) can potentially access network resources, and they handle proxy settings differently.
+        # Proxy handling is a bit of a mess.
+        # Python and Buckminster (java) can potentially access network resources, and they handle proxy settings differently.
         # The technique used here seems to work (meaning it uses the proxy when it is supposed to, and not when it isn't).
         # Don't mess around with it; things that look like they should work, don't.
         # The only way to know if this is doing the right thing is to test with a network tracing tool such as wireshark. 
