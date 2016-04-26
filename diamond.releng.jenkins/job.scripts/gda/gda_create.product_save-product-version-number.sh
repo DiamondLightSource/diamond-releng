@@ -8,8 +8,8 @@ if [[ -d "${buckminster_root_prefix}/products/" ]]; then
         fi
         export product_version_number="(version unknown)"
     done
-    echo "${product_version_number}" > ${buckminster_root_prefix}/products/product_version_number.txt
-    echo "\"${product_version_number}\" written to ${buckminster_root_prefix}/products/product_version_number.txt"    
+    echo "${product_version_number}" > ${WORKSPACE}/artifacts_to_archive/product_version_number.txt
+    echo "\"${product_version_number}\" written to ${WORKSPACE}/artifacts_to_archive/product_version_number.txt"    
 else
     export product_version_number="(version unknown)"
 fi

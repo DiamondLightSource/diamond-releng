@@ -7,5 +7,5 @@ for product in $(find ${buckminster_root_prefix}/products/ -mindepth 1 -maxdepth
     fi
     export product_version_number="(version unknown)"
 done
-echo "${product_version_number}" > ${buckminster_root_prefix}/products/product_version_number.txt
-echo "\"${product_version_number}\" written to ${buckminster_root_prefix}/products/product_version_number.txt"
+echo "${product_version_number}" > ${WORKSPACE}/artifacts_to_archive/product_version_number.txt
+echo "\"${product_version_number}\" written to ${WORKSPACE}/artifacts_to_archive/product_version_number.txt"
