@@ -58,6 +58,9 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-hpc.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-hpc" value="true"/>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^hdf\.(hdf5lib|object)(\..+)?$" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-hdf.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|runtime|project\.repository\..+)|org\.dawnsci\.passerelle\.parallel\.actor(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isencia.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-isencia" value="true"/>
