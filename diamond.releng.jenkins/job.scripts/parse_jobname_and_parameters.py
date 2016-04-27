@@ -204,11 +204,6 @@ def parse_jenkins_jobname(jobname):
         parse_result.append(('at_least_one_publish_parameter_selected', at_least_one_publish_parameter_selected))
         parse_result.append(('at_least_one_trigger_squish_parameter_selected', at_least_one_trigger_squish_parameter_selected))
 
-        if (at_least_one_publish_parameter_selected or
-            (os.environ.get('archive_products').strip().lower() == 'true') or
-            (os.environ.get('trigger_squish_tests').strip().lower() == 'true')):
-            parse_result.append(('product_zip', 'true'))  # override whatever was specified
-
     return parse_result
 
 
