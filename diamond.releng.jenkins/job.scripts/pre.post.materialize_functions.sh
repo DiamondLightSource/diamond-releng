@@ -7,13 +7,6 @@ if [[ -n "${GDA_release}" ]]; then
   . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
 fi
 
-if [[ "${JOB_NAME}" == *~*e4* ]]; then
-  script=e4_pre.post.materialize.functions.sh
-  echo "Sourcing ${script}"
-  . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/${script}
-fi
-
-
 #------------------------------------#
 #------------------------------------#
 

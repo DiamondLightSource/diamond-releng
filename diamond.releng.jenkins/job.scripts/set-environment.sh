@@ -50,7 +50,7 @@ set_environment_step () {
             return 100
         fi
     done
-    if [ -f "${WORKSPACE}/job-specific-environment-variables.properties" ]; then
+    if [ -s "${WORKSPACE}/job-specific-environment-variables.properties" ]; then
          # if required, job-specific-environment-variables.properties should be written in a previous build step
          echo "running \". ${WORKSPACE}/job-specific-environment-variables.properties\""
          . ${WORKSPACE}/job-specific-environment-variables.properties
