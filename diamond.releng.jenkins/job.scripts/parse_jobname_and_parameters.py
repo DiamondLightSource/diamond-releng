@@ -43,7 +43,7 @@ def parse_jenkins_jobname(jobname):
         elif '-publish.' in jobname:
             m = re.match('^(?P<prefix>.+)-publish\.[a-z]+(?P<suffix>.*?)$', jobname)
             parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product' + m.group('suffix')))
-            # use /dls/science/ (which is not backed up) snapshot builds, and /dls_sw/apps/ for release builds
+            # use /dls/science/ (which is not backed up) for snapshot builds, and /dls_sw/apps/ for release builds
             if 'master' in jm.group('DAWN_release'):
                 publish_parent = '/dls/science/groups/scisoft/'
             else:
@@ -152,14 +152,19 @@ def parse_jenkins_jobname(jobname):
         # if this is any publish job, work out the name of the upstream job (the create.product job), and where to publish to
         if '-publish.' in jobname:
             m = re.match('^(?P<prefix>.+)-publish.[a-z]+-(?P<product_name>.+)(?P<suffix>.?)$', jobname)
-            parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product-' + m.group('product_name') + m.group('suffix')))
+            if m.group('product_name') not in ('gdaserver', 'logpanel'):
+                parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product.beamline-' + m.group('product_name') + m.group('suffix')))
+                directory_product_name = 'gdaclient'
+            else:
+                parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product-' + m.group('product_name') + m.group('suffix')))
+                directory_product_name = m.group('product_name')
             # use /dls/science/ (which is not backed up) snapshot builds, and /dls_sw/apps/ for release builds
             if 'master' in jm.group('GDA_release'):
                 publish_parent = '/dls/science/groups/daq/'
             else:
                 publish_parent = '/dls_sw/apps/'
             publish_parent = os.path.join(publish_parent,
-                                          m.group('product_name'),
+                                          directory_product_name,
                                           jm.group('GDA_release') + (jm.group('job_variant') or ''),
                                           '')
             parse_result.append(('publish_module_load_directory_parent', publish_parent))
