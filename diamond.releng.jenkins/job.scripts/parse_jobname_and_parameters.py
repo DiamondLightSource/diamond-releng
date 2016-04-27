@@ -99,6 +99,8 @@ def parse_jenkins_jobname(jobname):
                     product_site = 'uk.ac.gda.client.' + beamline + '.site'
                 elif beamline == 'i20-1':
                     product_site = 'uk.ac.gda.beamline.i20_1.site'
+                elif beamline == 'p45':
+                    product_site = 'uk.ac.diamond.daq.beamline.p45.site'
                 else:
                     product_site = 'uk.ac.gda.beamline.' + beamline + '.site'
             elif site == 'GDA':
