@@ -55,6 +55,9 @@
   <rm:propertyElement key="eclipse.jetty9.p2.version">  <!-- version of Eclipse Jetty 9 p2 repository to use -->
     <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars SR2 depends on -->
   </rm:propertyElement>
+  <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
+    <bc:constant value="4.5.5"/>
+  </rm:propertyElement>
   <!--                                                             -->
   <!-- Properties for Gitolite-managed git repositories at Diamond -->
   <!--                                                             -->
@@ -2169,29 +2172,40 @@
   <!--
        Target Platform (PyDev) URLs
   -->
-  <rm:propertyElement key="pydev.provider">  <!-- pydev.provider can be "pydev" (standard PyDev release), "dls" (DLS tailored release), or "private" (your own) -->
-    <bc:constant value="pydev"/>
+  <!-- pydev.provider can be "old" (PyDev 3.6.0 or earlier), or "new" (PyDev 4.5.5+) -->
+  <rm:propertyElement key="pydev.provider">  <!-- defined here in case it is not defined in the CQuery -->
+    <bc:constant value="old"/>
   </rm:propertyElement>
-  <rm:propertyElement key="pydev.build">  <!-- pydev.build can be "release", or a specific build such as "3.0.0-rc1" -->
-    <bc:constant value="release"/>
+  <rm:propertyElement key="pydev.provider.from.cquery.translated">
+    <bc:replace>
+      <bc:constant value="${pydev.provider}"/>
+      <bc:match pattern="^(?! *(old|new) *$).*$" replacement="unrecognised.pydev.provider"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="pydev.provider.common">
+    <bc:constant value="${pydev.provider.from.cquery.translated}"/>
   </rm:propertyElement>
   <rm:propertyElement key="pydev.download.location">
     <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="pydev.pydev.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/mirrors/pydev"/>
+  <rm:propertyElement key="pydev.download.url.diamond">
+    <!-- <bc:constant value="${diamond.p2.url}/sites/dl.bintray.com/fabioz/pydev"/>  WARNING: not yet set up -->
+    <bc:constant value="https://dl.bintray.com/fabioz/pydev"/>
   </rm:propertyElement>
-  <rm:propertyElement key="pydev.pydev.download.url.public">
-    <bc:constant value="http://www.opengda.org/mirrors/pydev"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="pydev.dls.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/updates/pydev"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="pydev.dls.download.url.public">
-    <bc:constant value="http://www.opengda.org/updates/pydev"/>
+  <rm:propertyElement key="pydev.download.url.public">
+    <bc:constant value="https://dl.bintray.com/fabioz/pydev"/>
   </rm:propertyElement>
   <rm:propertyElement key="pydev.download.url">
-    <bc:constant value="${pydev.${pydev.provider}.download.url.${pydev.download.location}}"/>
+    <bc:constant value="${pydev.download.url.${pydev.download.location}}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="pydev.old.download.url.diamond">
+    <bc:constant value="${diamond.p2.url}/mirrors/pydev"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="pydev.old.download.url.public">
+    <bc:constant value="http://www.opengda.org/mirrors/pydev"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="pydev.old.download.url">
+    <bc:constant value="${pydev.old.download.url.${pydev.download.location}}"/>
   </rm:propertyElement>
   <!-- ***** -->
   <!--
@@ -4294,25 +4308,15 @@
        Target Platform (PyDev)
   -->
   <rm:searchPath name="tp_pydev">
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" resolutionFilter="(&amp;(pydev.provider=pydev)(pydev.build=release))" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" resolutionFilter="(pydev.provider=new)" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${pydev.download.url}/updates/"/>
+      <rm:uri format="${pydev.download.url}/${pydev.p2.version}/"/>
     </rm:provider>
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" resolutionFilter="(&amp;(pydev.provider=dls)(pydev.build=release))" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" resolutionFilter="(pydev.provider=old)" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${pydev.download.url}/trunk/"/>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" resolutionFilter="(!(pydev.build=release))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${pydev.download.url}/${pydev.build}/"/>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" resolutionFilter="(pydev.provider=private)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${pydev.download.url}/"/>
+      <rm:uri format="${pydev.old.download.url}/updates/"/>
     </rm:provider>
   </rm:searchPath>
   <!--
