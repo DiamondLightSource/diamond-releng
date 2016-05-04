@@ -1226,7 +1226,7 @@ class PewmaManager(object):
             current_branch = 'master'  # in case of problems parsing HEAD file
             with open(HEAD_file_loc, 'r') as HEAD_file:
                 for line in HEAD_file:
-                    current_branch = line.rsplit('/')[-1] or 'master'
+                    current_branch = (line.rsplit('/')[-1] or 'master').strip()  # strip() to get rid of newline
                     break
 
             git_config_commands = []
@@ -1297,6 +1297,9 @@ class PewmaManager(object):
             hooks_commit_msg_loc = os.path.join(git_dir, '.git', 'hooks', 'commit-msg')
             if os.path.exists(hooks_commit_msg_loc):
                 self.logger.debug('%scommit-msg hook already set up: %s' % (self.log_prefix, hooks_commit_msg_loc))
+            elif GERRIT_MIRROR_HOST in origin_url:
+                self.logger.debug('%sGerrit server assumed not accessible, so commit-msg hook not downloaded for %s' %
+                                 (self.log_prefix, os.path.basename(git_dir)))
             else:
                 commit_hook = self.gerrit_commit_hook()
                 if not self.options.dry_run:
