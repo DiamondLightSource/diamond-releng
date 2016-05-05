@@ -8,6 +8,7 @@
     <cq:property key="github.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
     <cq:property key="pydev.provider" value="old"/>
     <cq:property key="skip_DAWN_test_fragments" value="false"/>
+    <cq:property key="skip_EXTERNAL_test_fragments" value="false"/>
     <cq:property key="skip_GDA_test_fragments" value="true"/>
     <cq:property key="target.arch" value="*"/>
     <cq:property key="target.os" value="*"/>
@@ -15,9 +16,10 @@
     <cq:property key="use.eclipse.rap" value="no"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
     <cq:advisorNode namePattern="^builder(s\.(dawn|diamond))?$" skipComponent="true"/>
-    <cq:advisorNode namePattern="^.*\.tests?$" filter="(skip_ALL_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|org\.eclipse\.dawnsci\.|uk\.ac\.diamond\.(daq\.activemq\.connector|scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(skip_DAWN_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(skip_GDA_test_fragments=true)" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^.*\.tests?$" filter="(|(skip_ALL_test_fragments=true)(skip_ALL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|uk\.ac\.diamond\.(daq\.activemq\.connector|scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(|(skip_DAWN_test_fragments=true)(skip_DAWN_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(org\.eclipse\.(.*\.)?tests?)$" filter="(|(skip_EXTERNAL_test_fragments=true)(skip_EXTERNAL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(|(skip_GDA_test_fragments=true)(skip_GDA_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^org\.apache\.commons\.codec\.source$" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">This is to avoid what appear to be a Buckminster bug (noticed 2014/02/06 using Eclipse 4.3.1).
 If you materialize, and then materialize again, the second materialize can fail. See DASCTEST-211.</cq:documentation>
