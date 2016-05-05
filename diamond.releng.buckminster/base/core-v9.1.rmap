@@ -56,7 +56,7 @@
     <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars SR2 depends on -->
   </rm:propertyElement>
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
-    <bc:constant value="4.5.5"/>
+    <bc:constant value="4.6.0"/>
   </rm:propertyElement>
   <!--                                                             -->
   <!-- Properties for Gitolite-managed git repositories at Diamond -->
