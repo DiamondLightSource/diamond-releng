@@ -192,10 +192,11 @@ materialize_function () {
             # but we need to say --recreate and not --delete, in case the pre_materialize_functions cloned and set up a repository (e.g. for Gerrit tests)
             workspace_delete_option=--recreate
         fi
+        # materialize_properties_special is specified when the Jenkins job starts (normally empty)
         if [[ -z "${materialize_cquery}" ]]; then
-            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
+            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_properties_special} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
         else
-            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
+            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_properties_special} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
         fi
     fi
 
