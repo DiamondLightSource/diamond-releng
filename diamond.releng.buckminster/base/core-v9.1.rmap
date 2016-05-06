@@ -56,7 +56,7 @@
     <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars SR2 depends on -->
   </rm:propertyElement>
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
-    <bc:constant value="4.6.0"/>
+    <bc:constant value="5.0.0"/>
   </rm:propertyElement>
   <!--                                                             -->
   <!-- Properties for Gitolite-managed git repositories at Diamond -->
@@ -2172,7 +2172,7 @@
   <!--
        Target Platform (PyDev) URLs
   -->
-  <!-- pydev.provider can be "old" (PyDev 3.6.0 or earlier), or "new" (PyDev 4.5.5+) -->
+  <!-- pydev.provider can be "old" (PyDev 3.6.0 or earlier), or "new" (PyDev 5.0.0+) -->
   <rm:propertyElement key="pydev.provider">  <!-- defined here in case it is not defined in the CQuery -->
     <bc:constant value="old"/>
   </rm:propertyElement>
