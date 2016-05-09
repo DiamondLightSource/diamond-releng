@@ -57,14 +57,23 @@ def parse_jenkins_jobname(jobname):
         # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
         elif '-squish.trigger' in jobname:
             m = re.match('^(?P<prefix>.+)-squish.trigger(?P<suffix>.*)$', jobname)
-            parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product' + m.group('suffix')))
+            parse_result.append(('upstream_create_product_job',
+                                    m.group('prefix') +
+                                    '-create.product' +
+                                    m.group('suffix') +
+                                    (jm.group('job_variant') or '')
+                                 ))
             parse_result.append(('squish_platform_job_prefix', m.group('prefix')))
             parse_result.append(('squish_platform_job_suffix', m.group('suffix')))
 
         # if this is any squish job, work out the name of the upstream job (the create.product job)
         elif '-squish' in jobname:
             m = re.match('^(?P<prefix>.+)-squish(-subset)?(?P<suffix>.+)$', jobname)
-            parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product'))
+            parse_result.append(('upstream_create_product_job',
+                                    m.group('prefix')
+                                    + '-create.product' +
+                                    (jm.group('job_variant') or '')
+                                ))
 
     #########################
     # Parsing for GDA jobs #
