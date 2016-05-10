@@ -114,7 +114,12 @@ gda_publish_function () {
                     fi
                     if [[ "${initialize_module_load}" == "true" ]]; then
                         if [[ "${running_platform}" == "${platform}" ]]; then
-                            ${publish_module_load_directory_for_type}/${publish_module_load_directory_name}/gda-server -initialize
+                            executable_name=$(find ${publish_module_load_directory_for_type}/${publish_module_load_directory_name} -mindepth 1 -maxdepth 1 -type f ! -name "*.xpm" -perm -a+x | xargs -i basename {}  | head -q -n 1)
+                            if [[ -z "${executable_name:-}" ]]; then
+                                echo "Could not find an executable in ${publish_module_load_directory_for_type}/${publish_module_load_directory_name}, so terminating"
+                                return 100
+                            fi
+                            ${publish_module_load_directory_for_type}/${publish_module_load_directory_name}/${executable_name} -initialize
                         fi
                     fi
                     chmod -R go-w ${publish_module_load_directory}/ || return 3
