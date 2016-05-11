@@ -98,7 +98,7 @@ dawn_publish_function () {
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to module load for ${platform} ***\n"
-                publish_module_load_directory_for_type=${publish_module_load_directory_parent}/builds
+                publish_module_load_directory_for_type=$(readlink -m ${publish_module_load_directory_parent}/builds)
                 publish_module_load_directory_name=$(basename ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip .zip)
                 publish_module_load_link_name=${name_to_publish_as}-${platform}
                 publish_module_load_directory=${publish_module_load_directory_for_type}/${publish_module_load_directory_name}
