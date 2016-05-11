@@ -177,6 +177,9 @@ def parse_jenkins_jobname(jobname):
                                           jm.group('GDA_release') + (jm.group('job_variant') or ''),
                                           '')
             parse_result.append(('publish_module_load_directory_parent', publish_parent))
+            # for GDA, even if we build for non-linux64 platforms, we don't save the build, so don't attempt to publish
+            parse_result.append(('platform_windows64', 'false'))
+            parse_result.append(('platform_mac64', 'false'))
 
         # if this is the squish-trigger job, work out the name of the upstream job (the create.product job), and the name structure of the downstream jobs (the squish jobs)
         elif '-squish.trigger' in jobname:
@@ -554,6 +557,8 @@ def test_parse_jenkins_jobname():
         ('job_variant', None),
         ('upstream_create_product_job', 'GDA.master-create.product-gdaserver'),
         ('publish_module_load_directory_parent', '/dls/science/groups/daq/gdaserver/master/'),
+        ('platform_windows64', 'false'),
+        ('platform_mac64', 'false'),
         ]
     write_parse_result(p, output)
 
