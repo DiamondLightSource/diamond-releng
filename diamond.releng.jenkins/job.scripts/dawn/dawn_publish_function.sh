@@ -117,7 +117,7 @@ dawn_publish_function () {
                             ${publish_module_load_directory_for_type}/${publish_module_load_directory_name}/dawn -initialize
                         fi
                     fi
-                    chmod -R go-w ${publish_module_load_directory}/ || return 3
+                    chmod -R ugo-w ${publish_module_load_directory}/ || return 3
                     if [[ -L "${publish_module_load_link}" ]]; then
                         rm -v ${publish_module_load_link}
                     fi
