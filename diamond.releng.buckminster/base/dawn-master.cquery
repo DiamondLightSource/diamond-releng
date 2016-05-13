@@ -6,7 +6,6 @@
     <cq:property key="disallow.scisoft.deprecated" value="true"/>
     <cq:property key="download.location" value="Default is 'diamond'. Change this to 'public' if required."/>
     <cq:property key="github.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
-    <cq:property key="pydev.provider" value="old"/>
     <cq:property key="skip_DAWN_test_fragments" value="false"/>
     <cq:property key="skip_EXTERNAL_test_fragments" value="false"/>
     <cq:property key="skip_GDA_test_fragments" value="true"/>
