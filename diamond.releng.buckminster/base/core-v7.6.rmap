@@ -1955,7 +1955,7 @@
     <bc:constant value="${diamond.p2.url}/mirrors/dawb/org.dawb.workbench.p2"/>
   </rm:propertyElement>
   <rm:propertyElement key="dawb.p2.download.url.dawb.p2">
-    <bc:constant value="http://svn.codespot.com/a/eclipselabs.org/dawb/p2/org.dawb.workbench.p2"/>
+    <bc:constant value="http://www.opengda.org/mirrors/dawb/org.dawb.workbench.p2"/>
   </rm:propertyElement>
   <rm:propertyElement key="dawb.p2.download.url">
     <bc:constant value="${dawb.p2.download.url.${dawb.p2.download.location}}"/>

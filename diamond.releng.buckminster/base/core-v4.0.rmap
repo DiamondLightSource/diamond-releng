@@ -637,7 +637,7 @@
   <!-- DAWN URLs                    -->
   <!--                              -->
   <rm:propertyElement key="target_platform.dawb.p2.url">
-    <!-- <bc:constant value="http://svn.codespot.com/a/eclipselabs.org/dawb/p2/org.dawb.workbench.p2"/> -->
+    <!-- <bc:constant value="http://www.opengda.org/mirrors/dawb/org.dawb.workbench.p2"/> -->
     <bc:constant value="${diamond.p2.url}/mirrors/dawb/org.dawb.workbench.p2"/>
   </rm:propertyElement>
   <!-- ***** -->
