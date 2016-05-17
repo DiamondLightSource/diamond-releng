@@ -33,6 +33,11 @@ install_buckminster () {
         buckminster_version=4.5
     fi
 
+    # download location; either "direct" (from eclipse.org) or "mirror"
+    if [[ -z "${director_download_location}" ]]; then
+        director_download_location=mirror
+    fi
+
     # install type
     if [[ -z "${buckminster_install_type}" ]]; then
         buckminster_install_type=private
@@ -65,7 +70,12 @@ install_buckminster () {
     # create a temporary directory name: %/ is used to remove any trailing slash
     buckminster_install_dir_temp=${buckminster_install_dir%/}_install-in-progress
 
-    director_download="http://download.eclipse.org/tools/buckminster/products/director_latest.zip"
+    if [[ "${director_download_location}" == "direct" ]]; then
+        director_download="http://download.eclipse.org/tools/buckminster/products/director_latest.zip"
+    else
+        # the &r=1 suffix means download starts immediately from best mirror
+        director_download="http://www.eclipse.org/downloads/download.php?file=/tools/buckminster/products/director_latest.zip&r=1"
+    fi
     repository_buckminster=http://download.eclipse.org/tools/buckminster/headless-${buckminster_version}
 
     #==========================================================
@@ -101,7 +111,7 @@ install_buckminster () {
         if [ "${RETVAL}" != "0" ]; then
             if [[ "${JENKINS_URL}" = *diamond.ac.uk* ]]; then
                 # running under Jenkins at DLS, so write text to log so that job build description is set 
-                echo "set-build-description: Failure on wget from $(echo ${director_download} | awk -F/ '{print $3}') (probable network issue)"
+                echo "set-build-description: Failure on wget from $(echo ${director_download} | awk -F/ '{print $3}') (${director_download_location}) (probable network issue)"
             fi
             return ${RETVAL}
         fi
