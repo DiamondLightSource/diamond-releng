@@ -135,19 +135,18 @@ materialize_function () {
         fi
     fi
 
-    # source the scripts that identify_changes_to_test_function possibly built (this just defines the functions, not runs them - they are run below)
-    if [ -f "${WORKSPACE}/artifacts_to_archive/notify_to_gerrit_at_start.sh" ]; then
-        # defines function pre_materialize_function_stage1_gerrit_job_started
-        . ${WORKSPACE}/artifacts_to_archive/notify_to_gerrit_at_start.sh
-    fi
-    if [ -f "${WORKSPACE}/artifacts_to_archive/gerrit_pre.materialize.function.sh" ]; then
-        # defines function pre_materialize_function_stage2_gerrit
-        . ${WORKSPACE}/artifacts_to_archive/gerrit_pre.materialize.function.sh
-    fi
-    if [ -f "${WORKSPACE}/artifacts_to_archive/gerrit_post.materialize.function.sh" ]; then
-        # defines function post_materialize_function_gerrit
-        . ${WORKSPACE}/artifacts_to_archive/gerrit_post.materialize.function.sh
-    fi
+    # source the scripts that identify_changes_to_test_function.py possibly wrote
+    #   notify_to_gerrit_at_start.sh         defines function pre_materialize_function_stage1_gerrit_job_started
+    #   gerrit_pre.materialize.function.sh   defines function pre_materialize_function_stage2_gerrit
+    #   gerrit_post.materialize.function.sh  defines function post_materialize_function_gerrit
+    # (this just defines the functions, not runs them; they are run below)
+
+    for generated_script in notify_to_gerrit_at_start.sh gerrit_pre.materialize.function.sh gerrit_post.materialize.function.sh; do
+        if [ -f "${WORKSPACE}/artifacts_to_archive/${generated_script}" ]; then
+            echo "sourcing artifacts_to_archive/${generated_script}"
+            . ${WORKSPACE}/artifacts_to_archive/${generated_script}
+        fi
+    done
 
     # execute any stage 1 pre_materialize_functions (if defined)
     for fname in $(compgen -A function pre_materialize_function_stage1_); do
