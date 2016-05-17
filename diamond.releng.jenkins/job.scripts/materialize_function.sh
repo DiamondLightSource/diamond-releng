@@ -143,7 +143,7 @@ materialize_function () {
 
     for generated_script in notify_to_gerrit_at_start.sh gerrit_pre.materialize.function.sh gerrit_post.materialize.function.sh; do
         if [ -f "${WORKSPACE}/artifacts_to_archive/${generated_script}" ]; then
-            echo "sourcing artifacts_to_archive/${generated_script}"
+            echo "Sourcing artifacts_to_archive/${generated_script}"
             . ${WORKSPACE}/artifacts_to_archive/${generated_script}
         fi
     done
