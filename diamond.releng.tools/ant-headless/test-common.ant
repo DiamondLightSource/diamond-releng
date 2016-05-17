@@ -83,18 +83,21 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		</path>
 	</target>
 
-	<path id="tp.slf4j.path">
-		<fileset dir="${workspace.loc}/tp/plugins">
-			<include name="slf4j.api_1.7.18.jar" />
-		</fileset>
-	</path>
-
 	<path id="tp.jcl-over-slf4j.path">
 		<fileset dir="${workspace.loc}/tp/plugins">
 			<include name="jcl.over.slf4j_1.7.18.jar" />
 		</fileset>
 	</path>
-
+	<path id="tp.log4j-over-slf4j.path">
+		<fileset dir="${workspace.loc}/tp/plugins">
+			<include name="log4j.over.slf4j_1.7.18.jar" />
+		</fileset>
+	</path>
+	<path id="tp.slf4j.path">
+		<fileset dir="${workspace.loc}/tp/plugins">
+			<include name="slf4j.api_1.7.18.jar" />
+		</fileset>
+	</path>
 	<path id="tp.slf4j.ext.path">
 		<fileset dir="${workspace.loc}/tp/plugins">
 			<include name="slf4j.ext_1.7.18.jar" />
