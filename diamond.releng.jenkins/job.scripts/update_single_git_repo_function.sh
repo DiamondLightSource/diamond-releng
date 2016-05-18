@@ -81,8 +81,8 @@ update_single_git_repo_function () {
     # We cannot assume that the local branch is tracking the standard branch, since this might be a Gerrit repository previously used to test a change
     repo_branch=$(grep "${repo_name%.git}" ${WORKSPACE}/artifacts_to_archive/cquery-branches-file.txt | head -n 1 | cut -d "=" -f 2)
     git -C ${repo_path} checkout --detach --quiet
-    git -C ${repo_path} branch -D --quiet ${repo_branch} || true
-    git -C ${repo_path} checkout -b ${repo_branch} remotes/origin/${repo_branch} --no-track --quiet
+    git -C ${repo_path} branch -D --quiet ${repo_branch} |& sed "s/^/[${repo_name}] /" || true
+    git -C ${repo_path} checkout -b ${repo_branch} remotes/origin/${repo_branch} --no-track --quiet |& sed "s/^/[${repo_name}] /"
     echo "Clean and reset of ${repo_name} completed"
 
     $([ "$oldpipefail" == "0" ]) && set -o pipefail || true  # Turn pipefail on if it was on at the top of this script
