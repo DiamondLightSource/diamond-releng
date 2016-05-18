@@ -323,7 +323,7 @@
     <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
   <rm:propertyElement key="dawn.hdf.git.url">
-    <bc:constant value="${github.${dawn.hdf.github.authentication}.url}${dawn.hdfc.github.organization}/dawn-hdf.git"/>
+    <bc:constant value="${github.${dawn.hdf.github.authentication}.url}${dawn.hdf.github.organization}/dawn-hdf.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.hpc.github.organization">
