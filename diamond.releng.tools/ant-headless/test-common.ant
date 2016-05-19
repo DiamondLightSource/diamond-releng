@@ -183,7 +183,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<dirset dir="${workspace.git.loc}">
 				<include name="gda-common*/uk.ac.gda.common/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="gda-core*/uk.ac.gda.core/lib/${eclipse.os}-${eclipse.arch}" />
-				<include name="dawn-third*/ncsa.hdf/lib/${eclipse.os}-${eclipse.arch}" />
+				<include name="dawn-hdf*/hdf.hdf5lib/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="scisoft-cbflib*/uk.ac.diamond.CBFlib/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="gda-diamond*/uk.ac.gda.dls/lib/${eclipse.os}-${eclipse.arch}" />
 			</dirset>
@@ -195,7 +195,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	<target name="_set-library-PATH-VALUE-DAWN">
 		<path id="java.library.path.value">
 			<dirset dir="${workspace.git.loc}">
-				<include name="dawn-third*/ncsa.hdf/lib/${eclipse.os}-${eclipse.arch}" />
+				<include name="dawn-hdf*/hdf.hdf5lib/lib/${eclipse.os}-${eclipse.arch}" />
 				<include name="scisoft-cbflib*/uk.ac.diamond.CBFlib/lib/${eclipse.os}-${eclipse.arch}" />
 			</dirset>
 			<pathelement path="${previous.java.library.path.value}" />

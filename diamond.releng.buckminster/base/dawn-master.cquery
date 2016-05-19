@@ -78,7 +78,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-test.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(com\.amd\.aparapi|ncsa\.hdf|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(com\.amd\.aparapi|hdf\.(hdf5lib|object)|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-third.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.ui(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.ui(\..+)?|slicing(\..+)?|spectrum\.ui|volumerender(\..+)?))|uk\.ac\.diamond\.screenshot(\..+)?)$" useTargetPlatform="false">
