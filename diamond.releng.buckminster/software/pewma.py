@@ -45,10 +45,12 @@ COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
     ('gda', 'master', 'gda-master.cquery', 'v3.0', ('master', '9.master', 'v9.master'), ('1.8.0',)),
+    ('gda', 'v9.1', 'gda-v9.1.cquery', 'v3.0', ('v9.1', '9.1', '91'), ('1.8.0',)),
     ('gda', 'v9.0', 'gda-v9.0.cquery', 'v3.0', ('v9.0', '9.0', '90'), ('1.8.0',)),
     ('gda', '8.master.astra', 'gda-v8.master.astra.cquery', 'v2.12', ('8.master.astra', 'v8.master.astra'), ('1.8.0',)),
     ('gda', '8.master.muse', 'gda-v8.master.muse.cquery', 'v2.12', ('8.master.muse', 'v8.master.muse'), ('1.8.0',)),
     ('gda', '8.master', 'gda-v8.master.cquery', 'v2.12', ('8.master', 'v8.master'), ('1.8.0',)),
+    ('gda', 'v8.54', 'gda-v8.54.cquery', 'v2.12', ('v8.54', '8.54', '854'), ('1.8.0',)),
     ('gda', 'v8.52', 'gda-v8.52.cquery', 'v2.12', ('v8.52', '8.52', '852'), ('1.8.0',)),
     ('gda', 'v8.50', 'gda-v8.50.cquery', 'v2.10', ('v8.50', '8.50', '850'), ('1.8.0',)),
     ('gda', 'v8.48', 'gda-v8.48.cquery', 'v2.10', ('v8.48', '8.48', '848'), ('1.8.0', '1.7.0',)),
@@ -76,8 +78,10 @@ COMPONENT_CATEGORIES = (
     ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218'), None),
     ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217'), None),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.0', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', '2.1', 'dawn-v2.1.cquery', 'v3.0', ('v2.1', '2.1'), ('1.8.0',)),
     ('dawn', '2.0', 'dawn-v2.0.cquery', 'v3.0', ('v2.0', '2.0'), ('1.8.0',)),
     ('dawn', '1.master', 'dawn-v1.master.cquery', 'v2.12', ('1.master', 'v1.master'), ('1.8.0',)),
+    ('dawn', '1.12', 'dawn-v1.12.cquery', 'v2.12', ('v1.12', '1.12'), ('1.8.0',)),
     ('dawn', '1.11', 'dawn-v1.11.cquery', 'v2.12', ('v1.11', '1.11'), ('1.8.0',)),
     ('dawn', '1.10', 'dawn-v1.10.cquery', 'v2.10', ('v1.10', '1.10'), ('1.8.0',)),
     ('dawn', '1.9', 'dawn-v1.9.cquery', 'v2.9', ('v1.9', '1.9'), ('1.7.0',)),
