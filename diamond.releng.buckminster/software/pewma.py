@@ -2188,13 +2188,16 @@ class PewmaManager(object):
         else:
             exit_code = getattr(self, 'action_'+self.action.replace('.', '_').replace('-', '_'))()
 
-        end_time = datetime.datetime.now()
-        run_time = end_time - start_time
-        seconds = (run_time.days * 86400) + run_time.seconds
-        hours, remainder = divmod(seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
         if not self.options.quiet:
-            self.logger.info('%sTotal run time was %02d:%02d:%02d' % (self.log_prefix, hours, minutes, seconds))
+            end_time = datetime.datetime.now()
+            run_time = end_time - start_time
+            seconds = (run_time.days * 86400) + run_time.seconds
+            hours, remainder = divmod(seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            final_message = '%sTotal run time was %02d:%02d:%02d' % (self.log_prefix, hours, minutes, seconds)
+            if exit_code:
+                final_message += ' (Return code: %s)' % (exit_code,)
+            self.logger.log(logging.ERROR if exit_code else logging.INFO, final_message)
         return exit_code
 
 ###############################################################################
