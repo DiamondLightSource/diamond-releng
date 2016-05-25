@@ -33,7 +33,10 @@ record_head_commits_function () {
         if [[ ! -f "${materialize_workspace_path}_git/${repository}/.git/config" ]]; then
             echo "# Skipping ${materialize_workspace_path}_git/${repository} since it does not appear to be a Git repository"
         else
-            url=$(cd ${materialize_workspace_path}_git/${repository}/ && git config --get remote.origin.url)
+            url=$(cd ${materialize_workspace_path}_git/${repository}/ && git config --get remote.origin.pushurl)
+            if [[ -z "${url}" ]]; then
+                url=$(cd ${materialize_workspace_path}_git/${repository}/ && git config --get remote.origin.url)
+            fi
             commitid=$(cd ${materialize_workspace_path}_git/${repository}/ && git rev-parse --verify HEAD)
             branch=$(cd ${materialize_workspace_path}_git/${repository}/ && git rev-parse --abbrev-ref HEAD)
             echo "repository=${repository}***URL=${url}***HEAD=${commitid}***BRANCH=${branch}***"
