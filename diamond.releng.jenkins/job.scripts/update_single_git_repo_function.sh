@@ -30,7 +30,7 @@ update_single_git_repo_function () {
     set -e  # Turn on errexit
 
     if [[ ! -d "${repo_path}/.git" ]]; then
-        echo "Problems with ${repo_name}; ${repo_path}/.git missing, so deleting"
+        echo "[${repo_name}] ${repo_path}/.git missing, so deleting repo (next step will re-clone)"
         ls -ld ${repo_path} || true
         rm -rf ${repo_path}
         return
@@ -49,33 +49,43 @@ update_single_git_repo_function () {
     set -o pipefail  # Turn on pipefail
 
     # If a previous job left any git repository in an inconsistent state (e.g. due to network problems), delete the repository
-    # Prior to git 2.6.0, git fsck could have an exit code of zero even if errors were found, so check stderr as well as the exit code (next 2 lines require pipefail)
+    # Prior to git 2.6.0, git fsck could have an exit code of zero even if errors were found, so check stderr as well as the exit code
     # As of git 2.6.0+, this was supposed to have been fixed, but retain the check of stderr anyhow
 
     # As of git 2.6.0+, git fsck can be told to ignore certain errors. Our convention is that to use this, we put a file called .git.fsck.skiplist in the repo root directory
     if [[ -f "${repo_path}/.git.fsck.skiplist" ]]; then
         git -C ${repo_path} config fsck.skiplist ".git.fsck.skiplist"
+        # (next line requires pipefail)
         git -C ${repo_path} config --list | grep fsck | sed "s/^/[${repo_name}] /"
     fi
 
     set +e  # Continue if fsck gives a non-zero exit code 
     ERRORS=$(git -C ${repo_path} fsck --no-progress --full --strict 2>&1 | wc -l | cut -d ' ' -f 1)
     RETVAL=$?
-    set -e  # Turn errexit back on
     if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
         git -C ${repo_path} reset --quiet --hard HEAD && git -C ${repo_path} clean -fdxq
         RETVAL=$?
     fi
     if [[ "${RETVAL}" == "0" && "${ERRORS}" == "0" ]]; then
+        # (next line requires pipefail)
         git -C ${repo_path} fetch --prune |& sed "s/^/[${repo_name}] /"
         RETVAL=$?
+        # sometime we get transient fetch failures, in which case try once more
+        if [[ "${RETVAL}" != "0" ]]; then
+            echo "[${repo_name}] First attempt at git fetch failed (exit code ${RETVAL}); will retry in 2 seconds"
+            sleep 2s
+            # (next line requires pipefail)
+            git -C ${repo_path} fetch --prune |& sed "s/^/[${repo_name}] /"
+            RETVAL=$?
+        fi
     fi
     if [[ "${RETVAL}" != "0" || "${ERRORS}" != "0" ]]; then
-        echo "Problems with structure or state of ${repo_path}, so deleting"
+        echo "[${repo_name}] Problems with structure or state of ${repo_path}, so deleting"
         ls -ld ${repo_path} || true
         rm -rf ${repo_path}
         return
     fi
+    set -e  # Turn errexit back on
 
     # At this point, the repository is clean, and up-to-date with the remote. We need to re-establish the correct local branch.
     # We cannot assume that the local branch is tracking the standard branch, since this might be a Gerrit repository previously used to test a change
