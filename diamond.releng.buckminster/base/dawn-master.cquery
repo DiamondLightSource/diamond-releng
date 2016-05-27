@@ -127,7 +127,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common-rcp.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-common-rcp" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((core|example|p45)-config|documentation\.gda|uk\.ac\.(diamond\.(daq\.(beamline\.p45(\..+)?|client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\..+)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^((core|example|p45)-config|documentation\.gda|uk\.ac\.(diamond\.(daq\.(beamline\.p45(\..+)?|client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\..+)?|example(\..+)?|integrationtest|xmleditor\.feature)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-core" value="true"/>
     </cq:advisorNode>

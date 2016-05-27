@@ -2298,7 +2298,7 @@
   <rm:locator pattern="^uk\.ac\.gda\.bimorph(\..+)?" searchPathRef="gda_bimorph"/>
   <rm:locator pattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" searchPathRef="gda_common"/>
   <rm:locator pattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" searchPathRef="gda_common_rcp"/>
-  <rm:locator pattern="^((core|example|p45)-config|documentation\.gda|uk\.ac\.(diamond\.(daq\.(beamline\.p45(\..+)?|client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\..+)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" searchPathRef="gda_core"/>
+  <rm:locator pattern="^((core|example|p45)-config|documentation\.gda|uk\.ac\.(diamond\.(daq\.(beamline\.p45(\..+)?|client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\..+)?|example(\..+)?|integrationtest|xmleditor\.feature)))$" searchPathRef="gda_core"/>
   <rm:locator pattern="^(org\.csstudio\..+|org\.ehcache|uk\.ac\.gda\.dal(\..+)?)$" searchPathRef="gda_dal"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.cirrus$" searchPathRef="gda_devices_cirrus"/>
   <rm:locator pattern="^uk\.ac\.gda\.(devices\.mythen(\..+)?|epics\.client\.mythen)$" searchPathRef="gda_devices_mythen"/>
