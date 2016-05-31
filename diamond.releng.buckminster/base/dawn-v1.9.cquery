@@ -197,7 +197,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i13x.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-dls-beamlines-i13x" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(i19(.|-).+|uk\.ac\.gda\.beamline\.i19((.|-).+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(i19(.|-).+|uk\.ac\.gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i19.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-dls-beamlines-i19" value="true"/>
     </cq:advisorNode>

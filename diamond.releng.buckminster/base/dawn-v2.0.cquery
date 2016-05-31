@@ -122,7 +122,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common-rcp.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-common-rcp" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(core-config|documentation\.gda|example-config|uk\.ac\.(diamond\.(daq\.(client\.gui\.rcpcontroller|msgbus(\..+)?)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\..+)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(core-config|documentation\.gda|example-config|uk\.ac\.(diamond\.(daq\.(client\.gui\.rcpcontroller|msgbus(\..+)?)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\.api)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-core" value="true"/>
     </cq:advisorNode>
@@ -178,7 +178,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i13x.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-dls-beamlines-i13x" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(i19(.|-).+|uk\.ac\.gda\.beamline\.i19((.|-).+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(i19(.|-).+|uk\.ac\.gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i19.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-dls-beamlines-i19" value="true"/>
     </cq:advisorNode>

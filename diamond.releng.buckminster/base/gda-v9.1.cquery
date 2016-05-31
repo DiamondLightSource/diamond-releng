@@ -138,7 +138,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" useTargetPlatform="false" branchTagPath="gda-9.1">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common-rcp.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((core|example|p45)-config|documentation\.gda|uk\.ac\.(diamond\.(daq\.(beamline\.p45(\..+)?|client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\..+)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" useTargetPlatform="false" branchTagPath="gda-9.1">
+    <cq:advisorNode namePattern="^((core|example|p45)-config|documentation\.gda|uk\.ac\.(diamond\.(daq\.(beamline\.p45(\..+)?|client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\.api)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" useTargetPlatform="false" branchTagPath="gda-9.1">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.csstudio\..+|org\.ehcache|uk\.ac\.gda\.dal(\..+)?)$" useTargetPlatform="false" branchTagPath="gda-9.1">
@@ -180,7 +180,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(i13(i|j)-config|uk\.ac\.gda\.beamline\.i13(i|j)(\..+)?)$" useTargetPlatform="false" branchTagPath="gda-9.1">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i13x.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(i19(.|-).+|uk\.ac\.gda\.beamline\.i19((.|-).+)?)$" useTargetPlatform="false" branchTagPath="gda-9.1">
+    <cq:advisorNode namePattern="^(i19(.|-).+|uk\.ac\.gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator))$" useTargetPlatform="false" branchTagPath="gda-9.1">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i19.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(i21-config|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" useTargetPlatform="false" branchTagPath="gda-9.1">
