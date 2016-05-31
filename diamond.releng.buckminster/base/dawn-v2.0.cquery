@@ -214,7 +214,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mt" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((all-mx|i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|uk\.ac\.(diamond\.(daq\.mx|dna|stac)(\..+)?|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|services(\.(common|impl|samplemovementservice)(\..+)?)?)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^((all-mx|i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|uk\.ac\.(diamond\.(daq\.mx\.muse(\..+)?|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mx.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mx" value="true"/>
     </cq:advisorNode>
