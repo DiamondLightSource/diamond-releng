@@ -589,8 +589,8 @@ class PewmaManager(object):
                     self.options.prepare_jenkins_build_description_on_error or
                     self.options.prepare_jenkins_build_description_on_materialize_error):
                 # prompt to make sure the user really wants this directory deleted
-                response = raw_input('$$ %sDelete "%s" : y(es) | N(no) ? ' % (self.log_prefix, directory)).strip().lower()
-                if response != 'y':
+                response = raw_input('$$ %sDelete "%s" [y/n(default)]: ' % (self.log_prefix, directory)).strip().lower()
+                if not response.startswith('y'):
                     raise PewmaException('Will not delete directory. Abandoning.')
             self.logger.info('%sDeleting %s "%s"' % (self.log_prefix, description, directory,))
             if self.options.dry_run:
