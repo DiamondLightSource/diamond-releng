@@ -129,15 +129,15 @@ CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
 
 JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent network problem causing a checkout failure (the affected repository is only sometimes identified)
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+\.git):\s*($|Connection refused|Connection timed out|verify: false)', 1),  # 1 = first match group is the repository
-    ('org\.eclipse\.jgit\.api\.errors\.TransportException: (Connection reset|Short read of block\.)', 'Network error'),  # text = no specifc repository identified
+    ('org\.eclipse\.jgit\.api\.errors\.TransportException: (Connection reset|Short read of block\.)', 'Network error'),  # text = no specific repository identified
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: \S+://\S+/([^ /\t\n\r\f\v]+\.git): unknown host', 1),  # 1 = first match group is the repository
-    ('org\.eclipse\.jgit\.api\.errors\.InvalidRemoteException: Invalid remote: origin', 'Network error'),  # text = no specifc repository identified
-    ('org\.apache\.http\.conn\.HttpHostConnectException: Connection to .+ refused', 'Connection refused'),  # text = no specifc repository identified
-    ('java.net.ConnectException: Connection timed out', 'Network error'),  # text = no specifc repository identified
-    ('java.net.SocketTimeoutException: Read timed out', 'Network error'),  # text = no specifc repository identified
-    ('HttpComponents connection error response code (500|502|503)', 'Server error'),  # text = no specifc repository identified
-    ('ERROR:? +No repository found at http://www\.opengda\.org/', 'Server error'),  # text = no specifc repository identified
-    ('org\.eclipse\.equinox\.p2\.core\.ProvisionException: No repository found at', 'Network error'),  # text = no specifc repository identified
+    ('org\.eclipse\.jgit\.api\.errors\.InvalidRemoteException: Invalid remote: origin', 'Network error'),  # text = no specific repository identified
+    ('org\.apache\.http\.conn\.HttpHostConnectException: Connection to .+ refused', 'Connection refused'),  # text = no specific repository identified
+    ('java\.net\.ConnectException: Connection (refused|timed out)', 'Network error'),  # text = no specific repository identified
+    ('java\.net\.SocketTimeoutException: Read timed out', 'Network error'),  # text = no specific repository identified
+    ('HttpComponents connection error response code (500|502|503)', 'Server error'),  # text = no specific repository identified
+    ('ERROR:? +No repository found at http://www\.opengda\.org/', 'Server error'),  # text = no specific repository identified
+    ('org\.eclipse\.equinox\.p2\.core\.ProvisionException: No repository found at', 'Network error'),  # text = no specific repository identified
     )
 
 BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermittent Buckminster bug
@@ -286,10 +286,13 @@ class PewmaManager(object):
 
         self.valid_actions = dict((action, handler) for (action, handler, help) in self.valid_actions_with_help)
 
-        # If possible, determine a default workspace location, using the following tests in order:
-        # (1) if the is no current directory, do not set a default
+
+    def _determine_workspace_location_when_not_specified(self):
+        # If the caller does not specify the workspace location, work one out, using the following tests in order:
+        # (1) if there is no current directory, do not set a default
         # (2) if the current directory, or any or its parents, is an Eclipse workspace, make that the default
         #     (if the current directory, or any or its parents, is named .*_git, ignore the _git part)
+        #     (if the current directory, or any or its parents, contains both .metadata and a workspace or workspace_git, abandon)
         # (3) if the current directory is called "workspace", and is empty, make it the default
         # (4) if the current directory is called "workspace", and is not empty, do not set a default
         # (5) if the current directory contains a subdirectory called "workspace" that is an Eclipse workspace, make that the default
@@ -298,8 +301,6 @@ class PewmaManager(object):
         # (8) if the current directory does not contain a subdirectory called "workspace", use new directory <cwd>/workspace as the default
         # (9) Don't have a default workspace location
         # Note: all this will be irrelevant if the user explicitly specifies -w/--workspace on the command line
-
-        self.workspace_loc = None
 
         try:
             candidate = cwd = os.getcwd()
@@ -314,6 +315,12 @@ class PewmaManager(object):
                     self.workspace_loc = (os.path.isdir( os.path.join( candidate[:-4], '.metadata')) and candidate[:-4] or None)
                 if self.workspace_loc:
                     # Case 2 - current directory, or a parent, is an Eclipse workspace
+                    if os.path.exists( os.path.join(self.workspace_loc, 'workspace')):
+                        self.logger.error('Both .metadata/ and workspace/ exist within ' + self.workspace_loc)
+                        self.workspace_loc = None
+                    elif os.path.exists( os.path.join(self.workspace_loc, 'workspace_git')):
+                        self.logger.error('Both .metadata/ and workspace_git/ exist within ' + self.workspace_loc)
+                        self.workspace_loc = None
                     break
                 candidate = os.path.dirname(candidate)
             else:
@@ -337,7 +344,13 @@ class PewmaManager(object):
                     else:
                         # Case 8 - subdirectory "workspace" does not exist
                         self.workspace_loc = candidate
-        assert (self.workspace_loc is None) or os.path.isabs(self.workspace_loc)
+
+        if not self.workspace_loc:
+            raise PewmaException('ERROR: the "--workspace" option must be specified. ' +
+                                 os.path.basename(sys.argv[0]) +
+                                ' could not determine what workspace to use (based on the current directory).')
+        assert os.path.isabs(self.workspace_loc)
+
 
     def define_parser(self):
         """ Define all the command line options and how they are handled. """
@@ -350,8 +363,8 @@ class PewmaManager(object):
             self.parser.formatter.width = 120  # so avoid the default of 80 and assume a wider terminal (improve look of help)
 
         group = optparse.OptionGroup(self.parser, "Workspace options")
-        group.add_option('-w', '--workspace', dest='workspace', type='string', metavar='<dir>', default=self.workspace_loc,
-                               help='Workspace location (default: ' + (self.workspace_loc or "(None)") + ')')
+        group.add_option('-w', '--workspace', dest='workspace', type='string', metavar='<dir>', default=None,
+                               help='Workspace location')
         group.add_option('--delete', dest='delete', action='store_true', default=False,
                                help='First completely delete current workspace/ and workspace_git/')
         group.add_option('--recreate', dest='recreate', action='store_true', default=False,
@@ -428,6 +441,8 @@ class PewmaManager(object):
                                default='pewma-script.txt',
                                help='Script file, relative to workspace if not absolute (default: %default)')
         group.add_option('-q', '--quiet', dest='quiet', action='store_true', default=False, help='Be less verbose')
+        group.add_option('-Y', '--answer-yes', dest='answer_yes', action='store_true', default=False, help='No interactive prompts (assume YES if appropriate)')
+        group.add_option('-N', '--answer-no', dest='answer_no', action='store_true', default=False, help='No interactive prompts (assume NO if appropriate)')
         group.add_option('--log-level', dest='log_level', type='choice', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], metavar='<level>',
                                default='INFO', help='Logging level (default: %default)')
         group.add_option('--skip-proxy-setup', dest='skip_proxy_setup', action='store_true', default=False, help='Don\'t define any proxy settings')
@@ -464,6 +479,7 @@ class PewmaManager(object):
             git_count_at_start = len(self._get_git_directories())
             if git_count_at_start:
                 self.logger.info('Using %s existing .git repositories (which will not be updated) found in "%s"' % (git_count_at_start, self.workspace_git_loc,))
+            self._set_linux_group(self.workspace_git_loc)
         else:
             self.logger.info('%sCreating workspace_git directory "%s"' % (self.log_prefix, self.workspace_git_loc,))
             if not self.options.dry_run:
@@ -567,15 +583,28 @@ class PewmaManager(object):
 
     def delete_directory(self, directory, description):
         if directory and os.path.isdir(directory):
+            if self.options.answer_no:
+                raise PewmaException('%sWill not delete directory "%s". Abandoning.' % (self.log_prefix, directory))
+            if not (self.options.answer_yes or
+                    self.options.prepare_jenkins_build_description_on_error or
+                    self.options.prepare_jenkins_build_description_on_materialize_error):
+                # prompt to make sure the user really wants this directory deleted
+                response = raw_input('$$ %sDelete "%s" : y(es) | N(no) ? ' % (self.log_prefix, directory)).strip().lower()
+                if response != 'y':
+                    raise PewmaException('Will not delete directory. Abandoning.')
             self.logger.info('%sDeleting %s "%s"' % (self.log_prefix, description, directory,))
-            if not self.options.dry_run:
-                # shutil.rmtree(directory)  # does not work under Windows of there are read-only files in the directory, such as.svn\all-wcprops
-                if self.isLinux:
-                    retcode = subprocess.call(('rm', '-rf', directory), shell=False)
-                elif self.isWindows:
-                    retcode = subprocess.call(('rmdir', '/s', '/q', directory), shell=True)
-                else:
-                    self.logger.error('Could not delete directory: platform "%s" not recognised' % (self.system,))
+            if self.options.dry_run:
+                return
+            # shutil.rmtree(directory)  # does not work under Windows if there are read-only files in the directory, such as.svn\all-wcprops
+            if self.isLinux:
+                retcode = subprocess.call(('rm', '-rf', directory), shell=False)
+            elif self.isWindows:
+                retcode = subprocess.call(('rmdir', '/s', '/q', directory), shell=True)
+            else:
+                self.logger.error('Could not delete directory: platform "%s" not recognised' % (self.system,))
+                retcode = 1
+            if retcode:
+                raise PewmaException('Error deleting directory "%s". Abandoning.' % (directory,))
 
 
     def download_workspace_template(self, source, destination):
@@ -823,13 +852,21 @@ class PewmaManager(object):
             return
         assert directory and os.path.isabs(directory)
         assert self.isLinux
-        assert self.gid
+        assert self.gid_new
 
-        self.logger.info('Changing owning group to %s (%s) on %s' % (self.gid, self.options.directories_groupname, directory))
-        os.chown(directory, -1, self.gid)
+        gid_old = os.stat(directory).st_gid
+        grname_old = grp.getgrgid(gid_old).gr_name
+
+        if grname_old != self.options.directories_groupname:
+            self.logger.info('Changing owning group from %s (%s) to %s (%s) on %s' %
+                             (gid_old, grname_old,
+                              self.gid_new, self.options.directories_groupname,
+                              directory))
+            os.chown(directory, -1, self.gid_new)
         imode_old  = stat.S_IMODE(os.stat(directory).st_mode)  # get existing permissions
         imode_new = imode_old | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_ISGID | stat.S_IROTH | stat.S_IXOTH
-        self.logger.info('Changing permissions from 0x%04o to 0x%04o on %s' % (imode_old, imode_new, directory))
+        if imode_old != imode_new:
+            self.logger.info('Changing permissions from 0x%04o to 0x%04o on %s' % (imode_old, imode_new, directory))
         os.chmod(directory, imode_new)
 
     def action_setup(self):
@@ -1677,7 +1714,7 @@ class PewmaManager(object):
 ###############################################################################
 
     def report_executable_location(self, executable_name):
-        """ Determines the path to an executable (used when no version nubmer is available)
+        """ Determines the path to an executable (used when no version number is available)
             Writes the path to the log
             Returns the path string
         """
@@ -1777,7 +1814,7 @@ class PewmaManager(object):
 
         vmargs_to_add = []
         # For Buckminster 4.5, need to specify UseSplitVerifier: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=471115
-        # Always specify UseSplitVerifier unless we are sure that this in not Buckminster 4.5
+        # Always specify UseSplitVerifier unless we are sure that this is not Buckminster 4.5
         possibly_bucky_4point5_plus = True
         if self.executable_locations['buckminster']:
             for old_version in ('/dls_sw/apps/buckminster/64/4.4-', '/dls_sw/apps/buckminster/64/4.3-'):
@@ -2037,13 +2074,21 @@ class PewmaManager(object):
         if not self.options.jvmargs:
             self.options.jvmargs = []  # use [] rather than None so we can iterate over it
 
-        # validate workspace
+        # determine and validate workspace
         if self.options.workspace:
-            if ' ' in self.options.workspace:
-                raise PewmaException('ERROR: the "--workspace" directory must not contain blanks')
-            if self.options.workspace.endswith('_git'):
-                raise PewmaException('ERROR: the "--workspace" directory must not end with "_git"')
             self.workspace_loc = os.path.realpath(os.path.abspath(os.path.expanduser(self.options.workspace)))
+            self.logger.info('%s"--workspace" specified as "%s"' % (self.log_prefix, self.workspace_loc,))
+        elif self.action != 'get-branches-expected':
+                self._determine_workspace_location_when_not_specified()
+                self.logger.info('%s"--workspace" defaulted to "%s"' % (self.log_prefix, self.workspace_loc,))
+        else:
+            self.workspace_loc = None
+
+        if self.workspace_loc:  # will be set, unless (self.action == 'get-branches-expected)
+            if ' ' in self.workspace_loc:
+                raise PewmaException('ERROR: the "--workspace" directory must not contain blanks')
+            if self.workspace_loc.endswith('_git'):
+                raise PewmaException('ERROR: the "--workspace" directory must not end with "_git"')
             # if the workspace location was specified, check that it's not inside an existing workspace
             candidate = os.path.dirname(self.workspace_loc)
             while candidate != os.path.dirname(candidate):  # if we are not at the filesystem root (this is a platform independent check)
@@ -2052,20 +2097,20 @@ class PewmaManager(object):
                 else:
                     parent_workspace = (os.path.isdir( os.path.join( candidate[:-4], '.metadata')) and candidate[:-4])
                 if parent_workspace:
-                    raise PewmaException('ERROR: the workspace you specified ("' + self.workspace_loc + '") is inside what looks like another workspace ("' + parent_workspace + '")')
+                    raise PewmaException('ERROR: specified workspace location is inside what looks like another workspace (something containing a .metadata/) at "' + parent_workspace + '"')
                 candidate = os.path.dirname(candidate)
-        if self.workspace_loc:
             self.workspace_git_loc = self.workspace_loc + '_git'
-            self.logger.info('%sWorkspace directory specified: "%s"' % (self.log_prefix, self.workspace_loc,))
         elif (self.action != 'get-branches-expected'):
-            raise PewmaException('ERROR: the "--workspace" option must be specified, unless you run this script from an existing workspace')
+            raise PewmaException('ERROR: the "--workspace" option must be specified. ' +
+                                 os.path.basename(sys.argv[0]) +
+                                ' could not determine what workspace to use (based on the current directory).')
 
         # validate --directories_groupname
         if self.options.directories_groupname == 'dls_dasc' and self.group_dls_dasc_gid:
-            self.gid = self.group_dls_dasc_gid  # the numeric group id for group dls_dasc
+            self.gid_new = self.group_dls_dasc_gid  # the numeric group id for group dls_dasc
         elif self.options.directories_groupname:
             try:
-                self.gid = grp.getgrnam(self.options.directories_groupname).gr_gid  # the numeric group id for the group
+                self.gid_new = grp.getgrnam(self.options.directories_groupname).gr_gid  # the numeric group id for the group
             except (KeyError) as e:
                 raise PewmaException('ERROR: Linux group ' + self.options.directories_groupname + ' does not exist')
 
