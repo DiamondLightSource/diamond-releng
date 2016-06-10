@@ -667,19 +667,28 @@ class PewmaManager(object):
 
     def set_available_sites(self):
         """ Sets self.available_sites, a dictionary of {site name: project path} entries,
-            for all .site projects in the workspace or workspace_git directories
+            for all .site projects in the workspace or workspace_git directories,
+            provided they have been imported into the Eclipse workspace
         """
 
         # we cache self.available_sites and never recompute
         if hasattr(self, 'available_sites'):
             return
 
+        # first get the names of site projects that have been imported into in the workspace
+        site_projects_imported = set()
+        site_projects_imported_dir = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.resources', '.projects')
+        if os.path.isdir(site_projects_imported_dir):
+            for project_name in os.listdir(site_projects_imported_dir):
+                if project_name.endswith('.site'):
+                    site_projects_imported.add(project_name)
+
         sites = {}
         for parent_dir in [os.path.join(self.workspace_loc, 'sites'), os.path.join(self.workspace_loc, 'features')]:
             # .site projects will be exactly one directory level below the sites/ or features/ directory
             if os.path.isdir(parent_dir):
                 for site_dir in os.listdir(parent_dir):
-                    if site_dir.endswith('.site') and os.path.exists( os.path.join(parent_dir, site_dir, 'feature.xml')):
+                    if site_dir in site_projects_imported and os.path.exists( os.path.join(parent_dir, site_dir, 'feature.xml')):
                         sites[site_dir] = os.path.join(parent_dir, site_dir)
         if self.workspace_git_loc:
             # .site projects can be up to three directory levels below the git materialize directory
@@ -689,14 +698,15 @@ class PewmaManager(object):
                     for level2 in os.listdir(level1_dir):
                         level2_dir = os.path.join(level1_dir, level2)
                         if os.path.isdir(level2_dir):
-                            if level2.endswith('.site') and os.path.exists( os.path.join(level2_dir, 'feature.xml')):
+                            if level2 in site_projects_imported and os.path.exists( os.path.join(level2_dir, 'feature.xml')):
                                 sites[level2] = level2_dir
                             else:
                                 for level3 in os.listdir(level2_dir):
                                     level3_dir = os.path.join(level2_dir, level3)
                                     if os.path.isdir(level3_dir):
-                                        if level3.endswith('.site') and os.path.exists( os.path.join(level3_dir, 'feature.xml')):
+                                        if level3 in site_projects_imported and os.path.exists( os.path.join(level3_dir, 'feature.xml')):
                                             sites[level3] = level3_dir
+
         self.available_sites = sites
 
 
