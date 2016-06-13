@@ -125,7 +125,6 @@ PLATFORMS_AVAILABLE =  (
     )
 
 TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
-CQUERY_URI_PARENT = 'http://www.opengda.org/buckminster/base/'
 
 JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent network problem causing a checkout failure (the affected repository is only sometimes identified)
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+\.git):\s*($|Connection refused|Connection timed out|verify: false)', 1),  # 1 = first match group is the repository
@@ -372,6 +371,9 @@ class PewmaManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Materialize options")
+        group.add_option('--cquery-uri-parent', dest='cquery_uri_parent', metavar='URI',
+                         default='http://www.opengda.org/buckminster/base/',
+                         help=optparse.SUPPRESS_HELP)
         if self.isLinux:
             group.add_option('--directories.groupname', dest='directories_groupname', type='string', metavar='<groupname>',
                              default='dls_dasc' if self.group_dls_dasc_gid else None,
@@ -501,7 +503,7 @@ class PewmaManager(object):
 
         org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
           'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
-        cquery_to_add = CQUERY_URI_PARENT.replace(':', '\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
+        cquery_to_add = self.options.cquery_uri_parent.replace(':', '\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
         if not os.path.exists(org_eclipse_buckminster_ui_prefs_loc):
             # create a new org.eclipse.buckminster.ui.prefs file with the CQuery history
             with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
@@ -907,7 +909,7 @@ class PewmaManager(object):
         """
 
         (component_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_component_category_version_cquery()
-        source = CQUERY_URI_PARENT + cquery_to_use
+        source = self.options.cquery_uri_parent + cquery_to_use
         if self.options.dry_run:
             self.logger.info('%sDownloading "%s"' % (self.log_prefix, source))
             return
@@ -1030,7 +1032,7 @@ class PewmaManager(object):
             if self.options.maxParallelResolutions:
                 script_file.write('setpref maxParallelResolutions=%s\n' % (self.options.maxParallelResolutions,))
             script_file.write('import ' + properties_text)
-            script_file.write(CQUERY_URI_PARENT + cquery_to_use + '\n')
+            script_file.write(self.options.cquery_uri_parent + cquery_to_use + '\n')
 
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
@@ -2025,8 +2027,6 @@ class PewmaManager(object):
         except TypeError:
             raise PewmaException("ERROR: PewmaManager.main() called with incorrect argument.")
 
-        start_time = datetime.datetime.now()
-
         # process command line arguments (prompt if necessary):
         self.define_parser()
         (self.options, positional_arguments) = self.parser.parse_args(call_args[1:])
@@ -2235,7 +2235,8 @@ class PewmaManager(object):
             if not os.path.isabs(self.materialize_properties_path):
                self.materialize_properties_path = os.path.abspath(os.path.join(self.workspace_loc, self.materialize_properties_path))
 
-        # invoke funtion to perform the requested action
+        # invoke function to perform the requested action
+        start_time = datetime.datetime.now()
         action_handler = self.valid_actions[self.action]
         if action_handler:
             exit_code = action_handler(target=self.action)
@@ -2248,7 +2249,7 @@ class PewmaManager(object):
             seconds = (run_time.days * 86400) + run_time.seconds
             hours, remainder = divmod(seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
-            final_message = '%sTotal run time was %02d:%02d:%02d' % (self.log_prefix, hours, minutes, seconds)
+            final_message = '%sRun time was %02d:%02d:%02d [%s]' % (self.log_prefix, hours, minutes, seconds, self.action)
             if exit_code:
                 final_message += ' (Return code: %s)' % (exit_code,)
             self.logger.log(logging.ERROR if exit_code else logging.INFO, final_message)
