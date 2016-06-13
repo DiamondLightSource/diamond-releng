@@ -586,8 +586,7 @@ class PewmaManager(object):
             if self.options.answer_no:
                 raise PewmaException('%sWill not delete directory "%s". Abandoning.' % (self.log_prefix, directory))
             if not (self.options.answer_yes or
-                    self.options.prepare_jenkins_build_description_on_error or
-                    self.options.prepare_jenkins_build_description_on_materialize_error):
+                   (os.environ.get('USER') == 'dlshudson')):
                 # prompt to make sure the user really wants this directory deleted
                 response = raw_input('$$ %sDelete "%s" [y/n(default)]: ' % (self.log_prefix, directory)).strip().lower()
                 if not response.startswith('y'):
