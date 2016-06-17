@@ -859,10 +859,9 @@ class PewmaManager(object):
             on a directory. Done if option --directories.groupname set (or defaults, at DLS).
         """
 
-        if not self.options.directories_groupname:
+        if (not self.isLinux) or (not self.options.directories_groupname):
             return
         assert directory and os.path.isabs(directory)
-        assert self.isLinux
         assert self.gid_new
 
         gid_old = os.stat(directory).st_gid
@@ -2115,13 +2114,14 @@ class PewmaManager(object):
                                 ' could not determine what workspace to use (based on the current directory).')
 
         # validate --directories_groupname
-        if self.options.directories_groupname == 'dls_dasc' and self.group_dls_dasc_gid:
-            self.gid_new = self.group_dls_dasc_gid  # the numeric group id for group dls_dasc
-        elif self.options.directories_groupname:
-            try:
-                self.gid_new = grp.getgrnam(self.options.directories_groupname).gr_gid  # the numeric group id for the group
-            except (KeyError) as e:
-                raise PewmaException('ERROR: Linux group ' + self.options.directories_groupname + ' does not exist')
+        if self.isLinux:
+            if self.options.directories_groupname == 'dls_dasc' and self.group_dls_dasc_gid:
+                self.gid_new = self.group_dls_dasc_gid  # the numeric group id for group dls_dasc
+            elif self.options.directories_groupname:
+                try:
+                    self.gid_new = grp.getgrnam(self.options.directories_groupname).gr_gid  # the numeric group id for the group
+                except (KeyError) as e:
+                    raise PewmaException('ERROR: Linux group ' + self.options.directories_groupname + ' does not exist')
 
         # delete previous workspace as required
         if self.options.delete or self.options.recreate:
