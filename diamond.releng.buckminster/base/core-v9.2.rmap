@@ -312,16 +312,6 @@
     <bc:constant value="${dawn.eclipse.${dawn.eclipse.git.location.translated}.url}/dawn-eclipse.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.fable.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.fable.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.fable.git.url">
-    <bc:constant value="${github.${dawn.fable.github.authentication}.url}${dawn.fable.github.organization}/dawn-fable.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="dawn.hdf.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -2231,24 +2221,23 @@
   <!-- ** beamlines *** -->
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- ** daq- *** -->
-  <rm:locator pattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector|json|org\.apache\.activemq)(\..+)?)$" searchPathRef="daq_eclipse"/>
+  <rm:locator pattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector(\..+)?|org\.apache\.activemq)(\..+)?)$" searchPathRef="daq_eclipse"/>
   <rm:locator pattern="^(uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|emf\.edit|imaging\.server|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|server(\..+)?))$" searchPathRef="daq_platform"/>
   <!-- ** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
-  <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|jgoogleanalytics|macro|persistence|processing\.python|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
+  <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.(services|ui)|conversion|io|jexl|jgoogleanalytics|macro|persistence|processing\.python|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
-  <rm:locator pattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" searchPathRef="dawn_fable"/>
   <rm:locator pattern="^hdf\.(hdf5lib|object)(\..+)?$" searchPathRef="dawn_hdf"/>
   <rm:locator pattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" searchPathRef="dawn_hpc"/>
-  <rm:locator pattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|runtime|project\.repository\..+)|org\.dawnsci\.passerelle\.parallel\.actor(\..+)?)$" searchPathRef="dawn_isencia"/>
+  <rm:locator pattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|project\.repository\..+|runtime(\..+)?)|org\.dawnsci\.passerelle\.(testsupport|parallel\.actor(\..+)?))$" searchPathRef="dawn_isencia"/>
   <rm:locator pattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" searchPathRef="dawn_isenciaui"/>
   <rm:locator pattern="^org\.dawnsci\.mx\..+$" searchPathRef="dawn_mx"/>
-  <rm:locator pattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|product\.(logging|plugin)))$" searchPathRef="dawn_product"/>
+  <rm:locator pattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|nano\.product(\..+)?|product\.(logging|plugin)))$" searchPathRef="dawn_product"/>
   <rm:locator pattern="^org\.dawnsci\.rap\..+$" searchPathRef="dawn_rap"/>
   <rm:locator pattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" searchPathRef="dawn_tango"/>
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
   <rm:locator pattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
-  <rm:locator pattern="^(org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.ui(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.ui(\..+)?|python\.feature|slicing(\..+)?|spectrum\.ui|volumerender(\..+)?))|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
+  <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.(feature|ui)(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|ui)(\..+)?|python\.feature|slicing(\..+)?|spectrum\.ui)|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
   <rm:locator pattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" searchPathRef="dawn_workflow"/>
   <!-- ** dawnsci *** -->
   <rm:locator pattern="^org\.eclipse\.dawnsci\..+$" searchPathRef="dawnsci"/>
@@ -2626,22 +2615,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-eclipse=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from dawn-eclipse.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="dawn_fable">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-fable=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.fable.git.url}"/>
-      <rm:uri format="{0}/dawn-fable.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-fable=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-fable.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
