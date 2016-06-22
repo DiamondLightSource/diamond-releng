@@ -2225,7 +2225,7 @@
   <rm:locator pattern="^(uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|emf\.edit|imaging\.server|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|server(\..+)?))$" searchPathRef="daq_platform"/>
   <!-- ** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
-  <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.(services|ui)|conversion|io|jexl|jgoogleanalytics|macro|persistence|processing\.python|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
+  <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.(services|ui)|conversion|io|jexl|jgoogleanalytics|macro|persistence|processing\.python|python.rpc|thirdparty.xml)(\..+)?)$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
   <rm:locator pattern="^hdf\.(hdf5lib|object)(\..+)?$" searchPathRef="dawn_hdf"/>
   <rm:locator pattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" searchPathRef="dawn_hpc"/>
@@ -2307,7 +2307,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" searchPathRef="scisoft_2ddpr"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.arpes(\..+)?$" searchPathRef="scisoft_arpes"/>
   <rm:locator pattern="^uk\.ac\.diamond\.CBFlib$" searchPathRef="scisoft_cbflib"/>
-  <rm:locator pattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
+  <rm:locator pattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python(\..+)?|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.icat.*$" searchPathRef="scisoft_icat"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" searchPathRef="scisoft_ispyb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" searchPathRef="scisoft_mx"/>
