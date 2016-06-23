@@ -43,12 +43,6 @@
   <rm:propertyElement key="eclipse.release">
     <bc:constant value="4.5"/>
   </rm:propertyElement>
-  <rm:propertyElement key="rap.release">
-    <bc:constant value="2.1"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="use.eclipse.rap">  <!-- defined here in case it is not defined in the CQuery -->
-    <bc:constant value="no"/>
-  </rm:propertyElement>
   <rm:propertyElement key="eclipse.orbit.p2.version">  <!-- version of Eclipse Orbit p2 repository to use -->
     <bc:constant value="R20151221205849"/>  <!-- Mars.2 -->
   </rm:propertyElement>
@@ -370,16 +364,6 @@
   </rm:propertyElement>
   <rm:propertyElement key="dawn.product.git.url">
     <bc:constant value="${github.${dawn.product.github.authentication}.url}${dawn.product.github.organization}/dawn-product.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.rap.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.rap.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.rap.git.url">
-    <bc:constant value="${github.${dawn.rap.github.authentication}.url}${dawn.rap.github.organization}/dawn-rap.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.tango.github.organization">
@@ -2233,7 +2217,6 @@
   <rm:locator pattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" searchPathRef="dawn_isenciaui"/>
   <rm:locator pattern="^org\.dawnsci\.mx\..+$" searchPathRef="dawn_mx"/>
   <rm:locator pattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|nano\.product(\..+)?|product\.(logging|plugin)))$" searchPathRef="dawn_product"/>
-  <rm:locator pattern="^org\.dawnsci\.rap\..+$" searchPathRef="dawn_rap"/>
   <rm:locator pattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" searchPathRef="dawn_tango"/>
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
   <rm:locator pattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
@@ -2414,7 +2397,6 @@
        Target Platform components: Eclipse Orbit (which contains third-party jars which have passed Eclipse IP checks, and been turned in OSGI bundles)
        Some Eclipse components are published both as part of the platform release, and separately. Put the platform release last so we can get a newer release.
   -->
-  <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_rap" failOnError="false"/>
   <!-- patterns for eclipse repositories are there to speed up failure if we fall through (in case of error, or when looking for source bundles) -->
   <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_4.5_platform" failOnError="false"/>
   <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_4.5_release" failOnError="false"/>
@@ -2711,22 +2693,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-product=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from dawn-product.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="dawn_rap">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-rap=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.rap.git.url}"/>
-      <rm:uri format="{0}/dawn-rap.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-rap=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-rap.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
@@ -4317,18 +4283,6 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/releases/mars"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_rap">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(use.eclipse.rap=yes)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/rt/rap/${rap.release}"/>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(use.eclipse.rap=yes)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://download.eclipse.org/rt/rap/incubator/nightly/gef/"/>
     </rm:provider>
   </rm:searchPath>
   <!--

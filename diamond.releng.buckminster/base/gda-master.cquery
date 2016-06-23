@@ -74,10 +74,6 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-product.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-product" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawnsci\.rap\..+$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-rap.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.dawn-rap" value="true"/>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-tango.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-tango" value="true"/>
