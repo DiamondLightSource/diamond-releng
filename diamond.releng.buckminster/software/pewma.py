@@ -281,6 +281,7 @@ class PewmaManager(object):
             ('corba-validate-jar', self._iterate_ant, ('corba-validate-jar', 'Check that the corba .jar(s) in all or selected plugins match the source',)),
             ('corba-clean', self._iterate_ant, ('corba-clean', 'Remove temporary files from workspace left over from corba-make-jar',)),
             ('dummy', self._iterate_ant, ()),
+            ('developer-test', None, ()),
             )
 
         self.valid_actions = dict((action, handler) for (action, handler, help) in self.valid_actions_with_help)
@@ -540,47 +541,83 @@ class PewmaManager(object):
                 self.logger.debug('%sUpdated "%s" with CQuery %s' % (self.log_prefix, org_eclipse_buckminster_ui_prefs_loc, cquery_to_use))
 
 
-    def add_config_to_strings(self, component_name):
-        ''' Save the instance config used in "Window --> Preferences --> Run/Debug --> String Substitution"
-            This is referenced in the launchers for GDA servers etc.
+    def _add_string_substitution_variable_to_workspace(self, variable_name, variable_value, variable_description=None):
+        ''' Save a string in "Window --> Preferences --> Run/Debug --> String Substitution"
+            If variable_value 'is None' (n.b. not the same as '') , delete the entry
+            If variable_description 'is None' (n.b. not the same as '') , don't change any existing description
         '''
-
-        if component_name.startswith(('all-', 'core-', 'dls-', 'mt-', 'mx-')) or not component_name.endswith('-config'):
-            return  # component name is not an instance config, so don't save it 
+        self.logger.debug('Setting %s=%s %s' % (variable_name, variable_value, variable_description))
+        assert variable_name
 
         org_eclipse_core_variables_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
           'org.eclipse.core.runtime', '.settings', 'org.eclipse.core.variables.prefs')
-        if os.path.exists(org_eclipse_core_variables_prefs_loc):
-            # there should already be an existing org.eclipse.core.variables.prefs file (it exists in the template workspace)
+        if not os.path.exists(org_eclipse_core_variables_prefs_loc):
+            if variable_value is None:
+                return
+            replacement_lines = ['eclipse.preferences.version=1\n',
+                                 r'org.eclipse.core.variables.valueVariables=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n' +
+                                 r'<valueVariables>\n' +
+                                 r'<valueVariable description\="' + variable_description +
+                                 r'" name\="' + variable_name +
+                                 r'" readOnly\="false" value\="' + variable_value +
+                                 r'"/>\n' +
+                                 r'</valueVariables>\n' + '\n'
+                                ]
+            file_rewrite_required = True
+        else:
+            match_existing = (
+                r'^(?P<start>org\.eclipse\.core\.variables\.valueVariables=.+?<valueVariables>.+?)' +
+                r'<valueVariable description\\="(?P<description>.*?)" ' +
+                r'name\\="' + variable_name + r'" ' +
+                r'readOnly\\="(?P<readonly>.*?)" ' +
+                r'value\\="(?P<value>.*?)"/>\\n' +
+                r'(?P<finish>.*</valueVariables>.*?)$')
+            match_not_existing = (
+                r'^(?P<start>org\.eclipse\.core\.variables\.valueVariables=.+?<valueVariables>.+?)' +
+                r'(?P<finish></valueVariables>.*?)$')
             replacement_lines = []
-            variable_found = False
             file_rewrite_required = False
             with open(org_eclipse_core_variables_prefs_loc, 'r') as oecvp_file:
-                for line in oecvp_file.readlines():
+                for line in oecvp_file:
                     if not line.startswith('org.eclipse.core.variables.valueVariables='):
-                        replacement_lines += line
+                        replacement_lines.append(line)
+                        continue
+
+                    m = re.match(match_existing, line)
+                    if m:
+                        if m.group('value') == variable_value:
+                            if (variable_description is None) or (m.group('description') == variable_description):
+                                break  # nothing changed, and don't need to look at any more lines 
+                        # the value and/or the description has changed
+                        replacement = (m.group('start') +
+                                       r'<valueVariable description\="' + m.group('description') + '" ' +
+                                       r'name\="' + variable_name + r'" ' +
+                                       r'readOnly\="' + m.group('readonly') + r'" ' +
+                                       r'value\="' + variable_value + r'"/>\n' +
+                                       m.group('finish') + '\n')
                     else:
-                        m = re.match(r'^org\.eclipse\.core\.variables\.valueVariables=(.+?)<valueVariables>(.+?)<valueVariable(.*?) name\\="GDA_instance_config_name"(.*?) value\\="([^"]+?)"(.*?)/>(.*)$', line)
+                        m = re.match(match_not_existing, line)
                         if m:
-                            assert not (variable_found or file_rewrite_required)
-                            variable_found = True
-                            if m.group(5) == component_name:
-                                # the new GDA_instance_config_name is the same as the current one, so nothing needs to be changed
-                                break 
-                            else:
-                                # the new GDA_instance_config_name is different from the current one, so update with the new value
-                                replacement = 'org.eclipse.core.variables.valueVariables=%s<valueVariables>%s<valueVariable%s name\="GDA_instance_config_name"%s value\="%s"%s/>%s\n' % (
-                                  m.group(1), m.group(2), m.group(3), m.group(4), component_name, m.group(6), m.group(7))
-                                self.logger.log(5, line)
-                                self.logger.log(5, replacement)
-                                replacement_lines += replacement
-                                file_rewrite_required = True
-            if file_rewrite_required:
-                if not self.options.dry_run:
-                    with open(org_eclipse_core_variables_prefs_loc, 'w') as oecvp_file:
-                        for line in replacement_lines:
-                            oecvp_file.write(line)
-                self.logger.debug('%sUpdated "%s" with %s' % (self.log_prefix, org_eclipse_core_variables_prefs_loc, component_name))
+                            replacement = (m.group('start') +
+                                           r'<valueVariable description\="' + variable_description + '" ' +
+                                           r'name\="' + variable_name + r'" ' +
+                                           r'readOnly\="false" ' +
+                                           r'value\="' + variable_value + r'"/>\n' +
+                                           m.group('finish') + '\n')
+                        else:
+                            raise PewmaException('%sInternal error matching "%s"' % (self.log_prefix, line))
+                    self.logger.log(5, line)
+                    self.logger.log(5, replacement)
+                    replacement_lines.append(replacement)
+                    file_rewrite_required = True
+
+        if file_rewrite_required:
+            if not self.options.dry_run:
+                with open(org_eclipse_core_variables_prefs_loc, 'w') as oecvp_file:
+                    for line in replacement_lines:
+                        oecvp_file.write(line)
+            self.logger.debug('%sUpdated %s with "%s=%s" %s' %
+                             (self.log_prefix, org_eclipse_core_variables_prefs_loc, variable_name, variable_value, variable_description))
 
 
     def delete_directory(self, directory, description):
@@ -1069,8 +1106,17 @@ class PewmaManager(object):
                 elif self.options.prepare_jenkins_build_description_on_materialize_error:
                     # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                     print('set-build-description: ' + text)
+
         self.add_cquery_to_history(cquery_to_use)
-        self.add_config_to_strings(component_to_use)
+        if component_to_use.endswith('-config') and (not component_to_use.startswith(('all-', 'core-', 'dls-', 'mt-', 'mx-'))):
+            self._add_string_substitution_variable_to_workspace(
+              'GDA_instance_config_name',
+              component_to_use,
+              'Project name of GDA instance config')
+        self._add_string_substitution_variable_to_workspace(
+          'GDA_WORKSPACE_PARENT',
+          os.path.join( os.path.abspath(os.path.join(self.workspace_loc, '..')), ''),  # final '' is to make sure the path ends in a /
+          'Location of workspace parent directory')
 
         rc = max(rc, self.action_gerrit_config(check_arguments=False) or 0)
 
@@ -1249,7 +1295,7 @@ class PewmaManager(object):
                 if os.path.basename(git_dir) == gerrit_repo_name:
                     break
             else:
-                self.logger.debug('%sSkipped: not in Gerrit: %s' % (self.log_prefix, git_dir))
+                # self.logger.debug('%sSkipped: not in Gerrit: %s' % (self.log_prefix, git_dir))
                 continue
             config_file_loc = os.path.join(git_dir, '.git', 'config')
             if not os.path.isfile(config_file_loc):
@@ -1297,7 +1343,7 @@ class PewmaManager(object):
                     ('remote "origin"', 'url'                     , 'remote.origin.url'    , gerrit_repo_url            , True),)
 
             for (section, option, name, required_value, use_replace) in config_changes:
-                self.logger.debug('%sGetting: %s' % (self.log_prefix, (section, option, name, required_value, use_replace)))
+                self.logger.debug('%sGetting: %s in: %s' % (self.log_prefix, (section, option, name, required_value, use_replace), git_dir))
                 try:
                     option_value = config.get(section, option)
                     self.logger.debug('%sGot: %s' % (self.log_prefix, option_value))
@@ -1361,7 +1407,7 @@ class PewmaManager(object):
                 repo_status['hook_added'] = DONE
 
             if all(status == NOT_REQUIRED for status in repo_status.values()):
-                self.logger.info('%sSkipped: already switched to Gerrit; configured for EGit/JGit and git: %s' % (self.log_prefix, git_dir))
+                self.logger.debug('%sSkipped: already switched to Gerrit; configured for EGit/JGit and git: %s' % (self.log_prefix, git_dir))
             else:
                 for (action, message) in (('switched_remote_to_gerrit', 'switch remote.origin.url to Gerrit'),
                                           ('configured_for_eclipse'   , 'configure repository for EGit/JGit'),
@@ -1718,6 +1764,12 @@ class PewmaManager(object):
         selected_plugins = self.get_selected_plugins_with_releng_ant()  # might be an empty string to indicate all
         return self.run_ant_in_subprocess((selected_plugins, target))
 
+
+    def action_developer_test(self):
+        """ Available for testing during development
+        """
+
+        pass
 
 ###############################################################################
 #  Run Buckminster                                                            #
