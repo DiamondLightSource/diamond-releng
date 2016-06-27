@@ -157,7 +157,7 @@
     <bc:constant value="http://${diamond.p2.host.port}"/>
   </rm:propertyElement>
   <rm:propertyElement key="alfred.host.port">  <!-- visible both inside and outside Diamond, so normally no need to override  -->
-    <bc:constant value="alfredbeta.diamond.ac.uk"/>
+    <bc:constant value="alfred.diamond.ac.uk"/>
   </rm:propertyElement>
   <rm:propertyElement key="alfred.url">
     <bc:constant value="https://${alfred.host.port}"/>
