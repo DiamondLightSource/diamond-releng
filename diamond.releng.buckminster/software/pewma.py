@@ -1328,19 +1328,22 @@ class PewmaManager(object):
 
             git_config_commands = []
             config_changes = (
-                # section         , option                    , name                   , required_value                   , use_replace
-                ('gerrit'         , 'createchangeid'          , 'gerrit.createchangeid', 'true'                           , True),
-                ('remote "origin"', 'fetch'                   , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*'      , False),
-                ('remote "origin"', 'pushurl'                 , 'remote.origin.pushurl', gerrit_repo_url                  , False),
-                ('remote "origin"', 'push'                    , 'remote.origin.push'   , 'HEAD:refs/for/' + current_branch, False))
+                # section         , option          , name                   , required_value                   , use_replace
+                ('gerrit'         , 'createchangeid', 'gerrit.createchangeid', 'true'                           , True),
+                ('remote "origin"', 'fetch'         , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*'      , False),
+                ('remote "origin"', 'pushurl'       , 'remote.origin.pushurl', gerrit_repo_url                  , False),
+                ('remote "origin"', 'push'          , 'remote.origin.push'   , 'HEAD:refs/for/' + current_branch, False),
+                ('merge'          , 'log'           , 'merge.log'            , '50'                             , True),
+                ('merge'          , 'ff'            , 'merge.ff'             , 'false'                          , True),
+                )
 
             if ((GERRIT_MIRROR_HOST in origin_url) or
                (urlparse.urlunsplit((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '', '', '')) in origin_url)):
                 pass  # remote is GitHub, or remote is Gerrit with anonymous checkout, so leave the origin unchanged
             else:
                 config_changes += (
-                    # section         , option                    , name                   , required_value             , use_replace
-                    ('remote "origin"', 'url'                     , 'remote.origin.url'    , gerrit_repo_url            , True),)
+                # section         , option          , name                   , required_value                   , use_replace
+                ('remote "origin"', 'url'           , 'remote.origin.url'    , gerrit_repo_url                  , True),)
 
             for (section, option, name, required_value, use_replace) in config_changes:
                 self.logger.debug('%sGetting: %s in: %s' % (self.log_prefix, (section, option, name, required_value, use_replace), git_dir))
