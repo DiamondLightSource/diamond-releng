@@ -2169,12 +2169,6 @@
   <rm:propertyElement key="eclipse.download.url">
     <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="emf.emf.download.url">  <!-- also known as EMF Core -->
-    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gef.download.url">
-    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="nattable.download.url">
     <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
   </rm:propertyElement>
@@ -2364,10 +2358,7 @@
   <rm:locator pattern="^org\.springframework\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.commons\.(math|configuration)" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^uk\.ac\.diamond\..+" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^org\.eclipse\.gemini\.blueprint\..+" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^org\.eclipse\.swtbot(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0"/>
   <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.log4j(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0" failOnError="false"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javax\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>  <!-- if not found, will look in release and platform repos -->
   <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
@@ -2398,7 +2389,6 @@
        Some Eclipse components are published both as part of the platform release, and separately. Put the platform release last so we can get a newer release.
   -->
   <!-- patterns for eclipse repositories are there to speed up failure if we fall through (in case of error, or when looking for source bundles) -->
-  <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_4.5_platform" failOnError="false"/>
   <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_4.5_release" failOnError="false"/>
   <!--                                                                      -->
   <!--######################################################################-->
@@ -4204,13 +4194,6 @@
   <!--
        Target Platform (Eclipse)
   -->
-  <rm:searchPath name="eclipse_swtbot_2.3.0">  <!-- SWTBot -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/technology/swtbot/releases/2.3.0/"/>
-    </rm:provider>
-  </rm:searchPath>
   <rm:searchPath name="eclipse_orbit_p2">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
@@ -4269,13 +4252,6 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_4.5_platform">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.5)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/eclipse/updates/4.5"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_4.5_release">
