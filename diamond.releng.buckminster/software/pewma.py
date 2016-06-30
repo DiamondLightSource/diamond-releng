@@ -1335,6 +1335,7 @@ class PewmaManager(object):
                 ('remote "origin"', 'push'          , 'remote.origin.push'   , 'HEAD:refs/for/' + current_branch, False),
                 ('merge'          , 'log'           , 'merge.log'            , '50'                             , True),
                 ('merge'          , 'ff'            , 'merge.ff'             , 'false'                          , True),
+                ('pull'           , 'ff'            , 'pull.ff'              , 'true'                           , True),  # so merge.ff does not create a merge commit on every pull!
                 )
 
             if ((GERRIT_MIRROR_HOST in origin_url) or
