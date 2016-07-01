@@ -41,14 +41,31 @@
   <!-- Target Platform version properties -->
   <!--                                    -->
   <rm:propertyElement key="eclipse.release">
-    <bc:constant value="4.5"/>
+    <bc:constant value="mars"/>
   </rm:propertyElement>
-  <rm:propertyElement key="eclipse.orbit.p2.version">  <!-- version of Eclipse Orbit p2 repository to use -->
+  <!-- ***** -->
+  <!-- version of Eclipse Orbit p2 repository to use -->
+  <rm:propertyElement key="eclipse.orbit.p2.version.mars">  
     <bc:constant value="R20151221205849"/>  <!-- Mars.2 -->
   </rm:propertyElement>
-  <rm:propertyElement key="eclipse.jetty9.p2.version">  <!-- version of Eclipse Jetty 9 p2 repository to use -->
+  <rm:propertyElement key="eclipse.orbit.p2.version.neon">
+    <bc:constant value="R20160520211859"/>  <!-- Neon -->
+  </rm:propertyElement>
+  <rm:propertyElement key="eclipse.orbit.p2.version">
+    <bc:constant value="${eclipse.orbit.p2.version.${eclipse.release}}"/>
+  </rm:propertyElement>
+  <!-- ***** -->
+  <!-- version of Eclipse Jetty 9 p2 repository to use -->
+  <rm:propertyElement key="eclipse.jetty9.p2.version.mars">
     <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars SR2 depends on -->
   </rm:propertyElement>
+  <rm:propertyElement key="eclipse.jetty9.p2.version.neon">
+    <bc:constant value="9.3.9.v20160517"/>  <!-- matches the version that Neon depends on -->
+  </rm:propertyElement>
+  <rm:propertyElement key="eclipse.jetty9.p2.version">
+    <bc:constant value="${eclipse.jetty9.p2.version.${eclipse.release}}"/>
+  </rm:propertyElement>
+  <!-- ***** -->
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
     <bc:constant value="5.1.2"/>
   </rm:propertyElement>
@@ -2389,7 +2406,7 @@
        Some Eclipse components are published both as part of the platform release, and separately. Put the platform release last so we can get a newer release.
   -->
   <!-- patterns for eclipse repositories are there to speed up failure if we fall through (in case of error, or when looking for source bundles) -->
-  <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_4.5_release" failOnError="false"/>
+  <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_release" failOnError="false"/>
   <!--                                                                      -->
   <!--######################################################################-->
   <!--# Search Paths                                                       #-->
@@ -4254,11 +4271,11 @@
       <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_4.5_release">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=4.5)" readerType="p2" source="false" mutable="false">
+  <rm:searchPath name="eclipse_release">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/releases/mars"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/releases/${eclipse.release}"/>
     </rm:provider>
   </rm:searchPath>
   <!--
