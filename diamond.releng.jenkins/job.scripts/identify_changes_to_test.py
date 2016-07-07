@@ -582,7 +582,7 @@ post_materialize_function_gerrit () {
                 else:
                     pre_materialize_script_file.write('''\
     # submit type = %(submit_type)s
-    git merge --verbose --no-edit --log FETCH_HEAD
+    git merge --verbose --no-progress --no-edit --log FETCH_HEAD
 '''                     % {'submit_type': submit_type,})
 
                 pre_materialize_script_file.write('''\
