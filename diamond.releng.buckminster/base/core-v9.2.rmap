@@ -2234,7 +2234,7 @@
   <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.(feature|ui)(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|ui)(\..+)?|python\.feature|slicing(\..+)?|spectrum\.ui)|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
   <rm:locator pattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" searchPathRef="dawn_workflow"/>
   <!-- ** dawnsci *** -->
-  <rm:locator pattern="^org\.eclipse\.dawnsci\..+$" searchPathRef="dawnsci"/>
+  <rm:locator pattern="^org\.eclipse\.(dawnsci|january)(\..+)?$" searchPathRef="dawnsci"/>
   <!-- ** diamond- *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.org\.jacorb$" searchPathRef="diamond_jacorb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.jython$" searchPathRef="diamond_jython"/>
