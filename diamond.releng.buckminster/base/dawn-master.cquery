@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-    <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-e4-latest.rmap" properties="file:${user.home}/.dawn-master.cquery.properties" shortDesc="CQuery for Dawn master">
+<?xml version="1.0" encoding="UTF-8"?><cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-e4-latest.rmap" properties="file:${user.home}/.dawn-master.cquery.properties" shortDesc="CQuery for Dawn master">
     <cq:rootRequest name="${component}"/>
     <cq:property key="dascgerrit.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required."/>
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
@@ -38,11 +37,6 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-doc.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <!-- dawn-eclipse is currently empty in master, but will be reused at some point
-    <cq:advisorNode namePattern="^org\.eclipse\.richbeans\..+$" allowCircularDependency="true" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-eclipse.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    -->
     <cq:advisorNode namePattern="^hdf\.(hdf5lib|object)(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-hdf.git repository branch</cq:documentation>
     </cq:advisorNode>
@@ -299,7 +293,7 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-spectroscopy.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature|pydev\.rcp))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" useTargetPlatform="false">
