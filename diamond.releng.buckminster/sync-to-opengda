@@ -1,0 +1,3 @@
+#! /bin/bash
+
+rsync $* -F --omit-dir-times --delete -irtv ./ opengda.org:/var/www/html/buckminster/
