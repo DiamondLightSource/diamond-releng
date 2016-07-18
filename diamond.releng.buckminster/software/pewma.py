@@ -1335,8 +1335,11 @@ class PewmaManager(object):
                 ('remote "origin"', 'pushurl'       , 'remote.origin.pushurl', gerrit_repo_url                  , False),
                 ('remote "origin"', 'push'          , 'remote.origin.push'   , 'HEAD:refs/for/' + current_branch, False),
                 ('merge'          , 'log'           , 'merge.log'            , '50'                             , True),
-                ('merge'          , 'ff'            , 'merge.ff'             , 'false'                          , True),
-                ('pull'           , 'ff'            , 'pull.ff'              , 'true'                           , True),  # so merge.ff does not create a merge commit on every pull!
+                # the following 2 options commented out, since command line git works correctly,
+                # however JGit does not support pull.ff (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=474174)
+                ### ('merge'          , 'ff'            , 'merge.ff'             , 'false'                          , True),  # merges from branches should not fast-forward
+                ### # NB: if you have merge.ff=false, you also need pull.ff=true, so that you do not get a merge commit on every pull!
+                ### ('pull'           , 'ff'            , 'pull.ff'              , 'true'                           , True),  # pulls should fast-forward if possible
                 )
 
             if ((GERRIT_MIRROR_HOST in origin_url) or
