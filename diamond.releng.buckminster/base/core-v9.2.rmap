@@ -573,30 +573,14 @@
     <bc:constant value="${diamond.springframework.${diamond.springframework.git.location.translated}.url}/diamond-springframework.git"/>
   </rm:propertyElement>
   <!-- ** diffcalc *** -->
-  <rm:propertyElement key="diffcalc.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diffcalc.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="diffcalc.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="diffcalc.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/diamond"/>
-  </rm:propertyElement>
   <rm:propertyElement key="diffcalc.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
   <rm:propertyElement key="diffcalc.github.authentication">
     <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="diffcalc.github.url">
-    <bc:constant value="${github.${diffcalc.github.authentication}.url}${diffcalc.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="diffcalc.git.url">
-    <bc:constant value="${diffcalc.${diffcalc.git.location.translated}.url}/diffcalc.git"/>
+    <bc:constant value="${github.${diffcalc.github.authentication}.url}${diffcalc.github.organization}/diffcalc.git"/>
   </rm:propertyElement>
   <!-- ** embl- *** -->
   <rm:propertyElement key="embl.cca.github.organization">
