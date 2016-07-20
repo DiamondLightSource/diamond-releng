@@ -1265,32 +1265,6 @@
     <bc:constant value="${gda.hrpd.${gda.hrpd.git.location.translated}.url}/gda-hrpd.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="gda.incubation.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.incubation.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="gda.incubation.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.incubation.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.incubation.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.incubation.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.incubation.github.url">
-    <bc:constant value="${github.${gda.incubation.github.authentication}.url}${gda.incubation.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.incubation.git.url">
-    <bc:constant value="${gda.incubation.${gda.incubation.git.location.translated}.url}/gda-incubation.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="gda.legacy.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -2261,12 +2235,11 @@
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
   <rm:locator pattern="^uk\.ac\.gda\.epics(\.(adviewer|client|test))?$" searchPathRef="gda_epics"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
-  <rm:locator pattern="^(mapping-config|uk\.ac\.(diamond\.daq\.(detectors|devices|mapping|nexus|queues|scanning|server\.test)(\..+)?|diamond\.dataacq\.xcen(\..+)?|gda\.scan\.nxsscan(\..+)?))$" searchPathRef="gda_incubation"/>
   <rm:locator pattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" searchPathRef="gda_legacy"/>
   <rm:locator pattern="^((b16|b24|i06|i07|i10|i15|i15-1|i16|mt|all-mt)-(config|shared)|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
   <rm:locator pattern="^((all-mx|i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?|vmxi\.server\.feature)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
-  <rm:locator pattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta)(\..+)?)$" searchPathRef="gda_pes"/>
+  <rm:locator pattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.detectors\.vgscienta\.electronanalyser|gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta))(\..+)?)$" searchPathRef="gda_pes"/>
   <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
   <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
@@ -3342,22 +3315,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-hrpd=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-hrpd.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-    <rm:searchPath name="gda_incubation">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-incubation=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.incubation.git.url}"/>
-      <rm:uri format="{0}/gda-incubation.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-incubation=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-incubation.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>

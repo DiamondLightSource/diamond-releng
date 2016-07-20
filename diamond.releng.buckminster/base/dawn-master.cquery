@@ -196,10 +196,6 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-hrpd.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-hrpd" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(mapping-config|uk\.ac\.(diamond\.daq\.(detectors|devices|mapping|nexus|queues|scanning|server\.test)(\..+)?|diamond\.dataacq\.xcen(\..+)?|gda\.scan\.nxsscan(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-incubation.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.gda-incubation" value="true"/>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-legacy.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-legacy" value="true"/>
@@ -216,7 +212,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-nexus.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-nexus" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta)(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.detectors\.vgscienta\.electronanalyser|gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta))(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-pes.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-pes" value="true"/>
     </cq:advisorNode>
