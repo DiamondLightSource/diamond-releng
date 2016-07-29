@@ -2311,25 +2311,33 @@
   <rm:locator pattern="^tp\..+\.site$" searchPathRef="sites"/>
   <rm:locator pattern="^tp\..+\.feature$" searchPathRef="core_svn"/>
   <!--
+       Components to get from Eclipse Orbit p2 repository, Eclipse Jetty p2 repository
+  -->
+  <rm:locator pattern="^com\.google\.gson$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^com\.fasterxml\.jackson\..+" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.poi(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.commons\.(codec|collections|jxpath|lang|pool)$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.jdom$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
+  <!--
        Target Platform components (published from thirdparty/)
   -->
   <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api|me\.moocar\.logback-gelf)$" searchPathRef="GDA_tp_logging"/>
-  <rm:locator pattern="^com\.google\.(gson|guava)$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^com\.google\.guava$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
-  <rm:locator pattern="^org\.apache\.commons\.codec(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
+  <!-- org.apache compontents to get from DLS p2 (either because they are not in Orbit, or because the Orbit version is too old) -->
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.(camel|httpcomponents|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^org\.apache\.(camel|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <rm:locator pattern="^org\.eclipse\.nebula\..+$" searchPathRef="eclipse_nebula"/>
   <!-- -->
   <rm:locator pattern="^com\.github\.tschoonj\.xraylib$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^com\.isencia\.sherpa\.commons\.reduced$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^com\.fasterxml\.jackson\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
   <rm:locator pattern="^com\.springsource\..+" searchPathRef="DAWB_p2" failOnError="false"/>
   <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="GDA_tp_bundles"/>
@@ -2341,7 +2349,6 @@
   <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
   <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javax\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>  <!-- if not found, will look in release and platform repos -->
-  <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_p2"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies -->
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="GDA_tp_bundles"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
@@ -2361,7 +2368,7 @@
   <rm:locator pattern="^org\.quartz$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.apache\.log4j$" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^org\.apache\.commons\.(dbcp|math|net|pool)$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^org\.apache\.commons\.(math|net)$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.dom4j$" searchPathRef="DAWB_p2"/>
   <!--
        Target Platform components: Eclipse)
