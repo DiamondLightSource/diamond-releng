@@ -32,7 +32,8 @@ def parse_jenkins_jobname(jobname):
 
         # if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
         if 'create.product' in jobname:
-            parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))
+            parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'))
+            parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))  # retained for versions prior to Dawn 2.2 / GDA 9.2
             parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
             parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
             parse_result.append(('buckminster_properties_filename', 'buckminster.diamond.jenkins.properties'))
@@ -124,7 +125,8 @@ def parse_jenkins_jobname(jobname):
             elif site == 'RAL':
                 product_site = 'uk.ac.rl.gda.' + beamline + '.site'
             parse_result.append(('materialize_component', materialize_component))
-            parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))
+            parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'))
+            parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))  # retained for versions prior to Dawn 2.2 / GDA 9.2
             parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
             parse_result.append(('product_site', product_site))
             parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
@@ -150,7 +152,8 @@ def parse_jenkins_jobname(jobname):
                     product_site = materialize_component
                 parse_result.append(('non_beamline_product', product_name))
                 parse_result.append(('materialize_component', materialize_component))
-                parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))
+                parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'))
+                parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))  # retained for versions prior to Dawn 2.2 / GDA 9.2
                 parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
                 parse_result.append(('product_site', product_site))
                 parse_result.append(('product_options_extra', '--suppress-compile-warnings'))
@@ -253,6 +256,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', '1.11'),
         ('job_variant', None),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -293,6 +297,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', '1.master'),
         ('job_variant', None),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -333,6 +338,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', 'master'),
         ('job_variant', None),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -375,6 +381,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Vanilla'),
         ('DAWN_release', 'master'),
         ('job_variant', None),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -418,6 +425,7 @@ def test_parse_jenkins_jobname():
         ('DAWN_flavour', 'Diamond'),
         ('DAWN_release', 'master'),
         ('job_variant', '~neweclipse'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_options_extra', '--suppress-compile-warnings'),
@@ -478,6 +486,7 @@ def test_parse_jenkins_jobname():
         ('job_variant', None),
         ('GDA_beamline', 'example'),
         ('materialize_component', 'example-config'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.gda.example.site'),
@@ -500,6 +509,7 @@ def test_parse_jenkins_jobname():
         ('job_variant', None),
         ('GDA_beamline', 'example'),
         ('materialize_component', 'example-config'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.gda.example.site'),
@@ -519,6 +529,7 @@ def test_parse_jenkins_jobname():
         ('job_variant', None),
         ('GDA_beamline', 'b16'),
         ('materialize_component', 'b16-config'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.gda.beamline.b16.site'),
@@ -538,6 +549,7 @@ def test_parse_jenkins_jobname():
         ('job_variant', None),
         ('non_beamline_product', 'gdaserver'),
         ('materialize_component', 'uk.ac.diamond.daq.server.site'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ('product_site', 'uk.ac.diamond.daq.server.site'),
