@@ -2107,7 +2107,7 @@
     <bc:constant value="${target_platform.download.url.${target_platform.download.location}}"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.bundles.release">
-    <bc:constant value="gda9.test"/>
+    <bc:constant value="dls_20160801"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.css.release">
     <bc:constant value="v3_201311"/>
@@ -2116,7 +2116,7 @@
     <bc:constant value="8.52plus"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.release">
-    <bc:constant value="8.52plus"/>
+    <bc:constant value="dls_20160801"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.bundles.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_bundles/${target_platform.diamond.bundles.release}"/>
@@ -2315,7 +2315,8 @@
   -->
   <rm:locator pattern="^com\.google\.gson$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^javax\.transaction$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^javax\.(transaction|xml)$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.bcel$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2"/>
@@ -2359,7 +2360,6 @@
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="GDA_tp_bundles"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javassist$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^xstream$" searchPathRef="GDA_tp_bundles"/>
   <!--
        Target Platform components (PyDev)
   -->
@@ -2371,7 +2371,6 @@
   <rm:locator pattern="^com\.microstar$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^diva$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^ptolemy\..+" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.apache\.log4j$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(math|net)$" searchPathRef="DAWB_p2"/>
   <!--
