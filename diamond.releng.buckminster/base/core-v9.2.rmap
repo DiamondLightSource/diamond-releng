@@ -2314,13 +2314,19 @@
        Components to get from Eclipse Orbit p2 repository, Eclipse Jetty p2 repository
   -->
   <rm:locator pattern="^com\.google\.gson$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^com\.fasterxml\.jackson\..+" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^javax\.transaction$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.bcel$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.mina\.core$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.poi(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.sshd\.core$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(codec|collections|jxpath|lang|pool)$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.dom4j$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.jdom$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.quartz$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
   <!--
        Target Platform components (published from thirdparty/)
@@ -2365,11 +2371,9 @@
   <rm:locator pattern="^com\.microstar$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^diva$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^ptolemy\..+" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^org\.quartz$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.apache\.log4j$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(math|net)$" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^org\.dom4j$" searchPathRef="DAWB_p2"/>
   <!--
        Target Platform components: Eclipse)
        Target Platform components: Eclipse Orbit (which contains third-party jars which have passed Eclipse IP checks, and been turned in OSGI bundles)
