@@ -2236,7 +2236,7 @@
   <rm:locator pattern="^uk\.ac\.gda\.epics(\.(adviewer|client|test))?$" searchPathRef="gda_epics"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
   <rm:locator pattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" searchPathRef="gda_legacy"/>
-  <rm:locator pattern="^((b16|b24|i06|i07|i10|i15|i15-1|i16|mt|all-mt)-(config|shared)|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
+  <rm:locator pattern="^((b16|b24|i06|i06-1|i07|i10|i15|i15-1|i16|mt|all-mt)-(config|shared)|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
   <rm:locator pattern="^((all-mx|i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?|vmxi\.server\.feature)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
   <rm:locator pattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.detectors\.vgscienta\.electronanalyser|gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta))(\..+)?)$" searchPathRef="gda_pes"/>
