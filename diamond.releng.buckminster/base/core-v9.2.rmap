@@ -66,6 +66,10 @@
     <bc:constant value="${eclipse.jetty9.p2.version.${eclipse.release}}"/>
   </rm:propertyElement>
   <!-- ***** -->
+  <rm:propertyElement key="nattable.p2.version">  <!-- version of Eclipse NatTable p2 repository to use -->
+    <bc:constant value="1.4.0"/>
+  </rm:propertyElement>
+  <!-- ***** -->
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
     <bc:constant value="5.1.2"/>
   </rm:propertyElement>
@@ -2150,9 +2154,6 @@
   <rm:propertyElement key="eclipse.download.url">
     <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="nattable.download.url">
-    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="nebula.download.url">
     <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
   </rm:propertyElement>
@@ -2163,7 +2164,7 @@
   <rm:locator pattern="^tp$" searchPathRef="tp"/>
   <!--
        Components that should not be used
-       net.sourceforge.nattable.core is superceded by org.eclipse.nebula.widgets.nattable.core (but the former is still in the Juno p2 site)
+       net.sourceforge.nattable.core is superceded by org.eclipse.nebula.widgets.nattable.core (but the former is still in various p2 sites, even in Eclipse Neon)
    -->
   <rm:locator pattern="^(net\.sourceforge\.nattable\.core)$" searchPathRef="fail_old_component"/>  <!-- superceded by org.eclipse.nebula.widgets.nattable.core -->
   <!--
@@ -2317,13 +2318,14 @@
   <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^javax\.(transaction|xml(\..+)?)$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.aopalliance$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.bcel$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.derby$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.mina\.core$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.poi(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.sshd\.core$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.commons\.(codec|collections|jxpath|lang|pool)$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.commons\.(dbcp|codec|collections|jxpath|lang|pool)$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.dom4j$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.jdom$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
@@ -4184,11 +4186,10 @@
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nattable">
-    <!-- provider for version 1.1.0 -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${nattable.download.url}/nattable/releases/1.1.0/repository"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nattable/releases/${nattable.p2.version}/repository"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nebula">
