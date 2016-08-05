@@ -2111,7 +2111,7 @@
     <bc:constant value="${target_platform.download.url.${target_platform.download.location}}"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.bundles.release">
-    <bc:constant value="dls_20160801"/>
+    <bc:constant value="dls_20160805"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.css.release">
     <bc:constant value="v3_201311"/>
@@ -2120,7 +2120,7 @@
     <bc:constant value="8.52plus"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.release">
-    <bc:constant value="dls_20160801"/>
+    <bc:constant value="dls_20160805"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.bundles.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_bundles/${target_platform.diamond.bundles.release}"/>
@@ -2312,9 +2312,8 @@
   <rm:locator pattern="^tp\..+\.site$" searchPathRef="sites"/>
   <rm:locator pattern="^tp\..+\.feature$" searchPathRef="core_svn"/>
   <!--
-       Components to get from Eclipse Orbit p2 repository, Eclipse Jetty p2 repository
+       Components to get from Eclipse p2 repositories: Orbit, Jetty, NatTable
   -->
-  <rm:locator pattern="^com\.google\.gson$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^javax\.(transaction|xml(\..+)?)$" searchPathRef="eclipse_orbit_p2"/>
@@ -2332,10 +2331,12 @@
   <rm:locator pattern="^org\.quartz$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.xmlpull$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
+  <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <!--
        Target Platform components (published from thirdparty/)
   -->
   <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api|me\.moocar\.logback-gelf)$" searchPathRef="GDA_tp_logging"/>
+  <rm:locator pattern="^com\.google\.gson$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^com\.google\.guava$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
@@ -2343,7 +2344,6 @@
   <!-- org.apache compontents to get from DLS p2 (either because they are not in Orbit, or because the Orbit version is too old) -->
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
   <rm:locator pattern="^org\.apache\.(camel|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <rm:locator pattern="^org\.eclipse\.nebula\..+$" searchPathRef="eclipse_nebula"/>
   <!-- -->
   <rm:locator pattern="^com\.github\.tschoonj\.xraylib$" searchPathRef="GDA_tp_bundles"/>
