@@ -50,6 +50,7 @@ COMPONENT_CATEGORIES = (
     ('gda', '8.master.astra', 'gda-v8.master.astra.cquery', 'v2.12', ('8.master.astra', 'v8.master.astra'), ('1.8.0',)),
     ('gda', '8.master.muse', 'gda-v8.master.muse.cquery', 'v2.12', ('8.master.muse', 'v8.master.muse'), ('1.8.0',)),
     ('gda', '8.master', 'gda-v8.master.cquery', 'v2.12', ('8.master', 'v8.master'), ('1.8.0',)),
+    ('gda', 'v8.56', 'gda-v8.56.cquery', 'v2.12', ('v8.56', '8.56', '856'), ('1.8.0',)),
     ('gda', 'v8.54', 'gda-v8.54.cquery', 'v2.12', ('v8.54', '8.54', '854'), ('1.8.0',)),
     ('gda', 'v8.52', 'gda-v8.52.cquery', 'v2.12', ('v8.52', '8.52', '852'), ('1.8.0',)),
     ('gda', 'v8.50', 'gda-v8.50.cquery', 'v2.10', ('v8.50', '8.50', '850'), ('1.8.0',)),
@@ -78,9 +79,11 @@ COMPONENT_CATEGORIES = (
     ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218'), None),
     ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217'), None),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.0', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', '2.2', 'dawn-v2.2.cquery', 'v3.0', ('v2.2', '2.2'), ('1.8.0',)),
     ('dawn', '2.1', 'dawn-v2.1.cquery', 'v3.0', ('v2.1', '2.1'), ('1.8.0',)),
     ('dawn', '2.0', 'dawn-v2.0.cquery', 'v3.0', ('v2.0', '2.0'), ('1.8.0',)),
     ('dawn', '1.master', 'dawn-v1.master.cquery', 'v2.12', ('1.master', 'v1.master'), ('1.8.0',)),
+    ('dawn', '1.13', 'dawn-v1.13.cquery', 'v2.13', ('v1.13', '1.13'), ('1.8.0',)),
     ('dawn', '1.12', 'dawn-v1.12.cquery', 'v2.12', ('v1.12', '1.12'), ('1.8.0',)),
     ('dawn', '1.11', 'dawn-v1.11.cquery', 'v2.12', ('v1.11', '1.11'), ('1.8.0',)),
     ('dawn', '1.10', 'dawn-v1.10.cquery', 'v2.10', ('v1.10', '1.10'), ('1.8.0',)),
@@ -106,6 +109,17 @@ for c in COMPONENT_CATEGORIES:
 
 for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
     assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
+
+# For newer CQueries, we specify -Declipse.p2.mirrors=false so that the DLS mirror of eclipse.org p2 sites (alfred.diamond.ac.uk) is used
+# Older CQueries do not use the local DLS mirror, so we should not specify that property 
+CQUERY_PATTERNS_TO_SKIP_p2_mirrors_false = (
+    '^dawn-v1\.[0-9]\..*cquery$',
+    '^dawn-v1\.1[0-2]\..*cquery$',
+    '^dawn-v2\.[01]\.cquery$',
+    '^gda-v8\.[1-4]\.*\.cquery$',
+    '^gda-v8\.5[0-4]\..*cquery$',
+    '^gda-v9\.[01]\..*cquery$',
+    )
 
 # template names must be of the form vx.y in order for us to sort them
 for c in COMPONENT_CATEGORIES:
@@ -438,19 +452,21 @@ class PewmaManager(object):
         group = optparse.OptionGroup(self.parser, "General options")
         group.add_option('-D', dest='system_property', action='append', metavar='key=value',
                                help='Pass a system property to Buckminster or Ant')
-        group.add_option('-J', dest='jvmargs', action='append', metavar='key=value',
+        group.add_option('-J', dest='jvmargs', action='append', metavar='jvmarg',
                                help='Pass an additional JVM argument')
         group.add_option('-h', '--help', dest='help', action='store_true', default=False, help='Show help information and exit')
         group.add_option('-n', '--dry-run', dest='dry_run', action='store_true', default=False,
                                help='Log the actions to be done, but don\'t actually do them')
         group.add_option('-s', '--script-file', dest='script_file', type='string', metavar='<path>',
                                default='pewma-script.txt',
-                               help='Script file, relative to workspace if not absolute (default: %default)')
+                               help='Script file, relative to workspace (default: %default)')
         group.add_option('-q', '--quiet', dest='quiet', action='store_true', default=False, help='Be less verbose')
         group.add_option('-Y', '--answer-yes', dest='answer_yes', action='store_true', default=False, help='No interactive prompts (assume YES if appropriate)')
         group.add_option('-N', '--answer-no', dest='answer_no', action='store_true', default=False, help='No interactive prompts (assume NO if appropriate)')
         group.add_option('--log-level', dest='log_level', type='choice', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], metavar='<level>',
                                default='INFO', help='Logging level (default: %default)')
+        group.add_option('--debug-options-file', dest='debug_options_file', type='string', metavar='<path>',
+                               help='File containing debug options for Buckminster')
         group.add_option('--skip-proxy-setup', dest='skip_proxy_setup', action='store_true', default=False, help='Don\'t define any proxy settings')
         self.parser.add_option_group(group)
 
@@ -1047,6 +1063,18 @@ class PewmaManager(object):
         if exit_code:
             self.logger.info('Abandoning materialize: workspace setup failed')
             return exit_code
+
+        # set jvmarg -Declipse.p2.mirrors=false, unless the value has already been set, or unless the CQuery is an old one
+        assert cquery_to_use
+        for skip_pattern in CQUERY_PATTERNS_TO_SKIP_p2_mirrors_false:
+            if re.match(skip_pattern, cquery_to_use):
+                break
+        else:
+            for jvmarg in self.options.jvmargs:
+                if 'eclipse.p2.mirrors=' in jvmarg:
+                    break
+            else:
+                self.options.jvmargs.extend(('-Declipse.p2.mirrors=false',))
 
         self.logger.info('Writing buckminster materialize properties to "%s"' % (self.materialize_properties_path,))
         with open(self.materialize_properties_path, 'w') as properties_file:
@@ -1876,7 +1904,8 @@ class PewmaManager(object):
         self.report_and_check_java_version()
 
         buckminster_command = ['buckminster']
-
+        if self.options.debug_options_file:
+            buckminster_command.extend(('-debug', self.options.debug_options_file))
         if self.options.keyring:
             buckminster_command.extend(('-keyring', '"%s"' % (self.options.keyring,)))  # quote in case of embedded blanks or special characters
         buckminster_command.extend(('-application', 'org.eclipse.buckminster.cmdline.headless'))
@@ -1902,8 +1931,8 @@ class PewmaManager(object):
             vmargs_to_add.extend(('-Xms768m', '-Xmx1536m', '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=1000'))
         if self.java_proxy_system_properties:
             vmargs_to_add.extend(self.java_proxy_system_properties)
-        for keyval in self.options.jvmargs:
-            vmargs_to_add.extend(('"-D%s" ' % (keyval,),))
+        for jvmarg in self.options.jvmargs:
+            vmargs_to_add.extend((jvmarg,))
         if vmargs_to_add:
             buckminster_command.append('-vmargs')
             buckminster_command.extend(vmargs_to_add)
@@ -2143,6 +2172,10 @@ class PewmaManager(object):
             self.options.system_property = []  # use [] rather than None so we can iterate over it
         if not self.options.jvmargs:
             self.options.jvmargs = []  # use [] rather than None so we can iterate over it
+        if self.options.debug_options_file:
+            self.options.debug_options_file = os.path.abspath(self.options.debug_options_file)
+            if not os.path.isfile(self.options.debug_options_file):
+                raise PewmaException('ERROR: --debug-options-file is not valid: "%s"' % (self.options.debug_options_file,))
 
         # determine and validate workspace
         if self.options.workspace:
