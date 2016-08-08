@@ -1932,7 +1932,11 @@ class PewmaManager(object):
         if self.java_proxy_system_properties:
             vmargs_to_add.extend(self.java_proxy_system_properties)
         for jvmarg in self.options.jvmargs:
-            vmargs_to_add.extend((jvmarg,))
+            if jvmarg.startswith(('osgi.configuration.area', 'osgi.user.area', 'equinox.statechange.timeout')):
+                # fix up arguments that are missing the leading "-D"
+                vmargs_to_add.extend(('"-D%s" ' % (jvmarg,),))
+            else:
+                vmargs_to_add.extend(('"%s" ' % (jvmarg,),))
         if vmargs_to_add:
             buckminster_command.append('-vmargs')
             buckminster_command.extend(vmargs_to_add)

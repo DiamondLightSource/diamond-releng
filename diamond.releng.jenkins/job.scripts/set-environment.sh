@@ -248,7 +248,7 @@ set_environment_step () {
     if [[ "${buckminster_osgi_areas}" == "none" ]]; then
         export buckminster_osgi_areas=
     elif [[ "${buckminster_osgi_areas}" == "default" || -z "${buckminster_osgi_areas+arbitrary}" ]]; then
-        export buckminster_osgi_areas="-Josgi.configuration.area=$(dirname ${materialize_workspace_path})/buckminster-runtime-areas/configuration/ -Josgi.user.area=$(dirname ${materialize_workspace_path})/buckminster-runtime-areas/user/"
+        export buckminster_osgi_areas="-J-Dosgi.configuration.area=$(dirname ${materialize_workspace_path})/buckminster-runtime-areas/configuration/ -J-Dosgi.user.area=$(dirname ${materialize_workspace_path})/buckminster-runtime-areas/user/"
     elif [[ "${buckminster_osgi_areas+arbitrary}" ]]; then
         export buckminster_osgi_areas
     else
@@ -261,7 +261,7 @@ set_environment_step () {
     if [[ "${buckminster_extra_vmargs}" == "none" ]]; then
         export buckminster_extra_vmargs=
     elif [[ "${buckminster_extra_vmargs}" == "default" || -z "${buckminster_extra_vmargs+arbitrary}" ]]; then
-        export buckminster_extra_vmargs="-Jequinox.statechange.timeout=30000"
+        export buckminster_extra_vmargs="-J-Dequinox.statechange.timeout=30000"
     elif [[ "${buckminster_extra_vmargs+arbitrary}" ]]; then
         export buckminster_extra_vmargs
     else
