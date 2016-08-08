@@ -4205,24 +4205,6 @@
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${nebula.download.url}/technology/nebula/incubation/snapshot_20140205"/>
     </rm:provider>
-    <!-- provider for version taken from snapshot_20130730 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${nebula.download.url}/technology/nebula/snapshot_20130730"/>
-    </rm:provider>
-    <!-- provider for version taken from incubation/snapshot_20130730 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${nebula.download.url}/technology/nebula/incubation/snapshot_20130730"/>
-    </rm:provider>
-    <!-- provider for version taken from snapshot_20130531 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${nebula.download.url}/technology/nebula/snapshot_20130531"/>
-    </rm:provider>
     <!-- provider for version taken from some earlier snapshot -->
     <rm:provider componentTypes="osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
