@@ -156,6 +156,7 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent netw
 BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermittent Buckminster bug
     ('ERROR\s+\[\d+\]\s:\sjava\.lang\.ArrayIndexOutOfBoundsException: -1', 'Buckminster intermittent bug - try rerunning'),  # https://bugs.eclipse.org/bugs/show_bug.cgi?id=372470
     ('ERROR\s+\[\d+\]\s:\sConnecting Git team provider failed\. See log for details\.', 'Buckminster intermittent failure - try rerunning'),
+    ('ERROR\s+\[\d+\]\s:\sjava.lang.IllegalStateException: Preference node ".+" has been removed.', 'Buckminster intermittent failure - try rerunning'),
     )
 
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
