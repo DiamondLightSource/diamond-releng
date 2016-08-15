@@ -2197,7 +2197,7 @@
   <rm:locator pattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" searchPathRef="dawn_tango"/>
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
   <rm:locator pattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
-  <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.(feature|ui)(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|ui)(\..+)?|python\.feature|slicing(\..+)?|spectrum\.ui)|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
+  <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|javafx(\..+)?|mapping\.(feature|ui)(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|ui)(\..+)?|python\.feature|slicing(\..+)?|spectrum\.ui)|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
   <rm:locator pattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" searchPathRef="dawn_workflow"/>
   <!-- ** dawnsci *** -->
   <rm:locator pattern="^org\.eclipse\.(dawnsci|january)(\..+)?$" searchPathRef="dawnsci"/>
