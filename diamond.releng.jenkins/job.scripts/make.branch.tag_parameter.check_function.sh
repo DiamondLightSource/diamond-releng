@@ -17,6 +17,10 @@ make_branch_tag_parameter_check_function () {
         echo "tag_commitmsg was specified, but tag_name was not, so terminating"
         return 100
     fi
+    if [[ "${branch_name}" == "${tag_name}" ]]; then
+        echo "branch_name and tag_name are identical, so terminating"
+        return 100
+    fi
 
 }
 
