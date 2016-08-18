@@ -83,7 +83,7 @@ COMPONENT_CATEGORIES = (
     ('dawn', '2.1', 'dawn-v2.1.cquery', 'v3.0', ('v2.1', '2.1'), ('1.8.0',)),
     ('dawn', '2.0', 'dawn-v2.0.cquery', 'v3.0', ('v2.0', '2.0'), ('1.8.0',)),
     ('dawn', '1.master', 'dawn-v1.master.cquery', 'v2.12', ('1.master', 'v1.master'), ('1.8.0',)),
-    ('dawn', '1.13', 'dawn-v1.13.cquery', 'v2.13', ('v1.13', '1.13'), ('1.8.0',)),
+    ('dawn', '1.13', 'dawn-v1.13.cquery', 'v2.12', ('v1.13', '1.13'), ('1.8.0',)),
     ('dawn', '1.12', 'dawn-v1.12.cquery', 'v2.12', ('v1.12', '1.12'), ('1.8.0',)),
     ('dawn', '1.11', 'dawn-v1.11.cquery', 'v2.12', ('v1.11', '1.11'), ('1.8.0',)),
     ('dawn', '1.10', 'dawn-v1.10.cquery', 'v2.10', ('v1.10', '1.10'), ('1.8.0',)),
@@ -111,7 +111,7 @@ for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
     assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
 
 # For newer CQueries, we specify -Declipse.p2.mirrors=false so that the DLS mirror of eclipse.org p2 sites (alfred.diamond.ac.uk) is used
-# Older CQueries do not use the local DLS mirror, so we should not specify that property 
+# Older CQueries do not use the local DLS mirror, so we should not specify that property
 CQUERY_PATTERNS_TO_SKIP_p2_mirrors_false = (
     '^dawn-v1\.[0-9]\..*cquery$',
     '^dawn-v1\.1[0-2]\..*cquery$',
