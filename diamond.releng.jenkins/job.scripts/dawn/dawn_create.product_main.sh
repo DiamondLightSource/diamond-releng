@@ -15,7 +15,7 @@ materialize_function
 
 record_head_commits_function > ${materialized_info_path}/materialized_head_commits.txt
 # also record the current head in repos that might not have been materialized, but we still need to branch when making a release
-for extra_repo in "dawn-test" "jeromq"; do
+for extra_repo in "dawn-test"; do
     if ! grep -q "${extra_repo}.git" ${materialized_info_path}/materialized_head_commits.txt; then
         extra_repo_branch=$(grep ${extra_repo} ${materialized_info_path}/cquery-branches-file.txt | cut -d = -f 2)
         if [[ -n "${extra_repo_branch}" ]]; then
