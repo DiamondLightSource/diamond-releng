@@ -15,6 +15,7 @@ import logging
 import optparse
 import os
 import platform
+import pwd
 import re
 import shlex
 import socket
@@ -235,6 +236,11 @@ class PewmaManager(object):
         # when running at DLS, we might want to set the Linux group to "dls_dasc" on directories that we create
         self.group_dls_dasc_gid = None  # the numeric group id for group dls_dasc
         if self.isLinux:
+            self.user_euid = os.geteuid()                                  # effective running user id
+            try:
+                self.user_uname = pwd.getpwuid(self.user_euid).pw_name     # effective running user name
+            except (KeyError) as e:
+                self.user_uname = '?'
             try:
                 self.group_dls_dasc_gid = grp.getgrnam('dls_dasc').gr_gid  # the numeric group id for group dls_dasc
             except (KeyError) as e:
@@ -914,6 +920,7 @@ class PewmaManager(object):
     def _set_linux_group(self, directory):
         """ Optionally, change the Linux group (like chgrp) and permission (like chmod g+rwxs o+rx)
             on a directory. Done if option --directories.groupname set (or defaults, at DLS).
+            Can only be done if the user running the script is the directory owner (or root)
         """
 
         if (not self.isLinux) or (not self.options.directories_groupname):
@@ -921,20 +928,47 @@ class PewmaManager(object):
         assert directory and os.path.isabs(directory)
         assert self.gid_new
 
-        gid_old = os.stat(directory).st_gid
-        grname_old = grp.getgrgid(gid_old).gr_name
+        dirowner_uid = os.stat(directory).st_uid                 # current directory owner id
+        try:
+            dirowner_uname = pwd.getpwuid(dirowner_uid).pw_name  # current directory owner name
+        except (KeyError) as e:
+            dirowner_uname = '?'
+        gid_old = os.stat(directory).st_gid                      # current directory group id
+        try:
+            grname_old = grp.getgrgid(gid_old).gr_name           # current directory group name
+        except (KeyError) as e:
+            grname_old = '?'
+        imode_old  = stat.S_IMODE(os.stat(directory).st_mode)    # existing directory permission bits
+        imode_new = imode_old | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_ISGID | stat.S_IROTH | stat.S_IXOTH
+
+        is_directory_owner = self.user_euid in [dirowner_uid, 0]  # an effective uid of 0 indicates root
 
         if grname_old != self.options.directories_groupname:
             self.logger.info('Changing owning group from %s (%s) to %s (%s) on %s' %
-                             (gid_old, grname_old,
-                              self.gid_new, self.options.directories_groupname,
+                             (grname_old, gid_old,
+                              self.options.directories_groupname, self.gid_new,
                               directory))
-            os.chown(directory, -1, self.gid_new)
-        imode_old  = stat.S_IMODE(os.stat(directory).st_mode)  # get existing permissions
-        imode_new = imode_old | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_ISGID | stat.S_IROTH | stat.S_IXOTH
+            if is_directory_owner:
+                try:
+                    os.chown(directory, -1, self.gid_new)
+                except Exception as e:
+                    self.logger.error('chown failed: %s' % (e,))
+            else:
+                self.logger.warn('Cannot change owning group: current user %s (%s) is not directory owner %s (%s)' %
+                                 (self.user_uname, self.user_euid,
+                                  dirowner_uname, dirowner_uid,))
+
         if imode_old != imode_new:
             self.logger.info('Changing permissions from 0x%04o to 0x%04o on %s' % (imode_old, imode_new, directory))
-        os.chmod(directory, imode_new)
+            if is_directory_owner:
+                try:
+                    os.chmod(directory, imode_new)
+                except Exception as e:
+                    self.logger.error('chmod failed: %s' % (e,))
+            else:
+                self.logger.warn('Cannot change permissions: current user %s (%s) is not directory owner %s (%s)' %
+                                 (self.user_uname, self.user_euid,
+                                  dirowner_uname, dirowner_uid,))
 
     def action_setup(self):
         """ Processes command: setup [<category> [<version>] | <cquery>]
