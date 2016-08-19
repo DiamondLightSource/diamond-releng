@@ -30,13 +30,17 @@ junit_function () {
 
     # GDALargeTestFilesLocation specifies the (optional) directory holding large test files that are not held in any repository
     # It's not set in any properties file, since the location can be different on each Jenkins slave
-    # Instead, it's set in the slave "Node Properties" (exposed as an environment variable)
-    # If GDALargeTestFilesLocation is not passed to pewma.py, then pewma.py will look for it in a standard location
+    # Instead, it's set in the slave "Node Properties" (exposed as an environment variable), though not on all nodes
     if [[ "${GDALargeTestFilesLocation}" == "none" || -z "${GDALargeTestFilesLocation-arbitrary}" ]]; then
-        GDALargeTestFilesLocation_param=
-    else
+        # explicitly pass an empty GDALargeTestFilesLocation if the environment variable is "none", or set but null 
+        GDALargeTestFilesLocation_param=--GDALargeTestFilesLocation=
+    elif [[ -n "${GDALargeTestFilesLocation}" ]]; then
         GDALargeTestFilesLocation_param=--GDALargeTestFilesLocation=${GDALargeTestFilesLocation}
+    else
+        # don't pass GDALargeTestFilesLocation to pewma.py, so it will look for it in a standard location
+        GDALargeTestFilesLocation_param=
     fi
+    echo "set ${GDALargeTestFilesLocation_param}"
 
     ###
     ### Run Junit tests
