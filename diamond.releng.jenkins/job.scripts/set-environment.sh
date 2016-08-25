@@ -68,48 +68,64 @@ set_environment_step () {
 
         if [[ "${module_load_java_version}" == "none" || -z "${module_load_java_version-arbitrary}" || -z "${module_load_java_version+arbitrary}" ]]; then
             echo 'skipping "module load java"'
-        elif [[ "${module_load_java_version}" == "default" ]]; then
-            echo "issuing \"module load java\""
-            module load java
-        elif [[ "${module_load_java_version+arbitrary}" ]]; then
-            echo "issuing \"module load java/${module_load_java_version}\""
-            module load java/${module_load_java_version}
         else
-            echo 'Error in logic determining "module load java"'
-            return 100
+            echo "issuing \"module unload java\""
+            module unload java
+            if [[ "${module_load_java_version}" == "default" ]]; then
+                echo "issuing \"module load java\""
+                module load java
+            elif [[ "${module_load_java_version+arbitrary}" ]]; then
+                echo "issuing \"module load java/${module_load_java_version}\""
+                module load java/${module_load_java_version}
+            else
+                echo 'Error in logic determining "module load java"'
+                return 100
+            fi
         fi
 
         if [[ "${buckminster_headless_use_public_version:-false}" != "true" ]]; then
             if [[ "${module_load_buckminster_version}" == "none" || -z "${module_load_buckminster_version-arbitrary}" || -z "${module_load_buckminster_version+arbitrary}" ]]; then
                 echo 'skipping "module load buckminster"'
-            elif [[ "${module_load_buckminster_version}" == "default" ]]; then
-                echo "issuing \"module load buckminster\""
-                module load buckminster
-            elif [[ "${module_load_buckminster_version+arbitrary}" ]]; then
-                echo "issuing \"module load buckminster/${module_load_buckminster_version}\""
-                module load buckminster/${module_load_buckminster_version}
             else
-                echo 'Error in logic determining "module load buckminster"'
-                return 100
+                echo "issuing \"module unload buckminster\""
+                module unload buckminster
+                if [[ "${module_load_buckminster_version}" == "default" ]]; then
+                    echo "issuing \"module load buckminster\""
+                    module load buckminster
+                elif [[ "${module_load_buckminster_version+arbitrary}" ]]; then
+                    echo "issuing \"module load buckminster/${module_load_buckminster_version}\""
+                    module load buckminster/${module_load_buckminster_version}
+                else
+                    echo 'Error in logic determining "module load buckminster"'
+                    return 100
+                fi
             fi
         fi
 
         if [[ "${module_load_python_version}" == "none" || -z "${module_load_python_version-arbitrary}" || -z "${module_load_python_version+arbitrary}" ]]; then
             echo 'skipping "module load python"'
-        elif [[ "${module_load_python_version}" == "default" ]]; then
-            echo "issuing \"module load python\""
-            module load python
-        elif [[ "${module_load_python_version+arbitrary}" ]]; then
-            echo "issuing \"module load python/${module_load_python_version}\""
-            module load python/${module_load_python_version}
         else
-            echo 'Error in logic determining "module load python"'
-            return 100
+            echo "issuing \"module unload python\""
+            module unload python
+            if [[ "${module_load_python_version}" == "default" ]]; then
+                echo "issuing \"module load python\""
+                module load python
+            elif [[ "${module_load_python_version+arbitrary}" ]]; then
+                echo "issuing \"module unload python\""
+                module unload python
+                echo "issuing \"module load python/${module_load_python_version}\""
+                module load python/${module_load_python_version}
+            else
+                echo 'Error in logic determining "module load python"'
+                return 100
+            fi
         fi
 
         if [[ "${module_load_dawn_version}" == "none" || -z "${module_load_dawn_version-arbitrary}" || -z "${module_load_dawn_version+arbitrary}" ]]; then
             echo 'skipping "module load dawn"'
         else
+            echo "issuing \"module unload dawn\""
+            module unload dawn
             if [[ "${module_load_dawn_version}" == "default" ]]; then
                 echo "issuing \"module load dawn\""
                 module load dawn
