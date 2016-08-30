@@ -1535,7 +1535,7 @@ class PewmaManager(object):
             repos_excluded = []
         selected_repos = sorted(set(repos_included) - set(repos_excluded))
 
-        max_retcode = 0
+        return_code_count = {}  # dictionary with key=return_code value=number of times it occurs
         for (repo_name, git_dir) in sorted(git_directories):
             if self.options.non_gerrit_only:
                 if repo_name in [gerrit_repo_name for (gerrit_repo_name, gerrit_repo_url) in GERRIT_REPOSITORIES]:
@@ -1566,10 +1566,17 @@ class PewmaManager(object):
 
             retcode = self._one_git_repo(git_command, git_dir, prefix)
             if not self.options.quiet:
-                print()  # empty line after each repo to make the output more human-readable 
-            max_retcode = max(max_retcode, retcode)
+                print()  # empty line after each repo to make the output more human-readable
+            return_code_count[retcode] = return_code_count.get(retcode,0) + 1
 
-        return max_retcode
+        log_msg = '%s"%s" got ' % (self.log_prefix, git_command)
+        for rc in sorted(return_code_count.keys()):
+            log_msg += 'rc=%d (%s repo%s), ' % (rc, return_code_count[rc], 's' if return_code_count[rc] != 1 else '')
+            max_rc = rc
+        if log_msg.endswith(', '):
+            log_msg = log_msg[:-2]
+        self.logger.log(logging.ERROR if max_rc else logging.INFO, log_msg)
+        return max_rc
 
 
     def _one_git_repo(self, command, directory, prefix):
