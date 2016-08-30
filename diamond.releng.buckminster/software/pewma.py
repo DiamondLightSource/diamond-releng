@@ -477,8 +477,14 @@ class PewmaManager(object):
         group.add_option('--skip-proxy-setup', dest='skip_proxy_setup', action='store_true', default=False, help='Don\'t define any proxy settings')
         self.parser.add_option_group(group)
 
-        group = optparse.OptionGroup(self.parser, "Git options")
-        group.add_option('-p', '--prefix', dest='repo_prefix', action='store_true', default=False, help='Prefix first line of git command output with the repo directory name.')
+        group = optparse.OptionGroup(self.parser, "Git options (when using the git subcommand)")
+        group.add_option('-p', '--prefix', dest='repo_prefix', action='store_true', default=False, help='Prefix first line of git command output with the repo directory name')
+        group.add_option('--gerrit-only', dest='gerrit_only', action='store_true', default=False, help='Apply git command only to Gerrit-based repositories')
+        group.add_option('--non-gerrit-only', dest='non_gerrit_only', action='store_true', default=False, help='Apply git command to only to non-Gerrit-based repositories')
+        group.add_option('--repo-include', dest='repo_includes', type='string', metavar='<pattern>,<pattern>,...', default="",
+                               help='Only process repository names matching one or more of the glob patterns')
+        group.add_option('--repo-exclude', dest='repo_excludes', type='string', metavar='<pattern>,<pattern>,...', default="",
+                               help='Do not process repository names matching any of the glob patterns')
         self.parser.add_option_group(group)
 
 
@@ -817,15 +823,15 @@ class PewmaManager(object):
                 raise PewmaException('ERROR: No .site project in workspace')
 
 
-    def validate_plugin_patterns(self):
-        for glob_patterns in (self.options.plugin_includes, self.options.plugin_excludes):
+    def validate_glob_patterns(self, include_patterns, exclude_patterns, err_msg_prefix):
+        for glob_patterns in (include_patterns, exclude_patterns):
             if glob_patterns:
                 for pattern in glob_patterns.split(","):
                     if not pattern:
-                        raise PewmaException("ERROR: --include or --exclude contains an empty plugin pattern")
+                        raise PewmaException('ERROR: %s contains an empty plugin pattern' % (err_msg_prefix,))
                     if pattern.startswith("-") or ("=" in pattern):
                         # catch a possible error in command line construction
-                        raise PewmaException("ERROR: --include or --exclude contains an invalid plugin pattern \"%s\"" % (p,))
+                        raise PewmaException('ERROR: %s contains an invalid plugin pattern "%s"' % (p, err_msg_prefix,))
 
 
     def set_all_plugins_with_releng_ant(self):
@@ -855,14 +861,13 @@ class PewmaManager(object):
         self.all_plugins_with_releng_ant = plugin_names_paths
 
 
-    def get_matching_plugins_with_releng_ant(self, glob_patterns):
-        """ Finds all the plugin names that match the specified glob patterns (either --include or --exclude).
+    def get_items_matching_glob_patterns(self, items, patterns):
+        """ Finds all items that match the specified glob pattern(s)
         """
-        matching_paths_names = []
-
-        for p in glob_patterns.split(","):
-            matching_paths_names.extend(fnmatch.filter(self.all_plugins_with_releng_ant.keys(), p))
-        return sorted( set(matching_paths_names) )
+        matching_items = []
+        for p in patterns.split(","):
+            matching_items.extend(fnmatch.filter(items, p))
+        return sorted( set(matching_items) )
 
 
     def get_selected_plugins_with_releng_ant(self):
@@ -874,12 +879,12 @@ class PewmaManager(object):
             self.set_all_plugins_with_releng_ant()
 
             if self.options.plugin_includes:
-                included_plugins = self.get_matching_plugins_with_releng_ant(self.options.plugin_includes)
+                included_plugins = self.get_items_matching_glob_patterns(self.all_plugins_with_releng_ant.keys(), self.options.plugin_includes)
             else:
                 included_plugins = self.all_plugins_with_releng_ant
 
             if self.options.plugin_excludes:
-                excluded_plugins = self.get_matching_plugins_with_releng_ant(self.options.plugin_excludes)
+                excluded_plugins = self.get_items_matching_glob_patterns(self.all_plugins_with_releng_ant.keys(), self.options.plugin_excludes)
             else:
                 excluded_plugins = []
 
@@ -1311,7 +1316,7 @@ class PewmaManager(object):
 
 
     def _get_git_directories(self):
-        """ Returns a list of the absolute path to all Git repositories
+        """ Returns a list of (repo_name, absolute path to repository) of all Git repositories
         """
 
         if (not self.workspace_git_loc) or (not os.path.isdir(self.workspace_git_loc)):
@@ -1328,7 +1333,7 @@ class PewmaManager(object):
                 continue
             if '.git' in dirs:
                 # if this directory is the top level of a git checkout, remember it
-                git_directories.append(os.path.join(self.workspace_git_loc, root))
+                git_directories.append((os.path.basename(root), os.path.join(self.workspace_git_loc, root)))
                 dirs[:] = []  # do not recurse into this directory
         assert len(git_directories) == len(set(git_directories))  # should be no duplicates
 
@@ -1349,19 +1354,31 @@ class PewmaManager(object):
         self.logger.info('%sLooking for repositories that need switching to Gerrit, and/or configuring for EGit/JGit and git' % (self.log_prefix,))
 
         git_directories = self._get_git_directories()
-
         if not git_directories:
             self.logger.info('%sSkipped: %s' % (self.log_prefix, self.workspace_loc + '_git (does not contain any repositories)'))
             return
+        repo_names = [repo_name for (repo_name, _) in git_directories]
+        prefix= "%%%is: " % max([len(r) for r in repo_names]) if self.options.repo_prefix else ""
 
-        prefix= "%%%is: " % max([len(os.path.basename(x)) for x in git_directories]) if self.options.repo_prefix else ""
+        if self.options.repo_includes:
+            repos_included = self.get_items_matching_glob_patterns(repo_names, self.options.repo_includes)
+        else:
+            repos_included = repo_names
+        if self.options.repo_excludes:
+            repos_excluded = self.get_items_matching_glob_patterns(repo_names, self.options.repo_excludes)
+        else:
+            repos_excluded = []
+        selected_repos = sorted(set(repos_included) - set(repos_excluded))
 
-        for git_dir in sorted(git_directories):
+        for (repo_name, git_dir) in sorted(git_directories):
             for (gerrit_repo_name, gerrit_repo_url) in GERRIT_REPOSITORIES:
-                if os.path.basename(git_dir) == gerrit_repo_name:
+                if repo_name == gerrit_repo_name:
                     break
             else:
                 # self.logger.debug('%sSkipped: not in Gerrit: %s' % (self.log_prefix, git_dir))
+                continue
+            if repo_name not in selected_repos:
+                self.logger.debug('%sSkipped: does not satisfy --repo-include/--repo-include: %s' % (self.log_prefix, git_dir))
                 continue
             config_file_loc = os.path.join(git_dir, '.git', 'config')
             if not os.path.isfile(config_file_loc):
@@ -1469,7 +1486,7 @@ class PewmaManager(object):
                 self.logger.debug('%scommit-msg hook already set up: %s' % (self.log_prefix, hooks_commit_msg_loc))
             elif GERRIT_MIRROR_HOST in origin_url:
                 self.logger.debug('%sGerrit server assumed not accessible, so commit-msg hook not downloaded for %s' %
-                                 (self.log_prefix, os.path.basename(git_dir)))
+                                 (self.log_prefix, repo_name))
             else:
                 commit_hook = self.gerrit_commit_hook()
                 if not self.options.dry_run:
@@ -1502,18 +1519,39 @@ class PewmaManager(object):
             raise PewmaException('ERROR: git command has too few arguments')
 
         git_directories = self._get_git_directories()
-
         if not git_directories:
             self.logger.info('%sSkipped: %s' % (self.log_prefix, self.workspace_loc + '_git (does not contain any repositories)'))
             return
+        repo_names = [repo_name for (repo_name, _) in git_directories]
+        prefix= "%%%is: " % max([len(r) for r in repo_names]) if self.options.repo_prefix else ""
 
-        prefix= "%%%is: " % max([len(os.path.basename(x)) for x in git_directories]) if self.options.repo_prefix else ""
+        if self.options.repo_includes:
+            repos_included = self.get_items_matching_glob_patterns(repo_names, self.options.repo_includes)
+        else:
+            repos_included = repo_names
+        if self.options.repo_excludes:
+            repos_excluded = self.get_items_matching_glob_patterns(repo_names, self.options.repo_excludes)
+        else:
+            repos_excluded = []
+        selected_repos = sorted(set(repos_included) - set(repos_excluded))
 
         max_retcode = 0
-        for git_dir in sorted(git_directories):
-            git_command = 'git ' + ' '.join(self.arguments)
+        for (repo_name, git_dir) in sorted(git_directories):
+            if self.options.non_gerrit_only:
+                if repo_name in [gerrit_repo_name for (gerrit_repo_name, gerrit_repo_url) in GERRIT_REPOSITORIES]:
+                    self.logger.debug('%sSkipped: is Gerrit, but --non-gerrit-only specified: %s' % (self.log_prefix, git_dir))
+                    continue
+            if self.options.gerrit_only:
+                if repo_name not in [gerrit_repo_name for (gerrit_repo_name, gerrit_repo_url) in GERRIT_REPOSITORIES]:
+                    self.logger.debug('%sSkipped: is not Gerrit, but --gerrit-only specified: %s' % (self.log_prefix, git_dir))
+                    continue
+            if repo_name not in selected_repos:
+                self.logger.debug('%sSkipped: does not satisfy --repo-include/--repo-include: %s' % (self.log_prefix, git_dir))
+                continue
 
-            if git_command.strip() == 'git pull':
+            git_command = 'git ' + ' '.join(self.arguments)
+            if (git_command.strip() == 'git pull') or git_command.startswith('git pull '):
+                # don't attempt a "git pull" if no upstream defined
                 has_remote = False
                 config_path = os.path.join(git_dir, '.git', 'config')
                 if os.path.isfile(config_path):
@@ -2179,9 +2217,12 @@ class PewmaManager(object):
         self.logging_console_handler.setLevel( logging._levelNames[self.options.log_level.upper()] )
 
         # validation of options and action
-        self.validate_plugin_patterns()
+        self.validate_glob_patterns(self.options.plugin_includes, self.options.plugin_excludes, '--include or --exclude')
+        self.validate_glob_patterns(self.options.repo_includes, self.options.repo_excludes, '--repo-include or --repo-exclude')
         if self.options.delete and self.options.recreate:
             raise PewmaException('ERROR: you can specify at most one of --delete and --recreate')
+        if self.options.gerrit_only and self.options.non_gerrit_only:
+            raise PewmaException('ERROR: you can specify at most one of --gerrit-only and --non-gerrit-only')
         if (self.action not in list(self.valid_actions.keys())):
             raise PewmaException('ERROR: action "%s" unrecognised (try --help)' % (self.action,))
         if self.options.keyring:
