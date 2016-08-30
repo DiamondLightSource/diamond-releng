@@ -9,13 +9,13 @@ Testing notes:
       export WORKSPACE=~
       export tag_name=gda-9.2rel
       export tag_commitmsg="Tag for DAWN release 2.2 and GDA release 9.2"
-      export branch_name=gda-9.1
+      export branch_name=gda-9.2
       export repository_names_to_include_pattern=
       export repository_names_to_exclude_pattern="^(dawn-|dawnsci|embl-|gphl-|org.eclipse.launchbar|py4j|richbeans|scisoft-|sda|swt-xy-graph).*$"
 
    Populate file ~/artifacts_to_archive/materialized_head_commits.txt (get a copy from any Jenkins build job)
 
-   python make_branch_tag_generate_script.py /make_branch_tag_tmp > ${WORKSPACE}/artifacts_to_archive/make_branch_tag_script.sh
+   python /path/to/make_branch_tag_generate_script.py /scratch/make_branch_tag_tmp > ${WORKSPACE}/artifacts_to_archive/make_branch_tag_script.sh
    
    CAUTION: you can examine the generated script, but don't run it!
 '''
@@ -30,6 +30,12 @@ import time
 def generate_make_branch_tag_script():
 
     REPOSITORIES_TO_ALWAYS_IGNORE = ()  # tuple of repositories to always ignore
+
+    UPSTREAM_URL_REWRITES = {  # dictionary of repository URLs where the upstream URL is different from that recorded
+        'ssh://dascgitolite@dasc-git.diamond.ac.uk/gphl/gphl-abstract-beamline.git' : 'git@github.com:githubgphl/gphl-abstract-beamline.git',
+        'ssh://dascgitolite@dasc-git.diamond.ac.uk/gphl/gphl-astra.git'             : 'git@github.com:githubgphl/gphl-astra.git',
+        'ssh://dascgitolite@dasc-git.diamond.ac.uk/gphl/gphl-sdcp-common.git'       : 'git@github.com:githubgphl/gphl-sdcp-common.git'
+        }
 
     # set up environment
     if not len(sys.argv) == 2:
@@ -181,7 +187,10 @@ git push --verbose -u origin %(branch_name)s
         else:
             comment_prefix = '# '
         if repos_to_action[repo_name]['URL'].startswith(github_anonymous_prefix):
-            repos_to_action[repo_name]['URL'] = github_authenticated_prefix + repos_to_action[repo_name]['URL'][len(github_anonymous_prefix):]  # convert URL from anonymous clone to authenticated
+            # convert URL from anonymous clone to authenticated
+            repos_to_action[repo_name]['URL'] = github_authenticated_prefix + repos_to_action[repo_name]['URL'][len(github_anonymous_prefix):]
+        if repos_to_action[repo_name]['URL'] in UPSTREAM_URL_REWRITES:
+            repos_to_action[repo_name]['URL'] = UPSTREAM_URL_REWRITES[repos_to_action[repo_name]['URL']]
         lines = BASH_GIT_PREAMBLE % {'repository': repo_name,
                                      'URL': repos_to_action[repo_name]['URL'],
                                      'BRANCH': repos_to_action[repo_name]['BRANCH'],  # this is the original branch name (usually master)
