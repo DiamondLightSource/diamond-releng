@@ -1575,7 +1575,7 @@ class PewmaManager(object):
             max_rc = rc
         if log_msg.endswith(', '):
             log_msg = log_msg[:-2]
-        self.logger.log(logging.ERROR if max_rc else logging.INFO, log_msg)
+        self.logger.log(logging.ERROR if max_rc else logging.INFO if not self.options.quiet else logging.DEBUG, log_msg)
         return max_rc
 
 
@@ -2270,7 +2270,8 @@ class PewmaManager(object):
             self.logger.info('%s"--workspace" specified as "%s"' % (self.log_prefix, self.workspace_loc,))
         elif self.action != 'get-branches-expected':
                 self._determine_workspace_location_when_not_specified()
-                self.logger.info('%s"--workspace" defaulted to "%s"' % (self.log_prefix, self.workspace_loc,))
+                log_msg = '%s"--workspace" defaulted to "%s"' % (self.log_prefix, self.workspace_loc,)
+                self.logger.log(logging.INFO if not self.options.quiet else logging.DEBUG, log_msg)
         else:
             self.workspace_loc = None
 
