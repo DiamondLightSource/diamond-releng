@@ -33,9 +33,10 @@ install_buckminster () {
         buckminster_version=4.5
     fi
 
-    # download location; either "direct" (from eclipse.org) or "mirror"
-    if [[ -z "${director_download_location}" ]]; then
-        director_download_location=mirror
+    # download location; either "standard" (server visible both inside and outside DLS, a local mirror of part of eclipse.org)
+    #                        or "eclipse"  (from eclipse.org, or possibly a mirror selected by eclipse.org)
+    if [[ -z "${download_location}" ]]; then
+        download_location=standard
     fi
 
     # install type
@@ -70,13 +71,13 @@ install_buckminster () {
     # create a temporary directory name: %/ is used to remove any trailing slash
     buckminster_install_dir_temp=${buckminster_install_dir%/}_install-in-progress
 
-    if [[ "${director_download_location}" == "direct" ]]; then
-        director_download="http://download.eclipse.org/tools/buckminster/products/director_latest.zip"
+    if [[ "${download_location}" == "standard" ]]; then
+        director_download="https://alfred.diamond.ac.uk/sites/download.eclipse.org/tools/buckminster/products/director_latest.zip"
+        repository_buckminster=https://alfred.diamond.ac.uk/sites/download.eclipse.org/tools/buckminster/headless-${buckminster_version}
     else
-        # the &r=1 suffix means download starts immediately from best mirror
-        director_download="http://www.eclipse.org/downloads/download.php?file=/tools/buckminster/products/director_latest.zip&r=1"
+        director_download="http://download.eclipse.org/tools/buckminster/products/director_latest.zip"
+        repository_buckminster=http://download.eclipse.org/tools/buckminster/headless-${buckminster_version}
     fi
-    repository_buckminster=http://download.eclipse.org/tools/buckminster/headless-${buckminster_version}
 
     #==========================================================
     # report what we are doing
