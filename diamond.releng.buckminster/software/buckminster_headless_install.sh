@@ -74,9 +74,11 @@ install_buckminster () {
     if [[ "${download_location}" == "standard" ]]; then
         director_download="https://alfred.diamond.ac.uk/sites/download.eclipse.org/tools/buckminster/products/director_latest.zip"
         repository_buckminster=https://alfred.diamond.ac.uk/sites/download.eclipse.org/tools/buckminster/headless-${buckminster_version}
+        vmarg_mirror_option=' -vmargs -Declipse.p2.mirrors=false'
     else
         director_download="http://download.eclipse.org/tools/buckminster/products/director_latest.zip"
         repository_buckminster=http://download.eclipse.org/tools/buckminster/headless-${buckminster_version}
+        vmarg_mirror_option=
     fi
 
     #==========================================================
@@ -124,7 +126,7 @@ install_buckminster () {
 
     #==========================================================
     # install the base headless product, then delete the director
-    ${director_unzip_dir}/director/director -repository ${repository_buckminster} -destination ${buckminster_install_dir_temp} -profile Buckminster -installIU org.eclipse.buckminster.cmdline.product
+    ${director_unzip_dir}/director/director -repository ${repository_buckminster} -destination ${buckminster_install_dir_temp} -profile Buckminster -installIU org.eclipse.buckminster.cmdline.product${vmarg_mirror_option}
     echo "finished installing org.eclipse.buckminster.cmdline.product"
     rm -rf ${director_unzip_dir}
     rm -f ${director_zip_file}
@@ -146,8 +148,8 @@ EOF
 
     buckminster_command_temp=${buckminster_install_dir_temp}/buckminster
     for feature in org.eclipse.buckminster.core.headless.feature org.eclipse.buckminster.pde.headless.feature org.eclipse.buckminster.git.headless.feature org.eclipse.buckminster.maven.headless.feature; do
-        echo "doing ${buckminster_command_temp} install ${repository_buckminster} ${feature}"
-        ${buckminster_command_temp} install ${repository_buckminster} ${feature}
+        echo "issuing --> ${buckminster_command_temp} install ${repository_buckminster} ${feature}${vmarg_mirror_option}"
+        ${buckminster_command_temp} install ${repository_buckminster} ${feature}${vmarg_mirror_option}
         echo "finished installing ${feature}"
     done
 
