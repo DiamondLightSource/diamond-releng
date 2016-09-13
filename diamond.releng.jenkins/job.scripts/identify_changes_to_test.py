@@ -655,7 +655,7 @@ post_materialize_function_gerrit () {
         export repo_switched_to_alternate_head_%(REPO_TRANSLATED)s=true
     else
         export repo_switched_to_alternate_head_%(REPO_TRANSLATED)s=false
-        : if the repo does not exist, then we will allow the materilize to clone it, and afterwards switch the branch
+        echo "the repo does not exist, so we will allow the materialize to clone it, and afterwards switch the branch"
     fi
 
 ''' %           {'REPO_TRANSLATED': os.path.basename(repo).replace('-','_'),  # something like gda_core (not gda/gda-core)
