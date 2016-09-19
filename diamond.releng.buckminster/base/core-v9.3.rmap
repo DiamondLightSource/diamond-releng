@@ -44,6 +44,10 @@
     <bc:constant value="mars"/>
   </rm:propertyElement>
   <!-- ***** -->
+  <rm:propertyElement key="diamond.orbit.p2.version">  <!-- version of Diamond Orbit p2 repository to use -->
+    <bc:constant value="R201609191332"/>
+  </rm:propertyElement>
+  <!-- ***** -->
   <!-- version of Eclipse Orbit p2 repository to use -->
   <rm:propertyElement key="eclipse.orbit.p2.version.mars">  
     <bc:constant value="R20151221205849"/>  <!-- Mars.2 -->
@@ -77,6 +81,7 @@
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
     <bc:constant value="5.2.0"/>
   </rm:propertyElement>
+  <!-- ***** -->
   <!--                                                             -->
   <!-- Properties for Gitolite-managed git repositories at Diamond -->
   <!--                                                             -->
@@ -2120,9 +2125,6 @@
   <rm:propertyElement key="target_platform.diamond.css.release">
     <bc:constant value="v3_201311"/>
   </rm:propertyElement>
-  <rm:propertyElement key="target_platform.diamond.logging.release">
-    <bc:constant value="8.52plus"/>
-  </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.release">
     <bc:constant value="dls_20160805"/>
   </rm:propertyElement>
@@ -2131,9 +2133,6 @@
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.css.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_css/${target_platform.diamond.css.release}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.diamond.logging.p2.url">
-    <bc:constant value="${target_platform.download.url.selected}/tp_logging/${target_platform.diamond.logging.release}"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_noneclipse/${target_platform.diamond.noneclipse.release}"/>
@@ -2325,7 +2324,7 @@
   <rm:locator pattern="^org\.apache\.mina\.core$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.poi(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.sshd\.core$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.commons\.(dbcp|codec|collections|jxpath|lang|pool)$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.commons\.(dbcp|codec|collections|jxpath|lang|pool)(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.dom4j$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.jdom$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
@@ -2344,35 +2343,39 @@
   <rm:locator pattern="^org\.eclipse\.nebula\.(cwt|jface\.cdatetime|widgets\.cdatetime|widgets\.gallery)(\.source)?$" searchPathRef="eclipse_nebula_snapshot_20140205"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.(jface|widgets|widgets\.calendarcombo|widgets\.grid|widgets\.pgroup|widgets\.tablecombo|widgets\.xviewer)(\.source)?$" searchPathRef="tp_noneclipse"/>
   <!--
+       Components to get from Diamond p2 repositories: Orbit
+  -->
+  <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api|me\.moocar\.logback-gelf)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.github\.tschoonj\.xraylib$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.google\.gson(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.google\.guava(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.springsource\.(javax\.media\.jai\.(codec|core)|net\.sf\.cglib|org\.apache\.(commons\.digester|commons\.vfs|mina.core|sshd)|org\.castor)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.commons\.(beanutils|collections4|configuration|csv|digester|io|jexl|math|math3|net|validator|vfs)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.mariadb\.jdbc(\..+)??$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.mockito\..+$" searchPathRef="diamond_orbit_p2"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
+  <rm:locator pattern="^org\.objenesis(\..+)?" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^javassist(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^javax\.vecmath(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.de\.jaret(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.(poi|ws\.commons\.util|xmlrpc\.(client|common|server))(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.(org\.jfree|org.jfree\.chart)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.(org\.jscience|org\.jscience4|org\.mihalis\.opal|org\.nfunk\.jep|org\.powermock|rxtx)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.(com\.artenum|com\.jidesoft|com\.mindprod\.ledatastream|gnu\.regexp|jama|proxyvole)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <!--
        Target Platform components (published from thirdparty/)
   -->
-  <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api|me\.moocar\.logback-gelf|org\.mariadb\.jdbc)$" searchPathRef="GDA_tp_logging"/>
-  <rm:locator pattern="^com\.google\.gson$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^com\.google\.guava$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="tp_noneclipse"/>
-  <!-- org.apache compontents to get from DLS p2 (either because they are not in Orbit, or because the Orbit version is too old) -->
-  <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.(camel|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^org\.apache\.(mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
   <!-- -->
-  <rm:locator pattern="^com\.github\.tschoonj\.xraylib$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^com\.isencia\.sherpa\.commons\.reduced$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^com\.springsource\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
-  <rm:locator pattern="^com\.springsource\..+" searchPathRef="DAWB_p2" failOnError="false"/>
-  <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^org\.objenesis" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^org\.(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^org\.springframework\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
-  <rm:locator pattern="^org\.apache\.commons\.(math|configuration)" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^uk\.ac\.diamond\..+" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
-  <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
   <rm:locator pattern="^javax\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>  <!-- if not found, will look in release and platform repos -->
   <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_p2"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies -->
-  <rm:locator pattern="^org\.mockito\..+$" searchPathRef="GDA_tp_bundles"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
-  <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^javassist$" searchPathRef="GDA_tp_bundles"/>
   <!--
        Target Platform components (PyDev)
   -->
@@ -2384,8 +2387,6 @@
   <rm:locator pattern="^com\.microstar$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^diva$" searchPathRef="DAWB_p2"/>
   <rm:locator pattern="^ptolemy\..+" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^org\.apache\.log4j$" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^org\.apache\.commons\.(math|net)$" searchPathRef="DAWB_p2"/>
   <!--
        Target Platform components: Eclipse)
        Target Platform components: Eclipse Orbit (which contains third-party jars which have passed Eclipse IP checks, and been turned in OSGI bundles)
@@ -4147,20 +4148,6 @@
       <rm:uri format="${target_platform.diamond.bundles.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="GDA_tp_css">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${target_platform.diamond.css.p2.url}"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="GDA_tp_logging">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${target_platform.diamond.logging.p2.url}"/>
-    </rm:provider>
-  </rm:searchPath>
   <rm:searchPath name="tp_noneclipse">
     <rm:provider componentTypes="osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
@@ -4169,18 +4156,15 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       Target Platform (PyDev)
+       Target Platform (Diamond, Eclipse, PyDev)
   -->
-  <rm:searchPath name="tp_pydev">
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+  <rm:searchPath name="diamond_orbit_p2">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="https://dl.bintray.com/fabioz/pydev/${pydev.p2.version}/"/>
+      <rm:uri format="${alfred.url}/p2/orbit/${diamond.orbit.p2.version}/repository/"/>
     </rm:provider>
   </rm:searchPath>
-  <!--
-       Target Platform (Eclipse)
-  -->
   <rm:searchPath name="eclipse_orbit_p2">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
@@ -4230,6 +4214,13 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/releases/${eclipse.release}"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="tp_pydev">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="https://dl.bintray.com/fabioz/pydev/${pydev.p2.version}/"/>
     </rm:provider>
   </rm:searchPath>
   <!--
