@@ -263,6 +263,10 @@ class PewmaManager(object):
                  'Version defaults to master',
                  'CQuery is only required if you need to override the computed value',
                  )),
+            ('print-workspace-path', None,
+                ('print-workspace-path',
+                 'Prints the workspace directory path (explicit or determined), without a trailing newline',
+                 )),
             ('get-branches-expected', None,
                 ('get-branches-expected <component> [<category> [<version>] | <cquery>]',
                  'Determine the CQuery to use, and return from it a list of repositories and branches',
@@ -996,6 +1000,15 @@ class PewmaManager(object):
         if cquery_to_use:
             self.add_cquery_to_history(cquery_to_use)
 
+        return
+
+
+    def action_print_workspace_path(self):
+        """ Processes command: print-workspace-path
+        """
+
+        assert self.workspace_loc
+        print(self.workspace_loc, end='')
         return
 
 
@@ -2230,6 +2243,7 @@ class PewmaManager(object):
         # set the logging level and text for this program's logging
         self.log_prefix = ("", "(DRY_RUN) ")[self.options.dry_run]
         self.logging_console_handler.setLevel( logging._levelNames[self.options.log_level.upper()] )
+        if self.action == 'print-workspace-path': self.options.quiet = True  #  the output of print-workspace-path is used in scripts 
 
         # validation of options and action
         self.validate_glob_patterns(self.options.plugin_includes, self.options.plugin_excludes, '--include or --exclude')
@@ -2275,15 +2289,15 @@ class PewmaManager(object):
         # determine and validate workspace
         if self.options.workspace:
             self.workspace_loc = os.path.realpath(os.path.abspath(os.path.expanduser(self.options.workspace)))
-            self.logger.info('%s"--workspace" specified as "%s"' % (self.log_prefix, self.workspace_loc,))
+            log_msg = '%s"--workspace" specified as "%s"' % (self.log_prefix, self.workspace_loc,)
         elif self.action != 'get-branches-expected':
-                self._determine_workspace_location_when_not_specified()
-                log_msg = '%s"--workspace" defaulted to "%s"' % (self.log_prefix, self.workspace_loc,)
-                self.logger.log(logging.INFO if not self.options.quiet else logging.DEBUG, log_msg)
+            self._determine_workspace_location_when_not_specified()
+            log_msg = '%s"--workspace" defaulted to "%s"' % (self.log_prefix, self.workspace_loc,)
         else:
             self.workspace_loc = None
 
         if self.workspace_loc:  # will be set, unless (self.action == 'get-branches-expected)
+            self.logger.log(logging.INFO if not self.options.quiet else logging.DEBUG, log_msg)
             if ' ' in self.workspace_loc:
                 raise PewmaException('ERROR: the "--workspace" directory must not contain blanks')
             if self.workspace_loc.endswith('_git'):
