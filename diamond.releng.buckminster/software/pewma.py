@@ -468,6 +468,10 @@ class PewmaManager(object):
         group.add_option('-h', '--help', dest='help', action='store_true', default=False, help='Show help information and exit')
         group.add_option('-n', '--dry-run', dest='dry_run', action='store_true', default=False,
                                help='Log the actions to be done, but don\'t actually do them')
+        group.add_option('--workspace-must-exist', dest='workspace_must_exist', action='store_true', default=False,
+                               help='Fail if the workspace directory does not already exist')
+        group.add_option('--workspace-must-not-exist', dest='workspace_must_not_exist', action='store_true', default=False,
+                               help='Fail if the workspace directory already exists')
         group.add_option('-s', '--script-file', dest='script_file', type='string', metavar='<path>',
                                default='pewma-script.txt',
                                help='Script file, relative to workspace (default: %default)')
@@ -2243,7 +2247,7 @@ class PewmaManager(object):
         # set the logging level and text for this program's logging
         self.log_prefix = ("", "(DRY_RUN) ")[self.options.dry_run]
         self.logging_console_handler.setLevel( logging._levelNames[self.options.log_level.upper()] )
-        if self.action == 'print-workspace-path': self.options.quiet = True  #  the output of print-workspace-path is used in scripts 
+        if self.action == 'print-workspace-path': self.options.quiet = True  #  the output of print-workspace-path is used in scripts, so be quiet
 
         # validation of options and action
         self.validate_glob_patterns(self.options.plugin_includes, self.options.plugin_excludes, '--include or --exclude')
@@ -2313,10 +2317,15 @@ class PewmaManager(object):
                     raise PewmaException('ERROR: specified workspace location is inside what looks like another workspace (something containing a .metadata/) at "' + parent_workspace + '"')
                 candidate = os.path.dirname(candidate)
             self.workspace_git_loc = self.workspace_loc + '_git'
-        elif (self.action != 'get-branches-expected'):
+        elif (self.action != 'get-branches-expected') or any((self.options.workspace_must_exist, self.options.workspace_must_not_exist)):
             raise PewmaException('ERROR: the "--workspace" option must be specified. ' +
                                  os.path.basename(sys.argv[0]) +
                                 ' could not determine what workspace to use (based on the current directory).')
+
+        if self.options.workspace_must_exist and (not os.path.isdir(self.workspace_loc)):
+            raise PewmaException('ERROR: --workspace-must-exist specified, but workspace does not exist: ' + self.workspace_loc)
+        if self.options.workspace_must_not_exist and os.path.isdir(self.workspace_loc):
+            raise PewmaException('ERROR: --workspace-must-not-exist specified, but workspace exists: ' + self.workspace_loc)
 
         # validate --directories_groupname
         if self.isLinux:
