@@ -78,30 +78,41 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<fileset dir="${workspace.git.loc}/gda-common.git/uk.ac.gda.libs" >
 				<include name="*.jar" />
 				<exclude name="*-sources-*" />
-				<exclude name="**/com.springsource.org.apache.tools.ant*.jar" />  <!-- prefer the one in thirdparty/eclipse -->
 			</fileset>
 		</path>
 	</target>
 
 	<path id="tp.jcl-over-slf4j.path">
-		<fileset dir="${workspace.loc}/tp/plugins">
-			<include name="jcl.over.slf4j_1.7.18.jar" />
-		</fileset>
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="jcl.over.slf4j_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
 	</path>
 	<path id="tp.log4j-over-slf4j.path">
-		<fileset dir="${workspace.loc}/tp/plugins">
-			<include name="log4j.over.slf4j_1.7.18.jar" />
-		</fileset>
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="log4j.over.slf4j_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
 	</path>
 	<path id="tp.slf4j.path">
-		<fileset dir="${workspace.loc}/tp/plugins">
-			<include name="slf4j.api_1.7.18.jar" />
-		</fileset>
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="slf4j.api_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
 	</path>
 	<path id="tp.slf4j.ext.path">
-		<fileset dir="${workspace.loc}/tp/plugins">
-			<include name="slf4j.ext_1.7.18.jar" />
-		</fileset>
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="slf4j.ext_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
 	</path>
 
 	<!-- SWT platform-specific path -->
