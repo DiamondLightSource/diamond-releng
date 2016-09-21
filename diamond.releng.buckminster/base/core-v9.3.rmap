@@ -45,7 +45,7 @@
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="diamond.orbit.p2.version">  <!-- version of Diamond Orbit p2 repository to use -->
-    <bc:constant value="R201609200900"/>
+    <bc:constant value="R201609211245"/>
   </rm:propertyElement>
   <!-- ***** -->
   <!-- version of Eclipse Orbit p2 repository to use -->
@@ -2367,6 +2367,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\.(org\.jfree|org.jfree\.chart)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(org\.jscience|org\.jscience4|org\.mihalis\.opal|org\.nfunk\.jep|org\.powermock|rxtx)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(com\.artenum|com\.jidesoft|com\.mindprod\.ledatastream|gnu\.regexp|jama|proxyvole)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^xstream$" searchPathRef="diamond_orbit_p2"/>
   <!--
        Target Platform components (published from thirdparty/)
   -->
@@ -2380,13 +2381,6 @@
        Target Platform components (PyDev)
   -->
   <rm:locator pattern="^(com|org)\.python\.pydev(\..+)?" searchPathRef="tp_pydev"/>
-  <!--
-       DAWB components
-  -->
-  <rm:locator pattern="^com\.isencia\..+" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^com\.microstar$" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^diva$" searchPathRef="DAWB_p2"/>
-  <rm:locator pattern="^ptolemy\..+" searchPathRef="DAWB_p2"/>
   <!--
        Target Platform components: Eclipse)
        Target Platform components: Eclipse Orbit (which contains third-party jars which have passed Eclipse IP checks, and been turned in OSGI bundles)
@@ -4221,16 +4215,6 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="https://dl.bintray.com/fabioz/pydev/${pydev.p2.version}/"/>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       DAWB
-  -->
-  <rm:searchPath name="DAWB_p2">
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/org.dawb.workbench.p2/"/>
     </rm:provider>
   </rm:searchPath>
 </rm:rmap>
