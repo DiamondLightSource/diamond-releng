@@ -126,7 +126,7 @@ CQUERY_PATTERNS_TO_SKIP_p2_mirrors_false = (
 for c in COMPONENT_CATEGORIES:
     assert c[3].startswith('v')
     assert c[3].count('.') == 1
-TEMPLATES_AVAILABLE = sorted(set(c[3] for c in COMPONENT_CATEGORIES), key=lambda t: map(int, (t[1:].split('.'))))
+TEMPLATES_AVAILABLE = sorted(set(c[3] for c in COMPONENT_CATEGORIES), key=lambda t: list(map(int, (t[1:].split('.')))))
 DEFAULT_TEMPLATE = TEMPLATES_AVAILABLE[-1]  # the highest number
 
 PLATFORMS_AVAILABLE =  (
@@ -887,12 +887,12 @@ class PewmaManager(object):
             self.set_all_plugins_with_releng_ant()
 
             if self.options.plugin_includes:
-                included_plugins = self.get_items_matching_glob_patterns(self.all_plugins_with_releng_ant.keys(), self.options.plugin_includes)
+                included_plugins = self.get_items_matching_glob_patterns(list(self.all_plugins_with_releng_ant.keys()), self.options.plugin_includes)
             else:
                 included_plugins = self.all_plugins_with_releng_ant
 
             if self.options.plugin_excludes:
-                excluded_plugins = self.get_items_matching_glob_patterns(self.all_plugins_with_releng_ant.keys(), self.options.plugin_excludes)
+                excluded_plugins = self.get_items_matching_glob_patterns(list(self.all_plugins_with_releng_ant.keys()), self.options.plugin_excludes)
             else:
                 excluded_plugins = []
 
@@ -1513,7 +1513,7 @@ class PewmaManager(object):
                 self.logger.debug('%scommit-msg hook copied to: %s' % (self.log_prefix, hooks_commit_msg_loc))
                 repo_status['hook_added'] = DONE
 
-            if all(status == NOT_REQUIRED for status in repo_status.values()):
+            if all(status == NOT_REQUIRED for status in list(repo_status.values())):
                 self.logger.debug('%sSkipped: already switched to Gerrit; configured for EGit/JGit and git: %s' % (self.log_prefix, git_dir))
             else:
                 for (action, message) in (('switched_remote_to_gerrit', 'switch remote.origin.url to Gerrit'),
