@@ -30,18 +30,15 @@ import xml.etree.ElementTree as ET
 from xml.parsers.expat import ExpatError
 import zipfile
 
-COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, category, actual component name to use)
+# A category+version is one way of specifying a specific CQuery (version can default to "master")
 
-COMPONENT_ABBREVIATIONS.append(('gdaserver', 'gda', 'uk.ac.diamond.daq.server.site'))
-COMPONENT_ABBREVIATIONS.append(('logpanel', 'gda', 'uk.ac.gda.client.logpanel.site'))
-COMPONENT_ABBREVIATIONS.append(('gda-training', 'gda-training', 'gda-training-config'))
-COMPONENT_ABBREVIATIONS.append(('dsx', 'ida', 'uk.ac.diamond.dsx.site'))
-COMPONENT_ABBREVIATIONS.append(('wychwood', 'ida', 'uk.ac.diamond.dsx.site'))
-COMPONENT_ABBREVIATIONS.append(('idabuilder', 'ida', 'uk.ac.diamond.ida.product.site'))
-COMPONENT_ABBREVIATIONS.append(('idareport', 'ida', 'uk.ac.diamond.ida.report.site'))
-COMPONENT_ABBREVIATIONS.append(('dawnvanilla', 'dawn', 'org.dawnsci.base.site'))
-COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'dawn', 'uk.ac.diamond.dawn.site'))
-COMPONENT_ABBREVIATIONS.append(('testfiles', 'gda', 'GDALargeTestFiles'))
+COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, actual component name to use, category)
+
+COMPONENT_ABBREVIATIONS.append(('gdaserver', 'uk.ac.diamond.daq.server.site', 'gda'))
+COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.gda.client.logpanel.site', 'gda'))
+COMPONENT_ABBREVIATIONS.append(('gda-training', 'gda-training-config', 'gda-training'))
+COMPONENT_ABBREVIATIONS.append(('dawnvanilla', 'org.dawnsci.base.site', 'dawn'))
+COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'uk.ac.diamond.dawn.site', 'dawn'))
 
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
@@ -63,22 +60,6 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840'), ('1.7.0',)),
     ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839'), ('1.7.0',)),
     ('gda', 'v8.38', 'gda-v8.38.cquery', 'v2.6', ('v8.38', '8.38', '838'), ('1.7.0',)),
-    ('gda', 'v8.36', 'gda-v8.36.cquery', 'v2.5', ('v8.36', '8.36', '836'), ('1.7.0',)),
-    ('gda', 'v8.34', 'gda-v8.34.cquery', 'v2.4', ('v8.34', '8.34', '834'), ('1.7.0',)),
-    ('gda', 'v8.32', 'gda-v8.32.cquery', 'v2.4', ('v8.32', '8.32', '832'), None),
-    ('gda', 'v8.30', 'gda-v8.30.cquery', 'v2.4', ('v8.30', '8.30', '830'), None),
-    ('gda', 'v8.30-lnls', 'gda-v8.30-lnls.cquery', 'v2.4', ('v8.30-lnls', '8.30-lnls', '830-lnls'), None),
-    ('gda', 'v8.28', 'gda-v8.28.cquery', 'v2.4', ('v8.28', '8.28', '828'), None),
-    ('gda', 'v8.26', 'gda-v8.26.cquery', 'v2.3', ('v8.26', '8.26', '826'), None),
-    ('gda', 'v8.24', 'gda-v8.24.cquery', 'v2.3', ('v8.24', '8.24', '824'), None),
-    ('gda', 'v8.22', 'gda-v8.22.cquery', 'v2.2', ('v8.22', '8.22', '822'), None),
-    ('gda', 'v8.20', 'gda-v8.20.cquery', 'v2.2', ('v8.20', '8.20', '820'), None),
-    ('gda', 'v8.18', 'gda-v8.18.cquery', 'v1.0', ('v8.18', '8.18', '818'), None),
-    ('ida', 'master', 'ida-master.cquery', 'v2.8', ('master', 'trunk'), None),
-    ('ida', 'v2.20', 'ida-v2.20.cquery', 'v2.4', ('v2.20', '2.20', '220'), None),
-    ('ida', 'v2.19', 'ida-v2.19.cquery', 'v2.3', ('v2.19', '2.19', '219'), None),
-    ('ida', 'v2.18', 'ida-v2.18.cquery', 'v2.3', ('v2.18', '2.18', '218'), None),
-    ('ida', 'v2.17', 'ida-v2.17.cquery', 'v2.2', ('v2.17', '2.17', '217'), None),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.0', ('master', '2.master', 'v2.master'), ('1.8.0',)),
     ('dawn', '2.2', 'dawn-v2.2.cquery', 'v3.0', ('v2.2', '2.2'), ('1.8.0',)),
     ('dawn', '2.1', 'dawn-v2.1.cquery', 'v3.0', ('v2.1', '2.1'), ('1.8.0',)),
@@ -90,14 +71,6 @@ COMPONENT_CATEGORIES = (
     ('dawn', '1.10', 'dawn-v1.10.cquery', 'v2.10', ('v1.10', '1.10'), ('1.8.0',)),
     ('dawn', '1.9', 'dawn-v1.9.cquery', 'v2.9', ('v1.9', '1.9'), ('1.7.0',)),
     ('dawn', '1.8', 'dawn-v1.8.cquery', 'v2.9', ('v1.8', '1.8'), ('1.7.0',)),
-    ('dawn', '1.7.1', 'dawn-v1.7.1.cquery', 'v2.7', ('v1.7.1', '1.7.1', '171'), ('1.7.0',)),
-    ('dawn', '1.7', 'dawn-v1.7.cquery', 'v2.7', ('v1.7', '1.7'), ('1.7.0',)),
-    ('dawn', '1.6', 'dawn-v1.6.cquery', 'v2.6', ('v1.6', '1.6'), None),
-    ('dawn', '1.5', 'dawn-v1.5.cquery', 'v2.6', ('v1.5', '1.5'), None),
-    ('dawn', '1.4.1', 'dawn-v1.4.1.cquery', 'v2.5', ('v1.4.1', '1.4.1'), None),
-    ('dawn', '1.4', 'dawn-v1.4.cquery', 'v2.5', ('v1.4', '1.4'), None),
-    ('dawn', 'v1.0', 'dawn-v1.0.cquery', 'v2.3', ('v1.0', '1.0'), None),
-    ('none', 'master', 'master.cquery', 'v2.3', ('master', 'trunk'), None),
     ('training', 'master', 'training-trunk.cquery', 'v2.0', ('master', 'trunk'), None),
     ('training', 'v8.16', 'training-v8.16.cquery', 'v2.0', ('v8.16', '8.16', '816'), None),
     ('gda-training', 'v8.18', 'gda-training-v8.18.cquery', 'v1.0', ('v8.18', '8.18', '818'), None),
@@ -108,7 +81,7 @@ for c in COMPONENT_CATEGORIES:
     if c[0] not in CATEGORIES_AVAILABLE:
         CATEGORIES_AVAILABLE.append(c[0])
 
-for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
+for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
     assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
 
 # For newer CQueries, we specify -Declipse.p2.mirrors=false so that the DLS mirror of eclipse.org p2 sites (alfred.diamond.ac.uk) is used
@@ -1224,7 +1197,7 @@ class PewmaManager(object):
         # translate an abbreviated component name to the real component name
         if (self.arguments[0] not in CATEGORIES_AVAILABLE) and (not self.arguments[0].endswith('.cquery')):
             component_to_use = self.arguments[0]
-            for abbrev, cat, actual in COMPONENT_ABBREVIATIONS:
+            for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
                 if component_to_use == abbrev:
                     component_to_use = actual
                     category_implied = cat
