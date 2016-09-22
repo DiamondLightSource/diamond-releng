@@ -2182,7 +2182,7 @@
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- ** daq- *** -->
   <rm:locator pattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector(\..+)?|org\.apache\.activemq)(\..+)?)$" searchPathRef="daq_eclipse"/>
-  <rm:locator pattern="^(uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|emf\.edit|imaging\.server|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|server(\..+)?))$" searchPathRef="daq_platform"/>
+  <rm:locator pattern="^(uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|emf\.edit|imaging\.server|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|generator(\..+)?|server(\..+)?))$" searchPathRef="daq_platform"/>
   <!-- ** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.(services|ui)|conversion|io|jexl|jgoogleanalytics|macro|persistence|processing\.python|python.rpc|thirdparty.xml)(\..+)?)$" searchPathRef="dawn_common"/>
