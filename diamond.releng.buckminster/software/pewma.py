@@ -382,8 +382,8 @@ class PewmaManager(object):
                              help='Linux group to set on directories that are created (default: %default)')
         group.add_option('-l', '--location', dest='download_location', choices=('diamond', 'public'), metavar='<location>',
                          help='Download location ("diamond" or "public")')
-        group.add_option('-k', '--keyring', dest='keyring', type='string', metavar='<path>',
-                         help='Keyring file (for subversion authentication)')
+        group.add_option('-k', '--keyring', dest='keyring', type='string', metavar='<ignored>',
+                         help=optparse.SUPPRESS_HELP)  # Obsolete parameter that is ignored
         group.add_option('--materialize.properties.file', dest='materialize_properties_file', type='string', metavar='<path>',
                                default='materialize-properties.txt',
                                help='Properties file, relative to workspace if not absolute (default: %default)')
@@ -703,8 +703,8 @@ class PewmaManager(object):
 
 
     def unzip_workspace_template(self, template_zip, member, unzipdir):
-        self.logger.info('%sUnzipping "%s%s" to "%s"' % (self.log_prefix, template_zip, '/' +
-            member if member else '', unzipdir))  ### requires python 2.6+, Diamond RH5 requires "module load python"
+        self.logger.info('%sUnzipping "%s%s" to "%s"' %
+                         (self.log_prefix, template_zip, '/' + member if member else '', unzipdir))
         if self.options.dry_run:
             return
         template = zipfile.ZipFile(template_zip, 'r')
@@ -835,7 +835,7 @@ class PewmaManager(object):
                             if d.startswith('.'):
                                 pdirs.remove(d)
                         if [f for f in pfiles if not f.startswith('.')]:  # if any non-hidden file in the bin_dir_path directory
-                            # return plugin path relative to the parent directory, and plugin name (these will be the same for the subversion plugins)
+                            # return plugin path relative to the parent directory, and plugin name
                             assert os.path.basename(root) not in plugin_names_paths
                             plugin_names_paths[os.path.basename(root)] = os.path.relpath(root, self.workspace_git_loc)
                             break
@@ -1984,8 +1984,6 @@ class PewmaManager(object):
         buckminster_command = ['buckminster']
         if self.options.debug_options_file:
             buckminster_command.extend(('-debug', self.options.debug_options_file))
-        if self.options.keyring:
-            buckminster_command.extend(('-keyring', '"%s"' % (self.options.keyring,)))  # quote in case of embedded blanks or special characters
         buckminster_command.extend(('-application', 'org.eclipse.buckminster.cmdline.headless'))
         buckminster_command.extend(('--loglevel', self.options.log_level.upper()))
         buckminster_command.extend(('-data', self.workspace_loc))  # do not quote the workspace name (it should not contain blanks)
@@ -2231,22 +2229,6 @@ class PewmaManager(object):
             raise PewmaException('ERROR: you can specify at most one of --gerrit-only and --non-gerrit-only')
         if (self.action not in list(self.valid_actions.keys())):
             raise PewmaException('ERROR: action "%s" unrecognised (try --help)' % (self.action,))
-        if self.options.keyring:
-            self.options.keyring = os.path.realpath(os.path.abspath(os.path.expanduser(self.options.keyring)))
-            if ((os.path.sep + '.ssh' + os.path.sep) in self.options.keyring) or self.options.keyring.endswith(('id_rsa', 'id_rsa.pub')):
-                raise PewmaException('ERROR: --keyring "%s" appears to be an ssh key. This is **WRONG**, it should be an Eclipse keyring.' % (self.options.keyring,))
-            if not os.path.isfile(self.options.keyring):
-                # sometimes, for reasons unknown, we temporarily can't see the file
-                self.logger.warn('--keyring "%s" is not a valid filename, will look again in 2 seconds' % (self.options.keyring,))
-                time.sleep(2)
-                if not os.path.isfile(self.options.keyring):
-                    raise PewmaException('ERROR: --keyring "%s" is not a valid filename' % (self.options.keyring,))
-            if not os.access(self.options.keyring, os.R_OK):
-                # sometimes, for reasons unknown, we temporarily can't read the file
-                self.logger.warn('current user does not have read access to --keyring "%s", will look again in 2 seconds' % (self.options.keyring,))
-                time.sleep(2)
-                if not os.access(self.options.keyring, os.R_OK):
-                    raise PewmaException('ERROR: current user does not have read access to --keyring "%s"' % (self.options.keyring,))
         if self.options.delete and self.action not in ('setup', 'materialize'):
             raise PewmaException('ERROR: the --delete option cannot be specified with action "%s"' % (self.action))
         if self.options.recreate and self.action not in ('setup', 'materialize'):
