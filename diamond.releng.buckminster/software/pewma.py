@@ -31,12 +31,12 @@ from xml.parsers.expat import ExpatError
 import zipfile
 
 # A category+version is one way of specifying a specific CQuery (version can default to "master")
+# Caution: categories must never be the same as any component name or component abbreviation
 
 COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, actual component name to use, category)
 
 COMPONENT_ABBREVIATIONS.append(('gdaserver', 'uk.ac.diamond.daq.server.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.gda.client.logpanel.site', 'gda'))
-COMPONENT_ABBREVIATIONS.append(('gda-training', 'gda-training-config', 'gda-training'))
 COMPONENT_ABBREVIATIONS.append(('dawnvanilla', 'org.dawnsci.base.site', 'dawn'))
 COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'uk.ac.diamond.dawn.site', 'dawn'))
 
@@ -73,7 +73,6 @@ COMPONENT_CATEGORIES = (
     ('dawn', '1.8', 'dawn-v1.8.cquery', 'v2.9', ('v1.8', '1.8'), ('1.7.0',)),
     ('training', 'master', 'training-trunk.cquery', 'v2.0', ('master', 'trunk'), None),
     ('training', 'v8.16', 'training-v8.16.cquery', 'v2.0', ('v8.16', '8.16', '816'), None),
-    ('gda-training', 'v8.18', 'gda-training-v8.18.cquery', 'v1.0', ('v8.18', '8.18', '818'), None),
     )
 
 CATEGORIES_AVAILABLE = []  # dedupe COMPONENT_CATEGORIES while preserving order
@@ -82,6 +81,7 @@ for c in COMPONENT_CATEGORIES:
         CATEGORIES_AVAILABLE.append(c[0])
 
 for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
+    assert abbrev not in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is the same as a category' % (abbrev,)
     assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
 
 # For newer CQueries, we specify -Declipse.p2.mirrors=false so that the DLS mirror of eclipse.org p2 sites (alfred.diamond.ac.uk) is used
@@ -229,12 +229,11 @@ class PewmaManager(object):
                  '(parameters are the same as for the "materialize" action)',
                  )),
             ('materialize', None,
-                ('materialize <component> [<category> [<version>] | <cquery>]',
-                 'Materialize a component and its dependencies into a new or existing workspace',
-                 'Component can be abbreviated in many cases (eg just the beamline name is sufficient)',
+                ('materialize {<component> ...} [<category> [<version>] | <cquery>]',
+                 'Materialize component(s) and their dependencies into a new or existing workspace',
                  'Category can be one of "%s"' % '/'.join(CATEGORIES_AVAILABLE),
                  'Version defaults to master',
-                 'CQuery is only required if you need to override the computed value',
+                 'CQuery is only required if you don\'t want to use Category or Category+Version',
                  )),
             ('print-workspace-path', None,
                 ('print-workspace-path',
@@ -384,9 +383,6 @@ class PewmaManager(object):
                          help='Download location ("diamond" or "public")')
         group.add_option('-k', '--keyring', dest='keyring', type='string', metavar='<ignored>',
                          help=optparse.SUPPRESS_HELP)  # Obsolete parameter that is ignored
-        group.add_option('--materialize.properties.file', dest='materialize_properties_file', type='string', metavar='<path>',
-                               default='materialize-properties.txt',
-                               help='Properties file, relative to workspace if not absolute (default: %default)')
         group.add_option('--maxParallelMaterializations', dest='maxParallelMaterializations', type='int', metavar='<value>',
                          help='Override Buckminster default')
         group.add_option('--maxParallelResolutions', dest='maxParallelResolutions', type='int', metavar='<value>',
@@ -471,6 +467,12 @@ class PewmaManager(object):
 
     def setup_workspace(self):
         # create the workspace if it doesn't exist, initialise the workspace if it is not set up
+
+        if self.options.delete or self.options.recreate:
+            assert self.action in ('setup', 'materialize')
+            self.delete_directory(self.workspace_loc, "workspace directory")
+            if self.options.delete:
+                self.delete_directory(self.workspace_git_loc, "workspace_git directory")
 
         expand_template_required = True
         if os.path.isdir(self.workspace_loc):
@@ -735,13 +737,7 @@ class PewmaManager(object):
                     site_projects_imported.add(project_name)
 
         sites = {}
-        for parent_dir in [os.path.join(self.workspace_loc, 'sites'), os.path.join(self.workspace_loc, 'features')]:
-            # .site projects will be exactly one directory level below the sites/ or features/ directory
-            if os.path.isdir(parent_dir):
-                for site_dir in os.listdir(parent_dir):
-                    if site_dir in site_projects_imported and os.path.exists( os.path.join(parent_dir, site_dir, 'feature.xml')):
-                        sites[site_dir] = os.path.join(parent_dir, site_dir)
-        if self.workspace_git_loc:
+        if site_projects_imported and self.workspace_git_loc:
             # .site projects can be up to three directory levels below the git materialize directory
             for level1 in os.listdir(self.workspace_git_loc):
                 level1_dir = os.path.join(self.workspace_git_loc, level1)
@@ -956,6 +952,7 @@ class PewmaManager(object):
                                  (self.user_uname, self.user_euid,
                                   dirowner_uname, dirowner_uid,))
 
+
     def action_setup(self):
         """ Processes command: setup [<category> [<version>] | <cquery>]
         """
@@ -963,12 +960,9 @@ class PewmaManager(object):
         if len(self.arguments) > 2:
             raise PewmaException('ERROR: setup command has too many arguments')
 
-        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments)
-
+        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._parse_category_version_cquery(self.arguments)
         if category_to_use and version_to_use:
-            cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
-            template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
-            self.valid_java_versions = self._get_java_for_category_version(category_to_use, version_to_use)
+            (cquery_to_use, template_to_use, self.valid_java_versions) = self._get_category_version_translation(category_to_use, version_to_use)
         if template_to_use:
             self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
 
@@ -976,7 +970,6 @@ class PewmaManager(object):
 
         if cquery_to_use:
             self.add_cquery_to_history(cquery_to_use)
-
         return
 
 
@@ -993,7 +986,7 @@ class PewmaManager(object):
         """ Processes command: get-branches-expected <component> [<category> [<version>] | <cquery>]
         """
 
-        (component_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_component_category_version_cquery()
+        (_, _, _, cquery_to_use, _) = self._interpret_components_category_version_cquery()
         source = self.options.cquery_uri_parent + cquery_to_use
         if self.options.dry_run:
             self.logger.info('%sDownloading "%s"' % (self.log_prefix, source))
@@ -1083,8 +1076,8 @@ class PewmaManager(object):
         """ Processes command: materialize <component> [<category> [<version>] | <cquery>]
         """
 
-        (component_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_component_category_version_cquery()
-        if not component_to_use:
+        (components_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_components_category_version_cquery()
+        if not components_to_use:
             raise PewmaException('ERROR: materialize command requires the name of the component to materialize')
 
         # create the workspace if required
@@ -1106,18 +1099,15 @@ class PewmaManager(object):
             else:
                 self.options.jvmargs.extend(('-Declipse.p2.mirrors=false',))
 
-        self.logger.info('Writing buckminster materialize properties to "%s"' % (self.materialize_properties_path,))
-        with open(self.materialize_properties_path, 'w') as properties_file:
-            properties_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
-                                  ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
-            properties_file.write('component=%s\n' % (component_to_use,))
+        import_commands = ''
+        for component in components_to_use:
+            import_commands += 'import -Dcomponent=%s ' % (component,)
             if self.options.download_location:
-                properties_file.write('download.location.common=%s\n' % (self.options.download_location,))
-
+                import_commands += '-Ddownload.location.common=%s ' % (self.options.download_location,)
+            for keyval in self.options.system_property:
+                import_commands += '-D%s ' % (keyval,)
+            import_commands += self.options.cquery_uri_parent + cquery_to_use + '\n'
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
-        properties_text = '-P%s ' % (self.materialize_properties_path.replace('\\', '/'),)  # convert \ to / in path on Windows (avoiding \ as escape character)
-        for keyval in self.options.system_property:
-            properties_text += '-D%s ' % (keyval,)
         with open(self.script_file_path, 'w') as script_file:
             script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
@@ -1128,15 +1118,14 @@ class PewmaManager(object):
                 script_file.write('setpref maxParallelMaterializations=%s\n' % (self.options.maxParallelMaterializations,))
             if self.options.maxParallelResolutions:
                 script_file.write('setpref maxParallelResolutions=%s\n' % (self.options.maxParallelResolutions,))
-            script_file.write('import ' + properties_text)
-            script_file.write(self.options.cquery_uri_parent + cquery_to_use + '\n')
+            script_file.write(import_commands)
 
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
 
-        # get buckminster to run the materialize
+        # get buckminster to run the materialize(s)
         (rc, jgit_errors_repos, jgit_errors_general, buckminster_bugs) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_Buckminster_errors=True)
         # sometimes JGit gets intermittent failures (network?) when cloning a repository
         # sometimes Buckminster hits an intermittent bug
@@ -1169,11 +1158,12 @@ class PewmaManager(object):
                     print('set-build-description: ' + text)
 
         self.add_cquery_to_history(cquery_to_use)
-        if component_to_use.endswith('-config') and (not component_to_use.startswith(('all-', 'core-', 'dls-', 'mt-', 'mx-'))):
-            self._add_string_substitution_variable_to_workspace(
-              'GDA_instance_config_name',
-              component_to_use,
-              'Project name of GDA instance config')
+        for component in components_to_use:
+            if component.endswith('-config') and (not component.startswith(('all-', 'core-', 'dls-', 'mt-', 'mx-'))):
+                self._add_string_substitution_variable_to_workspace(
+                  'GDA_instance_config_name',
+                  component,
+                  'Project name of GDA instance config')
         self._add_string_substitution_variable_to_workspace(
           'GDA_WORKSPACE_PARENT',
           os.path.join( os.path.abspath(os.path.join(self.workspace_loc, '..')), ''),  # final '' is to make sure the path ends in a /
@@ -1184,59 +1174,68 @@ class PewmaManager(object):
         return rc
 
 
-    def _interpret_component_category_version_cquery(self):
-        """ Processes this part of the arguments: [<component>] [<category> [<version>] | <cquery>]
+    def _interpret_components_category_version_cquery(self):
+        """ Processes this part of the arguments: {<component> ...} [<category> [<version>] | <cquery>]
             (on behalf of "materialize" and "get_branches_expected" commands)
         """
 
         if len(self.arguments) < 1:
             raise PewmaException('ERROR: %s command has too few arguments' % (self.action,))
-        if len(self.arguments) > 3:
-            raise PewmaException('ERROR: %s command has too many arguments' % (self.action,))
 
-        # translate an abbreviated component name to the real component name
-        if (self.arguments[0] not in CATEGORIES_AVAILABLE) and (not self.arguments[0].endswith('.cquery')):
-            component_to_use = self.arguments[0]
+        # go through the arguments, and find where the component list ends, which is immediately before the (optional) category/version/cquery
+        # we rely on the fact that no component will ever have the same name as a category name
+        components_to_use = []
+        category_version_cquery = []
+        for index, item in enumerate(self.arguments):
+            if (item in CATEGORIES_AVAILABLE) or item.endswith('.cquery'):
+                components_to_use = self.arguments[:index]
+                category_version_cquery = self.arguments[index:]
+                break
+        else:
+            components_to_use = self.arguments
+            category_version_cquery = []
+
+        # translate any abbreviated component names to the real component name, and make sure they are all in the same category
+        category_implied = set()
+        for index, component_to_use in enumerate(components_to_use):
             for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
                 if component_to_use == abbrev:
-                    component_to_use = actual
-                    category_implied = cat
-                    break
+                    components_to_use[index] = actual
+                    category_implied.add(cat)
+                    continue
             else:
                 # component name is specified verbatim
-                if component_to_use.endswith('-config') or component_to_use.startswith('uk.ac.gda.beamline.'):
-                    category_implied = 'gda'  # must be a GDA project
-                else:
-                    category_implied = None
-            # interpret any (category / category version / cquery) arguments
-            (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments[1:])
-        else:
-            component_to_use = None
-            category_implied = None
-            # interpret any (category / category version / cquery) arguments
-            (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_category_version_cquery(self.arguments)
+                if component_to_use.endswith('-config') or component_to_use.startswith('uk.ac.gda.'):
+                    category_implied.add('gda')  # must be a GDA project
+        if len(category_implied) > 1:
+            raise PewmaException('ERROR: the %s components you want to materialize %s come from more than 1 category: %s' %
+                                 (len(components_to_use), components_to_use, [c for c in category_implied]))
+        category_implied = tuple(category_implied)
+        category_implied = (category_implied and category_implied[0]) or None
+
+        # interpret any (category / category+version / cquery) arguments
+        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._parse_category_version_cquery(category_version_cquery)
 
         if not category_to_use:
             category_to_use = category_implied
         elif category_implied and (category_implied != category_to_use):
-            # if a component abbreviation was provided, it implies a category. If a category was also specified, it must match the implied category 
-            raise PewmaException('ERROR: component "%s" is not consistent with category "%s"' % (component_to_use, category_to_use,))
+            # if a component abbreviation was provided, it implies a category. If a category was also specified, it must match the implied category
+            raise PewmaException('ERROR: components %s are not consistent with category "%s"' % (components_to_use, category_to_use,))
 
         if not (category_to_use or cquery_to_use):
-            raise PewmaException('ERROR: the category for component "%s" is missing (can be one of %s)' % (component_to_use, '/'.join(CATEGORIES_AVAILABLE)))
+            raise PewmaException('ERROR: the category is missing (can be one of %s)' % ('/'.join(CATEGORIES_AVAILABLE)))
 
         if category_to_use and version_to_use:
+            (cquery_to_use_translation, template_to_use, self.valid_java_versions) = self._get_category_version_translation(category_to_use, version_to_use)
             if not cquery_to_use:
-                cquery_to_use = self._get_cquery_for_category_version(category_to_use, version_to_use)
-            template_to_use = self._get_template_for_category_version(category_to_use, version_to_use)
-            self.valid_java_versions = self._get_java_for_category_version(category_to_use, version_to_use)
+                cquery_to_use = cquery_to_use_translation
 
         assert template_to_use and cquery_to_use
 
-        return (component_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use)
+        return (components_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use)
 
 
-    def _interpret_category_version_cquery(self, arguments_part):
+    def _parse_category_version_cquery(self, arguments_part):
         """ Processes this part of the arguments: [<category> [<version>] | <cquery>]
             (on behalf of "setup" and "materialize" commands)
         """
@@ -1265,44 +1264,24 @@ class PewmaManager(object):
                             version_to_use = v
                             break
                     else:
-                        raise PewmaException('ERROR: category "%s" is not consistent with version "%s"' % (category_to_use, version))
+                        raise PewmaException('ERROR: category "%s" does not have a version "%s"' % (category_to_use, version))
             else:
                 raise PewmaException('ERROR: "%s" is neither a category nor a CQuery' % (category_or_cquery,))
 
         return (category_to_use, version_to_use, cquery_to_use, template_to_use)
 
 
-    def _get_cquery_for_category_version(self, category, version):
-        """ Given a category and version, determine the CQuery that should be used
-            (on behalf of "setup" and "materialize" commands)
+    def _get_category_version_translation(self, category, version):
+        """ Given a category and version, determine (on behalf of "setup" and "materialize" commands)
+                the CQuery to use
+                the template version to use
+                the allowable java versions
         """
 
         assert category and version
-        cquery_to_use_list = [cc[2] for cc in COMPONENT_CATEGORIES if cc[0] == category and cc[1] == version]
-        assert len(cquery_to_use_list) == 1
-        return cquery_to_use_list[0]
-
-
-    def _get_template_for_category_version(self, category, version):
-        """ Given a category and version, determine the template that should be used
-            (on behalf of "setup" and "materialize" commands)
-        """
-
-        assert category and version
-        template_to_use_list = [cc[3] for cc in COMPONENT_CATEGORIES if cc[0] == category and cc[1] == version]
-        assert len(template_to_use_list) == 1
-        return template_to_use_list[0]
-
-
-    def _get_java_for_category_version(self, category, version):
-        """ Given a category and version, determine the java version(s) allowable
-            (on behalf of "setup" and "materialize" commands)
-        """
-
-        assert category and version
-        java_to_use_list = [cc[5] for cc in COMPONENT_CATEGORIES if cc[0] == category and cc[1] == version]
-        assert len(java_to_use_list) == 1
-        return java_to_use_list[0]
+        matching_list = [cc for cc in COMPONENT_CATEGORIES if cc[0] == category and cc[1] == version]
+        assert len(matching_list) == 1
+        return [matching_list[0][2], matching_list[0][3], matching_list[0][5]]
 
 
     def _get_git_directories(self):
@@ -1716,7 +1695,7 @@ class PewmaManager(object):
 
     def action_sites(self):
         sites = self.set_available_sites()
-        self.logger.info('Available sites in %s%s: %s' % (self.workspace_loc, ('', '[_git]')[bool(self.workspace_git_loc)], sorted(self.available_sites) or '<none>'))
+        self.logger.info('Available sites in %s: %s' % (self.workspace_git_loc, sorted(self.available_sites) or '<none>'))
 
 
     def action_site_p2(self):
@@ -2221,6 +2200,8 @@ class PewmaManager(object):
         if self.action == 'print-workspace-path': self.options.quiet = True  #  the output of print-workspace-path is used in scripts, so be quiet
 
         # validation of options and action
+        if self.options.keyring:
+            self.logger.warn('"--keyring" and "-k" options obsolete; ignored')
         self.validate_glob_patterns(self.options.plugin_includes, self.options.plugin_excludes, '--include or --exclude')
         self.validate_glob_patterns(self.options.repo_includes, self.options.repo_excludes, '--repo-include or --repo-exclude')
         if self.options.delete and self.options.recreate:
@@ -2255,7 +2236,7 @@ class PewmaManager(object):
         else:
             self.workspace_loc = None
 
-        if self.workspace_loc:  # will be set, unless (self.action == 'get-branches-expected)
+        if self.workspace_loc:  # will be set, unless (self.action == 'get-branches-expected')
             self.logger.log(logging.INFO if not self.options.quiet else logging.DEBUG, log_msg)
             if ' ' in self.workspace_loc:
                 raise PewmaException('ERROR: the "--workspace" directory must not contain blanks')
@@ -2316,15 +2297,11 @@ class PewmaManager(object):
                             error_message += ' (in ' + root + ')'
                         raise PewmaException(error_message + '. Abandoning.')
 
-            self.delete_directory(self.workspace_loc, "workspace directory")
-            if self.options.delete:
-                self.delete_directory(self.workspace_git_loc, "workspace_git directory")
-
         # Proxy handling is a bit of a mess.
         # Python and Buckminster (java) can potentially access network resources, and they handle proxy settings differently.
         # The technique used here seems to work (meaning it uses the proxy when it is supposed to, and not when it isn't).
         # Don't mess around with it; things that look like they should work, don't.
-        # The only way to know if this is doing the right thing is to test with a network tracing tool such as wireshark. 
+        # The only way to know if this is doing the right thing is to test with a network tracing tool such as wireshark.
         if self.options.skip_proxy_setup:
             for env_name in ('http_proxy', 'https_proxy', 'no_proxy'):
                 log_text = 'Using existing %s/%s = ' % (env_name, env_name.upper())
@@ -2400,9 +2377,6 @@ class PewmaManager(object):
             self.script_file_path = os.path.expanduser(self.options.script_file)
             if not os.path.isabs(self.script_file_path):
                self.script_file_path = os.path.abspath(os.path.join(self.workspace_loc, self.script_file_path))
-            self.materialize_properties_path = os.path.expanduser(self.options.materialize_properties_file)
-            if not os.path.isabs(self.materialize_properties_path):
-               self.materialize_properties_path = os.path.abspath(os.path.join(self.workspace_loc, self.materialize_properties_path))
 
         # invoke function to perform the requested action
         start_time = datetime.datetime.now()
