@@ -2286,8 +2286,6 @@
   <!--
        GDA components for specific beamlines
   -->
-  <!-- ** Example ** -->
-  <rm:locator pattern="^gda-training-config$" searchPathRef="gda_training_configurations"/>
   <!--
        Component uk.ac.diamond.org.springframework, which bundles various org.springframework components
        These various components must never be materialized as individual bundles (see Jira GDA-4844)
@@ -4044,20 +4042,6 @@
   <!--
        GDA sites and configurations
   -->
-  <rm:searchPath name="gda_training_configurations">
-    <rm:provider componentTypes="buckminster" readerType="local">
-      <rm:uri format="file://{0}/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="buckminster" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
-      <rm:uri format="${repository.subversion.diamond.download.url}/trunk/configurations/{0}?moduleAfterBranch&amp;moduleAfterTag">
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- ***** -->
   <rm:searchPath name="sites">
     <rm:provider componentTypes="eclipse.feature" readerType="local">
       <rm:uri format="file://{0}/sites/{1}">
