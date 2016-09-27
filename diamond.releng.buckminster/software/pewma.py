@@ -517,6 +517,8 @@ class PewmaManager(object):
         ''' remember the CQuery used, for future "File --> Open a Component Query" in the IDE
         '''
 
+        if self.options.dry_run:
+            return
         org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
           'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
         cquery_to_add = self.options.cquery_uri_parent.replace(':', '\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
@@ -563,6 +565,8 @@ class PewmaManager(object):
         '''
         self.logger.debug('Setting %s=%s %s' % (variable_name, variable_value, variable_description))
         assert variable_name
+        if self.options.dry_run:
+            return
 
         org_eclipse_core_variables_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
           'org.eclipse.core.runtime', '.settings', 'org.eclipse.core.variables.prefs')
@@ -1107,18 +1111,19 @@ class PewmaManager(object):
             for keyval in self.options.system_property:
                 import_commands += '-D%s ' % (keyval,)
             import_commands += self.options.cquery_uri_parent + cquery_to_use + '\n'
-        self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
-        with open(self.script_file_path, 'w') as script_file:
-            script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
-                              ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
-            if not self.options.skip_proxy_setup:
-                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
-            # set preferences
-            if self.options.maxParallelMaterializations:
-                script_file.write('setpref maxParallelMaterializations=%s\n' % (self.options.maxParallelMaterializations,))
-            if self.options.maxParallelResolutions:
-                script_file.write('setpref maxParallelResolutions=%s\n' % (self.options.maxParallelResolutions,))
-            script_file.write(import_commands)
+        self.logger.info('%sWriting buckminster commands to "%s"' % (self.log_prefix, self.script_file_path,))
+        if not self.options.dry_run:
+            with open(self.script_file_path, 'w') as script_file:
+                script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
+                                  ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
+                if not self.options.skip_proxy_setup:
+                    script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
+                # set preferences
+                if self.options.maxParallelMaterializations:
+                    script_file.write('setpref maxParallelMaterializations=%s\n' % (self.options.maxParallelMaterializations,))
+                if self.options.maxParallelResolutions:
+                    script_file.write('setpref maxParallelResolutions=%s\n' % (self.options.maxParallelResolutions,))
+                script_file.write(import_commands)
 
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
@@ -2010,9 +2015,10 @@ class PewmaManager(object):
                 trailing_quote_index = script_file_path_to_pass.find('"', 2)
                 assert trailing_quote_index != -1
                 script_file_path_to_pass = script_file_path_to_pass[1:trailing_quote_index]  # remove surrounding quotes used on Windows
-            with open(script_file_path_to_pass) as script_file:
-                for line in script_file.readlines():
-                    self.logger.debug('%s(script file): %s' % (self.log_prefix, line))
+            if not self.options.dry_run:  # script file will not have been written if dry run
+                with open(script_file_path_to_pass) as script_file:
+                    for line in script_file.readlines():
+                        self.logger.debug('%s(script file): %s' % (self.log_prefix, line))
 
         jgit_errors_repos = []
         jgit_errors_general = []
