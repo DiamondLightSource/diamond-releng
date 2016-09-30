@@ -45,7 +45,7 @@
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="diamond.orbit.p2.version">  <!-- version of Diamond Orbit p2 repository to use -->
-    <bc:constant value="R201609211245"/>
+    <bc:constant value="R201609301057"/>
   </rm:propertyElement>
   <!-- ***** -->
   <!-- version of Eclipse Orbit p2 repository to use -->
@@ -2352,6 +2352,7 @@
   <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(beanutils|collections4|configuration|csv|digester|io|jexl|math|math3|net|validator)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.servicemix\.bundles\.spring-.+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mariadb\.jdbc(\..+)??$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="diamond_orbit_p2"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.objenesis(\..+)?" searchPathRef="diamond_orbit_p2"/>

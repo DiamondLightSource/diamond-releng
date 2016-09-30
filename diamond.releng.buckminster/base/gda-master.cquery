@@ -32,6 +32,10 @@ Used for public downloads.</cq:documentation>
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">This is to avoid what appear to be a Buckminster bug (noticed 2014/02/06 using Eclipse 4.3.1).
 If you materialize, and then materialize again, the second materialize can fail. See DASCTEST-211.</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.apache\.servicemix\.bundles\.spring-core.source$" componentType="osgi.bundle" skipComponent="true">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">There appears to be a problem with the source bundle for spring-core,
+at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first and problems ensue).</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector(\..+)?|org\.apache\.activemq)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
