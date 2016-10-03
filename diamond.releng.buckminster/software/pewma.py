@@ -130,7 +130,11 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent netw
 BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermittent Buckminster bug
     ('ERROR\s+\[\d+\]\s:\sjava\.lang\.ArrayIndexOutOfBoundsException: -1', 'Buckminster intermittent bug - try rerunning'),  # https://bugs.eclipse.org/bugs/show_bug.cgi?id=372470
     ('ERROR\s+\[\d+\]\s:\sConnecting Git team provider failed\. See log for details\.', 'Buckminster intermittent failure - try rerunning'),
-    ('ERROR\s+\[\d+\]\s:\sjava.lang.IllegalStateException: Preference node ".+" has been removed.', 'Buckminster intermittent failure - try rerunning'),
+    ('ERROR\s+\[\d+\]\s:\sjava\.lang\.IllegalStateException: Preference node ".+" has been removed.', 'Buckminster intermittent failure - try rerunning'),
+    )
+
+SYSTEM_PROBLEM_ERROR_PATTERNS = ( # Error messages that identify a problem with the environment; e.g. resource depletion
+    ('java\.lang\.OutOfMemoryError: unable to create new native thread', 'System problem - out of threads'),  # sometimes occurs in Jenkins
     )
 
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
@@ -1131,21 +1135,26 @@ class PewmaManager(object):
             script_file_path_to_pass = self.script_file_path
 
         # get buckminster to run the materialize(s)
-        (rc, jgit_errors_repos, jgit_errors_general, buckminster_bugs) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_Buckminster_errors=True)
+        (rc, jgit_errors_repos, jgit_errors_general, buckminster_bugs, system_problems) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_Buckminster_errors=True)
         # sometimes JGit gets intermittent failures (network?) when cloning a repository
         # sometimes Buckminster hits an intermittent bug
-        if any((jgit_errors_repos, jgit_errors_general, buckminster_bugs)):
+        # sometimes there are system problems
+        if any((jgit_errors_repos, jgit_errors_general, buckminster_bugs, system_problems)):
             rc = max(int(rc), 2)
             for repo in jgit_errors_repos:
                 self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
-            for error_summary in set(jgit_errors_general):  # Use set, since multiple errors coukd have the same text, and only need logging once
+            for error_summary in set(jgit_errors_general):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
-            for error_summary in set(buckminster_bugs):  # Use set, since multiple errors coukd have the same text, and only need logging once
+            for error_summary in set(buckminster_bugs):  # Use set, since multiple errors could have the same text, and only need logging once
+                self.logger.error(error_summary)
+            for error_summary in set(system_problems):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary)
             if (self.options.prepare_jenkins_build_description_on_error or
                 # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                 self.options.prepare_jenkins_build_description_on_materialize_error):
-                if jgit_errors_repos:
+                if system_problems:
+                    text = system_problems[0]
+                elif jgit_errors_repos:
                     text = 'Failure cloning '
                     if len(jgit_errors_repos) == 1:
                         text += jgit_errors_repos[0]
@@ -1154,7 +1163,7 @@ class PewmaManager(object):
                     text += ' (probable network issue)'
                 elif jgit_errors_general:
                     text = 'Failure (probable network issue)'
-                else:
+                elif buckminster_bugs:
                     text = 'Failure (intermittent Buckminster bug)'
                 if self.options.prepare_jenkins_build_description_on_error:
                     print('append-build-description: ' + text)
@@ -2023,6 +2032,7 @@ class PewmaManager(object):
         jgit_errors_repos = []
         jgit_errors_general = []
         buckminster_bugs = []
+        system_problems = []
         if not self.options.dry_run:
             sys.stdout.flush()
             sys.stderr.flush()
@@ -2041,6 +2051,10 @@ class PewmaManager(object):
                             buckminster_bug = re.search(error_pattern, line)
                             if buckminster_bug:
                                 buckminster_bugs.append(error_summary)
+                        for (error_pattern, error_summary) in SYSTEM_PROBLEM_ERROR_PATTERNS:
+                            system_problem = re.search(error_pattern, line)
+                            if system_problem:
+                                system_problems.append(error_summary)
                     if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
                         print(line, end='')  # don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
@@ -2057,7 +2071,7 @@ class PewmaManager(object):
             retcode = 0
 
         if return_Buckminster_errors:
-            return (retcode, jgit_errors_repos, jgit_errors_general, buckminster_bugs)
+            return (retcode, jgit_errors_repos, jgit_errors_general, buckminster_bugs, system_problems)
         else:
             return retcode
 
