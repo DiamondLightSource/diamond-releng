@@ -91,7 +91,7 @@ def parse_jenkins_jobname(jobname):
             parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerrit-trigger', '-junit.tests-gerrit')))
 
         if 'junit' in jobname:
-            parse_result.append(('materialize_component', 'all-dls-config'))
+            parse_result.append(('materialize_components', 'all-dls-config'))
 
         # GDA create.product.beamline jobs (client)
         # if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
@@ -101,9 +101,9 @@ def parse_jenkins_jobname(jobname):
             beamline = m.group('GDA_beamline')
             parse_result.append(('GDA_beamline', beamline))
             if beamline in ('logpanel', 'synoptic'):
-                materialize_component = 'uk.ac.gda.client.' + beamline + '.site'
+                materialize_components = 'uk.ac.gda.client.' + beamline + '.site'
             else:
-                materialize_component = beamline + '-config'
+                materialize_components = beamline + '-config'
             if site == 'DLS':
                 if beamline in ('excalibur', 'synoptic'):
                     product_site = 'uk.ac.gda.client.' + beamline + '.site'
@@ -124,7 +124,7 @@ def parse_jenkins_jobname(jobname):
                 product_site = 'fr.esrf.gda.beamline.' + beamline + '.site'
             elif site == 'RAL':
                 product_site = 'uk.ac.rl.gda.' + beamline + '.site'
-            parse_result.append(('materialize_component', materialize_component))
+            parse_result.append(('materialize_components', materialize_components))
             parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'))
             parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))  # retained for versions prior to Dawn 2.2 / GDA 9.2
             parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
@@ -145,13 +145,13 @@ def parse_jenkins_jobname(jobname):
             if m:
                 product_name = m.group('product_name')
                 if product_name == 'gdaserver':
-                    materialize_component = 'uk.ac.diamond.daq.server.site'
-                    product_site = materialize_component
+                    materialize_components = 'uk.ac.diamond.daq.server.site'
+                    product_site = materialize_components
                 elif product_name == 'logpanel':
-                    materialize_component = 'uk.ac.gda.client.logpanel.site'
-                    product_site = materialize_component
+                    materialize_components = 'uk.ac.gda.client.logpanel.site'
+                    product_site = materialize_components
                 parse_result.append(('non_beamline_product', product_name))
-                parse_result.append(('materialize_component', materialize_component))
+                parse_result.append(('materialize_components', materialize_components))
                 parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'))
                 parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))  # retained for versions prior to Dawn 2.2 / GDA 9.2
                 parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
@@ -463,7 +463,7 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('GDA_release', 'master'),
         ('job_variant', None),
-        ('materialize_component', 'all-dls-config'),
+        ('materialize_components', 'all-dls-config'),
         ('postbuild_scan_for_compiler_warnings', True),
         ('postbuild_scan_for_open_tasks', True),
         ]
@@ -474,7 +474,7 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('GDA_release', 'master'),
         ('job_variant', None),
-        ('materialize_component', 'all-dls-config'),
+        ('materialize_components', 'all-dls-config'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ]
     write_parse_result(p, output)
@@ -485,7 +485,7 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('GDA_beamline', 'example'),
-        ('materialize_component', 'example-config'),
+        ('materialize_components', 'example-config'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
@@ -508,7 +508,7 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('GDA_beamline', 'example'),
-        ('materialize_component', 'example-config'),
+        ('materialize_components', 'example-config'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
@@ -528,7 +528,7 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('GDA_beamline', 'b16'),
-        ('materialize_component', 'b16-config'),
+        ('materialize_components', 'b16-config'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
@@ -548,7 +548,7 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('non_beamline_product', 'gdaserver'),
-        ('materialize_component', 'uk.ac.diamond.daq.server.site'),
+        ('materialize_components', 'uk.ac.diamond.daq.server.site'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),

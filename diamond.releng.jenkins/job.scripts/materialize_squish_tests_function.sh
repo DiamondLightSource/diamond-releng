@@ -32,7 +32,7 @@ materialize_squish_tests_function () {
     materialize_squish_tests=$(echo ${materialize_squish_tests:-true} | tr '[:upper:]' '[:lower:]')
     if [[ "${materialize_squish_tests}" == "true" ]]; then
         for squish_test_component in $( (set -o posix ; set)  | grep 'squish_tests_components_' | sort | cut -f 1 -d '='); do
-            export materialize_component=${!squish_test_component}
+            export materialize_components=${!squish_test_component}
             materialize_function
         done
     fi

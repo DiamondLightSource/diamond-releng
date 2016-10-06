@@ -117,8 +117,8 @@ materialize_function () {
     fi
 
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
-        if [ -z "${materialize_component}" ]; then
-            echo "$""materialize_component not set, so terminating"
+        if [ -z "${materialize_components}" ]; then
+            echo "$""materialize_components not set, so terminating"
             return 100
         fi
     fi
@@ -193,9 +193,9 @@ materialize_function () {
         fi
         # materialize_properties_special is specified when the Jenkins job starts (normally empty)
         if [[ -z "${materialize_cquery}" ]]; then
-            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_properties_special} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_category} ${materialize_version} || return 1
+            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_properties_special} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_components} ${materialize_category} ${materialize_version} || return 1
         else
-            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_properties_special} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_component} ${materialize_cquery} || return 1
+            ${pewma_py} ${log_level_option} ${workspace_delete_option} -w ${materialize_workspace_path} ${keyring_option} ${materialize_location_option} ${materialize_properties_base} ${materialize_properties_extra} ${materialize_properties_special} ${materialize_skip_list_property} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} materialize ${materialize_components} ${materialize_cquery} || return 1
         fi
     fi
 
