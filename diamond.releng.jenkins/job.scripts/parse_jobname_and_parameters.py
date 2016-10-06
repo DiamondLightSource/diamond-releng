@@ -91,7 +91,7 @@ def parse_jenkins_jobname(jobname):
             parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerrit-trigger', '-junit.tests-gerrit')))
 
         if 'junit' in jobname:
-            parse_result.append(('materialize_components', 'all-dls-config'))
+            parse_result.append(('materialize_components', 'all-dls-configs all-dls-clients gdaserver'))
 
         # GDA create.product.beamline jobs (client)
         # if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
@@ -100,10 +100,10 @@ def parse_jenkins_jobname(jobname):
             site = m.group('GDA_site')
             beamline = m.group('GDA_beamline')
             parse_result.append(('GDA_beamline', beamline))
-            if beamline in ('logpanel', 'synoptic'):
-                materialize_components = 'uk.ac.gda.client.' + beamline + '.site'
+            if beamline not in ('logpanel', 'synoptic'):
+                config_project = beamline + '-config'
             else:
-                materialize_components = beamline + '-config'
+                config_project = ''
             if site == 'DLS':
                 if beamline in ('excalibur', 'synoptic'):
                     product_site = 'uk.ac.gda.client.' + beamline + '.site'
@@ -124,7 +124,7 @@ def parse_jenkins_jobname(jobname):
                 product_site = 'fr.esrf.gda.beamline.' + beamline + '.site'
             elif site == 'RAL':
                 product_site = 'uk.ac.rl.gda.' + beamline + '.site'
-            parse_result.append(('materialize_components', materialize_components))
+            parse_result.append(('materialize_components', (config_project + ' ' + product_site).strip()))
             parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'))
             parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))  # retained for versions prior to Dawn 2.2 / GDA 9.2
             parse_result.append(('build_options_extra', '--suppress-compile-warnings'))
@@ -463,7 +463,7 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('GDA_release', 'master'),
         ('job_variant', None),
-        ('materialize_components', 'all-dls-config'),
+        ('materialize_components', 'all-dls-configs all-dls-clients gdaserver'),
         ('postbuild_scan_for_compiler_warnings', True),
         ('postbuild_scan_for_open_tasks', True),
         ]
@@ -474,7 +474,7 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('GDA_release', 'master'),
         ('job_variant', None),
-        ('materialize_components', 'all-dls-config'),
+        ('materialize_components', 'all-dls-configs all-dls-clients gdaserver'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ]
     write_parse_result(p, output)
@@ -485,7 +485,7 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('GDA_beamline', 'example'),
-        ('materialize_components', 'example-config'),
+        ('materialize_components', 'example-config uk.ac.gda.example.site'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
@@ -508,7 +508,7 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('GDA_beamline', 'example'),
-        ('materialize_components', 'example-config'),
+        ('materialize_components', 'example-config uk.ac.gda.example.site'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
@@ -528,7 +528,7 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('GDA_beamline', 'b16'),
-        ('materialize_components', 'b16-config'),
+        ('materialize_components', 'b16-config uk.ac.gda.beamline.b16.site'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'),
         ('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'),
         ('build_options_extra', '--suppress-compile-warnings'),
