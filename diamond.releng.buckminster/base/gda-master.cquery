@@ -159,7 +159,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-prosilica.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(all-dls-config|all-dls-clients|dls-config|uk\.ac\.(diamond\.daq\.dls(\..+)?|gda\.(beamline\.all-dls|diamond|dls)(\..+)?))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(all-dls-config(s)?|all-dls-clients|dls-config|uk\.ac\.(diamond\.daq\.dls(\..+)?|gda\.(beamline\.all-dls|diamond|dls)(\..+)?))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-diamond.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" useTargetPlatform="false">
