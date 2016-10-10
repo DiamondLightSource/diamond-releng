@@ -1135,41 +1135,7 @@ class PewmaManager(object):
             script_file_path_to_pass = self.script_file_path
 
         # get buckminster to run the materialize(s)
-        (rc, jgit_errors_repos, jgit_errors_general, buckminster_bugs, system_problems) = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), return_Buckminster_errors=True)
-        # sometimes JGit gets intermittent failures (network?) when cloning a repository
-        # sometimes Buckminster hits an intermittent bug
-        # sometimes there are system problems
-        if any((jgit_errors_repos, jgit_errors_general, buckminster_bugs, system_problems)):
-            rc = max(int(rc), 2)
-            for repo in jgit_errors_repos:
-                self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
-            for error_summary in set(jgit_errors_general):  # Use set, since multiple errors could have the same text, and only need logging once
-                self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
-            for error_summary in set(buckminster_bugs):  # Use set, since multiple errors could have the same text, and only need logging once
-                self.logger.error(error_summary)
-            for error_summary in set(system_problems):  # Use set, since multiple errors could have the same text, and only need logging once
-                self.logger.error(error_summary)
-            if (self.options.prepare_jenkins_build_description_on_error or
-                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                self.options.prepare_jenkins_build_description_on_materialize_error):
-                if system_problems:
-                    text = system_problems[0]
-                elif jgit_errors_repos:
-                    text = 'Failure cloning '
-                    if len(jgit_errors_repos) == 1:
-                        text += jgit_errors_repos[0]
-                    else:
-                        text += str(len(jgit_errors_repos)) + ' repositories'
-                    text += ' (probable network issue)'
-                elif jgit_errors_general:
-                    text = 'Failure (probable network issue)'
-                elif buckminster_bugs:
-                    text = 'Failure (intermittent Buckminster bug)'
-                if self.options.prepare_jenkins_build_description_on_error:
-                    print('append-build-description: ' + text)
-                elif self.options.prepare_jenkins_build_description_on_materialize_error:
-                    # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                    print('set-build-description: ' + text)
+        rc = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=True)
 
         self.add_cquery_to_history(cquery_to_use)
         for component in components_to_use:
@@ -1616,7 +1582,7 @@ class PewmaManager(object):
     def action_clean(self):
         """ Processes command: clean
         """
-        return self.run_buckminster_in_subprocess(('clean',))
+        return self.run_buckminster_in_subprocess(('clean',), scan_for_materialize_errors=False)
 
 
     def action_bmclean(self):
@@ -1649,7 +1615,7 @@ class PewmaManager(object):
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
+        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False)
 
 
     def action_buildthorough(self):
@@ -1678,7 +1644,7 @@ class PewmaManager(object):
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
+        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False)
 
 
     def action_target(self):
@@ -1686,7 +1652,7 @@ class PewmaManager(object):
         """
 
         if not self.arguments:
-            return self.run_buckminster_in_subprocess(('listtargetdefinitions',))
+            return self.run_buckminster_in_subprocess(('listtargetdefinitions',), scan_for_materialize_errors=False)
 
         if len(self.arguments) > 1:
             raise PewmaException('ERROR: target command has too many arguments')
@@ -1704,7 +1670,7 @@ class PewmaManager(object):
         if not os.path.isfile(path):
             raise PewmaException('ERROR: target file "%s" ("%s") does not exist' % (target, path))
 
-        return self.run_buckminster_in_subprocess(('importtargetdefinition', '--active', path[len(self.workspace_loc)+1:]))  # +1 for os.sep
+        return self.run_buckminster_in_subprocess(('importtargetdefinition', '--active', path[len(self.workspace_loc)+1:]), scan_for_materialize_errors=False)  # +1 for os.sep
 
 
     def action_sites(self):
@@ -1750,7 +1716,7 @@ class PewmaManager(object):
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
+        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False)
 
 
     def action_product(self):
@@ -1863,7 +1829,7 @@ class PewmaManager(object):
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass))
+        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False)
 
 
     def _iterate_ant(self, target):
@@ -1966,9 +1932,9 @@ class PewmaManager(object):
             return None
 
 
-    def run_buckminster_in_subprocess(self, buckminster_args, return_Buckminster_errors=False):
+    def run_buckminster_in_subprocess(self, buckminster_args, scan_for_materialize_errors=True):
         """ Generates and runs the buckminster command
-            If return_Buckminster_errors, then returns a list of repositories that had errors when attempting to clone (for materialize)
+            scan_for_materialize_errors is just an optimisation; set to False if not materializing
         """
 
         self.report_executable_location('buckminster')
@@ -2029,17 +1995,25 @@ class PewmaManager(object):
                     for line in script_file.readlines():
                         self.logger.debug('%s(script file): %s' % (self.log_prefix, line))
 
+        system_problems = []
         jgit_errors_repos = []
         jgit_errors_general = []
         buckminster_bugs = []
-        system_problems = []
         if not self.options.dry_run:
             sys.stdout.flush()
             sys.stderr.flush()
+            retcode = 2  # assume failure, we'll set to 0 if success
             try:
                 process = subprocess.Popen(buckminster_command, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
                 for line in iter(process.stdout.readline, b''):
-                    if return_Buckminster_errors:
+                    # sometimes there are system problems
+                    # sometimes JGit gets intermittent failures (network?) when cloning a repository
+                    # sometimes Buckminster hits an intermittent bug
+                    for (error_pattern, error_summary) in SYSTEM_PROBLEM_ERROR_PATTERNS:
+                        system_problem = re.search(error_pattern, line)
+                        if system_problem:
+                            system_problems.append(error_summary)
+                    if scan_for_materialize_errors:
                         for (error_pattern, error_summary) in JGIT_ERROR_PATTERNS:
                             jgit_error = re.search(error_pattern, line)
                             if jgit_error:
@@ -2051,10 +2025,6 @@ class PewmaManager(object):
                             buckminster_bug = re.search(error_pattern, line)
                             if buckminster_bug:
                                 buckminster_bugs.append(error_summary)
-                        for (error_pattern, error_summary) in SYSTEM_PROBLEM_ERROR_PATTERNS:
-                            system_problem = re.search(error_pattern, line)
-                            if system_problem:
-                                system_problems.append(error_summary)
                     if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
                         print(line, end='')  # don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
@@ -2070,10 +2040,38 @@ class PewmaManager(object):
         else:
             retcode = 0
 
-        if return_Buckminster_errors:
-            return (retcode, jgit_errors_repos, jgit_errors_general, buckminster_bugs, system_problems)
-        else:
-            return retcode
+        if any((system_problems, jgit_errors_repos, jgit_errors_general, buckminster_bugs)):
+            retcode = max(int(retcode), 2)
+            for error_summary in set(system_problems):  # Use set, since multiple errors could have the same text, and only need logging once
+                self.logger.error(error_summary)
+            for repo in jgit_errors_repos:
+                self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
+            for error_summary in set(jgit_errors_general):  # Use set, since multiple errors could have the same text, and only need logging once
+                self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
+            for error_summary in set(buckminster_bugs):  # Use set, since multiple errors could have the same text, and only need logging once
+                self.logger.error(error_summary)
+            if (self.options.prepare_jenkins_build_description_on_error or
+                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
+                self.options.prepare_jenkins_build_description_on_materialize_error):
+                if system_problems:
+                    text = system_problems[0]
+                elif jgit_errors_repos:
+                    text = 'Failure cloning '
+                    if len(jgit_errors_repos) == 1:
+                        text += jgit_errors_repos[0]
+                    else:
+                        text += str(len(jgit_errors_repos)) + ' repositories'
+                    text += ' (probable network issue)'
+                elif jgit_errors_general:
+                    text = 'Failure (probable network issue)'
+                elif buckminster_bugs:
+                    text = 'Failure (intermittent Buckminster bug)'
+                if self.options.prepare_jenkins_build_description_on_error:
+                    print('append-build-description: ' + text)
+                elif self.options.prepare_jenkins_build_description_on_materialize_error:
+                    # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
+                    print('set-build-description: ' + text)
+        return retcode
 
 
     def run_ant_in_subprocess(self, ant_args):
