@@ -728,7 +728,7 @@ class PewmaManager(object):
 
     def set_available_sites(self):
         """ Sets self.available_sites, a dictionary of {site name: project path} entries,
-            for all .site projects in the workspace or workspace_git directories,
+            for all .site projects in the workspace_git directory,
             provided they have been imported into the Eclipse workspace
         """
 
@@ -1748,7 +1748,7 @@ class PewmaManager(object):
                             platforms.add(p)
                             break
                     else:
-                        raise PewmaException('ERROR: "%s" was not recognised as either a site (in %s<_git>), or as a platform name' % (arg, self.workspace_loc))
+                        raise PewmaException('ERROR: "%s" was not recognised as either a site (in %s), or as a platform name' % (arg, self.workspace_git_loc))
 
         if not hasattr(self, 'site_name') or not self.site_name:
             self.set_site_name(None)
