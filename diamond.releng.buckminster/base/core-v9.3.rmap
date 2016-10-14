@@ -2206,7 +2206,7 @@
   <rm:locator pattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" searchPathRef="dawn_tango"/>
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
   <rm:locator pattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
-  <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|javafx\.starter|mapping\.(feature|ui)(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|ui)(\..+)?|python\.feature|slicing(\..+)?|spectrum\.ui|webintro(\..+)?)|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
+  <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.(feature|ui)(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|ui)(\..+)?|python\.feature|slicing(\..+)?|spectrum\.ui|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
   <rm:locator pattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" searchPathRef="dawn_workflow"/>
   <!-- ** dawnsci *** -->
   <rm:locator pattern="^org\.eclipse\.(dawnsci|january)(\..+)?$" searchPathRef="dawnsci"/>
@@ -2276,7 +2276,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" searchPathRef="scisoft_2ddpr"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.arpes(\.(feature|workflow\.feature))?$" searchPathRef="scisoft_arpes"/>
   <rm:locator pattern="^uk\.ac\.diamond\.CBFlib$" searchPathRef="scisoft_cbflib"/>
-  <rm:locator pattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python(\..+)?|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
+  <rm:locator pattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python(\..+)?|surfacescatter(\..+)?|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.icat.*$" searchPathRef="scisoft_icat"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" searchPathRef="scisoft_ispyb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" searchPathRef="scisoft_mx"/>
