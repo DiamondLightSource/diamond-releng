@@ -1278,6 +1278,16 @@
     <bc:constant value="${gda.hrpd.${gda.hrpd.git.location.translated}.url}/gda-hrpd.git"/>
   </rm:propertyElement>
   <!-- -->
+  <rm:propertyElement key="gda.ispyb.api.github.organization">
+    <bc:constant value="DiamondLightSource"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.ispyb.api.github.authentication">
+    <bc:constant value="ssh"/>  <!-- private repository, so ssh must be used -->
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.ispyb.api.git.url">
+    <bc:constant value="${github.${gda.ispyb.api.github.authentication}.url}${gda.ispyb.api.github.organization}/gda-ispyb-api.git"/>
+  </rm:propertyElement>
+  <!-- -->
   <rm:propertyElement key="gda.legacy.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -2224,7 +2234,7 @@
   <rm:locator pattern="^uk\.ac\.gda\..+\.peem(\..+)?$" searchPathRef="gda_devices_peem"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.pixium$" searchPathRef="gda_devices_pixium"/>
   <rm:locator pattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" searchPathRef="gda_devices_prosilica"/>
-  <rm:locator pattern="^(all-dls-config(s)?|all-dls-clients|dls-config|uk\.ac\.(diamond\.daq\.dls(\..+)?|gda\.(beamline\.all-dls|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond"/>
+  <rm:locator pattern="^(all-dls-configs|all-dls-clients|dls-config|uk\.ac\.(diamond\.daq\.dls(\..+)?|gda\.(diamond|dls)(\..+)?))$" searchPathRef="gda_diamond"/>
   <rm:locator pattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" searchPathRef="gda_dls_beamlines_b23"/>
   <rm:locator pattern="^(i09(-1|-2)?-config|uk\.ac\.gda\.(beamline\.i09(-1|-2)?(\..+)?|sisa\.client))$" searchPathRef="gda_dls_beamlines_i09"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
@@ -2236,9 +2246,10 @@
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
   <rm:locator pattern="^uk\.ac\.gda\.epics(\.(adviewer|client|test))?$" searchPathRef="gda_epics"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.ispyb\.(.+)$" searchPathRef="gda_ispyb_api"/>
   <rm:locator pattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" searchPathRef="gda_legacy"/>
   <rm:locator pattern="^((b16|b24|i06|i06-1|i07|i10|i15|i15-1|i16|mt|all-mt)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
-  <rm:locator pattern="^((all-mx|i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?|vmxi\.server\.feature)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" searchPathRef="gda_mx"/>
+  <rm:locator pattern="^((i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?|vmxi\.server\.feature)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
   <rm:locator pattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.detectors\.vgscienta\.electronanalyser|gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta))(\..+)?)$" searchPathRef="gda_pes"/>
   <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hatsaxs|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
@@ -3333,6 +3344,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-hrpd=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-hrpd.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="gda_ispyb_api">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.gda-ispyb-api=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.ispyb.api.git.url}"/>
+      <rm:uri format="{0}/gda-ispyb-api.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-ispyb-api=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from gda-ispyb-api.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
