@@ -1182,6 +1182,7 @@ class PewmaManager(object):
                 if component_to_use == abbrev:
                     components_to_use[index] = actual
                     category_implied.add(cat)
+                    self.logger.info('%sTranslated "%s" --> component "%s" in category %s' % (self.log_prefix, abbrev, actual, cat))
                     continue
             else:
                 # component name is specified verbatim
