@@ -1186,7 +1186,7 @@ class PewmaManager(object):
                     continue
             else:
                 # component name is specified verbatim
-                if component_to_use.endswith(('-config', '-configs', '-clients')) or component_to_use.startswith('uk.ac.gda.'):
+                if component_to_use.endswith(('-config', '-configs', '-clients')) or component_to_use.startswith(('gda','uk.ac.gda.')):
                     category_implied.add('gda')  # must be a GDA project
         if len(category_implied) > 1:
             raise PewmaException('ERROR: the %s components you want to materialize %s come from more than 1 category: %s' %

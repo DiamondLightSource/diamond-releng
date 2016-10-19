@@ -91,7 +91,7 @@ def parse_jenkins_jobname(jobname):
             parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerrit-trigger', '-junit.tests-gerrit')))
 
         if 'junit' in jobname:
-            parse_result.append(('materialize_components', 'all-dls-configs all-dls-clients gdaserver'))
+            parse_result.append(('materialize_components', 'all-dls-configs all-dls-clients gdaserver gda-orphan-projects'))
 
         # GDA create.product.beamline jobs (client)
         # if this is a create.product job, work out the name of the two downstream jobs (the publish.snapshot job, and the squish trigger job)
@@ -463,7 +463,7 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('GDA_release', 'master'),
         ('job_variant', None),
-        ('materialize_components', 'all-dls-configs all-dls-clients gdaserver'),
+        ('materialize_components', 'all-dls-configs all-dls-clients gdaserver gda-orphan-projects'),
         ('postbuild_scan_for_compiler_warnings', True),
         ('postbuild_scan_for_open_tasks', True),
         ]
@@ -474,7 +474,7 @@ def test_parse_jenkins_jobname():
         ('download.public', False),
         ('GDA_release', 'master'),
         ('job_variant', None),
-        ('materialize_components', 'all-dls-configs all-dls-clients gdaserver'),
+        ('materialize_components', 'all-dls-configs all-dls-clients gdaserver gda-orphan-projects'),
         ('build_options_extra', '--suppress-compile-warnings'),
         ]
     write_parse_result(p, output)
