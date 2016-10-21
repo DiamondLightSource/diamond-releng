@@ -422,10 +422,10 @@ class PewmaManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Test/Corba options")
-        group.add_option('--include', dest='plugin_includes', type='string', metavar='<pattern>,<pattern>,...', default="",
-                               help='Only process plugin names matching one or more of the glob patterns')
-        group.add_option('--exclude', dest='plugin_excludes', type='string', metavar='<pattern>,<pattern>,...', default="",
-                               help='Do not process plugin names matching any of the glob patterns')
+        group.add_option('--include', dest='project_includes', type='string', metavar='<pattern>,<pattern>,...', default="",
+                               help='Only process project names matching one or more of the glob patterns')
+        group.add_option('--exclude', dest='project_excludes', type='string', metavar='<pattern>,<pattern>,...', default="",
+                               help='Do not process project names matching any of the glob patterns')
         default_GDALargeTestFilesLocation = '/dls_sw/dasc/GDALargeTestFiles/'  # location at Diamond
         if not os.path.isdir(default_GDALargeTestFilesLocation):
             default_GDALargeTestFilesLocation=""
@@ -819,31 +819,31 @@ class PewmaManager(object):
                         raise PewmaException('ERROR: %s contains an invalid plugin pattern "%s"' % (p, err_msg_prefix,))
 
 
-    def set_all_plugins_with_releng_ant(self):
-        """ Finds all the plugins in the self.workspace_git_loc directory, provided they contain a releng.ant file plus compiled code.
+    def set_all_imported_projects_with_releng_ant(self):
+        """ Finds all the projects in the self.workspace_git_loc directory, provided
+            - they contain a releng.ant file
+            - they have been imported into the workspace
             Result is a dictionary of {plugin-name: relative/path/to/plugin} (the path is relative to self.workspace_git_loc)
         """
 
-        plugin_names_paths = {}
+        projects_imported_dir = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.resources', '.projects')
+        projects_imported = set()
+        if os.path.isdir(projects_imported_dir):
+            for project_name in os.listdir(projects_imported_dir):
+                if os.path.isdir(os.path.join(projects_imported_dir, project_name)):
+                    projects_imported.add(project_name)
+
+        project_names_paths = {}
         for root, dirs, files in os.walk(self.workspace_git_loc):
             for d in dirs[:]:
-                if d.startswith('.') or d.endswith(('.feature', '.site')):
+                if d.startswith('.') or d.endswith(('.feature', '.site', '-config')):
                     dirs.remove(d)
             if 'releng.ant' in files:
-                dirs[:] = []  # plugins are never nested inside plugins, so no need to look beneath this directory
-                bin_dir_path = os.path.join(root, 'classes' if os.path.basename(root) == 'uk.ac.gda.core' else 'bin')
-                if os.path.isdir(bin_dir_path):
-                    # only include this plugin if it contains compiled code (in case the filesystem contains a repo, but the workspace did not import all the projects)
-                    for proot, pdirs, pfiles in os.walk(bin_dir_path):
-                        for d in pdirs[:]:
-                            if d.startswith('.'):
-                                pdirs.remove(d)
-                        if [f for f in pfiles if not f.startswith('.')]:  # if any non-hidden file in the bin_dir_path directory
-                            # return plugin path relative to the parent directory, and plugin name
-                            assert os.path.basename(root) not in plugin_names_paths
-                            plugin_names_paths[os.path.basename(root)] = os.path.relpath(root, self.workspace_git_loc)
-                            break
-        self.all_plugins_with_releng_ant = plugin_names_paths
+                dirs[:] = []  # projects are not normally nested inside other projects, so no need to look beneath this directory
+                if os.path.basename(root) in projects_imported:  # only include this project if it was imported into the workspace
+                    assert os.path.basename(root) not in project_names_paths  # we should not have seen this before
+                    project_names_paths[os.path.basename(root)] = os.path.relpath(root, self.workspace_git_loc)
+        self.all_imported_projects_with_releng_ant = project_names_paths
 
 
     def get_items_matching_glob_patterns(self, items, patterns):
@@ -855,29 +855,29 @@ class PewmaManager(object):
         return sorted( set(matching_items) )
 
 
-    def get_selected_plugins_with_releng_ant(self):
-        """ Finds all the plugin names that match the specified glob patterns (combination of --include and --exclude).
+    def get_selected_imported_projects_with_releng_ant(self):
+        """ Finds all the project names that match the specified glob patterns (combination of --include and --exclude).
             If neither --include nor --exclude specified, return the empty string
         """
 
-        if self.options.plugin_includes or self.options.plugin_excludes:
-            self.set_all_plugins_with_releng_ant()
+        if self.options.project_includes or self.options.project_excludes:
+            self.set_all_imported_projects_with_releng_ant()
 
-            if self.options.plugin_includes:
-                included_plugins = self.get_items_matching_glob_patterns(list(self.all_plugins_with_releng_ant.keys()), self.options.plugin_includes)
+            if self.options.project_includes:
+                included_projects = self.get_items_matching_glob_patterns(list(self.all_imported_projects_with_releng_ant.keys()), self.options.project_includes)
             else:
-                included_plugins = self.all_plugins_with_releng_ant
+                included_projects = self.all_imported_projects_with_releng_ant
 
-            if self.options.plugin_excludes:
-                excluded_plugins = self.get_items_matching_glob_patterns(list(self.all_plugins_with_releng_ant.keys()), self.options.plugin_excludes)
+            if self.options.project_excludes:
+                excluded_projects = self.get_items_matching_glob_patterns(list(self.all_imported_projects_with_releng_ant.keys()), self.options.project_excludes)
             else:
-                excluded_plugins = []
+                excluded_projects = []
 
-            selected_plugins = sorted(set(included_plugins) - set(excluded_plugins))
+            selected_projects = sorted(set(included_projects) - set(excluded_projects))
 
-            if not selected_plugins:
-                raise PewmaException("ERROR: no compiled plugins matching --include=%s --exclude=%s found" % (self.options.plugin_includes, self.options.plugin_excludes))
-            return "-Dplugin_list=\"%s\"" % '|'.join([self.all_plugins_with_releng_ant[pname] for pname in selected_plugins])
+            if not selected_projects:
+                raise PewmaException("ERROR: no imported projects matching --include=%s --exclude=%s found" % (self.options.project_includes, self.options.project_excludes))
+            return "-Dplugin_list=\"%s\"" % '|'.join([self.all_imported_projects_with_releng_ant[pname] for pname in selected_projects])
 
         return ""
 
@@ -1837,8 +1837,8 @@ class PewmaManager(object):
         """ Processes using an ant target
         """
 
-        selected_plugins = self.get_selected_plugins_with_releng_ant()  # might be an empty string to indicate all
-        return self.run_ant_in_subprocess((selected_plugins, target))
+        selected_projects = self.get_selected_imported_projects_with_releng_ant()  # might be an empty string to indicate all
+        return self.run_ant_in_subprocess((selected_projects, target))
 
 
     def action_developer_test(self):
@@ -2221,7 +2221,7 @@ class PewmaManager(object):
         # validation of options and action
         if self.options.keyring:
             self.logger.warn('"--keyring" and "-k" options obsolete; ignored')
-        self.validate_glob_patterns(self.options.plugin_includes, self.options.plugin_excludes, '--include or --exclude')
+        self.validate_glob_patterns(self.options.project_includes, self.options.project_excludes, '--include or --exclude')
         self.validate_glob_patterns(self.options.repo_includes, self.options.repo_excludes, '--repo-include or --repo-exclude')
         if self.options.delete and self.options.recreate:
             raise PewmaException('ERROR: you can specify at most one of --delete and --recreate')
