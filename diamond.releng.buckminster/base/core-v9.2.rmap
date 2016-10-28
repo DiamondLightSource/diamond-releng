@@ -2346,7 +2346,7 @@
   <!--
        Target Platform components (published from thirdparty/)
   -->
-  <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api|me\.moocar\.logback-gelf|org\.mariadb\.jdbc)$" searchPathRef="GDA_tp_logging"/>
+  <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.(api|ext)|me\.moocar\.logback-gelf|org\.mariadb\.jdbc)$" searchPathRef="GDA_tp_logging"/>
   <rm:locator pattern="^com\.google\.gson$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^com\.google\.guava$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
