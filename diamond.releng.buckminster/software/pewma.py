@@ -137,6 +137,14 @@ SYSTEM_PROBLEM_ERROR_PATTERNS = ( # Error messages that identify a problem with 
     ('java\.lang\.OutOfMemoryError: unable to create new native thread', 'System problem - out of threads'),  # sometimes occurs in Jenkins
     )
 
+OUTPUT_LINES_TO_SUPPRESS = (
+    "INFO:  importproxysettings\n",
+    "WARN:  There are no proxy settings to import.\n",
+    'SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".\n',
+    "SLF4J: Defaulting to no-operation (NOP) logger implementation\n",
+    "SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.\n"
+    )
+
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
     # repository                  Gerrit URL
     ('daq-platform.git'         , 'ssh://gerrit.diamond.ac.uk:29418/daq/daq-platform.git'),
@@ -455,7 +463,6 @@ class PewmaManager(object):
                                default='INFO', help='Logging level (default: %default)')
         group.add_option('--debug-options-file', dest='debug_options_file', type='string', metavar='<path>',
                                help='File containing debug options for Buckminster')
-        group.add_option('--skip-proxy-setup', dest='skip_proxy_setup', action='store_true', default=False, help='Don\'t define any proxy settings')
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Git options (when using the git subcommand)")
@@ -1120,8 +1127,7 @@ class PewmaManager(object):
             with open(self.script_file_path, 'w') as script_file:
                 script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                                   ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
-                if not self.options.skip_proxy_setup:
-                    script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
+                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
                 # set preferences
                 if self.options.maxParallelMaterializations:
                     script_file.write('setpref maxParallelMaterializations=%s\n' % (self.options.maxParallelMaterializations,))
@@ -1606,8 +1612,7 @@ class PewmaManager(object):
         with open(self.script_file_path, 'w') as script_file:
             script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
-            if not self.options.skip_proxy_setup:
-                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
+            script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             script_file.write('perform ' + properties_text)
             script_file.write('-Dtarget.os=* -Dtarget.ws=* -Dtarget.arch=* ')
             script_file.write('%(site_name)s#buckminster.clean\n' % {'site_name': self.site_name})
@@ -1634,8 +1639,7 @@ class PewmaManager(object):
         with open(self.script_file_path, 'w') as script_file:
             script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
-            if not self.options.skip_proxy_setup:
-                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
+            script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if thorough:
                 script_file.write('build --thorough\n')
             else:
@@ -1705,8 +1709,7 @@ class PewmaManager(object):
         with open(self.script_file_path, 'w') as script_file:
             script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
-            if not self.options.skip_proxy_setup:
-                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
+            script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if not self.options.assume_build:
                 script_file.write('build --thorough\n')
             script_file.write('perform ' + properties_text)
@@ -1805,8 +1808,7 @@ class PewmaManager(object):
         with open(self.script_file_path, 'w') as script_file:
             script_file.write('### File generated ' + time.strftime("%a, %Y/%m/%d %H:%M:%S %z") +
                               ' (' + os.environ.get('BUILD_URL','$BUILD_URL:missing') + ')\n')
-            if not self.options.skip_proxy_setup:
-                script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
+            script_file.write('importproxysettings\n')  # will import proxy settings from Java system properties
             if not self.options.assume_build:
                 script_file.write('build --thorough\n')
             script_file.write('perform ' + properties_text)
@@ -2006,6 +2008,8 @@ class PewmaManager(object):
             retcode = 2  # assume failure, we'll set to 0 if success
             try:
                 process = subprocess.Popen(buckminster_command, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+                last_text_to_suppress = OUTPUT_LINES_TO_SUPPRESS[-1]
+                seen_last_text_to_suppress = False
                 for line in iter(process.stdout.readline, b''):
                     # sometimes there are system problems
                     # sometimes JGit gets intermittent failures (network?) when cloning a repository
@@ -2027,7 +2031,16 @@ class PewmaManager(object):
                             if buckminster_bug:
                                 buckminster_bugs.append(error_summary)
                     if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
-                        print(line, end='')  # don't add an extra newline
+                        if seen_last_text_to_suppress:
+                            print(line, end='')  # don't add an extra newline
+                        else:
+                            for x in OUTPUT_LINES_TO_SUPPRESS:
+                                if line == x:
+                                    if line == last_text_to_suppress:
+                                        seen_last_text_to_suppress = True
+                                    break
+                            else:
+                                print(line, end='')  # don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
                 retcode = process.returncode
             except OSError:
@@ -2316,80 +2329,19 @@ class PewmaManager(object):
                             error_message += ' (in ' + root + ')'
                         raise PewmaException(error_message + '. Abandoning.')
 
-        # Proxy handling is a bit of a mess.
-        # Python and Buckminster (java) can potentially access network resources, and they handle proxy settings differently.
-        # The technique used here seems to work (meaning it uses the proxy when it is supposed to, and not when it isn't).
-        # Don't mess around with it; things that look like they should work, don't.
-        # The only way to know if this is doing the right thing is to test with a network tracing tool such as wireshark.
-        if self.options.skip_proxy_setup:
-            for env_name in ('http_proxy', 'https_proxy', 'no_proxy'):
-                log_text = 'Using existing %s/%s = ' % (env_name, env_name.upper())
-                for variant in (env_name, env_name.upper()):
-                    if variant not in os.environ:
-                        log_text += '(unset)'
-                    else:
-                        log_text += os.environ[variant]
-                    log_text += '/'
-                self.logger.debug(log_text[:-1])  # drop trailing /
+        # convert proxy settings (as specified in environment variables) into Java system properties
+        self.java_proxy_system_properties = []
+        for env_name in ('http_proxy', 'https_proxy'):
+            for variant in (env_name, env_name.upper()):
+                setting = os.environ.get(variant,'').strip()
+                if setting:
+                    protocol = env_name.split('_')[0]
+                    host, port = setting.rsplit(':', 1)
+                    self.java_proxy_system_properties.extend(('"-D%s.proxyHost=%s"' % (protocol, host), '"-D%s.proxyPort=%s"' % (protocol, port)))
+        setting = os.environ.get('no_proxy','').strip()
+        if setting:
+            self.java_proxy_system_properties.append('"-Dhttp.nonProxyHosts=%s"' % (setting,),)
             self.logger.debug('Note: Experiments suggest that no_proxy is ignored by Buckminster')
-            self.java_proxy_system_properties = ()
-        else:
-            fqdn = socket.getfqdn()
-            if fqdn.endswith('.diamond.ac.uk'):
-                ### 17/Mar/2016 all proxy settings commented out, since DLS/STFC moved to a transparent proxy ###
-                #===============================================================
-                # proxy_value = 'wwwcache.rl.ac.uk:8080'
-                # no_proxy_value = 'dasc-git.diamond.ac.uk,dawn.diamond.ac.uk,gerrit.diamond.ac.uk,jenkins.diamond.ac.uk,svn.diamond.ac.uk,172.16.0.0/12,localhost,127.*,[::1]'
-                # self.java_proxy_system_properties = (
-                #     '"-Dhttp.proxyHost=wwwcache.rl.ac.uk"', '"-Dhttp.proxyPort=8080"',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
-                #     '"-Dhttps.proxyHost=wwwcache.rl.ac.uk"', '"-Dhttps.proxyPort=8080"',
-                #     # please see Jira DASCTEST-317 for a discussion of proxy bypass specification
-                #     '"-Dhttp.nonProxyHosts=dasc-git.diamond.ac.uk\|dawn.diamond.ac.uk\|gerrit.diamond.ac.uk\|jenkins.diamond.ac.uk\|svn.diamond.ac.uk\|172.16.0.0/12\|localhost\|127.*\|[::1]"',  # applies to https as well
-                #     )
-                #===============================================================
-                proxy_value = ''
-                no_proxy_value = ''
-                self.java_proxy_system_properties = ()
-            elif fqdn.endswith('.esrf.fr'):
-                proxy_value = 'proxy.esrf.fr:3128'
-                no_proxy_value = '127.0.0.1,localhost'
-                self.java_proxy_system_properties = (
-                    '"-Dhttp.proxyHost=proxy.esrf.fr"', '"-Dhttp.proxyPort=3128"',  # http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html
-                    '"-Dhttps.proxyHost=proxy.esrf.fr"', '"-Dhttps.proxyPort=3128"',
-                    '"-Dhttp.nonProxyHosts=localhost\|127.*\|[::1]"',  # applies to https as well
-                    )
-            else:
-                proxy_value = ''
-                no_proxy_value = ''
-                self.java_proxy_system_properties = ()
-            for env_name, env_value in (('http_proxy', 'http://'+proxy_value if proxy_value else ''),
-                                        ('https_proxy', 'https://'+proxy_value if proxy_value else ''),
-                                        ('no_proxy', no_proxy_value)):
-                if env_name not in os.environ:
-                    old_value = None  # indicates unset
-                else:
-                    old_value = os.environ[env_name].strip()
-                if env_value:
-                    if old_value:
-                        self.logger.debug('Setting %s=%s (previously: %s)' % (env_name, env_value, old_value))
-                    elif old_value is None:
-                        self.logger.debug('Setting %s=%s (previously unset)' % (env_name, env_value,))
-                    else:
-                        self.logger.debug('Setting %s=%s (previously null)' % (env_name, env_value,))
-                    os.environ[env_name] = env_value
-                    env_name_upper = env_name.upper()
-                    if env_name_upper in os.environ:
-                        old_value = os.environ[env_name_upper].strip()
-                        if old_value and (old_value != env_value):
-                            self.logger.debug('Unsetting %s (previously: %s)' % (env_name_upper, old_value,))
-                            del os.environ[env_name_upper]
-                else:
-                    if old_value:
-                        self.logger.debug('No new value found for %s (left as: %s)' % (env_name, old_value))
-                    elif old_value is None:
-                        self.logger.debug('No new value found for %s (left unset)' % (env_name,))
-                    else:
-                        self.logger.debug('No new value found for %s (left null)' % (env_name,))
 
         # get some file locations (even though they might not be needed)
         if self.workspace_loc:
