@@ -42,7 +42,7 @@ COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'uk.ac.diamond.dawn.site', 'dawn'
 
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
-    ('gda', 'master', 'gda-master.cquery', 'v3.0', ('master', '9.master', 'v9.master'), ('1.8.0',)),
+    ('gda', 'master', 'gda-master.cquery', 'v3.1', ('master', '9.master', 'v9.master'), ('1.8.0',)),
     ('gda', 'v9.1', 'gda-v9.1.cquery', 'v3.0', ('v9.1', '9.1', '91'), ('1.8.0',)),
     ('gda', 'v9.0', 'gda-v9.0.cquery', 'v3.0', ('v9.0', '9.0', '90'), ('1.8.0',)),
     ('gda', '8.master.astra', 'gda-v8.master.astra.cquery', 'v2.12', ('8.master.astra', 'v8.master.astra'), ('1.8.0',)),
@@ -60,7 +60,7 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840'), ('1.7.0',)),
     ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839'), ('1.7.0',)),
     ('gda', 'v8.38', 'gda-v8.38.cquery', 'v2.6', ('v8.38', '8.38', '838'), ('1.7.0',)),
-    ('dawn', 'master', 'dawn-master.cquery', 'v3.0', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', 'master', 'dawn-master.cquery', 'v3.1', ('master', '2.master', 'v2.master'), ('1.8.0',)),
     ('dawn', '2.2', 'dawn-v2.2.cquery', 'v3.0', ('v2.2', '2.2'), ('1.8.0',)),
     ('dawn', '2.1', 'dawn-v2.1.cquery', 'v3.0', ('v2.1', '2.1'), ('1.8.0',)),
     ('dawn', '2.0', 'dawn-v2.0.cquery', 'v3.0', ('v2.0', '2.0'), ('1.8.0',)),
