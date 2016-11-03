@@ -236,11 +236,11 @@
   <!--
        Git repositories
   -->
-  <!-- ** beamlines *** -->
+  <!-- *** beamlines *** -->
   <rm:propertyElement key="beamlines.b22.rsync.git.url">
     <bc:constant value="${diamond.dascgit.url}/beamlines/b22-rsync.git"/>
   </rm:propertyElement>
-  <!-- ** daq- *** -->
+  <!-- *** daq- *** -->
   <rm:propertyElement key="daq.eclipse.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
@@ -279,7 +279,7 @@
   <rm:propertyElement key="daq.platform.git.url">
     <bc:constant value="${daq.platform.${daq.platform.git.location.translated}.url}/daq-platform.git"/>
   </rm:propertyElement>
-  <!-- ** dawn- *** -->
+  <!-- *** dawn- *** -->
   <rm:propertyElement key="dawn.commandserver.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -445,7 +445,7 @@
   <rm:propertyElement key="dawn.workflow.git.url">
     <bc:constant value="${github.${dawn.workflow.github.authentication}.url}${dawn.workflow.github.organization}/dawn-workflow.git"/>
   </rm:propertyElement>
-  <!-- ** (eclipse/)dawnsci *** -->
+  <!-- *** (eclipse/)dawnsci *** -->
   <rm:propertyElement key="dawnsci.github.organization">
     <bc:constant value="eclipse"/>
   </rm:propertyElement>
@@ -455,7 +455,7 @@
   <rm:propertyElement key="dawnsci.git.url">
     <bc:constant value="${github.${dawnsci.github.authentication}.url}${dawnsci.github.organization}/dawnsci.git"/>
   </rm:propertyElement>
-  <!-- ** diamond- *** -->
+  <!-- *** diamond- *** -->
   <rm:propertyElement key="diamond.jacorb.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -585,7 +585,7 @@
   <rm:propertyElement key="diamond.springframework.git.url">
     <bc:constant value="${diamond.springframework.${diamond.springframework.git.location.translated}.url}/diamond-springframework.git"/>
   </rm:propertyElement>
-  <!-- ** diffcalc *** -->
+  <!-- *** diffcalc *** -->
   <rm:propertyElement key="diffcalc.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
@@ -595,7 +595,7 @@
   <rm:propertyElement key="diffcalc.git.url">
     <bc:constant value="${github.${diffcalc.github.authentication}.url}${diffcalc.github.organization}/diffcalc.git"/>
   </rm:propertyElement>
-  <!-- ** embl- *** -->
+  <!-- *** embl- *** -->
   <rm:propertyElement key="embl.cca.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -605,7 +605,7 @@
   <rm:propertyElement key="embl.cca.git.url">
     <bc:constant value="${github.${embl.cca.github.authentication}.url}${embl.cca.github.organization}/embl-cca.git"/>
   </rm:propertyElement>
-  <!-- ** epp- *** -->
+  <!-- *** epp- *** -->
   <rm:propertyElement key="epp.usagedata.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -631,7 +631,7 @@
   <rm:propertyElement key="epp.usagedata.git.url">
     <bc:constant value="${epp.usagedata.${epp.usagedata.git.location.translated}.url}/epp-usagedata.git"/>
   </rm:propertyElement>
-  <!-- ** gda- *** -->
+  <!-- *** gda- *** -->
   <rm:propertyElement key="gda.bimorph.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -1646,7 +1646,7 @@
   <rm:propertyElement key="gphl.sdcp.common.git.url">
     <bc:constant value="${gphl.sdcp.common.${gphl.sdcp.common.git.location.translated}.url}/gphl-sdcp-common.git"/>
   </rm:propertyElement>
-  <!-- ** jeromq *** -->
+  <!-- *** jeromq *** -->
   <rm:propertyElement key="jeromq.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -1656,7 +1656,7 @@
   <rm:propertyElement key="jeromq.git.url">
     <bc:constant value="${github.${jeromq.github.authentication}.url}${jeromq.github.organization}/jeromq.git"/>
   </rm:propertyElement>
-  <!-- ** Opt-ID *** -->
+  <!-- *** Opt-ID *** -->
   <rm:propertyElement key="opt.id.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
@@ -1666,7 +1666,7 @@
   <rm:propertyElement key="opt.id.git.url">
     <bc:constant value="${github.${opt.id.github.authentication}.url}${opt.id.github.organization}/Opt-ID.git"/>
   </rm:propertyElement>
-  <!-- ** org.eclipse.launchbar *** -->
+  <!-- *** org.eclipse.launchbar *** -->
   <rm:propertyElement key="org.eclipse.launchbar.github.organization">
     <bc:constant value="Itema-as"/>
   </rm:propertyElement>
@@ -1676,7 +1676,7 @@
   <rm:propertyElement key="org.eclipse.launchbar.git.url">
     <bc:constant value="${github.${org.eclipse.launchbar.github.authentication}.url}${org.eclipse.launchbar.github.organization}/org.eclipse.launchbar.git"/>
   </rm:propertyElement>
-  <!-- ** py4j *** -->
+  <!-- *** py4j *** -->
   <rm:propertyElement key="py4j.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -1686,7 +1686,7 @@
   <rm:propertyElement key="py4j.git.url">
     <bc:constant value="${github.${py4j.github.authentication}.url}${py4j.github.organization}/py4j.git"/>
   </rm:propertyElement>
-  <!-- ** (eclipse/)richbeans *** -->
+  <!-- *** (eclipse/)richbeans *** -->
   <rm:propertyElement key="richbeans.github.organization">
     <bc:constant value="eclipse"/>
   </rm:propertyElement>
@@ -1696,7 +1696,7 @@
   <rm:propertyElement key="richbeans.git.url">
     <bc:constant value="${github.${richbeans.github.authentication}.url}${richbeans.github.organization}/richbeans.git"/>
   </rm:propertyElement>
-  <!-- ** scisoft- *** -->
+  <!-- *** scisoft- *** -->
   <rm:propertyElement key="scisoft.2ddpr.git.location">
     <bc:constant value="${scisoft.git.location}"/>
   </rm:propertyElement>
@@ -2034,7 +2034,7 @@
   <rm:propertyElement key="scisoft.ws.git.url">
     <bc:constant value="${scisoft.ws.${scisoft.ws.git.location.translated}.url}/scisoft-ws.git"/>
   </rm:propertyElement>
-  <!-- ** sda *** -->
+  <!-- *** sda *** -->
   <rm:propertyElement key="sda.git.location">
     <bc:constant value="${scisoft.git.location}"/>
   </rm:propertyElement>
@@ -2060,7 +2060,7 @@
   <rm:propertyElement key="sda.git.url">
     <bc:constant value="${sda.${sda.git.location.translated}.url}/sda.git"/>
   </rm:propertyElement>
-  <!-- ** swt-xy-graph *** -->
+  <!-- *** swt-xy-graph *** -->
   <rm:propertyElement key="swt.xy.graph.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -2070,11 +2070,11 @@
   <rm:propertyElement key="swt.xy.graph.git.url">
     <bc:constant value="${github.${swt.xy.graph.github.authentication}.url}${swt.xy.graph.github.organization}/swt-xy-graph.git"/>
   </rm:propertyElement>
-  <!-- ** training *** -->
+  <!-- *** training *** -->
   <rm:propertyElement key="training.gerrit.1.git.url">
     <bc:constant value="${diamond.dascgerrit.url}/training/training-gerrit-1.git"/>
   </rm:propertyElement>
-  <!-- ** wychwood *** -->
+  <!-- *** wychwood *** -->
   <rm:propertyElement key="wychwood.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -2188,12 +2188,12 @@
         Components in Git repositories (note: patterns should match those in the CQuery advisor nodes)
         Please keep locators in sorted order of repository name
   -->
-  <!-- ** beamlines *** -->
+  <!-- *** beamlines *** -->
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
-  <!-- ** daq- *** -->
+  <!-- *** daq- *** -->
   <rm:locator pattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector(\..+)?|org\.apache\.activemq)(\..+)?)$" searchPathRef="daq_eclipse"/>
   <rm:locator pattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|emf\.edit|imaging\.server|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|guigenerator(\..+)?|tomography\.datacollection(\..+)?|scripting(\..+)?|server(\..+)?))$" searchPathRef="daq_platform"/>
-  <!-- ** dawn- *** -->
+  <!-- *** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.(services|ui)|conversion|io|jexl|jgoogleanalytics|macro|persistence|processing\.python|python.rpc|thirdparty.xml)(\..+)?)$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
@@ -2208,21 +2208,21 @@
   <rm:locator pattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
   <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|fileviewer(\.feature)?|isosurface(\..+)?|mapping\.(feature|ui)(\..+)?|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|ui)(\..+)?|python\.feature|slicing(\..+)?|spectrum\.(feature|ui)(\..+)?|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
   <rm:locator pattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" searchPathRef="dawn_workflow"/>
-  <!-- ** dawnsci *** -->
+  <!-- *** dawnsci *** -->
   <rm:locator pattern="^org\.eclipse\.(dawnsci|january)(\..+)?$" searchPathRef="dawnsci"/>
-  <!-- ** diamond- *** -->
+  <!-- *** diamond- *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.org\.jacorb$" searchPathRef="diamond_jacorb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.jython$" searchPathRef="diamond_jython"/>
   <rm:locator pattern="^org\.dawnsci\.miniconda(\..+)?$" searchPathRef="diamond_miniconda"/>
   <rm:locator pattern="^diamond\.releng\..+$" searchPathRef="diamond_releng"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="diamond_springframework"/>
-  <!-- ** diffcalc *** -->
+  <!-- *** diffcalc *** -->
   <rm:locator pattern="^diffcalc$" searchPathRef="diffcalc"/>
-  <!-- ** embl- *** -->
+  <!-- *** embl- *** -->
   <rm:locator pattern="^org\.embl\.cca\..+$" searchPathRef="embl_cca"/>
-  <!-- ** epp- *** -->
+  <!-- *** epp- *** -->
   <rm:locator pattern="^org\.eclipse\.epp\.usagedata\..+$" searchPathRef="epp_usagedata"/>
-  <!-- ** gda- *** -->
+  <!-- *** gda- *** -->
   <rm:locator pattern="^uk\.ac\.gda\.bimorph(\..+)?" searchPathRef="gda_bimorph"/>
   <rm:locator pattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" searchPathRef="gda_common"/>
   <rm:locator pattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" searchPathRef="gda_common_rcp"/>
@@ -2257,21 +2257,21 @@
   <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
   <rm:locator pattern="^uk\.ac\.(diamond\.daq\.(client\.microfocus(\..+)?|microfocus\.api|xas\.server\.feature)|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" searchPathRef="gda_xas_core"/>
-  <!-- ** gphl *** -->
+  <!-- *** gphl *** -->
   <rm:locator pattern="^com\.globalphasing\.sdcp\.abstract_beamline$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
   <rm:locator pattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" searchPathRef="gphl_sdcp_common"/>
-  <!-- ** jeromq *** -->
+  <!-- *** jeromq *** -->
   <rm:locator pattern="^org.zeromq$" searchPathRef="jeromq"/>
-  <!-- ** org.eclipse.launchbar *** -->
+  <!-- *** org.eclipse.launchbar *** -->
   <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
-  <!-- ** Opt-ID *** -->
+  <!-- *** Opt-ID *** -->
   <rm:locator pattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" searchPathRef="opt_id"/>
-  <!-- ** py4j *** -->
+  <!-- *** py4j *** -->
   <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j"/>
-  <!-- ** richbeans *** -->
+  <!-- *** richbeans *** -->
   <rm:locator pattern="^org\.eclipse\.richbeans\..+$" searchPathRef="richbeans"/>
-  <!-- ** scisoft- *** -->
+  <!-- *** scisoft- *** -->
   <rm:redirect pattern="uk\.ac\.diamond\.scisoft\.deprecated(\.rcp)?$" resolutionFilter="(disallow.scisoft.deprecated=true)" href="/***.ERROR.-.something.has.a.dependency.on.a-scisoft.deprecated-component,.but.the.CQuery.does.not.allow.this***"/>  <!-- See DASCTEST-212 -->
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" searchPathRef="scisoft_2ddpr"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.arpes(\.(feature|workflow\.feature))?$" searchPathRef="scisoft_arpes"/>
@@ -2286,13 +2286,13 @@
   <rm:locator pattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" searchPathRef="scisoft_spectroscopy"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|arpes\.calibration|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature|pydev\.rcp(\..+)?))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
-  <!-- ** sda *** -->
+  <!-- *** sda *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|scisoft\.applications|sda(\.bioclipse\.jmol\.feature)?)$" searchPathRef="sda"/>
-  <!-- ** swt-xy-graph *** -->
+  <!-- *** swt-xy-graph *** -->
   <!-- see below in the "Nebula" section -->
-  <!-- ** training *** -->
+  <!-- *** training *** -->
   <rm:locator pattern="^training\.gerrit\.(feature|plugin1|plugin2)$" searchPathRef="training_gerrit_1"/>
-  <!-- ** wychwood *** -->
+  <!-- *** wychwood *** -->
   <rm:locator pattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" searchPathRef="wychwood"/>
   <!--
        GDA components for specific beamlines
