@@ -30,7 +30,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector(\..+)?|org\.apache\.activemq)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|emf\.edit|imaging\.server|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|guigenerator(\..+)?|tomography\.datacollection(\..+)?|scripting(\..+)?|server(\..+)?))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|eclipse\.legacy|emf\.edit|imaging\.server|scisoftpy|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|tomography\.datacollection(\..+)?))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-platform.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" useTargetPlatform="false">
@@ -42,8 +42,8 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-doc.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <!-- dawn-eclipse is currently empty in master, but will be reused at some point
-    <cq:advisorNode namePattern="^org\.eclipse\.richbeans\..+$" allowCircularDependency="true" useTargetPlatform="false">
+    <!-- dawn-eclipse is currently empty in master, but may be reused at some point
+    <cq:advisorNode namePattern="^org\.eclipse\.<new-project-name>(\..+)$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
     -->
