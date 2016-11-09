@@ -86,6 +86,10 @@ for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
     assert abbrev not in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is the same as a category' % (abbrev,)
     assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
 
+INVALID_COMPONENTS = (  # tuple of (component name pattern, (applicable versions ...), error message) 
+    ('^all-dls-config$', ('master', 'v9.2'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    )
+
 # For newer CQueries, we specify -Declipse.p2.mirrors=false so that the DLS mirror of eclipse.org p2 sites (alfred.diamond.ac.uk) is used
 # Older CQueries do not use the local DLS mirror, so we should not specify that property
 CQUERY_PATTERNS_TO_SKIP_p2_mirrors_false = (
@@ -1096,6 +1100,11 @@ class PewmaManager(object):
         (components_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_components_category_version_cquery()
         if not components_to_use:
             raise PewmaException('ERROR: materialize command requires the name of the component to materialize')
+        for component in components_to_use:
+            for (invalid_component_pattern, applicable_versions, error_message) in INVALID_COMPONENTS:
+                if version_to_use in applicable_versions:
+                    if re.match(invalid_component_pattern, component):
+                        raise PewmaException('ERROR: ' + error_message)
 
         # create the workspace if required
         self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
