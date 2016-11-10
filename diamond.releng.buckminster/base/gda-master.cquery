@@ -94,7 +94,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-workflow.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.(dawnsci|january)(\..+)?$" allowCircularDependency="true" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci(\..+)?$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawnsci.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.jacorb$" useTargetPlatform="false">
@@ -234,6 +234,10 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     </cq:advisorNode>
     <cq:advisorNode namePattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" useTargetPlatform="false" branchTagPath="gda-master">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-sdcp-common.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.eclipse\.january(\..+)?$" useTargetPlatform="false">
+        <!-- only applicable if source.repository.january=true, otherwise org\.eclipse\.january is supplied by jars in the target platform -->
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">january.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org.zeromq$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">jeromq.git repository branch</cq:documentation>

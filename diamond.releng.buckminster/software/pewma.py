@@ -854,7 +854,9 @@ class PewmaManager(object):
             if 'releng.ant' in files:
                 dirs[:] = []  # projects are not normally nested inside other projects, so no need to look beneath this directory
                 if os.path.basename(root) in projects_imported:  # only include this project if it was imported into the workspace
-                    assert os.path.basename(root) not in project_names_paths  # we should not have seen this before
+                    if os.path.basename(root).startswith('org.eclipse.january') and ('/dawnsci.git/' in root):
+                        continue # ignore org.eclipse.january projects in the old (un-imported) location (dawnsci.git); the imported version is in january.git
+                    assert os.path.basename(root) not in project_names_paths  # we should not have seen this project before
                     project_names_paths[os.path.basename(root)] = os.path.relpath(root, self.workspace_git_loc)
         self.all_imported_projects_with_releng_ant = project_names_paths
 
