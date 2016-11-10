@@ -302,7 +302,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<attribute name="fork" default="on" />
 		<attribute name="forkmode" default="perBatch" />
 		<attribute name="maxmemory" default="512m" />
-		<attribute name="timeout" default="1800000" />
+		<attribute name="timeout" default="900000" />
 		<attribute name="printSummary" default="on" />
 		<attribute name="showoutput" default="true" />
 		<attribute name="logfailedtests" default="true" />
