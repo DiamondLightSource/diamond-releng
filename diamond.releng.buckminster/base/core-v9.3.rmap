@@ -44,15 +44,9 @@
     <bc:constant value="mars"/>
   </rm:propertyElement>
   <!-- ***** -->
-  <rm:propertyElement key="diamond.orbit.p2.version">  <!-- version of Diamond Orbit p2 repository to use -->
-    <bc:constant value="R201610100925"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <rm:propertyElement key="source.repository.january">  <!-- says whether to get org.eclipse.january* from a source repository, or a p2 site -->
-    <bc:constant value="false"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.january.p2.version">  <!-- version of Eclipse January p2 repository to use -->
-    <bc:constant value="1.0.1-20161109_163336"/>
+  <!-- version of Diamond Orbit p2 repository to use -->
+  <rm:propertyElement key="diamond.orbit.p2.version">
+    <bc:constant value="R201611161522"/>
   </rm:propertyElement>
   <!-- ***** -->
   <!-- version of Eclipse Orbit p2 repository to use -->
@@ -64,6 +58,14 @@
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.orbit.p2.version">
     <bc:constant value="${eclipse.orbit.p2.version.${eclipse.release}}"/>
+  </rm:propertyElement>
+  <!-- ***** -->
+  <!-- version of Eclipse January p2 repository to use -->
+  <rm:propertyElement key="source.repository.january">  <!-- says whether to get org.eclipse.january* from a source repository, or a p2 site -->
+    <bc:constant value="false"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="eclipse.january.p2.version">
+    <bc:constant value="1.0.1-20161109_163336"/>
   </rm:propertyElement>
   <!-- ***** -->
   <!-- version of Eclipse Jetty 9 p2 repository to use -->
@@ -1285,11 +1287,14 @@
     <bc:constant value="${gda.hrpd.${gda.hrpd.git.location.translated}.url}/gda-hrpd.git"/>
   </rm:propertyElement>
   <!-- -->
+  <rm:propertyElement key="source.repository.gda_ispyb_api">  <!-- says whether to get uk.ac.diamond.ispyb.* from a source repository, or a p2 site -->
+    <bc:constant value="false"/>
+  </rm:propertyElement>
   <rm:propertyElement key="gda.ispyb.api.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.ispyb.api.github.authentication">
-    <bc:constant value="ssh"/>  <!-- private repository, so ssh must be used -->
+    <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.ispyb.api.git.url">
     <bc:constant value="${github.${gda.ispyb.api.github.authentication}.url}${gda.ispyb.api.github.organization}/gda-ispyb-api.git"/>
@@ -2264,7 +2269,7 @@
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
   <rm:locator pattern="^uk\.ac\.gda\.epics(\.(adviewer|client|test))?$" searchPathRef="gda_epics"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.ispyb\.(.+)$" searchPathRef="gda_ispyb_api"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.ispyb\.(.+)$" searchPathRef="gda_ispyb_api"/>  <!-- if source.repository.gda_ispyb_api=true, materializes source projects, otherwise materializes jars into tp/ -->
   <rm:locator pattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" searchPathRef="gda_legacy"/>
   <rm:locator pattern="^((b16|b24|i06|i06-1|i07|i10|i15|i15-1|i16|mt|all-mt)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
   <rm:locator pattern="^((i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?|vmxi\.server\.feature)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" searchPathRef="gda_mx"/>
@@ -2333,7 +2338,6 @@
   <rm:locator pattern="^(GDALargeTestFiles|thirdparty)$" searchPathRef="extras_root"/>
   <rm:locator pattern="^uk\.ac\.diamond\.gda\.hc$" searchPathRef="diamond_gda_hc"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ida\.feature$" searchPathRef="core_svn"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.ispyb$" searchPathRef="core_svn"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.extensions|daresbury|developer\.tools|libs\.deps)$" searchPathRef="core_svn"/>
   <!--
        Components using in publishing from thirdparty/ to a p2 site from which Target Platform components can be materialized
@@ -2359,7 +2363,7 @@
   <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.quartz$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.xmlpull$" searchPathRef="eclipse_orbit_p2"/>
-  <!-- "^org\.eclipse\.january(\..+)?$" handled above -->
+  <!-- "^org\.eclipse\.january(\..+)?$" is in eclipse_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <!--
@@ -2395,6 +2399,7 @@
   <rm:locator pattern="^org\.(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.de\.jaret(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <!-- "^uk\.ac\.diamond\.ispyb\.(.+)$" is in diamond_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
   <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.(poi|ws\.commons\.util|xmlrpc\.(client|common|server))(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(org\.jfree|org.jfree\.chart)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(org\.jscience|org\.jscience4|org\.mihalis\.opal|org\.nfunk\.jep|org\.powermock|rxtx)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
@@ -3369,14 +3374,19 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="gda_ispyb_api">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.gda-ispyb-api=true))" readerType="git">
+  <rm:searchPath name="gda_ispyb_api">  <!-- either source or jars can be materialized, as specified by a property -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.gda-ispyb-api=true))(source.repository.gda_ispyb_api=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${gda.ispyb.api.git.url}"/>
       <rm:uri format="{0}/gda-ispyb-api.git,{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.gda-ispyb-api=true))(!(source.repository.gda_ispyb_api=true)))" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${alfred.url}/p2/orbit/${diamond.orbit.p2.version}/repository/"/>
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-ispyb-api=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-ispyb-api.git, but the CQuery specified that this repository should not be used ***">

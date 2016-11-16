@@ -193,7 +193,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(client\.)?hrpd$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-hrpd.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.ispyb\.(.+)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.ispyb\.(.+)$">  <!-- if source.repository.gda-ispyb-api=true, materializes source projects, otherwise materializes jars into tp/ -->
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-ispyb-api.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" useTargetPlatform="false">
@@ -235,7 +235,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" useTargetPlatform="false" branchTagPath="gda-master">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-sdcp-common.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.january(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.eclipse\.january(\..+)?$">
         <!-- only applicable if source.repository.january=true, otherwise org\.eclipse\.january is supplied by jars in the target platform -->
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">january.git repository branch</cq:documentation>
     </cq:advisorNode>

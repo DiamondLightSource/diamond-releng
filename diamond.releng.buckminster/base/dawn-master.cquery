@@ -255,7 +255,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-sdcp-common.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gphl-sdcp-common" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.january(\..+)?$" allowCircularDependency="true" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.eclipse\.january(\..+)?$" allowCircularDependency="true">
         <!-- only applicable if source.repository.january=true, otherwise org\.eclipse\.january is supplied by jars in the target platform -->
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">january.git repository branch</cq:documentation>
     </cq:advisorNode>

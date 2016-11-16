@@ -4148,7 +4148,7 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="https://alfred.diamond.ac.uk/p2/orbit/R201610100925/repository/"/>
+      <rm:uri format="https://alfred.diamond.ac.uk/p2/orbit/R201611161522/repository/"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_swtbot_2.3.0">  <!-- SWTBot -->
