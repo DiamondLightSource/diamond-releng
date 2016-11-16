@@ -2311,7 +2311,8 @@
        Target Platform components (published from thirdparty/)
   -->
   <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.(api|ext)|me\.moocar\.logback-gelf|org\.mariadb\.jdbc)$" searchPathRef="GDA_tp_logging"/>
-  <rm:locator pattern="^com\.google\.(gson|guava)$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^com\.google\.gson$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.google\.guava$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
@@ -4143,6 +4144,13 @@
   <!--
        Target Platform (Eclipse)
   -->
+  <rm:searchPath name="diamond_orbit_p2">  <!-- exists jst to get com.google.gson 2.7.0 -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="https://alfred.diamond.ac.uk/p2/orbit/R201610100925/repository/"/>
+    </rm:provider>
+  </rm:searchPath>
   <rm:searchPath name="eclipse_swtbot_2.3.0">  <!-- SWTBot -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
