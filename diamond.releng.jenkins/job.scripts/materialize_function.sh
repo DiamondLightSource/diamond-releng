@@ -118,8 +118,12 @@ materialize_function () {
 
     if [[ "${materialize_type}" == "fresh" || "${materialize_type}" == "extra-materialize" || "${materialize_type}" == "recreate" ]]; then
         if [ -z "${materialize_components}" ]; then
-            echo "$""materialize_components not set, so terminating"
-            return 100
+            if [ -z "${materialize_component}" ]; then
+                echo "neither $""materialize_components nor $""materialize_component set, so terminating"
+                return 100
+            fi
+            # re-export old name as new name
+            export materialize_components=${materialize_component}
         fi
     fi
 
