@@ -5,7 +5,7 @@
 This program runs in the context of a specific GDA or DAWN release, which determines the repository branches that would normally be used
 
 It takes a specification of a change or changes to test, defined by one or more of:
-(1) A Gerrit topic or topics (which identifies one or more changesets, typically in different repositories)
+(1) A Gerrit topic or topics (which identify one or more changesets, typically in different repositories)
 (2) A Gerrit changeset or changesets
 (3) A repository/branch name to override the standard branch
 If multiple specifications are provided, they need to be consistent with each other, obviously
@@ -236,21 +236,33 @@ class RequestedChangesProcessor():
         # self.logger.debug(json.dumps(standard_json, indent=2))
         return standard_json
 
-    def get_change_owner_initials(self, ci):
+    def get_change_uploader_initials(self, ci):
         ''' Return an HTML fragment consisting of a change owner's initials, with their full name as hover text
         '''
         try:
-            change_owner_fullname = ci['owner']['name']
-            change_owner_initials = ''.join(map(lambda x: x[0], change_owner_fullname.split()))
-            return '(<span title="' + change_owner_fullname + '">' + change_owner_initials + '</span>)'
+            change_uploader_fullname = ci['revisions'].values()[0]['uploader']['name']
+            change_uploader_initials = ''.join(map(lambda x: x[0], change_uploader_fullname.split()))
+            return '(<span title="' + change_uploader_fullname + '">' + change_uploader_initials + '</span>)'
         except:
             return ''
 
-    def get_change_owner_email(self, ci):
+    def get_change_summary(self, ci):
+        ''' Return a text fragment consisting of the repository name and the first part of the change subject (first line of commit)
+            Used to form hover text on a Jenkins page
+        '''
+        try:
+            subject = ci['subject']
+            if len(subject) > 53:
+                subject = subject[0:50] + '...'
+            return '%s: %s' % (os.path.basename(ci['project']), subject)
+        except:
+            return ''
+
+    def get_change_uploader_email(self, ci):
         ''' Return the email address associated with a change owner
         '''
         try:
-            return ci['owner']['email']
+            return ci['revisions'].values()[0]['uploader']['email']
         except:
             return ''
 
@@ -267,7 +279,9 @@ class RequestedChangesProcessor():
             build_param_value = os.environ.get(build_param_name, '').strip()
             if not build_param_value:
                 continue
-            url = 'changes/?q=topic:{%s}&o=CURRENT_REVISION&o=DETAILED_ACCOUNTS' % (urllib.quote(build_param_value),)
+            # ignore abandoned changes that are part of the topic (just like Gerrit does)
+            # if an abandoned change is specified explicitly (rather than as part of a topic), then it's a user error if the change is abandoned
+            url = 'changes/?q=topic:{%s}+-status:abandoned&o=CURRENT_REVISION&o=DETAILED_ACCOUNTS' % (urllib.quote(build_param_value),)
             changeinfos = self.gerrit_REST_api(url)
             if (not changeinfos) or (len(changeinfos) == 0):
                 self.logger.error('Item "%s" does not exist (or is not visible to Jenkins)' % (url.partition('?')[2].partition('&')[0],))
@@ -276,13 +290,14 @@ class RequestedChangesProcessor():
             component_changes_description = ''
             for ci in sorted(changeinfos, key=lambda ci: os.path.basename(ci['project'])):  # there can be multiple changeinfos for a topic
                 self.changes_to_test.append(ci)
-                change_owner_initials = self.get_change_owner_initials(ci)
+                change_uploader_initials = self.get_change_uploader_initials(ci)
+                change_summary = self.get_change_summary(ci)
                 self.logger.info('Build parameter %s=%s will test change "%s" in "%s", branch "%s", patch set "%s"' %
                                 (build_param_name, build_param_value, ci['_number'], os.path.basename(ci['project']), ci['branch'], ci['revisions'].values()[0]['_number']))
-                component_changes_description += (' <a href="%(gerrit_url)s#/c/%(change)s/%(patchset)s" title="%(repo)s">%(change)s,%(patchset)s</a>%(change_owner_initials)s' %
-                                                  {'gerrit_url': self.gerrit_url_browser, 'repo': os.path.basename(ci['project']),
+                component_changes_description += (' <a href="%(gerrit_url)s#/c/%(change)s/%(patchset)s" title="%(summary)s">%(change)s,%(patchset)s</a>%(change_uploader_initials)s' %
+                                                  {'gerrit_url': self.gerrit_url_browser, 'summary': change_summary,
                                                     'change': ci['_number'], 'patchset': ci['revisions'].values()[0]['_number'],
-                                                    'change_owner_initials': change_owner_initials})
+                                                    'change_uploader_initials': change_uploader_initials})
             self.jenkins_build_description += (GERRIT_ICON_HTML + ' topic <a href="%(gerrit_url)s#/q/topic:%(topic)s">%(topic)s</a><br>' %
                                                {'gerrit_url': self.gerrit_url_browser, 'topic': urllib.quote(build_param_value)})
             self.jenkins_build_description += '<span style="padding-left: 2em">(comprises</span> ' + component_changes_description.strip() + ')<br>'
@@ -312,13 +327,14 @@ class RequestedChangesProcessor():
             for ci in changeinfos:
                 self.changes_to_test.append(ci)
                 changes_specified_count += 1
-                change_owner_initials = self.get_change_owner_initials(ci)
+                change_uploader_initials = self.get_change_uploader_initials(ci)
+                change_summary = self.get_change_summary(ci)
                 self.logger.info('Build parameter %s=%s will test change "%s" in "%s", branch "%s", patch set "%s"' %
                                 (build_param_name, build_param_value, ci['_number'], os.path.basename(ci['project']), ci['branch'], ci['revisions'].values()[0]['_number']))
-                jenkins_build_description_changes += ('<a href="%(gerrit_url)s#/c/%(change)s/%(patchset)s" title="%(repo)s">%(change)s,%(patchset)s</a>%(change_owner_initials)s ' %
-                                                   {'gerrit_url': self.gerrit_url_browser, 'repo': os.path.basename(ci['project']),
+                jenkins_build_description_changes += ('<a href="%(gerrit_url)s#/c/%(change)s/%(patchset)s" title="%(summary)s">%(change)s,%(patchset)s</a>%(change_uploader_initials)s ' %
+                                                   {'gerrit_url': self.gerrit_url_browser, 'summary': change_summary,
                                                     'change': ci['_number'], 'patchset': ci['revisions'].values()[0]['_number'],
-                                                    'change_owner_initials': change_owner_initials})
+                                                    'change_uploader_initials': change_uploader_initials})
         if jenkins_build_description_changes:
             self.jenkins_build_description += (GERRIT_ICON_HTML +
                                                ' change' + (' ','s ')[bool(changes_specified_count > 1)] +
@@ -387,7 +403,7 @@ class RequestedChangesProcessor():
 
         # it's possible that we have multiple changes to test in the same project (repository)
         # check that they are all in the same dependency chain, and identify which is the top of the chain - this is the change we need to fetch
-        # check also that the dependency chain doesn't have more that one patchset for the same change
+        # check also that the dependency chain doesn't have more than one patchset for the same change
         # and finally, it really is better if all changes in the dependency change are the latest patchset for the change!
         self.changes_to_fetch = []  # a list of [ChangeInfos, [RelatedChangeAndCommitInfos], [RelatedChangeAndCommitInfos]], one per repository
         for (project, changes) in sorted(per_project_changes.iteritems()):
@@ -408,7 +424,7 @@ class RequestedChangesProcessor():
                 unmerged_older_related_changes = []  # the dependency chain of the current change - all unmerged related changes that are older than this change
                 seen_current_change_in_related_chain = False
                 for cr in relatedinfo['changes']:
-                    if '_change_number' not in cr:  # no _change_number indicates a related change that has already been merged
+                    if cr['status'] == 'MERGED':
                         break  # we have collected all the unmerged changes that are older than the current change
                     unmerged_all_related_changes.append(cr)
                     if not seen_current_change_in_related_chain:
@@ -436,6 +452,12 @@ class RequestedChangesProcessor():
                         self.logger.error('In "' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
                                           ' has a related change ' + str(cr['_change_number']) + '/' + str(cr['_revision_number']) +
                                           ' that is not current (latest patchset is ' + str(cr['_current_revision_number']) + ')')
+                        self.errors_found = True
+                        continue
+                    if cr['status'] not in ('NEW', 'DRAFT'):
+                        self.logger.error('Change "%s" in repository "%s" depends on related change "%s" that is not eligible for testing: status is "%s"' %
+                                          (str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']), os.path.basename(project),
+                                           str(cr['_change_number']) + '/' + str(cr['_revision_number']), cr['status']))
                         self.errors_found = True
 
             # at this point, unmerged_all_related_changes is (for this project) the dependency chain of the last change we looked at (any change would do)
