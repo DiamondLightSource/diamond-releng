@@ -116,6 +116,7 @@ def generate_cleanup_script(parent_directories_to_cleanup):
                             products_kept += 1
                         else:
                             print('  : will delete  %s' % (productdir_path,))
+                            script_file.write('  date +"%a %d/%b/%Y %H:%M:%S %z"\n')
                             script_file.write('  chmod -R u+w %s\n' % productdir_path)
                             script_file.write('  rm -rf       %s\n' % productdir_path)
                             products_deleted += 1
