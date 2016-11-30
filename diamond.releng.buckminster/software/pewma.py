@@ -135,6 +135,10 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent netw
     ('org\.eclipse\.equinox\.p2\.core\.ProvisionException: No repository found at', 'Network error'),  # text = no specific repository identified
     )
 
+PROJECT_ERROR_PATTERNS = ( # Error messages that identify an error reported by Buckminster
+    ('ERROR\s+\[\d+\]\s:\sError connecting project (\S+),', 1),  # 1 = first match group is the project
+    )
+
 BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermittent Buckminster bug
     ('ERROR\s+\[\d+\]\s:\sjava\.lang\.ArrayIndexOutOfBoundsException: -1', 'Buckminster intermittent bug - try rerunning'),  # https://bugs.eclipse.org/bugs/show_bug.cgi?id=372470
     ('ERROR\s+\[\d+\]\s:\sConnecting Git team provider failed\. See log for details\.', 'Buckminster intermittent failure - try rerunning'),
@@ -2016,6 +2020,7 @@ class PewmaManager(object):
         system_problems = []
         jgit_errors_repos = []
         jgit_errors_general = []
+        project_error_projects = []
         buckminster_bugs = []
         if not self.options.dry_run:
             sys.stdout.flush()
@@ -2028,6 +2033,7 @@ class PewmaManager(object):
                 for line in iter(process.stdout.readline, b''):
                     # sometimes there are system problems
                     # sometimes JGit gets intermittent failures (network?) when cloning a repository
+                    # sometimes Buckminster detects an error in the projects
                     # sometimes Buckminster hits an intermittent bug
                     for (error_pattern, error_summary) in SYSTEM_PROBLEM_ERROR_PATTERNS:
                         system_problem = re.search(error_pattern, line)
@@ -2041,6 +2047,13 @@ class PewmaManager(object):
                                     jgit_errors_repos.append(os.path.basename(jgit_error.group(error_summary)))
                                 else:
                                     jgit_errors_general.append(error_summary)
+                        for (error_pattern, error_summary) in PROJECT_ERROR_PATTERNS:
+                            project_error = re.search(error_pattern, line)
+                            if project_error:
+                                try:
+                                    project_error_projects.append(project_error.group(error_summary))
+                                except:
+                                    project_error_projects.append('<unknown>')
                         for (error_pattern, error_summary) in BUCKMINSTER_BUG_ERROR_PATTERNS:
                             buckminster_bug = re.search(error_pattern, line)
                             if buckminster_bug:
@@ -2069,7 +2082,7 @@ class PewmaManager(object):
         else:
             retcode = 0
 
-        if any((system_problems, jgit_errors_repos, jgit_errors_general, buckminster_bugs)):
+        if any((system_problems, jgit_errors_repos, jgit_errors_general, project_error_projects, buckminster_bugs)):
             retcode = max(int(retcode), 2)
             for error_summary in set(system_problems):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary)
@@ -2077,6 +2090,8 @@ class PewmaManager(object):
                 self.logger.error('Failure cloning ' + repo + ' (probable network issue): you MUST delete the partial clone before retrying')
             for error_summary in set(jgit_errors_general):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
+            for project in set(project_error_projects):  # Use set, since multiple errors could have the same text, and only need logging once
+                self.logger.error('Failure importing ' +  project + ' (probably invalid project metadata): you need to take a careful look at the error details before retrying')
             for error_summary in set(buckminster_bugs):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary)
             if (self.options.prepare_jenkins_build_description_on_error or
@@ -2093,6 +2108,13 @@ class PewmaManager(object):
                     text += ' (probable network issue)'
                 elif jgit_errors_general:
                     text = 'Failure (probable network issue)'
+                elif project_error_projects:
+                    text = 'Failure importing '
+                    if len(project_error_projects) == 1:
+                        text += project_error_projects[0]
+                    else:
+                        text += str(len(project_error_projects)) + ' projects'
+                    text += ' (probably bad project metadata)'
                 elif buckminster_bugs:
                     text = 'Failure (intermittent Buckminster bug)'
                 if self.options.prepare_jenkins_build_description_on_error:
