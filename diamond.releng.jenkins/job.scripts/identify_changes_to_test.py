@@ -32,6 +32,7 @@ To understand this code, you need to look at the Gerrit REST API documentation
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import cgi
 import collections
 import itertools
 import json
@@ -242,19 +243,19 @@ class RequestedChangesProcessor():
         try:
             change_uploader_fullname = ci['revisions'].values()[0]['uploader']['name']
             change_uploader_initials = ''.join(map(lambda x: x[0], change_uploader_fullname.split()))
-            return '(<span title="' + change_uploader_fullname + '">' + change_uploader_initials + '</span>)'
+            return '(<span title="' + cgi.escape(change_uploader_fullname, quote=True) + '">' + cgi.escape(change_uploader_initials, quote=True) + '</span>)'
         except:
             return ''
 
     def get_change_summary(self, ci):
-        ''' Return a text fragment consisting of the repository name and the first part of the change subject (first line of commit)
+        ''' Return an HTML-escaped text fragment consisting of the repository name and the first part of the change subject (first line of commit)
             Used to form hover text on a Jenkins page
         '''
         try:
             subject = ci['subject']
             if len(subject) > 53:
                 subject = subject[0:50] + '...'
-            return '%s: %s' % (os.path.basename(ci['project']), subject)
+            return cgi.escape('%s: %s' % (os.path.basename(ci['project']), subject), quote=True)
         except:
             return ''
 
