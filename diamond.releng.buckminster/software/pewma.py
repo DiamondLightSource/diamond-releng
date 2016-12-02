@@ -123,7 +123,7 @@ PLATFORMS_AVAILABLE =  (
 TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
 
 JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent network problem causing a checkout failure (the affected repository is only sometimes identified)
-    ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+\.git):\s*($|Connection refused|Connection timed out|verify: false)', 1),  # 1 = first match group is the repository
+    ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+\.git):', 1),  # 1 = first match group is the repository
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (Connection reset|Short read of block\.)', 'Network error'),  # text = no specific repository identified
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: \S+://\S+/([^ /\t\n\r\f\v]+\.git): unknown host', 1),  # 1 = first match group is the repository
     ('org\.eclipse\.jgit\.api\.errors\.InvalidRemoteException: Invalid remote: origin', 'Network error'),  # text = no specific repository identified
