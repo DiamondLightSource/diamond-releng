@@ -434,7 +434,7 @@ class PewmaManager(object):
                                help='Don\'t print compiler warnings')
         group.add_option('--assume-build', dest='assume_build', action='store_true', default=False, help='Skip explicit build when running "site.p2" or "product" actions')
         group.add_option('--recreate-symlink', dest='recreate_symlink', action='store_true', default=False,
-                               help='Create or update the "client" symlink to the built product (linux64 only)')
+                               help='Create or update the "client" or "server" symlink to the built product (linux64 only)')
         group.add_option('--buckminster.properties.file', dest='buckminster_properties_file', type='string', metavar='<path>',
                          help='Properties file, relative to site project if not absolute (default: filenames looked for in order: buckminster.properties, buckminster.beamline.properties)')
         group.add_option('--buckminster.root.prefix', dest='buckminster_root_prefix', type='string', metavar='<path>',

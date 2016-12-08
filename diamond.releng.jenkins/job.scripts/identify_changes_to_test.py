@@ -632,7 +632,7 @@ post_materialize_function_gerrit () {
                  })
 
                 clone_url = None
-                # find out if it's a Gerrit repostitory, and get the clone URL
+                # find out if it's a Gerrit repository, and get the clone URL
                 url = 'projects/?r=.*%s' % (urllib.quote(repo),)  # we need to find the full name for the project, eg gda-core --> gda/gda-core
                 projectinfos = self.gerrit_REST_api(url)
                 if projectinfos and (len(projectinfos) == 1):
@@ -640,13 +640,21 @@ post_materialize_function_gerrit () {
                     project = projectinfos.keys()[0]  # there will only be one key (only one matching repo found)
                     project_quoted = urllib.quote_plus(project)
                     # now we need to find out the URL to fetch changes from the repository
-                    # get a single commit from the respository (donesn't matter which) and get the fetch URL
+                    # get a single commit from the repository (donesn't matter which) and get the fetch URL
                     url = 'changes/?q=project:%s&n=1&o=CURRENT_REVISION' % (project_quoted,)  # get the change record for some arbitrary change; this will give us the fetch URL
                     changeinfo  = self.gerrit_REST_api(url)
                     try:
                         clone_url = changeinfo[0]['revisions'].values()[0]['fetch']['ssh']['url']
                     except Exception as err:
                         self.logger.error('Error getting Gerrit fetch URL: ' % str(err))
+                # otherwise, hard-code a few URLs for common checkout cases
+                # dawnsci is a special case, not yet handled here, since there is an option to get if from GitHub DawnScience not eclipse
+                elif repo in ('daq-eclipse',):
+                    clone_url = 'git@github.com:DiamondLightSource/' + repo + '.git'
+                elif repo in ('richbeans',):
+                    clone_url = 'git@github.com:eclipse/' + repo + '.git'
+                elif repo in ('gda-ispyb-api',):
+                    clone_url = 'git://github.com/DiamondLightSource/.git' + repo + '.git'
 
                 if clone_url:
                     pre_materialize_script_file.write('''\
