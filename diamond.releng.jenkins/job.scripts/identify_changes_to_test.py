@@ -626,9 +626,9 @@ post_materialize_function_gerrit () {
     echo -e "\\n=========================================================================================================================================="
     echo -e "*** `date +"%%a %%d/%%b/%%Y %%H:%%M:%%S"` pre-materialize attempt: switching %(REPO)s to head %(ALTERNATE_HEAD)s using %(ACTION)s ***\\n"
     repo=${materialize_workspace_path}_git/%(REPO)s.git
-    ''' %           {'REPO': os.path.basename(repo),  # something like gda-core (not gda/gda-core)
-                     'ALTERNATE_HEAD': head,  # could be a commit as well
-                     'ACTION': action,
+''' %           {'REPO': os.path.basename(repo),  # something like gda-core (not gda/gda-core)
+                 'ALTERNATE_HEAD': head,  # could be a commit as well
+                 'ACTION': action,
                  })
 
                 clone_url = None
@@ -654,7 +654,7 @@ post_materialize_function_gerrit () {
                 elif repo in ('richbeans',):
                     clone_url = 'git@github.com:eclipse/' + repo + '.git'
                 elif repo in ('gda-ispyb-api',):
-                    clone_url = 'git://github.com/DiamondLightSource/.git' + repo + '.git'
+                    clone_url = 'git://github.com/DiamondLightSource/' + repo + '.git'
 
                 if clone_url:
                     pre_materialize_script_file.write('''\
