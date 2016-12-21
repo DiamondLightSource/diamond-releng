@@ -55,12 +55,21 @@ build_function () {
             # Due to long dependency chains, the first GDA build fails with "The project cannot be built until its prerequisite is built",
             # and needs to be followed by an incremental build to complete the build.
             if [[ "${retcode}" != "0" ]]; then
+                if [[ "${retcode}" != "1" ]]; then
+                    # major problem, not just compile errors, so exit immediately
+                    $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
+                    return ${retcode}
+                fi
                 ${pewma_py} ${log_level_option} ${build_options_extra} --suppress-compile-warnings -w ${materialize_workspace_path} ${buckminster_osgi_areas} ${buckminster_extra_vmargs} buildinc
                 retcode=$?
             fi
         fi
         $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
         if [[ "${retcode}" != "0" ]]; then
+            if [[ "${retcode}" != "1" ]]; then
+                # major problem, not just compile errors, so exit immediately
+                return ${retcode}
+            fi
             if [[ "${do_not_fail_on_compile_errors:-false}" != "true" ]]; then
                 echo 'append-build-description: Failure - compile errors'
                 return 1
