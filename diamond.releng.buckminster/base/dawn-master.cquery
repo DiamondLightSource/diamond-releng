@@ -36,7 +36,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-commandserver.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python(\.test)?|services|ui|util)|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv(\..+)?|common\.(services|ui)\.feature|conversion(\..+)?|io|jexl(\.test)?|jgoogleanalytics(\.test)?|macro(\..+)?|persistence(\..+)?|processing\.python|python.rpc(\.test)?|thirdparty\.xml\.feature))$" allowCircularDependency="true" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(org\.dawb\.(common\.(gpu|python(\.test)?|services|ui|util)|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv(\..+)?|common\.(services|ui)\.feature|conversion(\..+)?|io|jexl(\.test)?|jgoogleanalytics(\.test)?|macro(\..+)?|persistence(\..+)?|processing\.(docgenerator|python)|python.rpc(\.test)?|thirdparty\.xml\.feature))$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-common.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawnsci\.documentation(\..+)?$" useTargetPlatform="false">
