@@ -198,6 +198,9 @@ If you materialize, and then materialize again, the second materialize can fail.
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(client\.)?hrpd$" useTargetPlatform="false" branchTagPath="gda-8.master">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-hrpd.git repository branch</cq:documentation>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^(imca-cat-config|gov\.anl\.aps\.beamline\.(imca-cat(\..+)?))$" useTargetPlatform="false" branchTagPath="gda-8.master">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-imca-cat.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^(mapping-config|uk\.ac\.(diamond\.daq\.(analysis|arpes|common|core|dawnsci|deprecated|devices|mapping|nexus|queues|scannable|scanning|scisoftpy|server|thirdparty)(\..+)?|diamond\.dataacq\.xcen(\..+)?|gda\.example\.mapping\.feature|gda\.scan\.nxsscan(\..+)?))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-incubation.git repository branch</cq:documentation>
     </cq:advisorNode>

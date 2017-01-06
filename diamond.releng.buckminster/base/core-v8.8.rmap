@@ -1240,6 +1240,16 @@
     <bc:constant value="${gda.hrpd.${gda.hrpd.git.location.translated}.url}/gda-hrpd.git"/>
   </rm:propertyElement>
   <!-- -->
+  <rm:propertyElement key="gda.imca.cat.github.organization">
+    <bc:constant value="openGDA"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.imca.cat.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.imca.cat.git.url">
+    <bc:constant value="${github.${gda.imca.cat.github.authentication}.url}${gda.imca.cat.github.organization}/gda-imca-cat.git"/>
+  </rm:propertyElement>
+  <!-- -->
   <rm:propertyElement key="gda.incubation.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -2235,6 +2245,7 @@
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
   <rm:locator pattern="^uk\.ac\.gda\.epics(\.(adviewer|client|test))?$" searchPathRef="gda_epics"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
+  <rm:locator pattern="^(imca-cat-config|gov\.anl\.aps\.beamline\.(imca-cat(\..+)?))$" searchPathRef="gda_imca_cat"/>
   <rm:locator pattern="^(mapping-config|uk\.ac\.(diamond\.daq\.(analysis|arpes|common|core|dawnsci|deprecated|devices|mapping|nexus|queues|scannable|scanning|scisoftpy|server|thirdparty)(\..+)?|diamond\.dataacq\.xcen(\..+)?|gda\.example\.mapping\.feature|gda\.scan\.nxsscan(\..+)?))$" searchPathRef="gda_incubation"/>
   <rm:locator pattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" searchPathRef="gda_legacy"/>
   <rm:locator pattern="^((b16|b24|i06|i07|i10|i15|i15-1|i16|mt|all-mt)-(config|shared)|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
@@ -3326,7 +3337,7 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-    <rm:searchPath name="gda_hrpd">
+  <rm:searchPath name="gda_hrpd">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-hrpd=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${gda.hrpd.git.url}"/>
@@ -3337,6 +3348,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-hrpd=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-hrpd.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="gda_imca_cat">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-imca-cat=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.imca.cat.git.url}"/>
+      <rm:uri format="{0}/gda-imca-cat.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-imca-cat=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from gda-imca-cat.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
