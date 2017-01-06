@@ -109,7 +109,10 @@ def parse_jenkins_jobname(jobname):
                 else:
                     product_site = 'uk.ac.gda.' + beamline + '.site'
             elif site == 'APS':
-                product_site = 'gov.aps.gda.beamline.' + beamline + '.site'
+                if beamline == 'id18':
+                    product_site = 'gov.aps.gda.beamline.' + beamline + '.site'
+                else:
+                    product_site = 'gov.anl.aps.beamline.' + beamline + '.site'
             elif site == 'ESRF':
                 product_site = 'fr.esrf.gda.beamline.' + beamline + '.site'
             elif site == 'RAL':

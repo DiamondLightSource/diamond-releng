@@ -25,7 +25,11 @@ if [[ -z "${non_beamline_product}" ]]; then
             product_site=uk.ac.gda.${GDA_beamline}.site
         fi
     elif [[ "${beamline_site}" == "APS" ]]; then
-        product_site=gov.aps.gda.beamline.${GDA_beamline}.site
+        if [[ "${GDA_beamline}" == "id18" ]]; then
+            product_site=gov.aps.gda.beamline.${GDA_beamline}.site
+        else
+            product_site=gov.anl.aps.imca-cat.site
+        fi
     elif [[ "${beamline_site}" == "ESRF" ]]; then
         product_site=fr.esrf.gda.beamline.${GDA_beamline}.site
     elif [[ "${beamline_site}" == "RAL" ]]; then
