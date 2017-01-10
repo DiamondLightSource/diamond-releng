@@ -2091,7 +2091,7 @@ class PewmaManager(object):
             for error_summary in set(jgit_errors_general):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary + ' (probable network issue): you should probably delete the workspace before retrying')
             for project in set(project_error_projects):  # Use set, since multiple errors could have the same text, and only need logging once
-                self.logger.error('Failure importing ' +  project + ' (probably invalid project metadata): you need to take a careful look at the error details before retrying')
+                self.logger.error('Failure importing ' +  project + ' (might be invalid project metadata): take a careful look at the error details before retrying')
             for error_summary in set(buckminster_bugs):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary)
             if (self.options.prepare_jenkins_build_description_on_error or
