@@ -12,6 +12,7 @@
     <cq:property key="target.os" value="*"/>
     <cq:property key="target.ws" value="*"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(com\.globalphasing\..*)$" skipComponent="true"/>
     <cq:advisorNode namePattern="^(?!.*-config$).*" filter="(only_..-config=true)" skipComponent="true"/>
     <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
     <cq:advisorNode namePattern="^.*\.tests?$" filter="(skip_ALL_test_fragments=true)" componentType="osgi.bundle" skipComponent="true">
