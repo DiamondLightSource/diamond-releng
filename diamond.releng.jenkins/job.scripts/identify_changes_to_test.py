@@ -295,11 +295,11 @@ class RequestedChangesProcessor():
                 change_summary = self.get_change_summary(ci)
                 self.logger.info('Build parameter %s=%s will test change "%s" in "%s", branch "%s", patch set "%s"' %
                                 (build_param_name, build_param_value, ci['_number'], os.path.basename(ci['project']), ci['branch'], ci['revisions'].values()[0]['_number']))
-                component_changes_description += (' <a href="%(gerrit_url)s#/c/%(change)s/%(patchset)s" title="%(summary)s">%(change)s,%(patchset)s</a>%(change_uploader_initials)s' %
+                component_changes_description += (' <a href="%(gerrit_url)s#/c/%(change)s/%(patchset)s" title="%(summary)s" target="_blank">%(change)s,%(patchset)s</a>%(change_uploader_initials)s' %
                                                   {'gerrit_url': self.gerrit_url_browser, 'summary': change_summary,
                                                     'change': ci['_number'], 'patchset': ci['revisions'].values()[0]['_number'],
                                                     'change_uploader_initials': change_uploader_initials})
-            self.jenkins_build_description += (GERRIT_ICON_HTML + ' topic <a href="%(gerrit_url)s#/q/topic:%(topic)s">%(topic)s</a><br>' %
+            self.jenkins_build_description += (GERRIT_ICON_HTML + ' topic <a href="%(gerrit_url)s#/q/topic:%(topic)s" target="_blank">%(topic)s</a><br>' %
                                                {'gerrit_url': self.gerrit_url_browser, 'topic': urllib.quote(build_param_value)})
             self.jenkins_build_description += '<span style="padding-left: 2em">(comprises</span> ' + component_changes_description.strip() + ')<br>'
 
@@ -332,7 +332,7 @@ class RequestedChangesProcessor():
                 change_summary = self.get_change_summary(ci)
                 self.logger.info('Build parameter %s=%s will test change "%s" in "%s", branch "%s", patch set "%s"' %
                                 (build_param_name, build_param_value, ci['_number'], os.path.basename(ci['project']), ci['branch'], ci['revisions'].values()[0]['_number']))
-                jenkins_build_description_changes += ('<a href="%(gerrit_url)s#/c/%(change)s/%(patchset)s" title="%(summary)s">%(change)s,%(patchset)s</a>%(change_uploader_initials)s ' %
+                jenkins_build_description_changes += ('<a href="%(gerrit_url)s#/c/%(change)s/%(patchset)s" title="%(summary)s" target="_blank">%(change)s,%(patchset)s</a>%(change_uploader_initials)s ' %
                                                    {'gerrit_url': self.gerrit_url_browser, 'summary': change_summary,
                                                     'change': ci['_number'], 'patchset': ci['revisions'].values()[0]['_number'],
                                                     'change_uploader_initials': change_uploader_initials})
