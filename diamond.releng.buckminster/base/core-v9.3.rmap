@@ -46,7 +46,7 @@
   <!-- ***** -->
   <!-- version of Diamond Orbit p2 repository to use -->
   <rm:propertyElement key="diamond.orbit.p2.version">
-    <bc:constant value="R201611171129"/>
+    <bc:constant value="R201701200926"/>
   </rm:propertyElement>
   <!-- ***** -->
   <!-- version of Eclipse Orbit p2 repository to use -->
