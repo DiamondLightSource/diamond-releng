@@ -107,6 +107,8 @@ def parse_jenkins_jobname(jobname):
             if site == 'DLS':
                 if beamline in ('excalibur', 'synoptic'):
                     product_site = 'uk.ac.gda.client.' + beamline + '.site'
+                elif beamline == 'i06-1':
+                    product_site = 'uk.ac.gda.beamline.i06_1.site'
                 elif beamline == 'i20-1':
                     product_site = 'uk.ac.gda.beamline.i20_1.site'
                 elif beamline == 'p45':
