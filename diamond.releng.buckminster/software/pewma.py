@@ -89,7 +89,8 @@ for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
     assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
 
 INVALID_COMPONENTS = (  # tuple of (component name pattern, (applicable versions ...), error message) 
-    ('^all-dls-config$', ('master', 'v9.2'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    ('^all-dls-config$', ('master', 'v9.3', 'v9.2'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    ('^all-mx-config$', ('master', 'v9.3', 'v9.2'), 'all-mx-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
     )
 
 # For newer CQueries, we specify -Declipse.p2.mirrors=false so that the DLS mirror of eclipse.org p2 sites (alfred.diamond.ac.uk) is used
