@@ -30,7 +30,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector(\..+)?|org\.apache\.activemq)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|imaging\.server|mx|scisoftpy|scm|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml))\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|tomography\.datacollection(\..+)?))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|imaging\.server|mx|scisoftpy|scm|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml)|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|tomography\.datacollection(\..+)?))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-platform.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" useTargetPlatform="false">
@@ -219,7 +219,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mt" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?|vmxi\.server\.feature)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^((i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mx.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mx" value="true"/>
     </cq:advisorNode>
