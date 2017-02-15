@@ -1725,7 +1725,7 @@
   </rm:propertyElement>
   <!-- *** py4j - net.sf.py4j*(legacy) and org.py4j* (new) *** -->
   <rm:propertyElement key="source.repository.py4j">  <!-- says whether to get net.sf.py4j*/org.py4j* from a source repository, or a p2 site -->
-    <bc:constant value="true"/>
+    <bc:constant value="false"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="py4j.github.organization">
