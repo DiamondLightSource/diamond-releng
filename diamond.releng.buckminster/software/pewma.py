@@ -2117,7 +2117,7 @@ class PewmaManager(object):
                         text += project_error_projects[0]
                     else:
                         text += str(len(project_error_projects)) + ' projects'
-                    text += ' (probably bad project metadata)'
+                    text += ' (bad project metadata, or intermittent Buckminster bug)'
                 elif buckminster_bugs:
                     text = 'Failure (intermittent Buckminster bug)'
                 if self.options.prepare_jenkins_build_description_on_error:
