@@ -65,7 +65,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^org\.dawnsci\.mx\..+$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-mx.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|nano\.product(\..+)?|product\.(logging|plugin)))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|logging\.feature|nano\.product(\..+)?|product\.(logging|plugin)))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-product.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" useTargetPlatform="false">
