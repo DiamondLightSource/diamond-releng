@@ -499,7 +499,11 @@ class RequestedChangesProcessor():
                                sorted(change_numbers_to_test_for_repo, key=int))
                         break
                 else:
-                    assert False  # sonething wrong if we didn't find the change in the list of its own dependencies
+                    self.logger.critical('Internal error - didn\'t find change in the list of its own dependencies')
+                    self.logger.info('change_numbers_to_test_for_repo = ' + str(change_numbers_to_test_for_repo))
+                    self.logger.info('unmerged_all_related_changes = ' + str(unmerged_all_related_changes))
+                    self.logger.info('self.changes_to_fetch = ' + str(self.changes_to_fetch))
+                    assert False  # something wrong if we didn't find the change in the list of its own dependencies
             else:
                 # unmerged_all_related_changes is empty, so we just need to fetch the single change
                 assert len(changes) == 1
