@@ -67,6 +67,9 @@
   <rm:propertyElement key="eclipse.january.p2.version">
     <bc:constant value="1.0.1-20161109_163336"/>
   </rm:propertyElement>
+  <rm:propertyElement key="eclipse.january.p2.url">
+    <bc:constant value="${alfred.url}/sites/download.eclipse.org/january/releases/${eclipse.january.p2.version}/repository/"/>
+  </rm:propertyElement>
   <!-- ***** -->
   <!-- version of Eclipse Jetty 9 p2 repository to use -->
   <rm:propertyElement key="eclipse.jetty9.p2.version.mars">
@@ -769,32 +772,6 @@
   </rm:propertyElement>
   <rm:propertyElement key="gda.core.git.url">
     <bc:constant value="${gda.core.${gda.core.git.location.translated}.url}/gda-core.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="gda.dal.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dal.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${gda.dal.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dal.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dal.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dal.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dal.github.url">
-    <bc:constant value="${github.${gda.dal.github.authentication}.url}${gda.dal.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dal.git.url">
-    <bc:constant value="${gda.dal.${gda.dal.git.location.translated}.url}/gda-dal.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="gda.devices.cirrus.git.location">
@@ -2193,17 +2170,11 @@
   <rm:propertyElement key="target_platform.diamond.bundles.release">
     <bc:constant value="dls_20160805"/>
   </rm:propertyElement>
-  <rm:propertyElement key="target_platform.diamond.css.release">
-    <bc:constant value="v3_201311"/>
-  </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.release">
     <bc:constant value="dls_20160805"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.bundles.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_bundles/${target_platform.diamond.bundles.release}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.diamond.css.p2.url">
-    <bc:constant value="${target_platform.download.url.selected}/tp_css/${target_platform.diamond.css.release}"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_noneclipse/${target_platform.diamond.noneclipse.release}"/>
@@ -2289,7 +2260,6 @@
   <rm:locator pattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" searchPathRef="gda_common"/>
   <rm:locator pattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" searchPathRef="gda_common_rcp"/>
   <rm:locator pattern="^((core|example|p45)-config|documentation\.gda|uk\.ac\.(diamond\.(daq\.(beamline\.p45(\..+)?|client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(commandinfo|experimentdefinition|feature|logpanel(\..+)?|test))?)|common\.client|core(\.test)?|edxd\.(calibration|common|detector)|epics\.dxp\.client|eventbus(\.api)?|example(\..+)?|logging\.dependencies\.fragment|phantom.detector|xmleditor\.feature)))$" searchPathRef="gda_core"/>
-  <rm:locator pattern="^(org\.csstudio\..+|org\.ehcache|uk\.ac\.gda\.dal(\..+)?)$" searchPathRef="gda_dal"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.cirrus$" searchPathRef="gda_devices_cirrus"/>
   <rm:locator pattern="^uk\.ac\.gda\.(devices\.mythen(\..+)?|epics\.client\.mythen)$" searchPathRef="gda_devices_mythen"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.pco$" searchPathRef="gda_devices_pco"/>
@@ -2315,7 +2285,7 @@
   <rm:locator pattern="^((i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
   <rm:locator pattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.detectors\.vgscienta\.electronanalyser|gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta))(\..+)?)$" searchPathRef="gda_pes"/>
-  <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hatsaxs|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
+  <rm:locator pattern="^((bm26a?|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hatsaxs|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?))$" searchPathRef="gda_scm"/>
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
   <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
@@ -3095,22 +3065,6 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="gda_dal">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dal=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.dal.git.url}"/>
-      <rm:uri format="{0}/gda-dal.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dal=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-dal.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
   <rm:searchPath name="gda_devices_cirrus">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-devices-cirrus=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
@@ -3771,7 +3725,7 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.january=true))(!(source.repository.january=true)))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/january/releases/${eclipse.january.p2.version}/repository/"/>
+      <rm:uri format="${eclipse.january.p2.url}"/>
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.january=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from january.git, but the CQuery specified that this repository should not be used ***">
