@@ -49,7 +49,7 @@ import urlparse
 
 MAX_TOPICS = 3  # a number >= the number of topic parameters in the Jenkins job
 MAX_CHANGESETS = 6  # a number >= the number of change parameters in the Jenkins job
-MAX_HEAD_OVERRIDES = 20  # a number >= the number of repo/branch parameters in the Jenkins job
+MAX_HEAD_OVERRIDES = 30  # a number >= the number of repo/branch parameters in the Jenkins job
 
 # input files
 artifacts_to_archive_DIR_PATH             = os.path.abspath(os.path.expanduser(os.path.join(os.environ['WORKSPACE'], 'artifacts_to_archive')))
