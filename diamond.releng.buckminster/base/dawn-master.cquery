@@ -27,7 +27,7 @@ If you materialize, and then materialize again, the second materialize can fail.
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">There appears to be a problem with the source bundle for spring-core,
 at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first and problems ensue).</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.org\.apache\.activemq)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.apache\.activemq$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|imaging\.server|mx|scisoftpy|scm|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml)|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|tomography\.datacollection(\..+)?))$" useTargetPlatform="false">
@@ -276,6 +276,9 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.richbeans\..+$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">richbeans.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.eclipse\.scanning\..+$" allowCircularDependency="true" useTargetPlatform="false">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scanning.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-2ddpr.git repository branch</cq:documentation>

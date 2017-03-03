@@ -1734,6 +1734,16 @@
   <rm:propertyElement key="richbeans.git.url">
     <bc:constant value="${github.${richbeans.github.authentication}.url}${richbeans.github.organization}/richbeans.git"/>
   </rm:propertyElement>
+  <!-- *** (eclipse/)scanning *** -->
+  <rm:propertyElement key="scanning.github.organization">
+    <bc:constant value="eclipse"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="scanning.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="scanning.git.url">
+    <bc:constant value="${github.${scanning.github.authentication}.url}${scanning.github.organization}/scanning.git"/>
+  </rm:propertyElement>
   <!-- *** scisoft- *** -->
   <rm:propertyElement key="scisoft.2ddpr.git.location">
     <bc:constant value="${scisoft.git.location}"/>
@@ -2223,7 +2233,7 @@
   <!-- *** beamlines *** -->
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- *** daq- *** -->
-  <rm:locator pattern="^(org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.org\.apache\.activemq)$" searchPathRef="daq_eclipse"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.activemq$" searchPathRef="daq_eclipse"/>
   <rm:locator pattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|imaging\.server|mx|scisoftpy|scm|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml)|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|tomography\.datacollection(\..+)?))$" searchPathRef="daq_platform"/>
   <!-- *** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
@@ -2307,6 +2317,8 @@
   <rm:locator pattern="^(org\.)?py4j([.-].+)?$" searchPathRef="py4j_new"/>  <!-- if source.repository.py4j=true, materializes source projects, otherwise materializes jars into tp/ -->
   <!-- *** richbeans *** -->
   <rm:locator pattern="^org\.eclipse\.richbeans\..+$" searchPathRef="richbeans"/>
+  <!-- *** scanning *** -->
+  <rm:locator pattern="^org\.eclipse\.scanning\..+$" searchPathRef="scanning"/>
   <!-- *** scisoft- *** -->
   <rm:redirect pattern="uk\.ac\.diamond\.scisoft\.deprecated(\.rcp)?$" resolutionFilter="(disallow.scisoft.deprecated=true)" href="/***.ERROR.-.something.has.a.dependency.on.a-scisoft.deprecated-component,.but.the.CQuery.does.not.allow.this***"/>  <!-- See DASCTEST-212 -->
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" searchPathRef="scisoft_2ddpr"/>
@@ -3860,6 +3872,24 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.richbeans=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from richbeans.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!--
+       (eclipse/)SCANNING repository
+  -->
+  <rm:searchPath name="scanning">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.scanning=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${scanning.git.url}"/>
+      <rm:uri format="{0}/scanning.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.scanning=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from scanning.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
