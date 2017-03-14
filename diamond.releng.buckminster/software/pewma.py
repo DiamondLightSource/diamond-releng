@@ -30,16 +30,26 @@ import xml.etree.ElementTree as ET
 from xml.parsers.expat import ExpatError
 import zipfile
 
-# A category+version is one way of specifying a specific CQuery (version can default to "master")
-# Caution: categories must never be the same as any component name or component abbreviation
-
 COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, actual component name to use, category)
 
-COMPONENT_ABBREVIATIONS.append(('gdaserver', 'uk.ac.diamond.daq.server.site', 'gda'))
-COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.gda.client.logpanel.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('dawnvanilla', 'org.dawnsci.base.site', 'dawn'))
 COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'uk.ac.diamond.dawn.site', 'dawn'))
 
+COMPONENT_ABBREVIATIONS.append(('example-client', 'uk.ac.gda.example.site', 'gda'))
+COMPONENT_ABBREVIATIONS.append(('p45-client', 'uk.ac.diamond.daq.beamline.p45.site', 'gda'))
+for beamline in ('b07-1', 'b16', 'b18', 'b21', 'b24',
+                 'i02', 'i02-2', 'i03', 'i04', 'i04-1',
+                 'i05', 'i05-1', 'i06', 'i06_1', 'i07', 'i08', 'i09', 'i09-2',
+                 'i10', 'i11', 'i11-1', 'i12', 'i13i', 'i13j', 'i14', 'i15', 'i15-1', 'i16', 'i18', 'i19-1', 'i19-2',
+                 'i20', 'i20_1', 'i21', 'i22', 'i23', 'i24', 'lab11',
+                 ):
+    COMPONENT_ABBREVIATIONS.append((beamline + '-client', 'uk.ac.gda.beamline.' + beamline + '.site', 'gda'))
+COMPONENT_ABBREVIATIONS.append(('gdaserver', 'uk.ac.diamond.daq.server.site', 'gda'))
+
+COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.gda.client.logpanel.site', 'gda'))
+
+# A category+version is one way of specifying a specific CQuery (version can default to "master")
+# Caution: categories must never be the same as any component name or component abbreviation
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
     ('gda', 'master', 'gda-master.cquery', 'v3.1', ('master', '9.master', 'v9.master'), ('1.8.0',)),
