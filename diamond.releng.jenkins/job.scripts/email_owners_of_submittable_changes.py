@@ -25,7 +25,6 @@ import urllib.parse
 import urllib.error
 
 GERRIT_HOST = 'gerrit.diamond.ac.uk'
-GERRIT_HTTP_PORT = ':8080'
 
 # define module-wide logging
 logger = logging.getLogger('email_owners_of_submittable_changes.py')  # global logger for this module
@@ -45,7 +44,7 @@ class SubmittableChangesProcessor():
         setup_logging()
         self.logger = logger
 
-        self.gerrit_url_base = 'http://' + GERRIT_HOST + GERRIT_HTTP_PORT + '/'  # when using the REST API, this is the base URL to use
+        self.gerrit_url_base = 'https://' + GERRIT_HOST + '/'  # when using the REST API, this is the base URL to use
         self.gerrit_url_browser = self.gerrit_url_base  # when generating links, this is the base URL to use
         self.use_digest_authentication = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
 

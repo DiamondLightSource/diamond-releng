@@ -63,7 +63,6 @@ NOTIFY_GERRIT_AT_END_FUNCTION_FILE_PATH   = os.path.join(artifacts_to_archive_DI
 CHANGE_OWNER_EMAIL_ADDRESSES_FILE_PATH    = os.path.join(artifacts_to_archive_DIR_PATH, 'change_owners_emails.txt')
 
 GERRIT_HOST = 'gerrit.diamond.ac.uk'
-GERRIT_HTTP_PORT = ':8080'
 GERRIT_ICON_HTML = '<img border="0" src="/plugin/gerrit-trigger/images/icon16.png" />'
 
 # define module-wide logging
@@ -90,7 +89,7 @@ class RequestedChangesProcessor():
         self.logger = logger
         self.logger.info(self.generated_header.rstrip())
 
-        self.gerrit_url_base = 'http://' + GERRIT_HOST + GERRIT_HTTP_PORT + '/'  # when using the REST API, this is the base URL to use
+        self.gerrit_url_base = 'https://' + GERRIT_HOST + '/'  # when using the REST API, this is the base URL to use
         self.gerrit_url_browser = self.gerrit_url_base  # when generating links, this is the base URL to use
         self.gerrit_ssh_command = 'ssh -p %s %s' % (self.get_gerrit_ssh_port(self.gerrit_url_base), GERRIT_HOST)
         self.use_digest_authentication = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'

@@ -198,8 +198,8 @@ GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit w
     ('training-gerrit-1.git'    , 'ssh://gerrit.diamond.ac.uk:29418/training/training-gerrit-1.git'),
     )
 
-GERRIT_SCHEME_ANON = 'http'                          # anonymous clone from Gerrit
-GERRIT_NETLOC_ANON = 'gerrit.diamond.ac.uk:8080'
+GERRIT_SCHEME_ANON = 'https'                         # anonymous clone from Gerrit
+GERRIT_NETLOC_ANON = 'gerrit.diamond.ac.uk'
 GERRIT_MIRROR_HOST = 'github.com'                    # mirror of Gerrit-hosted repo, not managed by Gerrit
 
 class GitConfigParser(ConfigParser.SafeConfigParser):
