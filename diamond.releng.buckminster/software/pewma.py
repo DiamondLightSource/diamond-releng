@@ -19,13 +19,13 @@ import pwd
 import re
 import shlex
 import socket
+import ssl
 import StringIO
 import stat
 import subprocess
 import sys
 import time
 import urllib2
-import urlparse
 import xml.etree.ElementTree as ET
 from xml.parsers.expat import ExpatError
 import zipfile
@@ -198,8 +198,8 @@ GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit w
     ('training-gerrit-1.git'    , 'ssh://gerrit.diamond.ac.uk:29418/training/training-gerrit-1.git'),
     )
 
-GERRIT_SCHEME_ANON = 'https'                         # anonymous clone from Gerrit
-GERRIT_NETLOC_ANON = 'gerrit.diamond.ac.uk'
+GERRIT_URI_ANON_PREFIX_OLD = 'http://gerrit.diamond.ac.uk:8080/'
+GERRIT_URI_ANON_PREFIX = 'https://gerrit.diamond.ac.uk/'
 GERRIT_MIRROR_HOST = 'github.com'                    # mirror of Gerrit-hosted repo, not managed by Gerrit
 
 class GitConfigParser(ConfigParser.SafeConfigParser):
@@ -1412,9 +1412,21 @@ class PewmaManager(object):
                 ### ('pull'           , 'ff'            , 'pull.ff'              , 'true'                           , True),  # pulls should fast-forward if possible
                 )
 
-            if ((GERRIT_MIRROR_HOST in origin_url) or
-               (urlparse.urlunsplit((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '', '', '')) in origin_url)):
-                pass  # remote is GitHub, or remote is Gerrit with anonymous checkout, so leave the origin unchanged
+            if GERRIT_MIRROR_HOST in origin_url:
+                # remote is GitHub, or remote is Gerrit with anonymous checkout
+                pass
+            elif origin_url.startswith(GERRIT_URI_ANON_PREFIX_OLD):
+                # remote is Gerrit with anonymous checkout, old URL
+                new_url = GERRIT_URI_ANON_PREFIX + origin_url[len(GERRIT_URI_ANON_PREFIX_OLD):]
+                config_changes += (
+                # section         , option          , name                   , required_value                   , use_replace
+                ('remote "origin"', 'url'           , 'remote.origin.url'    , new_url                          , True),
+                ('http'           , 'sslVerify'     , 'http.sslVerify'       , 'false'                          , True),)
+            elif origin_url.startswith(GERRIT_URI_ANON_PREFIX):
+                # remote is Gerrit with anonymous checkout, new URL
+                config_changes += (
+                # section         , option          , name                   , required_value                   , use_replace
+                ('http'           , 'sslVerify'     , 'http.sslVerify'       , 'false'                          , True),)
             else:
                 config_changes += (
                 # section         , option          , name                   , required_value                   , use_replace
@@ -2203,10 +2215,17 @@ class PewmaManager(object):
         if hasattr(self, '_gerrit_commit_hook'):
             return self._gerrit_commit_hook
 
-        commit_hook_url = urlparse.urlunparse((GERRIT_SCHEME_ANON, GERRIT_NETLOC_ANON, '/tools/hooks/commit-msg', '', '', ''))
-        # open the URL
+        commit_hook_url = GERRIT_URI_ANON_PREFIX + 'tools/hooks/commit-msg'
+        if 'create_default_context' in ssl.__dict__:
+            # in Python > 2.7.9, certificates are checked. The certificate chain for gerrit.diamond.ac.uk is wrong, so bypass the check.
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+            context_parameter = {'context': ctx}
+        else:
+            context_parameter = {}
         try:
-            resp = urllib2.urlopen(commit_hook_url, timeout=30)
+            resp = urllib2.urlopen(commit_hook_url, timeout=30, **context_parameter)
         except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
             self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
             if self.options.prepare_jenkins_build_description_on_error:
