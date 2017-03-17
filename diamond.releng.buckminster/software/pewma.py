@@ -19,7 +19,6 @@ import pwd
 import re
 import shlex
 import socket
-import ssl
 import StringIO
 import stat
 import subprocess
@@ -1413,20 +1412,17 @@ class PewmaManager(object):
                 )
 
             if GERRIT_MIRROR_HOST in origin_url:
-                # remote is GitHub, or remote is Gerrit with anonymous checkout
+                # remote is GitHub
                 pass
             elif origin_url.startswith(GERRIT_URI_ANON_PREFIX_OLD):
                 # remote is Gerrit with anonymous checkout, old URL
                 new_url = GERRIT_URI_ANON_PREFIX + origin_url[len(GERRIT_URI_ANON_PREFIX_OLD):]
                 config_changes += (
                 # section         , option          , name                   , required_value                   , use_replace
-                ('remote "origin"', 'url'           , 'remote.origin.url'    , new_url                          , True),
-                ('http'           , 'sslVerify'     , 'http.sslVerify'       , 'false'                          , True),)
+                ('remote "origin"', 'url'           , 'remote.origin.url'    , new_url                          , True),)
             elif origin_url.startswith(GERRIT_URI_ANON_PREFIX):
                 # remote is Gerrit with anonymous checkout, new URL
-                config_changes += (
-                # section         , option          , name                   , required_value                   , use_replace
-                ('http'           , 'sslVerify'     , 'http.sslVerify'       , 'false'                          , True),)
+                pass
             else:
                 config_changes += (
                 # section         , option          , name                   , required_value                   , use_replace
@@ -2216,16 +2212,8 @@ class PewmaManager(object):
             return self._gerrit_commit_hook
 
         commit_hook_url = GERRIT_URI_ANON_PREFIX + 'tools/hooks/commit-msg'
-        if 'create_default_context' in ssl.__dict__:
-            # in Python > 2.7.9, certificates are checked. The certificate chain for gerrit.diamond.ac.uk is wrong, so bypass the check.
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
-            context_parameter = {'context': ctx}
-        else:
-            context_parameter = {}
         try:
-            resp = urllib2.urlopen(commit_hook_url, timeout=30, **context_parameter)
+            resp = urllib2.urlopen(commit_hook_url, timeout=30)
         except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
             self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
             if self.options.prepare_jenkins_build_description_on_error:
