@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rm:rmap xmlns:rm="http://www.eclipse.org/buckminster/RMap-1.0">
-  <rm:redirect href="core-v8.8.rmap"/>
+  <rm:redirect href="core-v8.9.rmap"/>
 </rm:rmap>
