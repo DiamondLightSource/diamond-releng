@@ -865,7 +865,14 @@ post_materialize_function_gerrit () {
             if self.jenkins_build_description.endswith('<br>'):
                 self.jenkins_build_description = self.jenkins_build_description[:-4].strip()
             if self.jenkins_build_description:
-                print('append-build-description: ' + self.jenkins_build_description.strip())  # will be read by SetBuildDescriptionBuildstep.groovy
+                # print text that will be read by SetBuildDescriptionBuildstep.groovy
+                jbd = 'append-build-description: ' + self.jenkins_build_description.strip()
+                if (sys.stdout.encoding) is None and (sys.getdefaultencoding() == 'ascii') and os.environ.get('LANG').upper().endswith('UTF-8'):
+                    # When running under Jenkins, Python does not correctly determine the console encoding, so force
+                    # it to UTF-8 so any non-Ascii characters in the commit message don't raise a UnicodeEncodeError
+                    print(jbd.encode('utf-8'))
+                else:
+                    print(jbd)
         if return_code:
             return return_code  # error in changes requested
         if not (self.changes_to_test or self.get_override_branch_for_repo(None)):
