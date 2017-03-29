@@ -44,6 +44,7 @@ for beamline in ('b07-1', 'b16', 'b18', 'b21', 'b24',
                  ):
     COMPONENT_ABBREVIATIONS.append((beamline + '-client', 'uk.ac.gda.beamline.' + beamline + '.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('gdaserver', 'uk.ac.diamond.daq.server.site', 'gda'))
+COMPONENT_ABBREVIATIONS.append(('all-dls', ('all-dls-configs', 'all-dls-clients', 'uk.ac.diamond.daq.server.site', 'gda-orphan-projects'), 'gda'))
 
 COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.gda.client.logpanel.site', 'gda'))
 
@@ -1205,33 +1206,51 @@ class PewmaManager(object):
 
         # go through the arguments, and find where the component list ends, which is immediately before the (optional) category/version/cquery
         # we rely on the fact that no component will ever have the same name as a category name
-        components_to_use = []
+        components_to_use_raw = []
         category_version_cquery = []
         for index, item in enumerate(self.arguments):
             if (item in CATEGORIES_AVAILABLE) or item.endswith('.cquery'):
-                components_to_use = self.arguments[:index]
+                components_to_use_raw = self.arguments[:index]
                 category_version_cquery = self.arguments[index:]
                 break
         else:
-            components_to_use = self.arguments
+            components_to_use_raw = self.arguments
             category_version_cquery = []
 
         # translate any abbreviated component names to the real component name, and make sure they are all in the same category
         category_implied = set()
-        for index, component_to_use in enumerate(components_to_use):
+        components_to_use_translated = []
+        for component_to_use in components_to_use_raw:
             for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
                 if component_to_use == abbrev:
-                    components_to_use[index] = actual
+                    if isinstance(actual, basestring):
+                        components_to_use_translated.append(actual)  # replacement is a single item
+                        self.logger.info('%sTranslated "%s" --> component "%s" in category %s' % (self.log_prefix, abbrev, actual, cat))
+                    else:
+                        components_to_use_translated.extend(actual)  # replacement is a tuple of items
+                        self.logger.info('%sTranslated "%s" --> components %s in category %s' % (self.log_prefix, abbrev, tuple(str(a) for a in actual), cat))
                     category_implied.add(cat)
-                    self.logger.info('%sTranslated "%s" --> component "%s" in category %s' % (self.log_prefix, abbrev, actual, cat))
-                    continue
+                    break
             else:
                 # component name is specified verbatim
+                components_to_use_translated.append(component_to_use)
                 if component_to_use.endswith(('-config', '-configs', '-clients')) or component_to_use.startswith(('gda','uk.ac.gda.')):
                     category_implied.add('gda')  # must be a GDA project
+
+        # dedupe components_to_use_translated (preserves order; efficiency doesn't matter since list short)
+        components_to_use = []
+        for c in components_to_use_translated:
+            if c not in components_to_use:
+                components_to_use.append(c)
+            else:
+                self.logger.info('%sComponent "%s" appears in materialize list multiple times - duplicates removed' % (self.log_prefix, c))
+        if components_to_use_raw != components_to_use:
+            self.logger.info('%sComponent(s) to materialize: %s' % (self.log_prefix, tuple(str(c) for c in components_to_use)))
+
         if len(category_implied) > 1:
             raise PewmaException('ERROR: the %s components you want to materialize %s come from more than 1 category: %s' %
                                  (len(components_to_use), components_to_use, [c for c in category_implied]))
+
         category_implied = tuple(category_implied)
         category_implied = (category_implied and category_implied[0]) or None
 
