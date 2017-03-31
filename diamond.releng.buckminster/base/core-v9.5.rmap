@@ -65,7 +65,7 @@
     <bc:constant value="false"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.january.p2.version">
-    <bc:constant value="2.0.0"/>
+    <bc:constant value="2.0.1"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.january.p2.url">
     <bc:constant value="${alfred.url}/sites/download.eclipse.org/january/releases/${eclipse.january.p2.version}/repository/"/>
