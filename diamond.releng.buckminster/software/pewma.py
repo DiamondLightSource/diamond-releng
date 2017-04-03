@@ -102,9 +102,12 @@ for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
     assert abbrev not in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is the same as a category' % (abbrev,)
     assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
 
-INVALID_COMPONENTS = (  # tuple of (component name pattern, (applicable versions ...), error message) 
-    ('^all-dls-config$', ('master', 'v9.3', 'v9.2'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
-    ('^all-mx-config$', ('master', 'v9.3', 'v9.2'), 'all-mx-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+INVALID_COMPONENTS = (  # tuple of (component name pattern, (applicable versions pattern), error message) 
+    ('^all-dls-config$', ('^(master|v9\.[5432])$'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    ('^all-mx-config$', ('^(master|v9\.[5432])$'), 'all-mx-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    ('^all-dls-configs$', ('^(v?8\..+|v9\.[01])$'), 'all-dls-configs only applies to GDA 9.2+'),
+    ('^all-dls-clients$', ('^(v?8\..+|v9\.[01])$'), 'all-dls-clients only applies to GDA 9.2+'),
+    ('^all-dls$', ('^(v?8\..+|v9\.[01])$'), 'all-dls only applies to GDA 9.2+'),
     )
 
 # For newer CQueries, we specify -Declipse.p2.mirrors=false so that the DLS mirror of eclipse.org p2 sites (alfred.diamond.ac.uk) is used
@@ -1125,11 +1128,6 @@ class PewmaManager(object):
         (components_to_use, category_to_use, version_to_use, cquery_to_use, template_to_use) = self._interpret_components_category_version_cquery()
         if not components_to_use:
             raise PewmaException('ERROR: materialize command requires the name of the component to materialize')
-        for component in components_to_use:
-            for (invalid_component_pattern, applicable_versions, error_message) in INVALID_COMPONENTS:
-                if version_to_use in applicable_versions:
-                    if re.match(invalid_component_pattern, component):
-                        raise PewmaException('ERROR: ' + error_message)
 
         # create the workspace if required
         self.template_name = 'template_workspace_%s.zip' % (template_to_use,)
@@ -1217,6 +1215,15 @@ class PewmaManager(object):
             components_to_use_raw = self.arguments
             category_version_cquery = []
 
+        # interpret any (category / category+version / cquery) arguments
+        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._parse_category_version_cquery(category_version_cquery)
+
+        for component in components_to_use_raw:
+            for (invalid_component_pattern, applicable_versions, error_message) in INVALID_COMPONENTS:
+                if re.match(applicable_versions, version_to_use):
+                    if re.match(invalid_component_pattern, component):
+                        raise PewmaException('ERROR: ' + error_message)
+
         # translate any abbreviated component names to the real component name, and make sure they are all in the same category
         category_implied = set()
         components_to_use_translated = []
@@ -1253,9 +1260,6 @@ class PewmaManager(object):
 
         category_implied = tuple(category_implied)
         category_implied = (category_implied and category_implied[0]) or None
-
-        # interpret any (category / category+version / cquery) arguments
-        (category_to_use, version_to_use, cquery_to_use, template_to_use) = self._parse_category_version_cquery(category_version_cquery)
 
         if not category_to_use:
             category_to_use = category_implied
