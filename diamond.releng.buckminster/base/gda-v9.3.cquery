@@ -13,7 +13,7 @@
     <cq:property key="target.os" value="*"/>
     <cq:property key="target.ws" value="*"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^(.*(i02|i02-2|i03|i04|i23|i24|all-mx-configs).*)$" filter="(materialize_skip_list=*allmx*)" skipComponent="true"/>
+    <cq:advisorNode namePattern="^(.*(i02|i02-1|i02-2|i03|i04|i23|i24|all-mx-configs).*)$" filter="(materialize_skip_list=*allmx*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i11-1.*)$" filter="(materialize_skip_list=*i11-1*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i24.*)$" filter="(materialize_skip_list=*i24*)" skipComponent="true"/>
@@ -206,7 +206,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^((b16|b24|i06|i06-1|i07|i10|i15|i15-1|i16|mt|optics)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" useTargetPlatform="false" branchTagPath="gda-9.3">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?)|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" useTargetPlatform="false" branchTagPath="gda-9.3">
+    <cq:advisorNode namePattern="^((i02|i02-1|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?)|dna|stac)|gda\.(beamline\.(i02|i02-1|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" useTargetPlatform="false" branchTagPath="gda-9.3">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mx.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.nexus(\..+)?$" useTargetPlatform="false" branchTagPath="gda-9.3">
