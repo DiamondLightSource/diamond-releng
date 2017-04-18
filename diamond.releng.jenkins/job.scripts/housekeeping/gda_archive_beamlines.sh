@@ -44,9 +44,9 @@ archive_beamline () {
         echo '$beamline variable was not set - exiting'
         return 1
     fi
-    echo -e "\n****************************"
-    echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Processing beamline ${beamline} ***\n"
-    echo -e "\n****************************"
+    echo -e "\n********************************************************************************"
+    echo -e "*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Processing beamline ${beamline} ***"
+    echo -e "********************************************************************************"
     if [[ "${dryrun}" != "false" ]]; then
         echo 'Running in dryrun mode ($dryrun != false)'
     fi
