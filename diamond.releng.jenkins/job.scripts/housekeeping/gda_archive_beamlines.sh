@@ -26,7 +26,7 @@ perform_find_and_action () {
                 echo "Running ${initial_command} ..."
                 ${initial_command}
             fi
-            find ${find_command} -exec ${per_file_command} \;
+            find ${find_command} -exec ${per_file_command} \; || true
         fi
     fi
 
@@ -79,7 +79,7 @@ archive_beamline () {
     parent_dir="/dls_sw/${beamline}/logs"
     filename_pattern='gda_output_*.txt'
     if [[ -d "${parent_dir}" ]]; then
-        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir} matching ${filename_pattern} ..."
+        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
         find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name "${filename_pattern}" -mtime +7"
         initial_command=""
         per_file_command="gzip \"{}\""
@@ -91,7 +91,7 @@ archive_beamline () {
         parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
         filename_pattern="gda_${type}_output_"'*.txt'
         if [[ -d "${parent_dir}" ]]; then
-            echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir} matching ${filename_pattern} ..."
+            echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
             find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name "${filename_pattern}" -mtime +7"
             initial_command=""
             per_file_command="gzip \"{}\""
@@ -109,7 +109,7 @@ archive_beamline () {
     parent_dir="/dls_sw/${beamline}/var"
     if [[ -d "${parent_dir}" ]]; then
         echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Deleting files older than 1 year from ${parent_dir} (excluding '*/jythonCache/*') ..."
-        find_command="${parent_dir} -type f -not -path */jythonCache/* -mtime +365"
+        find_command="${parent_dir} -mindepth 1 -type f -not -path */jythonCache/* -mtime +365"
         initial_command=""
         per_file_command="-delete"
         perform_find_and_action
@@ -119,7 +119,7 @@ archive_beamline () {
     parent_dir="/dls_sw/${beamline}/var"
     if [[ -d "${parent_dir}" ]]; then
         echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Removing empty directories from ${parent_dir} ..."
-        find_command="${parent_dir} -type d -empty"
+        find_command="${parent_dir} -mindepth 1 -type d -empty"
         initial_command=""
         per_file_command="-delete"
         perform_find_and_action
