@@ -108,8 +108,8 @@ archive_beamline () {
     fi
     parent_dir="/dls_sw/${beamline}/var"
     if [[ -d "${parent_dir}" ]]; then
-        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Deleting files older than 1 year from ${parent_dir} (excluding '*/jythonCache/*') ..."
-        find_command="${parent_dir} -mindepth 1 -type f -not -path */jythonCache/* -mtime +365"
+        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Deleting files older than 1 year from ${parent_dir} (excluding jythonCache/, motorPositions/, .ssh/) ..."
+        find_command="${parent_dir} -mindepth 1 -type f -not -path */jythonCache/* -not -path */motorPositions/* -not -path */.ssh/* -mtime +365"
         initial_command=""
         per_file_command="-delete"
         perform_find_and_action
