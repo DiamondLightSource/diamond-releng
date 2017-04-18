@@ -99,13 +99,15 @@ archive_beamline () {
         fi
     done
 
-    # Delete old files from var/ (excluding jythonCache/, which might be in active use)
     # From Charles:
-    #   Can the removal of old files from var please _not_ be run against I16.
+    #   Can the removal of old files from var please _not_ be run against B16, I07, I16.
     #   They have some old persistence stuff there (which, despite having mtime dates going back over a year, I think might still be used).
-    if [[ "${beamline}" == "i16" ]]; then
+    if [[ "${beamline}" == "b16" || "${beamline}" == "i07" || "${beamline}" == "i16" ]]; then
+        echo -e "\nCleanup of var/ is always skipped for this beamline ${beamline}"
         return
     fi
+
+    # Delete old files from var/ (excluding some sub-directories, which might be in active use)
     parent_dir="/dls_sw/${beamline}/var"
     if [[ -d "${parent_dir}" ]]; then
         echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Deleting files older than 1 year from ${parent_dir} (excluding jythonCache/, motorPositions/, .ssh/) ..."
