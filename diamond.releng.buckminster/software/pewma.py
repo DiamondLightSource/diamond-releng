@@ -503,6 +503,8 @@ class PewmaManager(object):
                                help='Only process repository names matching one or more of the glob patterns')
         group.add_option('--repo-exclude', dest='repo_excludes', type='string', metavar='<pattern>,<pattern>,...', default="",
                                help='Do not process repository names matching any of the glob patterns')
+        group.add_option('--max-git-output', dest='max_git_output', type='int', metavar='<value>', default=30000,
+                               help='Maximum characters git output per repository (0=unlimited)')
         self.parser.add_option_group(group)
 
 
@@ -855,7 +857,7 @@ class PewmaManager(object):
                         raise PewmaException('ERROR: %s contains an empty plugin pattern' % (err_msg_prefix,))
                     if pattern.startswith("-") or ("=" in pattern):
                         # catch a possible error in command line construction
-                        raise PewmaException('ERROR: %s contains an invalid plugin pattern "%s"' % (p, err_msg_prefix,))
+                        raise PewmaException('ERROR: %s contains an invalid plugin pattern "%s"' % (err_msg_prefix, pattern))
 
 
     def set_all_imported_projects_with_releng_ant(self):
@@ -1632,18 +1634,23 @@ class PewmaManager(object):
             if self.options.repo_prefix:
                 if len(out)!=0 or len(err)!=0:
                     print(prefix % os.path.basename(directory).strip(), end='')
-                    if '\n' in out or '\r' in out:  # if out is multiline
-                        print("...")                # start it on a new line
-                    elif '\n' in err or '\r' in err:  # if err is multiline
-                        print("...")                  # start it on a new line
-                if len(err)!=0:
-                    print(err, file=sys.stderr)
-                if len(out)!=0:
+                    try:
+                        if ((len(out) and len(err)) or              # if both out and err
+                            (('\n' in out) or ('\r' in out)) or     # if out is multiline
+                            (('\n' in err) or ('\r' in err))):      # if err is multiline
+                            print("...")                            # start it on a new line
+                    except UnicodeDecodeError:
+                        if (len(out)>100) or (len(err)>100):
+                            print("...")                            # start it on a new line
+            if err:
+                print(err, file=sys.stderr)
+            if out:
+                if self.options.max_git_output > 0:
+                    print(out[0:self.options.max_git_output])
+                    if len(out) > self.options.max_git_output:
+                        print('... truncated "', command, '" in ',os.path.basename(directory).strip(), ' ...', sep='')
+                else:
                     print(out)
-            else:
-                if err:
-                    print(err, file=sys.stderr)
-                print(out)
             sys.stderr.flush()
             sys.stdout.flush()
             if retcode:
