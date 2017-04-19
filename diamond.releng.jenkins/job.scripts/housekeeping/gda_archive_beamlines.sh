@@ -17,15 +17,20 @@ perform_find_and_action () {
     fi
 
     count=$(find ${find_command} | wc -l)
-    echo "${count} items found by \"find ${find_command}\""
+    echo "${count} items found by: find ${find_command}"
     if [[ "${count}" != "0" ]]; then
         if [[ "${dryrun}" != "false" ]]; then
+            if [[ -n "${initial_command}" ]]; then
+                echo "If not in dryrun mode, would run: ${initial_command}"
+            fi
+            echo "If not in dryrun mode, would run: find ${find_command} -exec ${per_file_command} \; || true"
             find ${find_command} -print
         else
             if [[ -n "${initial_command}" ]]; then
-                echo "Running ${initial_command} ..."
+                echo "Running: ${initial_command}"
                 ${initial_command}
             fi
+            echo "Running: find ${find_command} -exec ${per_file_command} \; || true"
             find ${find_command} -exec ${per_file_command} \; || true
         fi
     fi
