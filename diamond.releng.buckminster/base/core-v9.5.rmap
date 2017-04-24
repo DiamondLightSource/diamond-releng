@@ -87,7 +87,10 @@
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="nebula.p2.version">  <!-- version of Eclipse Nebula p2 repository to use, only used when nebula.new=true -->
-    <bc:constant value="1.0.0"/>
+    <bc:constant value="1.2.0"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="nebula.incubation.p2.version">  <!-- version of Eclipse Nebula Incubation p2 repository to use, only used when nebula.new=true -->
+    <bc:constant value="snapshot-20170424_140154"/>
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
@@ -2336,8 +2339,8 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
   <!-- *** sda *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|scisoft\.applications|sda(\.bioclipse\.jmol\.feature)?)$" searchPathRef="sda"/>
-  <!-- *** swt-xy-graph *** -->
-  <!-- see below in the "Nebula" section -->
+  <!-- *** swt-xy-graph *** -->  <!-- use the DLS source fork of this, not the standard version from the Eclipse Nebula p2 site -->
+  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="swt_xy_graph"/>
   <!-- *** training *** -->
   <rm:locator pattern="^training\.gerrit\.(feature|plugin1|plugin2)$" searchPathRef="training_gerrit_1"/>
   <!-- *** wychwood *** -->
@@ -2394,11 +2397,11 @@
   -->
   <!-- This set is for nebula.new=true -->
   <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula_incubation" failOnError="false"/>
   <!-- This set is for nebula.new!=true -->
-  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="swt_xy_graph"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.formattedtext(\.source)?$" searchPathRef="eclipse_nebula_incubation_snapshot_20140205"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.(cwt|jface\.cdatetime|widgets\.cdatetime|widgets\.gallery)(\.source)?$" searchPathRef="eclipse_nebula_snapshot_20140205"/>
-  <rm:locator pattern="^org\.eclipse\.nebula\.(jface|widgets|widgets\.calendarcombo|widgets\.grid|widgets\.pgroup|widgets\.tablecombo|widgets\.xviewer)(\.source)?$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^org\.eclipse\.nebula\.(jface|widgets|widgets\.calendarcombo|widgets\.grid|widgets\.pgroup|widgets\.tablecombo|widgets\.xviewer)(\.source)?$" searchPathRef="eclipse_nebula_old"/>
   <!--
        Components to get from Diamond p2 repositories: Orbit
   -->
@@ -4126,7 +4129,7 @@
        SWT-XY-GRAPH repository
   -->
   <rm:searchPath name="swt_xy_graph">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true))(buckminster.component=org.eclipse.nebula.visualization.xygraph.preference)(!(nebula.new=true)))" readerType="git">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true)))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
       <rm:uri format="{0}/swt-xy-graph.git,{1}">
@@ -4134,7 +4137,7 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true))(!(nebula.new=true)))" readerType="git">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true)))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
       <rm:uri format="{0}/swt-xy-graph.git,PureJava/{1}">
@@ -4336,6 +4339,13 @@
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/releases/${nebula.p2.version}"/>
     </rm:provider>
   </rm:searchPath>
+  <rm:searchPath name="eclipse_nebula_incubation">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(nebula.new=true)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/incubation/${nebula.incubation.p2.version}"/>
+    </rm:provider>
+  </rm:searchPath>
   <rm:searchPath name="eclipse_nebula_snapshot_20140205">
     <!-- provider for version taken from snapshot_20140205 -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(nebula.new=true))" readerType="p2" source="false" mutable="false">
@@ -4350,6 +4360,13 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${nebula.download.url}/technology/nebula/incubation/snapshot_20140205"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_nebula_old">
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(nebula.new=true))" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_release">
