@@ -83,7 +83,7 @@
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="nattable.p2.version">  <!-- version of Eclipse NatTable p2 repository to use -->
-    <bc:constant value="1.4.0"/>
+    <bc:constant value="1.5.0"/>
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="nebula.p2.version">  <!-- version of Eclipse Nebula p2 repository to use, only used when nebula.new=true -->
