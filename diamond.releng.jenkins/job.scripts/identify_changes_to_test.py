@@ -405,119 +405,114 @@ class RequestedChangesProcessor():
         # check that they are all in the same dependency chain, and identify which is the top of the chain - this is the change we need to fetch
         # check also that the dependency chain doesn't have more than one patchset for the same change
         # and finally, it really is better if all changes in the dependency change are the latest patchset for the change!
-        self.changes_to_fetch = []  # a list of [ChangeInfos, [RelatedChangeAndCommitInfos], [RelatedChangeAndCommitInfos]], one per repository
+        self.changes_to_fetch = []  # a list of [ChangeInfos, RelatedChangeAndCommitInfo, ...], one per repository
         for (project, changes) in sorted(per_project_changes.iteritems()):
-            assert changes  # there must be some changes to test in this repository
-            change_patch_numbers_to_test = [(ci['_number'], ci['revisions'].values()[0]['_number']) for ci in changes]  # [0] since we only requested the current revisions
-            change_patch_numbers_to_test_str = str([str('%s/%s' % (c,p)) for (c,p) in change_patch_numbers_to_test]).replace("'","")
+            assert changes  # there must be some changes to test in this repository, otherwise we would not be here
+            change_patch_numbers_requested_to_test = [(ci['_number'], ci['revisions'].values()[0]['_number']) for ci in changes]  # [0] since we only requested the current revisions
+            change_patch_numbers_requested_to_test_str = str([str('%s/%s' % (c,p)) for (c,p) in change_patch_numbers_requested_to_test]).replace("'","")
             if len(changes) != 1:
-                self.logger.info('Checking that repository "' + os.path.basename(project) + '" changes ' + change_patch_numbers_to_test_str + ' are related')
+                self.logger.info('Checking that repository "' + os.path.basename(project) + '" changes ' + change_patch_numbers_requested_to_test_str + ' are related')
 
             # for all changes in this repository that were explicitly listed for testing, get all changes that are related
             # the related changes for a given change are in git commit order, from newest to oldest
             # if there are related changes, then the related changes chain includes the current change plus all related changes, both newer and older
             # however, if there are no related changes, then the related changes chain is empty (you might expect it to include the current change itself)
+            # we ignore any related changes that are newer than the change explicitly listed for testing
+            related_change_chains = []  # will be a list, each entry is either a list of related change records, or a len(1) list of a single ChangeInfo record if there were no related changes
             for ci in changes:
                 url = 'changes/%s/revisions/current/related' % (ci['_number'],)
                 relatedinfo = self.gerrit_REST_api(url)
-                unmerged_all_related_changes = []  # the dependency chain of the current change - all unmerged related changes, both older and newer than this change
-                unmerged_older_related_changes = []  # the dependency chain of the current change - all unmerged related changes that are older than this change
+                older_unmerged_related_changes = []  # the dependency chain of the current change - all unmerged related changes that are older than this change
                 seen_current_change_in_related_chain = False
-                for cr in relatedinfo['changes']:
-                    if cr['status'] == 'MERGED':
-                        break  # we have collected all the unmerged changes that are older than the current change
-                    unmerged_all_related_changes.append(cr)
+                seen_merged_change_older_than_current_change_in_related_chain = False
+                for cr in relatedinfo['changes']:  # we're processing in order from newest to oldest; our change is somewhere in the chain
                     if not seen_current_change_in_related_chain:
                         if cr['_change_number'] == ci['_number']:
                             seen_current_change_in_related_chain = True
                         continue
-                    unmerged_older_related_changes.append(cr)
-                unmerged_all_related_change_patch_numbers = [(cr['_change_number'], cr['_revision_number']) for cr in unmerged_all_related_changes]
-                unmerged_all_related_change_patch_numbers_str = str([str('%r/%r' % (c,p)) for (c,p) in unmerged_all_related_change_patch_numbers]).replace("'","")
-                unmerged_older_related_change_patch_numbers = [(cr['_change_number'], cr['_revision_number']) for cr in unmerged_older_related_changes]
-                unmerged_older_related_change_patch_numbers_str = str([str('%r/%r' % (c,p)) for (c,p) in unmerged_older_related_change_patch_numbers]).replace("'","")
-                if not unmerged_all_related_changes:
-                    self.logger.info('"' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
-                                     ' does not have any unmerged related changes')
-                elif len(unmerged_older_related_change_patch_numbers) == 0:
-                    self.logger.info('"' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
-                                     ' has no older unmerged related changes' +
-                                     ' from chain ' + unmerged_all_related_change_patch_numbers_str)
-                else:
-                    self.logger.info('"' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
-                                     ' has older unmerged related changes: ' + unmerged_older_related_change_patch_numbers_str +
-                                     ' from chain ' + unmerged_all_related_change_patch_numbers_str)
-                for cr in unmerged_older_related_changes:
-                    if cr['_revision_number'] != cr['_current_revision_number']:
-                        self.logger.error('In "' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
-                                          ' has a related change ' + str(cr['_change_number']) + '/' + str(cr['_revision_number']) +
-                                          ' that is not current (latest patchset is ' + str(cr['_current_revision_number']) + ')')
-                        self.errors_found = True
-                        continue
-                    if cr['status'] not in ('NEW', 'DRAFT'):
-                        self.logger.error('Change "%s" in repository "%s" depends on related change "%s" that is not eligible for testing: status is "%s"' %
-                                          (str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']), os.path.basename(project),
-                                           str(cr['_change_number']) + '/' + str(cr['_revision_number']), cr['status']))
-                        self.errors_found = True
-
-            # at this point, unmerged_all_related_changes is (for this project) the dependency chain of the last change we looked at (any change would do)
-            # check that all the changes in the project that we were asked to test are related
-            # the simplest way to test this is to check that all change numbers are in the related list for any one change we were asked to test
-            related_change_patch_numbers = [(cr['_change_number'], cr['_revision_number']) for cr in unmerged_all_related_changes]
-            if len(change_patch_numbers_to_test) > 1:
-                if not set(change_patch_numbers_to_test) <= set(related_change_patch_numbers):
-                    self.logger.error('Multiple changes in "' + os.path.basename(project) + '" were specified, but from unrelated commits ' +
-                                      '(all commits to be tested must be from a single chain)')
+                    if cr['status'] == 'MERGED':
+                        seen_merged_change_older_than_current_change_in_related_chain = True
+                    else:
+                        older_unmerged_related_changes.append(cr)
+                        if seen_merged_change_older_than_current_change_in_related_chain:
+                            self.logger.critical('In "' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
+                                              ' has a older related change ' + str(cr['_change_number']) + '/' + str(cr['_revision_number']) +
+                                              ' that is _not_ merged, but which has a descendant that _is_ merged - should be impossible. Check ' + url)
+                            self.errors_found = True
+                if relatedinfo['changes'] and (not seen_current_change_in_related_chain):
+                    self.logger.critical('In "' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
+                                      ' didn\'t find change in the list of its own dependencies. Check ' + url)
                     self.errors_found = True
-                    break  # only need to report this error once per repository
 
+                if older_unmerged_related_changes:
+                    unmerged_older_related_change_patch_numbers = [(cr['_change_number'], cr['_revision_number']) for cr in older_unmerged_related_changes]
+                    unmerged_older_related_change_patch_numbers_str = str([str('%r/%r' % (c,p)) for (c,p) in unmerged_older_related_change_patch_numbers]).replace("'","")
+                    self.logger.info('"' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
+                                     ' has older unmerged related changes: ' + unmerged_older_related_change_patch_numbers_str)
+                    for cr in older_unmerged_related_changes:
+                        if cr['_revision_number'] != cr['_current_revision_number']:
+                            self.logger.error('In "' + os.path.basename(project) + '" change ' + str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']) +
+                                              ' has a related change ' + str(cr['_change_number']) + '/' + str(cr['_revision_number']) +
+                                              ' that is not current (latest patchset is ' + str(cr['_current_revision_number']) + ')')
+                            self.errors_found = True
+                            continue
+                        if cr['status'] not in ('NEW', 'DRAFT'):
+                            self.logger.error('Change "%s" in repository "%s" depends on related change "%s" that is not eligible for testing: status is "%s"' %
+                                              (str(ci['_number']) + '/' + str(ci['revisions'].values()[0]['_number']), os.path.basename(project),
+                                               str(cr['_change_number']) + '/' + str(cr['_revision_number']), cr['status']))
+                            self.errors_found = True
+                    related_change_chains.append([ci] + older_unmerged_related_changes)
+                else:
+                    related_change_chains.append([ci])
+
+            assert len(related_change_chains) == len(changes)
             if self.errors_found:
                 continue  # next repository
 
             # now we want to identify, out of the commits requested to be tested in this repository, the newest one
             # we also need to identify all commits (whether listed for testing or not) from the newest requested back to the branch head
             # for the test, we just need to fetch the newest commit (fetches all unmerged commits in the dependency chain)
-            change_numbers_to_test_for_repo = [ci['_number'] for ci in changes]  # at this point, we know the patch numbers are good
-            if unmerged_all_related_changes:
-                for (index, related_change) in enumerate(unmerged_all_related_changes):  # we going from newest to oldest commit
-                    if related_change['_change_number'] in change_numbers_to_test_for_repo:
-                        # we have found the newest commit among those we were asked to test, so it's the one to fetch
-                        related_changes_implicitly_tested = unmerged_all_related_changes[index+1:]
-                        requested_changes_implicitly_tested = [cr for cr in related_changes_implicitly_tested if cr['_change_number'] in change_numbers_to_test_for_repo]
-                        self.changes_to_fetch.append([[ci for ci in changes if ci['_number'] == related_change['_change_number']],  # the original changeinfo record
-                                                 related_changes_implicitly_tested,  # a list of relatedchange records
-                                                 requested_changes_implicitly_tested])  # a list of relatedchange records
-                        assert len(self.changes_to_fetch[-1][0]) == 1  # there should be exactly one changeinfo record
-                        self.changes_to_fetch[-1][0] = self.changes_to_fetch[-1][0][0]  # so no need to have a list of one element
-                        self.logger.info('In "' + os.path.basename(project) +
-                                         '", change to fetch is "' + str('%s/%s' % (self.changes_to_fetch[-1][0]['_number'], self.changes_to_fetch[-1][0]['revisions'].values()[0]['_number'])) +
-                                         '" (newest commit from changes ' + str(sorted(change_numbers_to_test_for_repo, key=int)) + ')' +
-                                         ' and also includes changes ' +
-                                         str([str('%s/%s' % (cr['_change_number'], cr['_revision_number'])) for cr in related_changes_implicitly_tested]).replace("'",""))
-                        assert (sorted([cr['_change_number'] for cr in requested_changes_implicitly_tested] + [self.changes_to_fetch[-1][0]['_number']], key=int) ==
-                               sorted(change_numbers_to_test_for_repo, key=int))
-                        break
-                else:
-                    self.logger.critical('Internal error - didn\'t find change in the list of its own dependencies')
-                    self.logger.info('change_numbers_to_test_for_repo = ' + str(change_numbers_to_test_for_repo))
-                    self.logger.info('unmerged_all_related_changes = ' + str(unmerged_all_related_changes))
-                    self.logger.info('self.changes_to_fetch = ' + str(self.changes_to_fetch))
-                    assert False  # something wrong if we didn't find the change in the list of its own dependencies
+            if len(related_change_chains) > 1:
+                # we were asked to test multiple changes in the repository, check that they are all in the same chain, and identify the longest chain
+                related_change_chains.sort(key=lambda c: len(c))
+                tokenized_related_change_chains = []
+                for chain in related_change_chains:
+                    token = ''
+                    for cr in chain[:0:-1]:  # go through the related change records (if any) from the end (newest) back to the first (the one after the ChangeInfo record)
+                        token += '%s/%s##' % (cr['_change_number'], cr['_revision_number'])
+                    token += '%s/%s##' % (chain[0]['_number'], chain[0]['revisions'].values()[0]['_number'])  # from the start (newest) of the chain, which is a ChangeInfo record
+                    tokenized_related_change_chains.append(token)
+                for item, next in itertools.izip(tokenized_related_change_chains, tokenized_related_change_chains[1:]):
+                    if len(item) < len(next):
+                        if item == next[:len(item)]:
+                            continue
+                    self.logger.error('Multiple changes in "' + os.path.basename(project) + '" were specified, but from unrelated commits ' +
+                                      '(all commits to be tested must be from a single chain)')
+                    self.errors_found = True
+                    break  # only need to report this error once per repository
+            change_chain_to_test = related_change_chains[-1]
+            if self.errors_found:
+                continue  # next repository
+
+            # at this point, we know the patch numbers are good
+            # "change_chain_to_test" is a list of either a single ChangeInfo record, or a ChangeInfo record plus related change records
+            self.changes_to_fetch.append(change_chain_to_test)  # append result for this repository
+            change_to_fetch_desc = 'In "%s", change to fetch is "%s/%s"' % (
+                                    os.path.basename(project),
+                                    self.changes_to_fetch[-1][0]['_number'],
+                                    self.changes_to_fetch[-1][0]['revisions'].values()[0]['_number'])
+            if len(change_chain_to_test) == 1:
+                self.logger.info(change_to_fetch_desc)
             else:
-                # unmerged_all_related_changes is empty, so we just need to fetch the single change
-                assert len(changes) == 1
-                self.changes_to_fetch.append([changes[0],  # the original changeinfo record
-                                        [],  # a list of relatedchange records
-                                        []])  # a list of relatedchange records
-                self.logger.info('In "' + os.path.basename(project) +
-                                 '", change to fetch is "' + str('%s/%s' % (self.changes_to_fetch[-1][0]['_number'], self.changes_to_fetch[-1][0]['revisions'].values()[0]['_number'])) +
-                                 '" (newest commit from changes ' + str(sorted(change_numbers_to_test_for_repo, key=int)) + ')')
+                self.logger.info(change_to_fetch_desc +
+                                 ' and also includes changes ' +
+                                 str([str('%s/%s' % (cr['_change_number'], cr['_revision_number'])) for cr in change_chain_to_test[1:]]).replace("'",""))
 
         if self.errors_found:  # we have finished all parameter validation
             self.logger.error('Errors were found in the details of the Gerrit changes to test - abandoning')
             return 1
 
-        # self.changes_to_fetch is a list of [ChangeInfo, [RelatedChangeAndCommitInfos], [RelatedChangeAndCommitInfos]]
+        # self.changes_to_fetch is a list of [ChangeInfo, [RelatedChangeAndCommitInfos, ...]
         # confirm that we have exactly 1 change to fetch per project
         projects_to_fetch = [ci[0]['project'] for ci in self.changes_to_fetch]
         assert len(projects_to_fetch) == len(set(projects_to_fetch))
@@ -752,10 +747,10 @@ post_materialize_function_gerrit () {
                 ['%s gerrit review %s,%s -p %s -n NONE' % (self.gerrit_ssh_command, ci[0]['_number'], ci[0]['revisions'].values()[0]['_number'], ci[0]['project']),
                  '']
                 )
-            if ci[1]:  # if the fetched change includes older unmerged changes in its dependency chain
-                self.ssh_fetched_changes[-1][-1] = (' (includes older change' + ('','s')[bool(len(ci[1])>1)] + ' ' +
-                                              str([str('%s/%s' % (cr['_change_number'], cr['_revision_number'])) for cr in ci[1]]).translate(None,b"'[]") + ')')
-                for cr in ci[1]:
+            if len(ci) > 1:  # if the fetched change includes older unmerged changes in its dependency chain
+                self.ssh_fetched_changes[-1][-1] = (' (includes older change' + ('','s')[bool(len(ci)>2)] + ' ' +
+                                              str([str('%s/%s' % (cr['_change_number'], cr['_revision_number'])) for cr in ci[1:]]).translate(None,b"'[]") + ')')
+                for cr in ci[1:]:
                     self.ssh_ancestor_changes.append(
                         ['%s gerrit review %s,%s -n NONE' % (self.gerrit_ssh_command, cr['_change_number'], cr['_revision_number']),  # project not in record
                          ' (tested as part of newer change ' + str(ci[0]['_number']) + '/' + str(ci[0]['revisions'].values()[0]['_number']) + ')']
@@ -783,7 +778,7 @@ post_materialize_function_gerrit () {
                                   % (c[0], c[1],  os.environ.get('BUILD_URL','')))
                 if "status unchanged" not in self.gerrit_verified_option:
                     started_script_file.write(' --verified 0')
-                started_script_file.write(' | true\n')
+                started_script_file.write(' || true\n')
             if self.ssh_ancestor_changes:  # if the change had older unmerged related changes
                 if not self.gerrit_verify_ancestors:
                     started_script_file.write('  set +x  # Turn off xtrace\n')
@@ -791,7 +786,7 @@ post_materialize_function_gerrit () {
                 else:
                     started_script_file.write('\n  # job parameter gerrit_verify_ancestors specified to also verify older unmerged changes that are included\n')
                 for c in self.ssh_ancestor_changes:
-                    started_script_file.write('  %s --message \'"Build Started%s %s"\' | true\n'
+                    started_script_file.write('  %s --message \'"Build Started%s %s"\' || true\n'
                                       % (c[0], c[1],  os.environ.get('BUILD_URL','')))
             started_script_file.write('  set +x  # Turn off xtrace\n')
             started_script_file.write('}\n\n')
@@ -821,11 +816,11 @@ post_materialize_function_gerrit () {
                                   % (c[0], c[1],  os.environ.get('BUILD_URL','')))
                 if "+1" in self.gerrit_verified_option:
                     finished_script_file.write(' --verified +1')
-                finished_script_file.write(' | true\n')
+                finished_script_file.write(' || true\n')
             if self.ssh_ancestor_changes:  # if the change had older unmerged related changes
                 if not self.gerrit_verify_ancestors:
                     finished_script_file.write('  set +x  # Turn off xtrace\n')
-                    finished_script_file.write('  return  # job parameter gerrit_verify_ancestors specified not to verify older unmerged changes  that were included\n\n')
+                    finished_script_file.write('  return  # job parameter gerrit_verify_ancestors specified not to verify older unmerged changes that were included\n\n')
                 else:
                     finished_script_file.write('\n  # job parameter gerrit_verify_ancestors specified to also verify older unmerged changes that were included\n')
                 for c in self.ssh_ancestor_changes:
@@ -833,7 +828,7 @@ post_materialize_function_gerrit () {
                                       % (c[0], c[1],  os.environ.get('BUILD_URL','')))
                     if "+1" in self.gerrit_verified_option:
                         finished_script_file.write(' --verified +1')
-                    finished_script_file.write(' | true\n')
+                    finished_script_file.write(' || true\n')
             finished_script_file.write('  set +x  # Turn off xtrace\n')
             finished_script_file.write('}\n')
 
@@ -850,7 +845,7 @@ post_materialize_function_gerrit () {
                                   % (c[0], c[1],  os.environ.get('BUILD_URL','')))
                 if "-1" in self.gerrit_verified_option:
                     finished_script_file.write(' --verified -1')
-                finished_script_file.write(' | true\n')
+                finished_script_file.write(' || true\n')
             finished_script_file.write('  set +x  # Turn off xtrace\n')
             # don't change verified status of ancestor jobs
             finished_script_file.write('}\n\n')
