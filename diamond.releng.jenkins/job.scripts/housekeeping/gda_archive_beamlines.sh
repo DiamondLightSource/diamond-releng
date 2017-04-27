@@ -110,6 +110,12 @@ archive_beamline () {
         fi
     done
 
+    # After some discussion with Mark Booth, we decide to skip the cleanup of the var/ directory for the moment
+    # As lots of things can go in there, it's possible that old files are simply ones that are static, and are still required
+    echo -e "\nCleanup of var/ is currently skipped for all beamlines"
+    echo -e "-- end of ${beamline} cleanup\n"
+    return
+
     # From Charles:
     #   Can the removal of old files from var please _not_ be run against B16, I07, I16.
     #   They have some old persistence stuff there (which, despite having mtime dates going back over a year, I think might still be used).
