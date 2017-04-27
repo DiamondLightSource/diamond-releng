@@ -69,7 +69,7 @@ archive_beamline () {
         echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 30 days from ${parent_dir} to ${archive_dir} ..."
         find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -mtime +30"
         initial_command="mkdir -pv ${archive_dir}"
-        per_file_command="rsync -a --no-owner -v --remove-source-files {} ${archive_dir}"
+        per_file_command="rsync -a --no-owner --remove-source-files --out-format="%-50n %B %12l %M" {} ${archive_dir}"
         perform_find_and_action
     fi
 
@@ -81,7 +81,7 @@ archive_beamline () {
             echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 30 days from ${parent_dir} to ${archive_dir} ..."
             find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -mtime +30"
             initial_command="mkdir -pv ${archive_dir}"
-            per_file_command="rsync -a --no-owner -v --remove-source-files {} ${archive_dir}"
+            per_file_command="rsync -a --no-owner --remove-source-files --out-format="%-50n %B %12l %M" {} ${archive_dir}"
             perform_find_and_action
         fi
     done
