@@ -3,6 +3,12 @@
 #------------------------------------#
 #------------------------------------#
 
+# use the latest available version of xz
+module load xz
+echo "Compression will be done using xz from $(which xz)"
+xz --version
+xz --info-memory
+
 perform_find_and_action () {
     # find_command            must be set and non-empty
     # initial_command         must be set, but may be non-empty
@@ -87,7 +93,7 @@ archive_beamline () {
         echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
         find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name "${filename_pattern}" -mtime +7"
         initial_command=""
-        per_file_command="gzip \"{}\""
+        per_file_command="xz -z \"{}\""
         perform_find_and_action
     fi
 
@@ -99,7 +105,7 @@ archive_beamline () {
             echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
             find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name "${filename_pattern}" -mtime +7"
             initial_command=""
-            per_file_command="gzip \"{}\""
+            per_file_command="xz -z \"{}\""
             perform_find_and_action
         fi
     done
