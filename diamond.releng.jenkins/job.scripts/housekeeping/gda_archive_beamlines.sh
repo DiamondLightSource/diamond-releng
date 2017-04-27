@@ -69,7 +69,7 @@ archive_beamline () {
         echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 30 days from ${parent_dir} to ${archive_dir} ..."
         find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -mtime +30"
         initial_command="mkdir -pv ${archive_dir}"
-        per_file_command="mv -v \"{}\" ${archive_dir}"
+        per_file_command="mv -v {} ${archive_dir}"
         perform_find_and_action
     fi
 
@@ -81,7 +81,7 @@ archive_beamline () {
             echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 30 days from ${parent_dir} to ${archive_dir} ..."
             find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -mtime +30"
             initial_command="mkdir -pv ${archive_dir}"
-            per_file_command="mv -v \"{}\" ${archive_dir}"
+            per_file_command="mv -v {} ${archive_dir}"
             perform_find_and_action
         fi
     done
@@ -93,7 +93,7 @@ archive_beamline () {
         echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
         find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name "${filename_pattern}" -mtime +7"
         initial_command=""
-        per_file_command="xz -z \"{}\""
+        per_file_command="xz -z {}"
         perform_find_and_action
     fi
 
@@ -105,7 +105,7 @@ archive_beamline () {
             echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
             find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name "${filename_pattern}" -mtime +7"
             initial_command=""
-            per_file_command="xz -z \"{}\""
+            per_file_command="xz -z {}"
             perform_find_and_action
         fi
     done
