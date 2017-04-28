@@ -9,42 +9,52 @@ echo "Compression will be done using xz from $(which xz)"
 xz --version
 xz --info-memory
 
-perform_find_and_action () {
-    # find_command            must be set and non-empty
-    # initial_command         must be set, but may be non-empty
-    # per_file_command        must be set and non-empty
-    if [[ -z "${find_command}" ]]; then
-        echo '$find_command variable was not set - exiting'
-        return 1
-    fi
-    if [[ -z "${per_file_command}" ]]; then
-        echo '$per_file_command variable was not set - exiting'
-        return 1
-    fi
 
-    count=$(find ${find_command} | wc -l)
-    echo "${count} items found by: find ${find_command}"
-    if [[ "${count}" != "0" ]]; then
-        if [[ "${dryrun}" != "false" ]]; then
-            find ${find_command} -print | sort
-            if [[ -n "${initial_command}" ]]; then
-                echo "If not in dryrun mode, would run: ${initial_command}"
+archive_files () {
+    # parent_dir        must be set and non-empty
+    # archive_dir       must be set and non-empty
+    if [[ -d "${parent_dir}" ]]; then
+        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 30 days from ${parent_dir} to ${archive_dir} ..."
+
+        find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -mtime +30"
+        count=$(find ${find_command} | wc -l)
+        echo "${count} items found by: find ${find_command}"
+        if [[ "${count}" != "0" ]]; then
+            if [[ "${dryrun}" != "false" ]]; then
+                find ${find_command} -print | sort
+                echo "If not in dryrun mode, would run: find ${find_command} -exec rsync -a --no-owner --remove-source-files --out-format=\"%-50n %B %12l %M\" {} ${archive_dir} \; || true"
+            else
+                mkdir_command="mkdir -pv ${archive_dir}"
+                echo "Running: ${mkdir_command}"
+                ${mkdir_command}
+                echo "Running: find ${find_command} -exec rsync -a --no-owner --remove-source-files --out-format=\"%-50n %B %12l %M\" {} ${archive_dir} \; || true"
+                echo "Note: if you see this, it is only a warning, the compression has still been done: 'Cannot set the file group: Operation not permitted'"
+                find ${find_command} -exec rsync -a --no-owner --remove-source-files --out-format="%-50n %B %12l %M" {} ${archive_dir} \; || true
             fi
-            echo "If not in dryrun mode, would run: find ${find_command} -exec ${per_file_command} \; || true"
-        else
-            if [[ -n "${initial_command}" ]]; then
-                echo "Running: ${initial_command}"
-                ${initial_command}
-            fi
-            echo "Running: find ${find_command} -exec ${per_file_command} \; || true"
-            find ${find_command} -exec ${per_file_command} \; || true
         fi
     fi
+}
 
-    unset find_command
-    unset expects initial_command
-    unset expects per_file_command
 
+compress_files () {
+    # parent_dir        must be set and non-empty
+    # filename_pattern  must be set and non-empty
+    if [[ -d "${parent_dir}" ]]; then
+        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
+
+        find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name \"${filename_pattern}\" -mtime +7"
+        count=$(find ${find_command} | wc -l)
+        echo "${count} items found by: find ${find_command}"
+        if [[ "${count}" != "0" ]]; then
+            if [[ "${dryrun}" != "false" ]]; then
+                find ${find_command} -print | sort
+                echo "If not in dryrun mode, would run: find ${find_command} -exec xz -z {} \; || true"
+            else
+                echo "Running: find ${find_command} -exec xz -z {} \; || true"
+                find ${find_command} -exec xz -z {} \; || true
+            fi
+        fi
+    fi
 }
 
 #------------------------------------#
@@ -65,49 +75,25 @@ archive_beamline () {
     # Move old logs to archive (GDA 8 log locations)
     parent_dir="/dls_sw/${beamline}/logs"
     archive_dir=/dls/science/groups/das/Archive/${beamline}/logs
-    if [[ -d "${parent_dir}" ]]; then
-        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 30 days from ${parent_dir} to ${archive_dir} ..."
-        find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -mtime +30"
-        initial_command="mkdir -pv ${archive_dir}"
-        per_file_command="rsync -a --no-owner --remove-source-files --out-format=\"%-50n %B %12l %M\" {} ${archive_dir}"
-        perform_find_and_action
-    fi
+    archive_files
 
     # Move old logs to archive (GDA 9 log locations)
     for type in client servers logpanel; do
         parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
         archive_dir="/dls/science/groups/das/Archive/${beamline}/logs/gda_${type}_output"
-        if [[ -d "${parent_dir}" ]]; then
-            echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 30 days from ${parent_dir} to ${archive_dir} ..."
-            find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -mtime +30"
-            initial_command="mkdir -pv ${archive_dir}"
-            per_file_command="rsync -a --no-owner --remove-source-files --out-format=\"%-50n %B %12l %M\" {} ${archive_dir}"
-            perform_find_and_action
-        fi
+        archive_files
     done
 
     # Compress old logs (GDA 8 log locations)
     parent_dir="/dls_sw/${beamline}/logs"
     filename_pattern='gda_output_*.txt'
-    if [[ -d "${parent_dir}" ]]; then
-        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
-        find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name "${filename_pattern}" -mtime +7"
-        initial_command=""
-        per_file_command="xz -z {}"
-        perform_find_and_action
-    fi
+    compress_files
 
     # Compress old logs (GDA 9 log locations)
     for type in client servers logpanel; do
         parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
         filename_pattern="gda_${type}_output_"'*.txt'
-        if [[ -d "${parent_dir}" ]]; then
-            echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
-            find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name "${filename_pattern}" -mtime +7"
-            initial_command=""
-            per_file_command="xz -z {}"
-            perform_find_and_action
-        fi
+        compress_files
     done
 
     # After some discussion with Mark Booth, we decide to skip the cleanup of the var/ directory for the moment
