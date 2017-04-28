@@ -28,7 +28,6 @@ archive_files () {
                 echo "Running: ${mkdir_command}"
                 ${mkdir_command}
                 echo "Running: find ${find_command} -exec rsync -a --no-owner --remove-source-files --out-format=\"%-50n %B %12l %M\" {} ${archive_dir} \; || true"
-                echo "Note: if you see this, it is only a warning, the compression has still been done: 'Cannot set the file group: Operation not permitted'"
                 find ${find_command} -exec rsync -a --no-owner --remove-source-files --out-format="%-50n %B %12l %M" {} ${archive_dir} \; || true
             fi
         fi
@@ -51,6 +50,7 @@ compress_files () {
                 echo "If not in dryrun mode, would run: find ${find_command} -exec xz -z {} \; || true"
             else
                 echo "Running: find ${find_command} -exec xz -z {} \; || true"
+                echo "Note: if you see this, it is only a warning, the compression has still been done: 'Cannot set the file group: Operation not permitted'"
                 find ${find_command} -exec xz -z {} \; || true
             fi
         fi
