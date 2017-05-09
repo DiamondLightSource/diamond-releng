@@ -131,6 +131,11 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<include name="org.eclipse.swt.${eclipse.window.os}.${eclipse.arch}_*.jar" />  <!-- the platform-dependent jar -->
 		</fileset>
 	</path>
+	<path id="tp.swtbot.path">
+		<fileset dir="${workspace.loc}/tp/plugins">
+			<include name="org.eclipse.swtbot.*.jar" />                                    <!-- the SWTBot jars (platform-independent) -->
+		</fileset>
+	</path>
 
 	<!-- Location of latest versions of hamcrest jars -->
 	<path id="tp.hamcrest.path">
@@ -155,10 +160,11 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<exclude name="*.source_*" />
 			<exclude name="org.apache.ant*" />
 			<exclude name="org.eclipse.ant*" />
-			<exclude name="org.junit*" />              <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
-			<exclude name="org.eclipse.jdt.junit*" />  <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
-			<exclude name="org.hamcrest.*" />          <!-- Use tp.hamcrest.path if you need Hamcrest -->
-			<exclude name="org.eclipse.swt.*" />       <!-- Use tp.swt.path if you need SWT -->
+			<exclude name="org.junit*" />                <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
+			<exclude name="org.eclipse.jdt.junit*" />    <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
+			<exclude name="org.hamcrest.*" />            <!-- Use tp.hamcrest.path if you need Hamcrest -->
+			<exclude name="org.eclipse.swt.*" />         <!-- Use tp.swt.path if you need SWT -->
+			<exclude name="org.eclipse.swtbot.*.jar" />  <!-- Use tp.swtbot.path if you need SWTBot -->
 			<exclude name="org.apache.batik*" />       <!-- org.apache.batik.pdf has it's own copy of org.apache.commons.io so exclude it -->
 		</fileset>
 	</path>
@@ -244,7 +250,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	</target>
 
 	<target name="Xvfb_start" depends="Xvfb_check" if="Xvfb_available">
-		<!-- If invoked from gda-build.py, Xvfb-display-number has already been set.
+		<!-- If invoked from "pewma.py", Xvfb-display-number has already been set.
 		     This allows tests to be run in parallel without using the same Xvfb-display-number -->
 		<property name="Xvfb-display-number" value="6123" />
 		<property name="Xvfb-display-name" value="DISPLAY" />
@@ -265,6 +271,38 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<arg value="Xvfb :${Xvfb-display-number}" />
 		</exec>
 		<sleep seconds="2" />  <!-- allow time to fully stop, otherwise if the next plugin uses Xvfb as well, tests may fail with weird X11 errors -->
+	</target>
+
+	<!-- Window manager when running headless under Linux (required for SWTBot) -->
+	<target name="Metacity_check" unless="Metacity_check_done">
+		<exec executable="which" osfamily="unix" resultproperty="which_Metacity_result" inputstring="">
+			<arg value="metacity" />
+		</exec>
+		<condition property="Metacity_available">
+			<and>
+				<os family="unix" />
+				<equals arg1="${which_Metacity_result}" arg2="0" />
+			</and>
+		</condition>
+		<property name="Metacity_check_done" value="true" />
+	</target>
+
+	<target name="Metacity_start" depends="Metacity_check, Xvfb_start" if="Metacity_available">
+		<echo>Starting metacity for DISPLAY :${Xvfb-display-number} to act as Window Manager for SWTBot tests</echo>
+		<exec executable="metacity" spawn="true" os="Linux">
+			<arg value="--display=:${Xvfb-display-number}" />
+			<arg value="--replace" />
+		</exec>
+		<sleep seconds="2" />  <!-- allow time to initialize -->
+	</target>
+
+	<target name="Metacity_stop" if="Metacity_available">
+		<echo>Stopping metacity for DISPLAY :${Xvfb-display-number} used as a Window Manager for SWTBot tests</echo>
+		<exec executable="pkill" os="Linux" inputstring="">
+			<arg value="-f" />
+			<arg value="metacity --display=:${Xvfb-display-number}" />
+		</exec>
+		<sleep seconds="2" />  <!-- allow time to fully stop -->
 	</target>
 
 	<!-- use netstat to report on open ports when running under Linux -->
