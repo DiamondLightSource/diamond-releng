@@ -694,6 +694,9 @@ class PewmaManager(object):
                 response = raw_input('$$ %sDelete "%s" [y/n(default)]: ' % (self.log_prefix, directory)).strip().lower()
                 if not response.startswith('y'):
                     raise PewmaException('Will not delete directory. Abandoning.')
+            cwd = os.getcwd()
+            if cwd and os.path.realpath(cwd) == os.path.realpath(directory):
+                raise PewmaException('Cannot delete current directory. Abandoning.')
             self.logger.info('%sDeleting %s "%s"' % (self.log_prefix, description, directory,))
             if self.options.dry_run:
                 return
