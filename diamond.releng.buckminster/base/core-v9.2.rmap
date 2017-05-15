@@ -4175,7 +4175,7 @@
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="https://dl.bintray.com/fabioz/pydev/${pydev.p2.version}/"/>
+      <rm:uri format="${alfred.url}/sites/dl.bintray.com/fabioz/pydev/${pydev.p2.version}/"/>
     </rm:provider>
   </rm:searchPath>
   <!--
