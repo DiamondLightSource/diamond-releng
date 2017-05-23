@@ -2258,7 +2258,7 @@
   <rm:locator pattern="^org\.eclipse\.dawnsci(\..+)?$" searchPathRef="dawnsci"/>
   <!-- *** diamond- *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.org\.jacorb$" searchPathRef="diamond_jacorb"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.jython$" searchPathRef="diamond_jython"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.jython(\..+)?$" searchPathRef="diamond_jython"/>
   <rm:locator pattern="^org\.dawnsci\.miniconda(\..+)?$" searchPathRef="diamond_miniconda"/>
   <rm:locator pattern="^diamond\.releng\..+$" searchPathRef="diamond_releng"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="diamond_springframework"/>
