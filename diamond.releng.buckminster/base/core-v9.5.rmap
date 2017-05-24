@@ -60,6 +60,10 @@
     <bc:constant value="${eclipse.orbit.p2.version.${eclipse.release}}"/>
   </rm:propertyElement>
   <!-- ***** -->
+  <rm:propertyElement key="eclipse.eclipselink.p2.version">  <!-- version of Eclipse EclipseLink p2 repository to use -->
+    <bc:constant value="2.6.4.v20160829-44060b6/"/>
+  </rm:propertyElement>
+  <!-- ***** -->
   <!-- version of Eclipse January p2 repository to use -->
   <rm:propertyElement key="source.repository.january">  <!-- says whether to get org.eclipse.january* from a source repository, or a p2 site -->
     <bc:constant value="false"/>
@@ -2371,7 +2375,7 @@
   <rm:locator pattern="^tp\..+\.site$" searchPathRef="sites"/>
   <rm:locator pattern="^tp\..+\.feature$" searchPathRef="core_svn"/>
   <!--
-       Components to get from Eclipse p2 repositories: Orbit, Jetty, NatTable
+       Components to get from Eclipse p2 repositories: Orbit, EclipseLink, Jetty, NatTable
   -->
   <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="eclipse_orbit_p2"/>
@@ -2390,6 +2394,7 @@
   <rm:locator pattern="^org\.quartz$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.xmlpull$" searchPathRef="eclipse_orbit_p2"/>
   <!-- "^org\.eclipse\.january(\..+)?$" is in eclipse_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
+  <rm:locator pattern="^org\.eclipse\.persistence\..+$" searchPathRef="eclipse_eclipselink_p2"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
   <!--
@@ -4316,6 +4321,13 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version}/repository/"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_eclipselink_p2">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/rt/eclipselink/updates/${eclipse.eclipselink.p2.version}/"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_jetty9_p2">
