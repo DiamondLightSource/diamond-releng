@@ -1623,10 +1623,14 @@ class PewmaManager(object):
             sys.stdout.flush()
             sys.stderr.flush()
             try:
-                # set environment variables to pass to git command extensions 
+                # set environment variables to pass to git command extensions
                 os.environ['PEWMA_PY_WORKSPACE_GIT_LOC'] = self.workspace_git_loc
-                os.environ['PEWMA_PY_COMMAND'] = str(command)
-                os.environ['PEWMA_PY_DIRECTORY'] = str(directory)
+                if sys.stdin.encoding is not None:
+                    os.environ['PEWMA_PY_COMMAND'] = command.encode(sys.stdin.encoding)
+                    os.environ['PEWMA_PY_DIRECTORY'] = directory.encode(sys.stdin.encoding)
+                else:
+                    os.environ['PEWMA_PY_COMMAND'] = str(command)
+                    os.environ['PEWMA_PY_DIRECTORY'] = str(directory)
                 process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, cwd=directory)
                 out, err = process.communicate()
                 out, err = out.rstrip(), err.rstrip()
@@ -2317,6 +2321,8 @@ class PewmaManager(object):
                         print('      %s' % (line,))
             return
 
+        if sys.stdin.encoding is not None:
+            positional_arguments = [item.decode(sys.stdin.encoding) for item in positional_arguments]  # in case any unicode characters in input string
         self.action = positional_arguments[0]
         self.arguments = positional_arguments[1:]
 
