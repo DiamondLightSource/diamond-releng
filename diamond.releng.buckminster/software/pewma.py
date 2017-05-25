@@ -98,9 +98,18 @@ for c in COMPONENT_CATEGORIES:
     if c[0] not in CATEGORIES_AVAILABLE:
         CATEGORIES_AVAILABLE.append(c[0])
 
+VERSIONS_AVAILABLE = set()  # dedupe version_synonyms
+for c in COMPONENT_CATEGORIES:
+    for v in c[4]:
+        VERSIONS_AVAILABLE.add(v)
+
 for abbrev, actual, cat in COMPONENT_ABBREVIATIONS:
     assert abbrev not in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is the same as a category' % (abbrev,)
     assert cat in CATEGORIES_AVAILABLE, 'Component abbreviation "%s" is defined with an invalid category: "%s"' % (abbrev, cat)
+    assert abbrev not in VERSIONS_AVAILABLE, 'Component abbreviation "%s" is the same as a version' % (abbrev,)
+
+for cat in CATEGORIES_AVAILABLE:
+    assert cat not in VERSIONS_AVAILABLE, 'Category "%s" is the same as a version' % (cat,)
 
 INVALID_COMPONENTS = (  # tuple of (component name pattern, (applicable versions pattern), error message) 
     ('^all-dls-config$', ('^(master|v9\.[5432])$'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
@@ -1212,7 +1221,7 @@ class PewmaManager(object):
         components_to_use_raw = []
         category_version_cquery = []
         for index, item in enumerate(self.arguments):
-            if (item in CATEGORIES_AVAILABLE) or item.endswith('.cquery'):
+            if (item in CATEGORIES_AVAILABLE) or (item in VERSIONS_AVAILABLE) or item.endswith('.cquery'):
                 components_to_use_raw = self.arguments[:index]
                 category_version_cquery = self.arguments[index:]
                 break
@@ -1286,7 +1295,7 @@ class PewmaManager(object):
 
 
     def _parse_category_version_cquery(self, arguments_part):
-        """ Processes this part of the arguments: [<category> [<version>] | <cquery>]
+        """ Processes this part of the arguments: [ [<category> ] [<version>] | <cquery>]
             (on behalf of "setup" and "materialize" commands)
         """
 
@@ -1295,18 +1304,18 @@ class PewmaManager(object):
         cquery_to_use = None
         template_to_use = DEFAULT_TEMPLATE
 
-        # interpret any (category / category version / cquery) arguments
+        # interpret any (category / category version / version / cquery) arguments
         if arguments_part:
-            category_or_cquery = arguments_part[0]
-            if category_or_cquery.endswith('.cquery'):
-                cquery_to_use = category_or_cquery
+            category_or_version_or_cquery = arguments_part[0]
+            if category_or_version_or_cquery.endswith('.cquery'):
+                cquery_to_use = category_or_version_or_cquery
                 if len(arguments_part) > 1:
                     raise PewmaException('ERROR: No other options can follow the CQuery')
                 for c, v, q, t, s, j in [cc for cc in COMPONENT_CATEGORIES if cc[2] == cquery_to_use]:
                     template_to_use = t
                     break
-            elif category_or_cquery in CATEGORIES_AVAILABLE:
-                category_to_use = category_or_cquery
+            elif category_or_version_or_cquery in CATEGORIES_AVAILABLE:
+                category_to_use = category_or_version_or_cquery
                 if len(arguments_part) > 1:
                     version = arguments_part[1].lower()
                     for c, v, q, t, s, j in [cc for cc in COMPONENT_CATEGORIES if cc[0] == category_to_use]:
@@ -1315,8 +1324,20 @@ class PewmaManager(object):
                             break
                     else:
                         raise PewmaException('ERROR: category "%s" does not have a version "%s"' % (category_to_use, version))
+                    if len(arguments_part) > 2:
+                        raise PewmaException('ERROR: unexpected additional parameters found "%s"' % (arguments_part[2:],))
+            elif category_or_version_or_cquery.lower() in VERSIONS_AVAILABLE:
+                version = category_or_version_or_cquery.lower()
+                for c, v, q, t, s, j in [cc for cc in COMPONENT_CATEGORIES]:
+                    if version in s:
+                        version_to_use = v
+                        break
+                else:
+                    assert False  # should always match
+                if len(arguments_part) > 1:
+                    raise PewmaException('ERROR: unexpected additional parameters found "%s"' % (arguments_part[1:],))
             else:
-                raise PewmaException('ERROR: "%s" is neither a category nor a CQuery' % (category_or_cquery,))
+                assert False, 'Internal error in _parse_category_version_cquery: "%s"' % (category_or_version_or_cquery,)
 
         return (category_to_use, version_to_use, cquery_to_use, template_to_use)
 
