@@ -37,74 +37,6 @@
   <rm:propertyElement key="training.repository.user">  <!-- used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide) -->
     <bc:constant value="template"/>
   </rm:propertyElement>
-  <!--                                    -->
-  <!-- Target Platform version properties -->
-  <!--                                    -->
-  <rm:propertyElement key="eclipse.release">
-    <bc:constant value="mars"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <!-- version of Diamond Orbit p2 repository to use -->
-  <rm:propertyElement key="diamond.orbit.p2.version">
-    <bc:constant value="R201706011428"/>  <!-- For a release, should be a value like R201701200926 -->
-  </rm:propertyElement>
-  <!-- ***** -->
-  <!-- version of Eclipse Orbit p2 repository to use -->
-  <rm:propertyElement key="eclipse.orbit.p2.version.mars">  
-    <bc:constant value="R20151221205849"/>  <!-- Mars.2 -->
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.orbit.p2.version.neon">
-    <bc:constant value="R20160520211859"/>  <!-- Neon -->
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.orbit.p2.version">
-    <bc:constant value="${eclipse.orbit.p2.version.${eclipse.release}}"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <rm:propertyElement key="eclipse.eclipselink.p2.version">  <!-- version of Eclipse EclipseLink p2 repository to use -->
-    <bc:constant value="2.6.4.v20160829-44060b6/"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <!-- version of Eclipse January p2 repository to use -->
-  <rm:propertyElement key="source.repository.january">  <!-- says whether to get org.eclipse.january* from a source repository, or a p2 site -->
-    <bc:constant value="false"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.january.p2.version">
-    <bc:constant value="2.0.1"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.january.p2.url">
-    <bc:constant value="${alfred.url}/sites/download.eclipse.org/january/releases/${eclipse.january.p2.version}/repository/"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <!-- version of Eclipse Jetty 9 p2 repository to use -->
-  <rm:propertyElement key="eclipse.jetty9.p2.version.mars">
-    <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars SR2 depends on -->
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.jetty9.p2.version.neon">
-    <bc:constant value="9.3.9.v20160517"/>  <!-- matches the version that Neon depends on -->
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.jetty9.p2.version">
-    <bc:constant value="${eclipse.jetty9.p2.version.${eclipse.release}}"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <rm:propertyElement key="nattable.p2.version">  <!-- version of Eclipse NatTable p2 repository to use -->
-    <bc:constant value="1.5.0"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <rm:propertyElement key="nebula.p2.version">  <!-- version of Eclipse Nebula p2 repository to use, only used when nebula.new=true -->
-    <bc:constant value="1.2.0"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="nebula.incubation.p2.version">  <!-- version of Eclipse Nebula Incubation p2 repository to use, only used when nebula.new=true -->
-    <bc:constant value="snapshot-20170424_140154"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
-    <bc:constant value="5.2.0"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <rm:propertyElement key="py4j.p2.version">  <!-- version of Py4j p2 repository to use -->
-    <bc:constant value="0.10.4"/>
-  </rm:propertyElement>
-  <!-- ***** -->
   <!--                                                             -->
   <!-- Properties for Gitolite-managed git repositories at Diamond -->
   <!--                                                             -->
@@ -259,11 +191,11 @@
   <!--
        Git repositories
   -->
-  <!-- *** beamlines *** -->
+  <!-- ** beamlines *** -->
   <rm:propertyElement key="beamlines.b22.rsync.git.url">
     <bc:constant value="${diamond.dascgit.url}/beamlines/b22-rsync.git"/>
   </rm:propertyElement>
-  <!-- *** daq- *** -->
+  <!-- ** daq- *** -->
   <rm:propertyElement key="daq.eclipse.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
@@ -273,36 +205,7 @@
   <rm:propertyElement key="daq.eclipse.git.url">
     <bc:constant value="${github.${daq.eclipse.github.authentication}.url}${daq.eclipse.github.organization}/daq-eclipse.git"/>
   </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="daq.platform.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.platform.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${daq.platform.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.platform.dascgerrit.authentication">
-    <bc:constant value="${dascgerrit.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.platform.dascgerrit.url">
-    <bc:constant value="${diamond.dascgerrit.${daq.platform.dascgerrit.authentication}.url}/daq"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.platform.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.platform.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.platform.github.url">
-    <bc:constant value="${github.${daq.platform.github.authentication}.url}${daq.platform.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.platform.git.url">
-    <bc:constant value="${daq.platform.${daq.platform.git.location.translated}.url}/daq-platform.git"/>
-  </rm:propertyElement>
-  <!-- *** dawn- *** -->
+  <!-- ** dawn- *** -->
   <rm:propertyElement key="dawn.commandserver.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -359,14 +262,14 @@
     <bc:constant value="${dawn.eclipse.${dawn.eclipse.git.location.translated}.url}/dawn-eclipse.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.hdf.github.organization">
+  <rm:propertyElement key="dawn.fable.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
-  <rm:propertyElement key="dawn.hdf.github.authentication">
+  <rm:propertyElement key="dawn.fable.github.authentication">
     <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="dawn.hdf.git.url">
-    <bc:constant value="${github.${dawn.hdf.github.authentication}.url}${dawn.hdf.github.organization}/dawn-hdf.git"/>
+  <rm:propertyElement key="dawn.fable.git.url">
+    <bc:constant value="${github.${dawn.fable.github.authentication}.url}${dawn.fable.github.organization}/dawn-fable.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.hpc.github.organization">
@@ -399,16 +302,6 @@
     <bc:constant value="${github.${dawn.isenciaui.github.authentication}.url}${dawn.isenciaui.github.organization}/dawn-isenciaui.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.marketplace.server.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.marketplace.server.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.marketplace.server.git.url">
-    <bc:constant value="${github.${dawn.marketplace.server.github.authentication}.url}${dawn.marketplace.server.github.organization}/dawn-marketplace-server.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="dawn.mx.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -427,6 +320,16 @@
   </rm:propertyElement>
   <rm:propertyElement key="dawn.product.git.url">
     <bc:constant value="${github.${dawn.product.github.authentication}.url}${dawn.product.github.organization}/dawn-product.git"/>
+  </rm:propertyElement>
+  <!-- -->
+  <rm:propertyElement key="dawn.rap.github.organization">
+    <bc:constant value="DawnScience"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="dawn.rap.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="dawn.rap.git.url">
+    <bc:constant value="${github.${dawn.rap.github.authentication}.url}${dawn.rap.github.organization}/dawn-rap.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.tango.github.organization">
@@ -478,7 +381,7 @@
   <rm:propertyElement key="dawn.workflow.git.url">
     <bc:constant value="${github.${dawn.workflow.github.authentication}.url}${dawn.workflow.github.organization}/dawn-workflow.git"/>
   </rm:propertyElement>
-  <!-- *** (eclipse/)dawnsci *** -->
+  <!-- ** (eclipse/)dawnsci *** -->
   <rm:propertyElement key="dawnsci.github.organization">
     <bc:constant value="eclipse"/>
   </rm:propertyElement>
@@ -488,7 +391,33 @@
   <rm:propertyElement key="dawnsci.git.url">
     <bc:constant value="${github.${dawnsci.github.authentication}.url}${dawnsci.github.organization}/dawnsci.git"/>
   </rm:propertyElement>
-  <!-- *** diamond- *** -->
+  <!-- ** diamond- *** -->
+  <rm:propertyElement key="diamond.enthought.git.location">
+    <bc:constant value="${gda.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.enthought.git.location.translated">
+    <bc:replace>
+      <bc:propertyRef key="diamond.enthought.git.location"/>
+      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^public$" replacement="github"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.enthought.dascgit.url">
+    <bc:constant value="${diamond.dascgit.url}/diamond"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.enthought.github.organization">
+    <bc:constant value="openGDA"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.enthought.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.enthought.github.url">
+    <bc:constant value="${github.${diamond.enthought.github.authentication}.url}${diamond.enthought.github.organization}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.enthought.git.url">
+    <bc:constant value="${diamond.enthought.${diamond.enthought.git.location.translated}.url}/diamond-enthought.git"/>
+  </rm:propertyElement>
+  <!-- -->
   <rm:propertyElement key="diamond.jacorb.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -618,7 +547,7 @@
   <rm:propertyElement key="diamond.springframework.git.url">
     <bc:constant value="${diamond.springframework.${diamond.springframework.git.location.translated}.url}/diamond-springframework.git"/>
   </rm:propertyElement>
-  <!-- *** diffcalc *** -->
+  <!-- ** diffcalc *** -->
   <rm:propertyElement key="diffcalc.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
@@ -628,7 +557,7 @@
   <rm:propertyElement key="diffcalc.git.url">
     <bc:constant value="${github.${diffcalc.github.authentication}.url}${diffcalc.github.organization}/diffcalc.git"/>
   </rm:propertyElement>
-  <!-- *** embl- *** -->
+  <!-- ** embl- *** -->
   <rm:propertyElement key="embl.cca.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -638,7 +567,7 @@
   <rm:propertyElement key="embl.cca.git.url">
     <bc:constant value="${github.${embl.cca.github.authentication}.url}${embl.cca.github.organization}/embl-cca.git"/>
   </rm:propertyElement>
-  <!-- *** epp- *** -->
+  <!-- ** epp- *** -->
   <rm:propertyElement key="epp.usagedata.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -664,7 +593,7 @@
   <rm:propertyElement key="epp.usagedata.git.url">
     <bc:constant value="${epp.usagedata.${epp.usagedata.git.location.translated}.url}/epp-usagedata.git"/>
   </rm:propertyElement>
-  <!-- *** gda- *** -->
+  <!-- ** gda- *** -->
   <rm:propertyElement key="gda.bimorph.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -779,6 +708,32 @@
   </rm:propertyElement>
   <rm:propertyElement key="gda.core.git.url">
     <bc:constant value="${gda.core.${gda.core.git.location.translated}.url}/gda-core.git"/>
+  </rm:propertyElement>
+  <!-- -->
+  <rm:propertyElement key="gda.dal.git.location">
+    <bc:constant value="${gda.git.location}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.dal.git.location.translated">
+    <bc:replace>
+      <bc:constant value="${gda.dal.git.location}"/>
+      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^public$" replacement="github"/>
+    </bc:replace>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.dal.dascgit.url">
+    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.dal.github.organization">
+    <bc:constant value="openGDA"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.dal.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.dal.github.url">
+    <bc:constant value="${github.${gda.dal.github.authentication}.url}${gda.dal.github.organization}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.dal.git.url">
+    <bc:constant value="${gda.dal.${gda.dal.git.location.translated}.url}/gda-dal.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="gda.devices.cirrus.git.location">
@@ -1295,19 +1250,6 @@
     <bc:constant value="${github.${gda.imca.cat.github.authentication}.url}${gda.imca.cat.github.organization}/gda-imca-cat.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="source.repository.gda_ispyb_api">  <!-- says whether to get uk.ac.diamond.ispyb.* from a source repository, or a p2 site -->
-    <bc:constant value="false"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.ispyb.api.github.organization">
-    <bc:constant value="DiamondLightSource"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.ispyb.api.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.ispyb.api.git.url">
-    <bc:constant value="${github.${gda.ispyb.api.github.authentication}.url}${gda.ispyb.api.github.organization}/gda-ispyb-api.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="gda.legacy.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -1666,18 +1608,17 @@
   <rm:propertyElement key="gphl.sdcp.common.git.url">
     <bc:constant value="${gphl.sdcp.common.${gphl.sdcp.common.git.location.translated}.url}/gphl-sdcp-common.git"/>
   </rm:propertyElement>
-  <!-- *** (eclipse/)january *** -->
-  <!-- only applicable if source.repository.january=true, otherwise org\.eclipse\.january is supplied by jars in the target platform -->
-  <rm:propertyElement key="january.github.organization">
-    <bc:constant value="eclipse"/>
+  <!-- ** jeromq *** -->
+  <rm:propertyElement key="jeromq.github.organization">
+    <bc:constant value="DawnScience"/>
   </rm:propertyElement>
-  <rm:propertyElement key="january.github.authentication">
+  <rm:propertyElement key="jeromq.github.authentication">
     <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="january.git.url">
-    <bc:constant value="${github.${january.github.authentication}.url}${january.github.organization}/january.git"/>
+  <rm:propertyElement key="jeromq.git.url">
+    <bc:constant value="${github.${jeromq.github.authentication}.url}${jeromq.github.organization}/jeromq.git"/>
   </rm:propertyElement>
-  <!-- *** Opt-ID *** -->
+  <!-- ** Opt-ID *** -->
   <rm:propertyElement key="opt.id.github.organization">
     <bc:constant value="DiamondLightSource"/>
   </rm:propertyElement>
@@ -1687,21 +1628,7 @@
   <rm:propertyElement key="opt.id.git.url">
     <bc:constant value="${github.${opt.id.github.authentication}.url}${opt.id.github.organization}/Opt-ID.git"/>
   </rm:propertyElement>
-  <!-- *** org.eclipse.launchbar *** -->
-  <rm:propertyElement key="org.eclipse.launchbar.github.organization">
-    <bc:constant value="Itema-as"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="org.eclipse.launchbar.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="org.eclipse.launchbar.git.url">
-    <bc:constant value="${github.${org.eclipse.launchbar.github.authentication}.url}${org.eclipse.launchbar.github.organization}/org.eclipse.launchbar.git"/>
-  </rm:propertyElement>
-  <!-- *** py4j - net.sf.py4j*(legacy) and org.py4j* (new) *** -->
-  <rm:propertyElement key="source.repository.py4j">  <!-- says whether to get net.sf.py4j*/org.py4j* from a source repository, or a p2 site -->
-    <bc:constant value="false"/>
-  </rm:propertyElement>
-  <!-- -->
+  <!-- ** py4j *** -->
   <rm:propertyElement key="py4j.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -1711,37 +1638,7 @@
   <rm:propertyElement key="py4j.git.url">
     <bc:constant value="${github.${py4j.github.authentication}.url}${py4j.github.organization}/py4j.git"/>
   </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="py4j.new.github.organization">
-    <bc:constant value="bartdag"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="py4j.new.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="py4j.new.git.url">
-    <bc:constant value="${github.${py4j.new.github.authentication}.url}${py4j.new.github.organization}/py4j.git"/>
-  </rm:propertyElement>
-  <!-- *** (eclipse/)richbeans *** -->
-  <rm:propertyElement key="richbeans.github.organization">
-    <bc:constant value="eclipse"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="richbeans.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="richbeans.git.url">
-    <bc:constant value="${github.${richbeans.github.authentication}.url}${richbeans.github.organization}/richbeans.git"/>
-  </rm:propertyElement>
-  <!-- *** (eclipse/)scanning *** -->
-  <rm:propertyElement key="scanning.github.organization">
-    <bc:constant value="eclipse"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scanning.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scanning.git.url">
-    <bc:constant value="${github.${scanning.github.authentication}.url}${scanning.github.organization}/scanning.git"/>
-  </rm:propertyElement>
-  <!-- *** scisoft- *** -->
+  <!-- ** scisoft- *** -->
   <rm:propertyElement key="scisoft.2ddpr.git.location">
     <bc:constant value="${scisoft.git.location}"/>
   </rm:propertyElement>
@@ -2079,7 +1976,7 @@
   <rm:propertyElement key="scisoft.ws.git.url">
     <bc:constant value="${scisoft.ws.${scisoft.ws.git.location.translated}.url}/scisoft-ws.git"/>
   </rm:propertyElement>
-  <!-- *** sda *** -->
+  <!-- ** sda *** -->
   <rm:propertyElement key="sda.git.location">
     <bc:constant value="${scisoft.git.location}"/>
   </rm:propertyElement>
@@ -2105,7 +2002,7 @@
   <rm:propertyElement key="sda.git.url">
     <bc:constant value="${sda.${sda.git.location.translated}.url}/sda.git"/>
   </rm:propertyElement>
-  <!-- *** swt-xy-graph *** -->
+  <!-- ** swt-xy-graph *** -->
   <rm:propertyElement key="swt.xy.graph.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -2115,11 +2012,11 @@
   <rm:propertyElement key="swt.xy.graph.git.url">
     <bc:constant value="${github.${swt.xy.graph.github.authentication}.url}${swt.xy.graph.github.organization}/swt-xy-graph.git"/>
   </rm:propertyElement>
-  <!-- *** training *** -->
+  <!-- ** training *** -->
   <rm:propertyElement key="training.gerrit.1.git.url">
     <bc:constant value="${diamond.dascgerrit.url}/training/training-gerrit-1.git"/>
   </rm:propertyElement>
-  <!-- *** wychwood *** -->
+  <!-- ** wychwood *** -->
   <rm:propertyElement key="wychwood.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -2175,13 +2072,25 @@
     <bc:constant value="${target_platform.download.url.${target_platform.download.location}}"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.bundles.release">
-    <bc:constant value="dls_20160805"/>
+    <bc:constant value="8.52plus"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="target_platform.diamond.css.release">
+    <bc:constant value="v3_201311"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="target_platform.diamond.logging.release">
+    <bc:constant value="8.52plus"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.release">
-    <bc:constant value="dls_20160805"/>
+    <bc:constant value="8.52plus"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.bundles.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_bundles/${target_platform.diamond.bundles.release}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="target_platform.diamond.css.p2.url">
+    <bc:constant value="${target_platform.download.url.selected}/tp_css/${target_platform.diamond.css.release}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="target_platform.diamond.logging.p2.url">
+    <bc:constant value="${target_platform.download.url.selected}/tp_logging/${target_platform.diamond.logging.release}"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_noneclipse/${target_platform.diamond.noneclipse.release}"/>
@@ -2189,6 +2098,15 @@
   <!--
        Target Platform (Eclipse) URLs
   -->
+  <rm:propertyElement key="eclipse.release">
+    <bc:constant value="3.8"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="rap.release">
+    <bc:constant value="2.1"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="use.eclipse.rap">  <!-- defined here in case it is not defined in the CQuery -->
+    <bc:constant value="no"/>
+  </rm:propertyElement>
   <!-- eclipse.download.location can be "diamond" (DLS internal servers) [default], "public" (opengda.org), or "eclipse (eclipse.org)" -->
   <!-- Use of "eclipse" is NOT recommended, since we don't know if/when that gets changed - use our internal or opengda mirror instead -->
   <rm:propertyElement key="eclipse.download.location">
@@ -2203,8 +2121,23 @@
   <rm:propertyElement key="eclipse.download.url.eclipse">
     <bc:constant value="http://download.eclipse.org"/>
   </rm:propertyElement>
+  <rm:propertyElement key="eclipse.download.url">
+    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="emf.emf.download.url">  <!-- also known as EMF Core -->
+    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gef.download.url">
+    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="graphiti.download.url">
+    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="nattable.download.url">
+    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
+  </rm:propertyElement>
   <rm:propertyElement key="nebula.download.url">
-    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>  <!-- This entire section not used when nebula.new=true -->
+    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>
   </rm:propertyElement>
   <!--                                                                      -->
   <!--######################################################################-->
@@ -2213,7 +2146,7 @@
   <rm:locator pattern="^tp$" searchPathRef="tp"/>
   <!--
        Components that should not be used
-       net.sourceforge.nattable.core is superceded by org.eclipse.nebula.widgets.nattable.core (but the former is still in various p2 sites, even in Eclipse Neon)
+       net.sourceforge.nattable.core is superceded by org.eclipse.nebula.widgets.nattable.core (but the former is still in the Juno p2 site)
    -->
   <rm:locator pattern="^(net\.sourceforge\.nattable\.core)$" searchPathRef="fail_old_component"/>  <!-- superceded by org.eclipse.nebula.widgets.nattable.core -->
   <!--
@@ -2227,99 +2160,92 @@
         Components in Git repositories (note: patterns should match those in the CQuery advisor nodes)
         Please keep locators in sorted order of repository name
   -->
-  <!-- *** beamlines *** -->
+  <!-- ** beamlines *** -->
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
-  <!-- *** daq- *** -->
-  <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.activemq$" searchPathRef="daq_eclipse"/>
-  <rm:locator pattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|imaging\.server|mx|pes\.server|scisoftpy|scm|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml)|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|tomography\.datacollection(\..+)?))$" searchPathRef="daq_platform"/>
-  <!-- *** dawn- *** -->
+  <!-- ** daq- *** -->
+  <rm:locator pattern="^(org\.eclipse\.malcolm(\..+)?|org\.eclipse\.scanning(\..+)?|uk\.ac\.diamond\.(daq\.(activemq|malcolm)\.connector|org\.apache\.activemq)(\..+)?)$" searchPathRef="daq_eclipse"/>
+  <!-- ** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
-  <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python(\.test)?|services|ui|util)|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv(\..+)?|common\.(services|ui)\.feature|conversion(\..+)?|io|jexl(\.test)?|jgoogleanalytics(\.test)?|macro(\..+)?|persistence(\..+)?|processing\.(docgenerator|python)|python.rpc(\.test)?|thirdparty\.xml\.feature))$" searchPathRef="dawn_common"/>
+  <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python|services|ui|util)(\.test)?|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv|common\.services|conversion|io|jexl|jgoogleanalytics|macro|nexus|persistence|processing\.python|python.rpc)(\..+)?)$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
-  <rm:locator pattern="^hdf\.(hdf5lib|object)(\..+)?$" searchPathRef="dawn_hdf"/>
+  <rm:locator pattern="^org\.eclipse\.richbeans\..+$" searchPathRef="dawn_eclipse"/>
+  <rm:locator pattern="^org\.eclipse\.dawnsci\..+$" searchPathRef="dawnsci"/>
+  <rm:locator pattern="^org\.(dawb\.(fabio|fable\..+|jep)|lwjgl\.opengl)$" searchPathRef="dawn_fable"/>
   <rm:locator pattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" searchPathRef="dawn_hpc"/>
-  <rm:locator pattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|project\.repository\..+|runtime(\..+)?)|org\.dawnsci\.passerelle\.(testsupport|parallel\.actor(\..+)?))$" searchPathRef="dawn_isencia"/>
+  <rm:locator pattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|runtime|project\.repository\..+)|org\.dawnsci\.passerelle\.parallel\.actor(\..+)?)$" searchPathRef="dawn_isencia"/>
   <rm:locator pattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" searchPathRef="dawn_isenciaui"/>
   <rm:locator pattern="^org\.dawnsci\.mx\..+$" searchPathRef="dawn_mx"/>
-  <rm:locator pattern="^org\.dawnsci\.marketplace(\.(core|server|ui))?$" searchPathRef="dawn_marketplace_server"/>
-  <rm:locator pattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|logging\.feature|nano\.product(\..+)?|product\.(logging|plugin)))$" searchPathRef="dawn_product"/>
+  <rm:locator pattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|product\.(logging|plugin)))$" searchPathRef="dawn_product"/>
+  <rm:locator pattern="^org\.dawnsci\.rap\..+$" searchPathRef="dawn_rap"/>
   <rm:locator pattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" searchPathRef="dawn_tango"/>
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
-  <rm:locator pattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
-  <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\..+)?|datavis(\..+)?|dde\..+|fileviewer(\.feature)?|isosurface(\..+)?|mapping\..+|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|python\.ui|ui(\..+)?)|python\.feature|slicing(\..+)?|spectrum\..+|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.screenshot\..+)$" searchPathRef="dawn_ui"/>
+  <rm:locator pattern="^(com\.amd\.aparapi|ncsa\.hdf|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
+  <rm:locator pattern="^(org\.(dawb\.(visualization\.feature|workbench\.ui(\.test)?)|dawnsci\.(algorithm\.ui|breadcrumb\.navigation|common\.widgets(\.gda)?(\.test)?|dde(\..+)?|isosurface(\..+)?|mapping\.ui(\..+)?|plotting(\..+)?|processing\.ui|slicing(\..+)?|spectrum\.ui))|uk\.ac\.diamond\.screenshot(\..+)?)$" searchPathRef="dawn_ui"/>
   <rm:locator pattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" searchPathRef="dawn_workflow"/>
-  <!-- *** dawnsci *** -->
-  <rm:locator pattern="^org\.eclipse\.dawnsci(\..+)?$" searchPathRef="dawnsci"/>
-  <!-- *** diamond- *** -->
+  <!-- ** diamond- *** -->
+  <rm:locator pattern="^uk\.ac\.diamond\.sda\.enthought(\..+)?$" searchPathRef="diamond_enthought"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.jacorb$" searchPathRef="diamond_jacorb"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.jython(\..+)?$" searchPathRef="diamond_jython"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.jython$" searchPathRef="diamond_jython"/>
   <rm:locator pattern="^org\.dawnsci\.miniconda(\..+)?$" searchPathRef="diamond_miniconda"/>
   <rm:locator pattern="^diamond\.releng\..+$" searchPathRef="diamond_releng"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="diamond_springframework"/>
-  <!-- *** diffcalc *** -->
+  <!-- ** diffcalc *** -->
   <rm:locator pattern="^diffcalc$" searchPathRef="diffcalc"/>
-  <!-- *** embl- *** -->
+  <!-- ** embl- *** -->
   <rm:locator pattern="^org\.embl\.cca\..+$" searchPathRef="embl_cca"/>
-  <!-- *** epp- *** -->
+  <!-- ** epp- *** -->
   <rm:locator pattern="^org\.eclipse\.epp\.usagedata\..+$" searchPathRef="epp_usagedata"/>
-  <!-- *** gda- *** -->
+  <!-- ** gda- *** -->
   <rm:locator pattern="^uk\.ac\.gda\.bimorph(\..+)?" searchPathRef="gda_bimorph"/>
   <rm:locator pattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" searchPathRef="gda_common"/>
   <rm:locator pattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" searchPathRef="gda_common_rcp"/>
-  <rm:locator pattern="^((core|example|p45)-config|documentation\.gda|uk\.ac\.(diamond\.(daq\.(beamline\.p45(\..+)?|client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|persistence(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api|browser|(client(\.(closeactions|commandinfo|experimentdefinition|feature|logpanel(\..+)?|test))?)|common\.client|core(\.test)?|edxd\.(calibration|common|detector)|epics\.dxp\.client|eventbus(\.api)?|example(\..+)?|logging\.dependencies\.fragment|phantom.detector|xmleditor\.feature)))$" searchPathRef="gda_core"/>
+  <rm:locator pattern="^(core-config|documentation\.gda|example-config|uk\.ac\.(diamond\.daq\.msgbus(\..+)?|diamond\.scisoft\.gda\.feature|gda\.(analysis(\.test)?|api|browser|(client(\.(closeactions|commandinfo|experimentdefinition|feature|logging|logpanel(\..+)?|synoptic(\..+)?|test))?)|common\.client|core(\.test)?|eventbus(\.api)?|example(\..+)?|integrationtest|server|xmleditor\.feature)))$" searchPathRef="gda_core"/>
+  <rm:locator pattern="^(org\.csstudio\..+|org\.ehcache|uk\.ac\.gda\.dal(\..+)?)$" searchPathRef="gda_dal"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.cirrus$" searchPathRef="gda_devices_cirrus"/>
   <rm:locator pattern="^uk\.ac\.gda\.(devices\.mythen(\..+)?|epics\.client\.mythen)$" searchPathRef="gda_devices_mythen"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.pco$" searchPathRef="gda_devices_pco"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.peem(\..+)?$" searchPathRef="gda_devices_peem"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.pixium$" searchPathRef="gda_devices_pixium"/>
   <rm:locator pattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" searchPathRef="gda_devices_prosilica"/>
-  <rm:locator pattern="^(all-dls-configs|all-dls-clients|dls-config|uk\.ac\.(diamond\.daq\.dls(\..+)?|gda\.(diamond|dls)(\..+)?))$" searchPathRef="gda_diamond"/>
+  <rm:locator pattern="^((all-)?dls-config|uk\.ac\.gda\.(beamline\.all-dls|diamond|dls)(\..+)?)$" searchPathRef="gda_diamond"/>
   <rm:locator pattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" searchPathRef="gda_dls_beamlines_b23"/>
   <rm:locator pattern="^(i09(-1|-2)?-config|uk\.ac\.gda\.(beamline\.i09(-1|-2)?(\..+)?|sisa\.client))$" searchPathRef="gda_dls_beamlines_i09"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
-  <rm:locator pattern="^(i12-config|uk\.ac\.gda\.beamline\.i12(\..+)?)$" searchPathRef="gda_dls_beamlines_i12"/>
+  <rm:locator pattern="^(i12-config|uk\.ac\.gda\.(beamline\.i12(\..+)?|edxd\..+|epics\.dxp\.client))$" searchPathRef="gda_dls_beamlines_i12"/>
   <rm:locator pattern="^(i13(i|j)-config|uk\.ac\.gda\.beamline\.i13(i|j)(\..+)?)$" searchPathRef="gda_dls_beamlines_i13x"/>
   <rm:locator pattern="^(i19(.|-).+|uk\.ac\.gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator))$" searchPathRef="gda_dls_beamlines_i19"/>
-  <rm:locator pattern="^(i21-(config|python)|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" searchPathRef="gda_dls_beamlines_i21"/>
+  <rm:locator pattern="^(i21-config|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" searchPathRef="gda_dls_beamlines_i21"/>
   <rm:locator pattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" searchPathRef="gda_dls_beamlines_xas"/>
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
   <rm:locator pattern="^uk\.ac\.gda\.epics(\.(adviewer|client|test))?$" searchPathRef="gda_epics"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
   <rm:locator pattern="^(imca-cat-config|gov\.anl\.aps\.beamline\.(imca-cat(\..+)?))$" searchPathRef="gda_imca_cat"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.ispyb\.(.+)$" searchPathRef="gda_ispyb_api"/>  <!-- if source.repository.gda_ispyb_api=true, materializes source projects, otherwise materializes jars into tp/ -->
   <rm:locator pattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" searchPathRef="gda_legacy"/>
-  <rm:locator pattern="^((b16|b24|i06|i06-1|i07|i10|i15|i15-1|i16|mt|optics)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
-  <rm:locator pattern="^((i02|i02-1|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|uk\.ac\.(diamond\.(daq\.(mx\.muse(\..+)?)|dna|stac)|gda\.(beamline\.(i02|i02-1|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" searchPathRef="gda_mx"/>
+  <rm:locator pattern="^((b16|b24|i06|i07|i10|i15|i15-1|i16|mt|all-mt)-(config|shared)|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
+  <rm:locator pattern="^((all-mx|i02|i02-2|i03|i04|i04-1|i23|i24|mx)-config|uk\.ac\.(diamond\.(daq\.mx\.muse(\..+)?|dna|stac)|gda\.(beamline\.(i02|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
-  <rm:locator pattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.(detectors\.vgscienta\.electronanalyser|devices\.specs\.phoibos)|gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta))(\..+)?)$" searchPathRef="gda_pes"/>
-  <rm:locator pattern="^((bm26a?|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hatsaxs|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?))$" searchPathRef="gda_scm"/>
+  <rm:locator pattern="^(i05(-1)?-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.gda\.(arpes|beamline\.i05(-1)?|devices\.vgscienta)(\..+)?)$" searchPathRef="gda_pes"/>
+  <rm:locator pattern="^((bm26a?|id18|lpd|b21|i22|lab11|ncdsim)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|gov\.aps\.gda\.beamline\.id18(\..+)?|uk\.ac\.gda\.(beamline\.(b21|i22|lab11)(\..+)?|devices\.(bssc|hatsaxs|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)|uk\.ac\.rl\.gda\.lpd(\..+)?)$" searchPathRef="gda_scm"/>
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
   <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
-  <rm:locator pattern="^uk\.ac\.(diamond\.daq\.(client\.microfocus(\..+)?|microfocus\.api|xas\.server\.feature)|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" searchPathRef="gda_xas_core"/>
-  <!-- *** gphl *** -->
+  <rm:locator pattern="^uk\.ac\.(diamond\.daq\.microfocus.api|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" searchPathRef="gda_xas_core"/>
+  <!-- ** gphl *** -->
   <rm:locator pattern="^com\.globalphasing\.sdcp\.abstract_beamline$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
   <rm:locator pattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" searchPathRef="gphl_sdcp_common"/>
-  <!-- *** january *** -->
-  <rm:locator pattern="^org\.eclipse\.january(\..+)?$" searchPathRef="january"/>  <!-- depending on source.repository.january, will materialize either source projects, or jars into tp/ -->
-  <!-- *** org.eclipse.launchbar *** -->
-  <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
-  <!-- *** Opt-ID *** -->
+  <!-- ** jeromq *** -->
+  <rm:locator pattern="^org.zeromq$" searchPathRef="jeromq"/>
+  <!-- ** Opt-ID *** -->
   <rm:locator pattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" searchPathRef="opt_id"/>
-  <!-- *** py4j *** -->
-  <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j"/>  <!-- if source.repository.py4j=true, materializes source projects, otherwise materializes jars into tp/ -->
-  <rm:locator pattern="^(org\.)?py4j([.-].+)?$" searchPathRef="py4j_new"/>  <!-- if source.repository.py4j=true, materializes source projects, otherwise materializes jars into tp/ -->
-  <!-- *** richbeans *** -->
-  <rm:locator pattern="^org\.eclipse\.richbeans\..+$" searchPathRef="richbeans"/>
-  <!-- *** scanning *** -->
-  <rm:locator pattern="^org\.eclipse\.scanning\..+$" searchPathRef="scanning"/>
-  <!-- *** scisoft- *** -->
+  <!-- ** py4j *** -->
+  <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j"/>
+  <!-- ** scisoft- *** -->
   <rm:redirect pattern="uk\.ac\.diamond\.scisoft\.deprecated(\.rcp)?$" resolutionFilter="(disallow.scisoft.deprecated=true)" href="/***.ERROR.-.something.has.a.dependency.on.a-scisoft.deprecated-component,.but.the.CQuery.does.not.allow.this***"/>  <!-- See DASCTEST-212 -->
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" searchPathRef="scisoft_2ddpr"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.arpes(\.(feature|workflow\.feature))?$" searchPathRef="scisoft_arpes"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.arpes(\..+)?$" searchPathRef="scisoft_arpes"/>
   <rm:locator pattern="^uk\.ac\.diamond\.CBFlib$" searchPathRef="scisoft_cbflib"/>
-  <rm:locator pattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python(\..+)?|surfacescatter(\..+)?|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
+  <rm:locator pattern="^(de\.desy\.file\.loader|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding|plotserver|processing|test|xmlrpc)(\..+)?)?|core\.feature|deprecated|jython|python|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.icat.*$" searchPathRef="scisoft_icat"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" searchPathRef="scisoft_ispyb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" searchPathRef="scisoft_mx"/>
@@ -2327,19 +2253,21 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" searchPathRef="scisoft_peema"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ptychography(\..+)?$" searchPathRef="scisoft_ptychography"/>
   <rm:locator pattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" searchPathRef="scisoft_spectroscopy"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|arpes\.calibration|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature|pydev\.rcp(\..+)?))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|rcp)(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rp|system\.info|ui\.feature))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
-  <!-- *** sda *** -->
-  <rm:locator pattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|scisoft\.applications|sda(\.bioclipse\.jmol\.feature)?)$" searchPathRef="sda"/>
-  <!-- *** swt-xy-graph *** -->  <!-- use the DLS source fork of this, not the standard version from the Eclipse Nebula p2 site -->
-  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="swt_xy_graph"/>
-  <!-- *** training *** -->
+  <!-- ** sda *** -->
+  <rm:locator pattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|sda(\.bioclipse\.jmol\.feature)?)$" searchPathRef="sda"/>
+  <!-- ** swt-xy-graph *** -->
+  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="swt_xy_graph" failOnError="false"/>
+  <!-- ** training *** -->
   <rm:locator pattern="^training\.gerrit\.(feature|plugin1|plugin2)$" searchPathRef="training_gerrit_1"/>
-  <!-- *** wychwood *** -->
+  <!-- ** wychwood *** -->
   <rm:locator pattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" searchPathRef="wychwood"/>
   <!--
        GDA components for specific beamlines
   -->
+  <!-- ** Example ** -->
+  <rm:locator pattern="^gda-training-config$" searchPathRef="gda_training_configurations"/>
   <!--
        Component uk.ac.diamond.org.springframework, which bundles various org.springframework components
        These various components must never be materialized as individual bundles (see Jira GDA-4844)
@@ -2356,6 +2284,7 @@
   <rm:locator pattern="^(GDALargeTestFiles|thirdparty)$" searchPathRef="extras_root"/>
   <rm:locator pattern="^uk\.ac\.diamond\.gda\.hc$" searchPathRef="diamond_gda_hc"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ida\.feature$" searchPathRef="core_svn"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.ispyb$" searchPathRef="core_svn"/>
   <rm:locator pattern="^uk\.ac\.gda\.(client\.extensions|daresbury|developer\.tools|libs\.deps)$" searchPathRef="core_svn"/>
   <!--
        Components using in publishing from thirdparty/ to a p2 site from which Target Platform components can be materialized
@@ -2363,88 +2292,74 @@
   <rm:locator pattern="^tp\..+\.site$" searchPathRef="sites"/>
   <rm:locator pattern="^tp\..+\.feature$" searchPathRef="core_svn"/>
   <!--
-       Components to get from Eclipse p2 repositories: Orbit, EclipseLink, Jetty, NatTable
-  -->
-  <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^javax\.(transaction|xml(\..+)?)$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.aopalliance$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.derby$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.mina\.core$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.poi(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.sshd\.core$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.commons\.(dbcp|codec|collections|jxpath|lang|pool)(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.dom4j$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.jdom$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.quartz$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.xmlpull$" searchPathRef="eclipse_orbit_p2"/>
-  <!-- "^org\.eclipse\.january(\..+)?$" is in eclipse_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
-  <rm:locator pattern="^org\.eclipse\.persistence\..+$" searchPathRef="eclipse_eclipselink_p2"/>
-  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
-  <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
-  <!--
-       Nebula, which can come for various places, mostly governed by property nebula.new (true or otherwise)
-  -->
-  <!-- This set is for nebula.new=true -->
-  <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula" failOnError="false"/>
-  <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula_incubation" failOnError="false"/>
-  <!-- This set is for nebula.new!=true -->
-  <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.formattedtext(\.source)?$" searchPathRef="eclipse_nebula_incubation_snapshot_20140205"/>
-  <rm:locator pattern="^org\.eclipse\.nebula\.(cwt|jface\.cdatetime|widgets\.cdatetime|widgets\.gallery)(\.source)?$" searchPathRef="eclipse_nebula_snapshot_20140205"/>
-  <rm:locator pattern="^org\.eclipse\.nebula\.(jface|widgets|widgets\.calendarcombo|widgets\.grid|widgets\.pgroup|widgets\.tablecombo|widgets\.xviewer)(\.source)?$" searchPathRef="eclipse_nebula_old"/>
-  <!--
-       Components to get from Diamond p2 repositories: Orbit
-  -->
-  <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api|me\.moocar\.logback-gelf)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^com\.github\.tschoonj\.xraylib$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^com\.google\.gson(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^com\.google\.guava(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^com\.springsource\.(javax\.media\.jai\.(codec|core)|net\.sf\.cglib|org\.apache\.(commons\.vfs|mina.core|sshd)|org\.castor)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.commons\.(beanutils|collections4|configuration|csv|digester|io|jexl|math|math3|net|validator)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.servicemix\.bundles\.spring-.+$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.h2(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.mariadb\.jdbc(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.mockito\..+$" searchPathRef="diamond_orbit_p2"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
-  <rm:locator pattern="^org\.objenesis(\..+)?" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^pl\.pragmatists\.JUnitParams(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^javassist(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^javax\.vecmath(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.de\.jaret(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <!-- "^uk\.ac\.diamond\.ispyb\.(.+)$" is in diamond_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
-  <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.(poi|ws\.commons\.util|xmlrpc\.(client|common|server))(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.(org\.jfree|org.jfree\.chart)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.(org\.jscience|org\.jscience4|org\.mihalis\.opal|org\.nfunk\.jep|org\.powermock|rxtx)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.(com\.artenum|com\.jidesoft|com\.mindprod\.ledatastream|gnu\.regexp|jama|proxyvole)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^xstream$" searchPathRef="diamond_orbit_p2"/>
-  <!--
        Target Platform components (published from thirdparty/)
   -->
+  <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.(api|ext)|me\.moocar\.logback-gelf|org\.mariadb\.jdbc)$" searchPathRef="GDA_tp_logging"/>
+  <rm:locator pattern="^com\.google\.gson$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.google\.guava$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="tp_noneclipse"/>
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.apache\.(mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^org\.apache\.commons\..+$" searchPathRef="tp_noneclipse" failOnError="false"/>
+  <rm:locator pattern="^org\.apache\.(camel|httpcomponents|mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
+  <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
+  <rm:locator pattern="^org\.eclipse\.nebula\..+$" searchPathRef="eclipse_nebula"/>
   <!-- -->
-  <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
-  <rm:locator pattern="^javax\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>  <!-- if not found, will look in release and platform repos -->
-  <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_p2"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies -->
+  <rm:locator pattern="^com\.github\.tschoonj\.xraylib$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^com\.isencia\.sherpa\.commons\.reduced$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^com\.fasterxml\.jackson\..+" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^com\.springsource\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
+  <rm:locator pattern="^com\.springsource\..+" searchPathRef="DAWB_p2" failOnError="false"/>
+  <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.objenesis" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.(boofcv|ddogleg|georegression)(\..+)?$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.springframework\..+" searchPathRef="GDA_tp_bundles" failOnError="false"/>
+  <rm:locator pattern="^org\.apache\.commons\.(math|configuration)" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^uk\.ac\.diamond\..+" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.eclipse\.gemini\.blueprint\..+" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^org\.eclipse\.swtbot(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0"/>
+  <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_orbit_R20150519210750" failOnError="false"/>
+  <rm:locator pattern="^org\.apache\.log4j(\..+)?$" searchPathRef="eclipse_swtbot_2.3.0" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.remote(\..+)?$" searchPathRef="eclipse_ptp_2.0.0"/>
+  <rm:locator pattern="^javax\.vecmath$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^javax\.(ejb|jms|xml\.rpc)$" searchPathRef="eclipse_orbit_R20150519210750"/>
+  <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_R20150519210750"/>
+  <rm:locator pattern="^org\.mockito$" searchPathRef="eclipse_orbit_R20140525021250"/>  <!-- org.eclipse.dawnsci.hdf5.test should use only eclipse-approved dependencies -->
+  <rm:locator pattern="^org\.mockito\..+$" searchPathRef="GDA_tp_bundles"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
+  <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^javassist$" searchPathRef="GDA_tp_bundles"/>
+  <rm:locator pattern="^xstream$" searchPathRef="GDA_tp_bundles"/>
   <!--
        Target Platform components (PyDev)
   -->
   <rm:locator pattern="^(com|org)\.python\.pydev(\..+)?" searchPathRef="tp_pydev"/>
   <!--
+       DAWB components
+  -->
+  <rm:locator pattern="^com\.isencia\..+" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^activation$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^com\.microstar$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^diva$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^ptolemy\..+" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^org\.quartz$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^mail$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^org\.apache\.log4j$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^org\.apache\.commons\.(dbcp|math|net|pool)$" searchPathRef="DAWB_p2"/>
+  <rm:locator pattern="^org\.dom4j$" searchPathRef="DAWB_p2"/>
+  <!--
        Target Platform components: Eclipse)
        Target Platform components: Eclipse Orbit (which contains third-party jars which have passed Eclipse IP checks, and been turned in OSGI bundles)
        Some Eclipse components are published both as part of the platform release, and separately. Put the platform release last so we can get a newer release.
   -->
+  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_rap" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_3.8_platform" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_3.8_release" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.(emf|xsd)(\..+)?" searchPathRef="eclipse_emf_emf" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse.(draw2d|gef|zest)(\..+)?" searchPathRef="eclipse_gef"/>
+  <rm:locator pattern="^org\.eclipse\.graphiti(\..+)?" searchPathRef="eclipse_graphiti"/>
   <!-- patterns for eclipse repositories are there to speed up failure if we fall through (in case of error, or when looking for source bundles) -->
-  <rm:locator pattern="^(?!(uk\.ac\.(gda|diamond)|org\.(dawnsci|opengda))\.).+" searchPathRef="eclipse_release" failOnError="false"/>
+  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.8_platform" failOnError="false"/>
+  <rm:locator pattern="^(?!uk\.ac\.(gda|diamond)\.).+" searchPathRef="eclipse_3.8_release" failOnError="false"/>
   <!--                                                                      -->
   <!--######################################################################-->
   <!--# Search Paths                                                       #-->
@@ -2564,22 +2479,6 @@
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="daq_platform">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.daq-platform=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${daq.platform.git.url}"/>
-      <rm:uri format="{0}/daq-platform.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.daq-platform=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from daq-platform.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
   <!--
        DAWN- repositories
   -->
@@ -2647,17 +2546,17 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="dawn_hdf">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-hdf=true))" readerType="git">
+  <rm:searchPath name="dawn_fable">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-fable=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.hdf.git.url}"/>
-      <rm:uri format="{0}/dawn-hdf.git,{1}">
+      <rm:property key="git.remote.uri" value="${dawn.fable.git.url}"/>
+      <rm:uri format="{0}/dawn-fable.git,{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-hdf=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-hdf.git, but the CQuery specified that this repository should not be used ***">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-fable=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from dawn-fable.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
@@ -2711,22 +2610,6 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="dawn_marketplace_server">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-marketplace-server=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.marketplace.server.git.url}"/>
-      <rm:uri format="{0}/dawn-marketplace-server.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-marketplace-server=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-marketplace_server.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
   <rm:searchPath name="dawn_mx">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-mx=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
@@ -2754,6 +2637,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-product=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from dawn-product.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="dawn_rap">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-rap=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${dawn.rap.git.url}"/>
+      <rm:uri format="{0}/dawn-rap.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-rap=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from dawn-rap.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
@@ -2859,6 +2758,22 @@
   <!--
        DIAMOND- repositories
   -->
+  <rm:searchPath name="diamond_enthought">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.diamond-enthought=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${diamond.enthought.git.url}"/>
+      <rm:uri format="{0}/diamond-enthought.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.diamond-enthought=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from diamond-enthought.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
   <rm:searchPath name="diamond_jacorb">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.diamond-jacorb=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
@@ -2938,6 +2853,7 @@
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
+  <!-- -->
   <!--
        DIFFCALC repository
   -->
@@ -3069,6 +2985,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.gda-core=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-core.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="gda_dal">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dal=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.dal.git.url}"/>
+      <rm:uri format="{0}/gda-dal.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dal=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from gda-dal.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
@@ -3378,7 +3310,7 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-    <rm:searchPath name="gda_hrpd">
+  <rm:searchPath name="gda_hrpd">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-hrpd=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${gda.hrpd.git.url}"/>
@@ -3405,27 +3337,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-imca-cat=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-imca-cat.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_ispyb_api">  <!-- either source or jars can be materialized, as specified by a property -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.gda-ispyb-api=true))(source.repository.gda_ispyb_api=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.ispyb.api.git.url}"/>
-      <rm:uri format="{0}/gda-ispyb-api.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.gda-ispyb-api=true))(!(source.repository.gda_ispyb_api=true)))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/p2/orbit/${diamond.orbit.p2.version}/repository/"/>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-ispyb-api=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-ispyb-api.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
@@ -3504,7 +3415,7 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="buckminster,eclipse.feature" resolutionFilter="(!(disallow.repo.gda-mx=true))" readerType="git">
+    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(!(disallow.repo.gda-mx=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${gda.mx.git.url}"/>
       <rm:uri format="{0}/gda-mx.git,sites/{1}">
@@ -3720,24 +3631,18 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       (eclipse/)JANUARY repository, or p2 site
+       JEROMQ- repository
   -->
-  <rm:searchPath name="january">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.january=true))(source.repository.january=true))" readerType="git">
+  <rm:searchPath name="jeromq">
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.jeromq=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${january.git.url}"/>
-      <rm:uri format="{0}/january.git,{1}">
+      <rm:property key="git.remote.uri" value="${jeromq.git.url}"/>
+      <rm:uri format="{0}/jeromq.git">
         <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.january=true))(!(source.repository.january=true)))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.january.p2.url}"/>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.january=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from january.git, but the CQuery specified that this repository should not be used ***">
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(disallow.repo.jeromq=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from jeromq.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
@@ -3761,44 +3666,10 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       org.eclipse.launchbar - repository
+       PY4J- repository
   -->
-  <rm:searchPath name="org_eclipse_launchbar">
-    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
-      <rm:uri format="{0}/org.eclipse.launchbar.git,bundles/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
-      <rm:uri format="{0}/org.eclipse.launchbar.git,features/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.org.eclipse.launchbar=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${org.eclipse.launchbar.git.url}"/>
-      <rm:uri format="{0}/org.eclipse.launchbar.git,tests/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.org.eclipse.launchbar=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from org.eclipse.launchbar.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       PY4J- repository or p2 site; legacy or new
-  -->
-  <rm:searchPath name="py4j">  <!-- either source or jars can be materialized, as specified by a property -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.py4j=true))(source.repository.py4j=true))" readerType="git">
+  <rm:searchPath name="py4j">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.py4j=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${py4j.git.url}"/>
       <rm:uri format="{0}/py4j.git,{1}">
@@ -3806,70 +3677,8 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.py4j=true))(!(source.repository.py4j=true)))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://eclipse-legacy.py4j.org/"/>
-    </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.py4j=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from py4j.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="py4j_new">  <!-- either source or jars can be materialized, as specified by a property -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.py4j=true))(source.repository.py4j=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${py4j.new.git.url}"/>
-      <rm:uri format="{0}/py4j.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.py4j=true))(!(source.repository.py4j=true)))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/dl.bintray.com/py4j/py4j-eclipse/${py4j.p2.version}/"/>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.py4j=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from py4j.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       (eclipse/)RICHBEANS repository
-  -->
-  <rm:searchPath name="richbeans">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.richbeans=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${richbeans.git.url}"/>
-      <rm:uri format="{0}/richbeans.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.richbeans=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from richbeans.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       (eclipse/)SCANNING repository
-  -->
-  <rm:searchPath name="scanning">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.scanning=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${scanning.git.url}"/>
-      <rm:uri format="{0}/scanning.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.scanning=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from scanning.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
@@ -4106,7 +3915,7 @@
        SWT-XY-GRAPH repository
   -->
   <rm:searchPath name="swt_xy_graph">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true)))" readerType="git">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true))(buckminster.component=org.eclipse.nebula.visualization.xygraph.preference))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
       <rm:uri format="{0}/swt-xy-graph.git,{1}">
@@ -4114,7 +3923,7 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true)))" readerType="git">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.swt-xy-graph=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
       <rm:uri format="{0}/swt-xy-graph.git,PureJava/{1}">
@@ -4187,6 +3996,20 @@
   <!--
        GDA sites and configurations
   -->
+  <rm:searchPath name="gda_training_configurations">
+    <rm:provider componentTypes="buckminster" readerType="local">
+      <rm:uri format="file://{0}/{1}">
+        <bc:propertyRef key="workspace.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="buckminster" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
+      <rm:uri format="${repository.subversion.diamond.download.url}/trunk/configurations/{0}?moduleAfterBranch&amp;moduleAfterTag">
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- ***** -->
   <rm:searchPath name="sites">
     <rm:provider componentTypes="eclipse.feature" readerType="local">
       <rm:uri format="file://{0}/sites/{1}">
@@ -4271,6 +4094,20 @@
       <rm:uri format="${target_platform.diamond.bundles.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
+  <rm:searchPath name="GDA_tp_css">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${target_platform.diamond.css.p2.url}"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="GDA_tp_logging">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${target_platform.diamond.logging.p2.url}"/>
+    </rm:provider>
+  </rm:searchPath>
   <rm:searchPath name="tp_noneclipse">
     <rm:provider componentTypes="osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
@@ -4279,92 +4116,155 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       Target Platform (Diamond, Eclipse, PyDev)
+       Target Platform (PyDev)
   -->
-  <rm:searchPath name="diamond_orbit_p2">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+  <rm:searchPath name="tp_pydev">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/p2/orbit/${diamond.orbit.p2.version}/repository/"/>
+      <rm:uri format="${alfred.url}/pydev3.6.0/"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_orbit_p2">
+  <!--
+       Target Platform (Eclipse)
+  -->
+  <rm:searchPath name="diamond_orbit_p2">  <!-- exists just to get com.google.gson 2.7.0 -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version}/repository/"/>
+      <rm:uri format="https://alfred.diamond.ac.uk/p2/orbit/R201701200926/repository/"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_eclipselink_p2">
+  <rm:searchPath name="eclipse_swtbot_2.3.0">  <!-- SWTBot -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/rt/eclipselink/updates/${eclipse.eclipselink.p2.version}/"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/technology/swtbot/releases/2.3.0/"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_jetty9_p2">
+  <rm:searchPath name="eclipse_ptp_2.0.0">  <!-- PTP -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/jetty/updates/jetty-bundles-9.x/${eclipse.jetty9.p2.version}/"/>
+      <rm:uri format="http://download.eclipse.org/tools/ptp/builds/remote/2.0.0/"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_orbit_R20150519210750">  <!-- Mars -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_orbit_R20140525021250">  <!-- Luna, Luna SR1 -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_emf_emf">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${emf.emf.download.url}/modeling/emf/emf/updates/releases_20140212"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_gef">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${gef.download.url}/tools/gef/updates/releases"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_graphiti">
+    <!-- provider for version 0.10.0, can be used together with the Eclipse versions 4.3 (Kepler) and 4.2/3.8 (Juno) -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${graphiti.download.url}/graphiti/updates/0.10.0"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nattable">
+    <!-- provider for version 1.1.0 -->
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nattable/releases/${nattable.p2.version}/repository"/>
+      <rm:uri format="${nattable.download.url}/nattable/releases/1.1.0/repository"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nebula">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(nebula.new=true)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/releases/${nebula.p2.version}"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_nebula_incubation">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(nebula.new=true)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/incubation/${nebula.incubation.p2.version}"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_nebula_snapshot_20140205">
     <!-- provider for version taken from snapshot_20140205 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(nebula.new=true))" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${nebula.download.url}/technology/nebula/snapshot_20140205"/>
     </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_nebula_incubation_snapshot_20140205">
     <!-- provider for version taken from incubation/snapshot_20140205 -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(nebula.new=true))" readerType="p2" source="false" mutable="false">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${nebula.download.url}/technology/nebula/incubation/snapshot_20140205"/>
     </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_nebula_old">
-    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(nebula.new=true))" readerType="p2" source="false" mutable="false">
+    <!-- provider for version taken from snapshot_20130730 -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${nebula.download.url}/technology/nebula/snapshot_20130730"/>
+    </rm:provider>
+    <!-- provider for version taken from incubation/snapshot_20130730 -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${nebula.download.url}/technology/nebula/incubation/snapshot_20130730"/>
+    </rm:provider>
+    <!-- provider for version taken from snapshot_20130531 -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${nebula.download.url}/technology/nebula/snapshot_20130531"/>
+    </rm:provider>
+    <!-- provider for version taken from some earlier snapshot -->
+    <rm:provider componentTypes="osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_release">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+  <rm:searchPath name="eclipse_3.8_platform">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(|(eclipse.release=3.8)(buckminster.component=org.eclipse.jetty*))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/releases/${eclipse.release}"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/eclipse/updates/3.8"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="tp_pydev">
+  <rm:searchPath name="eclipse_3.8_release">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(|(eclipse.release=3.8)(buckminster.component=org.eclipse.jetty*))" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/releases/juno"/>  <!-- yes this is correct, 3.8 is Juno -->
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_rap">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(use.eclipse.rap=yes)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/rt/rap/${rap.release}"/>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(use.eclipse.rap=yes)" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="http://download.eclipse.org/rt/rap/incubator/nightly/gef/"/>
+    </rm:provider>
+  </rm:searchPath>
+  <!--
+       DAWB
+  -->
+  <rm:searchPath name="DAWB_p2">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/dl.bintray.com/fabioz/pydev/${pydev.p2.version}/"/>
+      <rm:uri format="${alfred.url}/org.dawb.workbench.p2/"/>
     </rm:provider>
   </rm:searchPath>
 </rm:rmap>
