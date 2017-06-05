@@ -41,7 +41,7 @@ compress_files () {
     if [[ -d "${parent_dir}" ]]; then
         echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Compressing files older than 7 days in ${parent_dir}, matching ${filename_pattern} ..."
 
-        find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name \"${filename_pattern}\" -mtime +7"
+        find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -name ${filename_pattern} -mtime +7"
         count=$(find ${find_command} | wc -l)
         echo "${count} items found by: find ${find_command}"
         if [[ "${count}" != "0" ]]; then
