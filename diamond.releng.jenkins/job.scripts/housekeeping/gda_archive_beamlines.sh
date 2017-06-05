@@ -86,13 +86,13 @@ archive_beamline () {
 
     # Compress old logs (GDA 8 log locations)
     parent_dir="/dls_sw/${beamline}/logs"
-    filename_pattern='gda_output_*.txt'
+    filename_pattern='*.txt'
     compress_files
 
     # Compress old logs (GDA 9 log locations)
     for type in client servers logpanel; do
         parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
-        filename_pattern="gda_${type}_output_"'*.txt'
+        filename_pattern='*.txt'
         compress_files
     done
 
