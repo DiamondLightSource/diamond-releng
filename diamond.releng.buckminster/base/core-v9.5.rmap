@@ -2273,7 +2273,7 @@
   <rm:locator pattern="^uk\.ac\.gda\..+\.peem(\..+)?$" searchPathRef="gda_devices_peem"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.pixium$" searchPathRef="gda_devices_pixium"/>
   <rm:locator pattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" searchPathRef="gda_devices_prosilica"/>
-  <rm:locator pattern="^(all-dls-configs|all-dls-clients|dls-config|uk\.ac\.(diamond\.daq\.dls(\..+)?|gda\.(diamond|dls)(\..+)?))$" searchPathRef="gda_diamond"/>
+  <rm:locator pattern="^(all-dls-configs|all-dls-clients|dls-config|(i15|i15-1)-config|uk\.ac\.(diamond\.daq\.dls(\..+)?|gda\.(beamline\.(i15|i15-1)|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond" failOnError="false"/>
   <rm:locator pattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" searchPathRef="gda_dls_beamlines_b23"/>
   <rm:locator pattern="^(i09(-1|-2)?-config|uk\.ac\.gda\.(beamline\.i09(-1|-2)?(\..+)?|sisa\.client))$" searchPathRef="gda_dls_beamlines_i09"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
@@ -3175,6 +3175,38 @@
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${gda.diamond.git.url}"/>
       <rm:uri format="{0}/gda-diamond.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="buckminster" resolutionFilter="(!(disallow.repo.gda-diamond=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.mt.git.url}"/>
+      <rm:uri format="{0}/gda-diamond.git,configurations/{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(!(disallow.repo.gda-diamond=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.mt.git.url}"/>
+      <rm:uri format="{0}/gda-diamond.git,features/{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(!(disallow.repo.gda-diamond=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.mt.git.url}"/>
+      <rm:uri format="{0}/gda-diamond.git,sites/{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.gda-diamond=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.mt.git.url}"/>
+      <rm:uri format="{0}/gda-diamond.git,plugins/{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
