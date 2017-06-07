@@ -27,7 +27,7 @@ import urllib.error
 GERRIT_HOST = 'gerrit.diamond.ac.uk'
 
 # define module-wide logging
-logger = logging.getLogger('email_owners_of_submittable_changes.py')  # global logger for this module
+logger = logging.getLogger(__name__)
 def setup_logging():
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
     # create console handler
@@ -168,7 +168,7 @@ PLEASE CONSIDER EITHER:
         if email_expires_days:
             message['Expiry-Date'] = (datetime.datetime.utcnow() + datetime.timedelta(days=email_expires_days)).strftime("%a, %d %b %Y %H:%M:%S +0000")
 
-        logging.info("Sending email ...")
+        self.logger.info("Sending email ...")
         with smtplib.SMTP('localhost') as smtp:
             smtp.send_message(message)
 
