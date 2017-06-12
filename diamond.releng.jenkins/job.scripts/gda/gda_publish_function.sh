@@ -107,6 +107,7 @@ gda_publish_function () {
                     echo "NOTE: product version already published: \"${publish_module_load_directory}\" exists"
                     (( publish_module_load_platforms_skipped += 1 ))
                 else
+                    # note: "caution: filename not matched" is expected for Windows, thats how we know what to unzip
                     if [[ $(zipinfo -1 ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip ${publish_module_load_directory_name}/) ]]; then
                         ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory_for_type}
                     else

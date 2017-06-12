@@ -107,6 +107,7 @@ dawn_publish_function () {
                     echo "NOTE: product version already published: \"${publish_module_load_directory}\" exists"
                     (( publish_module_load_platforms_skipped += 1 ))
                 else
+                    # note: "caution: filename not matched" is expected for Windows, thats how we know what to unzip
                     if [[ $(zipinfo -1 ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip ${publish_module_load_directory_name}/) ]]; then
                         ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory_for_type}
                     else
@@ -148,11 +149,11 @@ dawn_publish_function () {
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to diamond webserver of .zip for ${platform} ***\n"
                 ssh ${webserver_diamond_ssh_options} ${webserver_diamond_name} "mkdir -pv ${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}/"
-                ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}
+                ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --include "/*-${platform}.exe" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}
                 (( publish_webserver_zip_download_platforms_updated += 1 ))
                 # optionally delete any old versions for this platform
                 if [[ "${publish_webserver_diamond_zip_remove_old_versions}" == "true" ]]; then
-                    ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' --delete ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}
+                    ${rsync} -e "${webserver_diamond_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --include "/*-${platform}.exe" --exclude '*' --delete ${WORKSPACE}/artifacts_to_publish/. ${webserver_diamond_name}:${publish_webserver_diamond_zip_directory_parent}/builds-${name_to_publish_as}
                 fi
             fi
         done
@@ -174,11 +175,11 @@ dawn_publish_function () {
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to opengda webserver of .zip for ${platform} ***\n"
                 ssh ${webserver_opengda_ssh_options} ${webserver_opengda_name} "mkdir -pv ${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}/"
-                ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}
+                ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --include "/*-${platform}.exe" --exclude '*' ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}
                 (( publish_webserver_zip_download_platforms_updated += 1 ))
                 # optionally delete any old versions for this platform
                 if [[ "${publish_webserver_opengda_zip_remove_old_versions}" == "true" ]]; then
-                    ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --exclude '*' --delete ${WORKSPACE}/artifacts_to_publish/. ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}
+                    ${rsync} -e "${webserver_opengda_rsync_options}" -ilprtDOv --include "/*-${platform}.zip" --include "/*-${platform}.exe" --exclude '*' --delete ${WORKSPACE}/artifacts_to_publish/. ${WORKSPACE}/artifacts_to_publish/. ${webserver_opengda_name}:${publish_webserver_opengda_zip_directory_parent}/builds-${name_to_publish_as}
                 fi
             fi
         done
