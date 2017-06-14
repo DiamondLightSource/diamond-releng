@@ -226,8 +226,8 @@ GERRIT_URI_ANON_PREFIX_OLD = 'http://gerrit.diamond.ac.uk:8080/'
 GERRIT_URI_ANON_PREFIX = 'https://gerrit.diamond.ac.uk/'
 GERRIT_MIRROR_HOST = 'github.com'                    # mirror of Gerrit-hosted repo, not managed by Gerrit
 
-class GitConfigParser(ConfigParser.SafeConfigParser):
-    """ Subclass of the regular SafeConfigParser that handles the leading tab characters in .git/config files """
+class GitConfigParser(ConfigParser.RawConfigParser):
+    """ Subclass of the regular ConfigParser that handles the leading tab characters in .git/config files """
     def readgit(self, filename):
         with open(filename, 'r') as config_file:
             text = config_file.read()
@@ -1459,12 +1459,12 @@ class PewmaManager(object):
 
             git_config_commands = []
             config_changes = (
-                # section         , option          , name                   , required_value                   , use_replace
-                ('gerrit'         , 'createchangeid', 'gerrit.createchangeid', 'true'                           , True),
-                ('remote "origin"', 'fetch'         , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*'      , False),
-                ('remote "origin"', 'pushurl'       , 'remote.origin.pushurl', gerrit_repo_url                  , False),
-                ('remote "origin"', 'push'          , 'remote.origin.push'   , 'HEAD:refs/for/' + current_branch, False),
-                ('merge'          , 'log'           , 'merge.log'            , '50'                             , True),
+                # section         , option          , name                   , required_value                   , action_if_already_exists
+                ('gerrit'         , 'createchangeid', 'gerrit.createchangeid', 'true'                           , 'replace'),
+                ('remote "origin"', 'fetch'         , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*'      , 'append'),
+                ('remote "origin"', 'pushurl'       , 'remote.origin.pushurl', gerrit_repo_url                  , 'append'),
+                ('remote "origin"', 'push'          , 'remote.origin.push'   , 'HEAD:refs/for/' + current_branch, 'keep'),
+                ('merge'          , 'log'           , 'merge.log'            , '50'                             , 'replace'),
                 # the following 2 options commented out, since command line git works correctly,
                 # however JGit does not support pull.ff (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=474174)
                 ### ('merge'          , 'ff'            , 'merge.ff'             , 'false'                          , True),  # merges from branches should not fast-forward
@@ -1479,18 +1479,18 @@ class PewmaManager(object):
                 # remote is Gerrit with anonymous checkout, old URL
                 new_url = GERRIT_URI_ANON_PREFIX + origin_url[len(GERRIT_URI_ANON_PREFIX_OLD):]
                 config_changes += (
-                # section         , option          , name                   , required_value                   , use_replace
-                ('remote "origin"', 'url'           , 'remote.origin.url'    , new_url                          , True),)
+                # section         , option          , name                   , required_value                   , action_if_already_exists
+                ('remote "origin"', 'url'           , 'remote.origin.url'    , new_url                          , 'replace'),)
             elif origin_url.startswith(GERRIT_URI_ANON_PREFIX):
                 # remote is Gerrit with anonymous checkout, new URL
                 pass
             else:
                 config_changes += (
-                # section         , option          , name                   , required_value                   , use_replace
-                ('remote "origin"', 'url'           , 'remote.origin.url'    , gerrit_repo_url                  , True),)
+                # section         , option          , name                   , required_value                   , action_if_already_exists
+                ('remote "origin"', 'url'           , 'remote.origin.url'    , gerrit_repo_url                  , 'replace'),)
 
-            for (section, option, name, required_value, use_replace) in config_changes:
-                self.logger.debug('%sGetting: %s in: %s' % (self.log_prefix, (section, option, name, required_value, use_replace), git_dir))
+            for (section, option, name, required_value, action_if_already_exists) in config_changes:
+                self.logger.debug('%sGetting: %s in: %s' % (self.log_prefix, (section, option, name, required_value, action_if_already_exists), git_dir))
                 try:
                     option_value = config.get(section, option)
                     self.logger.debug('%sGot: %s' % (self.log_prefix, option_value))
@@ -1502,10 +1502,12 @@ class PewmaManager(object):
                     option_value = None
 
                 if option_value != required_value:
-                    if use_replace:
+                    if action_if_already_exists == 'replace':
                         git_config_commands.append('git config -f %s %s %s' % (config_file_loc, name, required_value))
-                    else:
+                    elif action_if_already_exists == 'append':
                         git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
+                    else:
+                        self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, option_value, git_dir))
                 else:
                     self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
 
