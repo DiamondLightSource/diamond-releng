@@ -470,13 +470,16 @@
   </rm:propertyElement>
   <rm:propertyElement key="diamond.jacorb.git.location.translated">
     <bc:replace>
-      <bc:propertyRef key="diamond.jacorb.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:constant value="${diamond.jacorb.git.location}"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="diamond.jacorb.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="diamond.jacorb.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.jacorb.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${diamond.jacorb.dascgerrit.authentication}.url}/diamond"/>
   </rm:propertyElement>
   <rm:propertyElement key="diamond.jacorb.github.organization">
     <bc:constant value="openGDA"/>
@@ -496,13 +499,16 @@
   </rm:propertyElement>
   <rm:propertyElement key="diamond.jython.git.location.translated">
     <bc:replace>
-      <bc:propertyRef key="diamond.jython.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:constant value="${diamond.jython.git.location}"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="diamond.jython.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="diamond.jython.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.jython.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${diamond.jython.dascgerrit.authentication}.url}/diamond"/>
   </rm:propertyElement>
   <rm:propertyElement key="diamond.jython.github.organization">
     <bc:constant value="openGDA"/>
@@ -574,13 +580,16 @@
   </rm:propertyElement>
   <rm:propertyElement key="diamond.springframework.git.location.translated">
     <bc:replace>
-      <bc:propertyRef key="diamond.springframework.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:constant value="${diamond.springframework.git.location}"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="diamond.springframework.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="diamond.springframework.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="diamond.springframework.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${diamond.springframework.dascgerrit.authentication}.url}/diamond"/>
   </rm:propertyElement>
   <rm:propertyElement key="diamond.springframework.github.organization">
     <bc:constant value="openGDA"/>
@@ -1306,12 +1315,15 @@
   <rm:propertyElement key="gda.legacy.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.legacy.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.legacy.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.legacy.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.legacy.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.legacy.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.legacy.github.organization">
     <bc:constant value="openGDA"/>
