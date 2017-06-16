@@ -1499,17 +1499,18 @@ class PewmaManager(object):
                     self.logger.debug('%sMany: %s' % (self.log_prefix, option_value_plural))
 
                 except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
-                    option_value = None
+                    git_config_commands.append('git config -f %s %s %s' % (config_file_loc, name, required_value))
 
-                if option_value != required_value:
-                    if action_if_already_exists == 'replace':
-                        git_config_commands.append('git config -f %s %s %s' % (config_file_loc, name, required_value))
-                    elif action_if_already_exists == 'append':
-                        git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
-                    else:
-                        self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, option_value, git_dir))
                 else:
-                    self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
+                    if option_value != required_value:
+                        if action_if_already_exists == 'append':
+                            git_config_commands.append('git config -f %s --add %s %s' % (config_file_loc, name, required_value))
+                        elif action_if_already_exists == 'replace':
+                            git_config_commands.append('git config -f %s %s %s' % (config_file_loc, name, required_value))
+                        else:
+                            self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, option_value, git_dir))
+                    else:
+                        self.logger.log(5, '%sSkipped: already have %s=%s in: %s' % (self.log_prefix, name, required_value, git_dir))
 
             repo_status = {'switched_remote_to_gerrit': NOT_REQUIRED, 'configured_for_eclipse': NOT_REQUIRED, 'hook_added': NOT_REQUIRED}
 
