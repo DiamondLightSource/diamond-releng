@@ -2420,6 +2420,7 @@
   <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(beanutils|collections4|configuration|csv|digester|io|jexl|math|math3|net|validator)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.servicemix\.bundles\.spring-.+$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.epics(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.h2(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.jline$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mariadb\.jdbc(\..+)?$" searchPathRef="diamond_orbit_p2"/>
