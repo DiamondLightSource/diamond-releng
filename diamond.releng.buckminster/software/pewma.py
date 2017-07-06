@@ -995,21 +995,26 @@ class PewmaManager(object):
         imode_new = imode_old | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_ISGID | stat.S_IROTH | stat.S_IXOTH
 
         is_directory_owner = self.user_euid in [dirowner_uid, 0]  # an effective uid of 0 indicates root
+        is_in_new_group = self.gid_new in os.getgroups()  # the file owner must be a member of the new file group 
 
         if grname_old != self.options.directories_groupname:
             self.logger.info('Changing owning group from %s (%s) to %s (%s) on %s' %
                              (grname_old, gid_old,
                               self.options.directories_groupname, self.gid_new,
                               directory))
-            if is_directory_owner:
+            if not is_directory_owner:
+                self.logger.warn('Cannot change owning group: current user %s (%s) is not directory owner %s (%s)' %
+                                 (self.user_uname, self.user_euid,
+                                  dirowner_uname, dirowner_uid,))
+            if not is_in_new_group:
+                self.logger.warn('Cannot change owning group: current user %s (%s) is not in new group %s (%s)' %
+                                 (self.user_uname, self.user_euid,
+                                  self.options.directories_groupname, self.gid_new,))
+            else:
                 try:
                     os.chown(directory, -1, self.gid_new)
                 except Exception as e:
                     self.logger.error('chown failed: %s' % (e,))
-            else:
-                self.logger.warn('Cannot change owning group: current user %s (%s) is not directory owner %s (%s)' %
-                                 (self.user_uname, self.user_euid,
-                                  dirowner_uname, dirowner_uid,))
 
         if imode_old != imode_new:
             self.logger.info('Changing permissions from 0x%04o to 0x%04o on %s' % (imode_old, imode_new, directory))
