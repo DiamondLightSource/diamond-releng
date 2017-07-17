@@ -84,6 +84,11 @@ archive_beamline () {
         compress_files
     done
 
+    # Compress old terminal logs
+    parent_dir="/dls_sw/${beamline}/logs/terminal_output"
+    filename_pattern='*.txt'
+    compress_files
+
     # Move old logs to archive (GDA 8 log locations)
     parent_dir="/dls_sw/${beamline}/logs"
     archive_dir=/dls/science/groups/das/Archive/${beamline}/logs
@@ -95,6 +100,11 @@ archive_beamline () {
         archive_dir="/dls/science/groups/das/Archive/${beamline}/logs/gda_${type}_output"
         archive_files
     done
+
+    # Move old terminal logs to archive
+    parent_dir="/dls_sw/${beamline}/logs/terminal_output"
+    archive_dir=/dls/science/groups/das/Archive/${beamline}/logs/terminal_output
+    archive_files
 
     # After some discussion with Mark Booth, we decide to skip the cleanup of the var/ directory for the moment
     # As lots of things can go in there, it's possible that old files are simply ones that are static, and are still required
