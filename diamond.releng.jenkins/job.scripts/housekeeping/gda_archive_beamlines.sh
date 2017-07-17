@@ -72,18 +72,6 @@ archive_beamline () {
         echo 'Running in dryrun mode ($dryrun != false)'
     fi
 
-    # Move old logs to archive (GDA 8 log locations)
-    parent_dir="/dls_sw/${beamline}/logs"
-    archive_dir=/dls/science/groups/das/Archive/${beamline}/logs
-    archive_files
-
-    # Move old logs to archive (GDA 9 log locations)
-    for type in client servers logpanel; do
-        parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
-        archive_dir="/dls/science/groups/das/Archive/${beamline}/logs/gda_${type}_output"
-        archive_files
-    done
-
     # Compress old logs (GDA 8 log locations)
     parent_dir="/dls_sw/${beamline}/logs"
     filename_pattern='*.txt'
@@ -94,6 +82,18 @@ archive_beamline () {
         parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
         filename_pattern='*.txt'
         compress_files
+    done
+
+    # Move old logs to archive (GDA 8 log locations)
+    parent_dir="/dls_sw/${beamline}/logs"
+    archive_dir=/dls/science/groups/das/Archive/${beamline}/logs
+    archive_files
+
+    # Move old logs to archive (GDA 9 log locations)
+    for type in client servers logpanel; do
+        parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
+        archive_dir="/dls/science/groups/das/Archive/${beamline}/logs/gda_${type}_output"
+        archive_files
     done
 
     # After some discussion with Mark Booth, we decide to skip the cleanup of the var/ directory for the moment
