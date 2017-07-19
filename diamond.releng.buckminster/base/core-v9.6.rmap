@@ -105,6 +105,17 @@
     <bc:constant value="0.10.4"/>
   </rm:propertyElement>
   <!-- ***** -->
+  <!-- version of Eclipse Nebula xygraph p2 repository to use -->
+    <!-- not used until we have a release version
+    <rm:propertyElement key="eclipse.xygraph.p2.version">
+        <bc:constant value="1.4.0"/>
+    </rm:propertyElement>
+    -->
+  <rm:propertyElement key="eclipse.xygraph.p2.url">
+    <!-- <bc:constant value="${alfred.url}/sites/download.eclipse.org/nebula/snapshot/"/>  -->
+    <bc:constant value="http://download.eclipse.org/nebula/snapshot/"/>
+  </rm:propertyElement>
+  <!-- ***** -->
   <!--                                                             -->
   <!-- Properties for Gitolite-managed git repositories at Diamond -->
   <!--                                                             -->
@@ -2117,7 +2128,9 @@
   <rm:propertyElement key="sda.git.url">
     <bc:constant value="${sda.${sda.git.location.translated}.url}/sda.git"/>
   </rm:propertyElement>
-  <!-- *** swt-xy-graph *** -->
+  <!-- *** swt-xy-graph ***
+    for org.eclipse.nebula.visualization.widgets*, this is always the repo
+    for org.eclipse.nebula.visualization.xygraph*, this is the old repo, the new one is org.eclipse.nebula -->
   <rm:propertyElement key="swt.xy.graph.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -2343,8 +2356,10 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
   <!-- *** sda *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|scisoft\.applications|sda(\.bioclipse\.jmol\.feature)?)$" searchPathRef="sda"/>
-  <!-- *** swt-xy-graph *** -->  <!-- use the DLS source fork of this, not the standard version from the Eclipse Nebula p2 site -->
-  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="swt_xy_graph"/>
+  <!-- *** swt-xy-graph *** -->  <!-- for widgets, use the DLS source fork of this, not the standard version from the Eclipse Nebula p2 site -->
+                                 <!-- for xygraph, use the DLS source fork of this (xygraph.new!=true), or the Eclipse Nebula source (xygraph.new=true), or the p2 site -->
+  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.widgets(\..+)?$" searchPathRef="swt_xy_graph_widgets"/>
+  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.xygraph(\..+)?$" searchPathRef="swt_xy_graph_xygraph"/>
   <!-- *** training *** -->
   <rm:locator pattern="^training\.gerrit\.(feature|plugin1|plugin2)$" searchPathRef="training_gerrit_1"/>
   <!-- *** wychwood *** -->
@@ -4148,18 +4163,10 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       SWT-XY-GRAPH repository
+       SWT-XY-GRAPH repository; old (DawnScience) or new (Eclipse repo or p2)
   -->
-  <rm:searchPath name="swt_xy_graph">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true)))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
-      <rm:uri format="{0}/swt-xy-graph.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(&amp;(!(disallow.repo.swt-xy-graph=true)))" readerType="git">
+  <rm:searchPath name="swt_xy_graph_widgets">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
       <rm:uri format="{0}/swt-xy-graph.git,PureJava/{1}">
@@ -4167,10 +4174,37 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.swt-xy-graph=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from swt-xy-graph.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="swt_xy_graph_xygraph">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(xygraph.new=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
+      <rm:uri format="{0}/swt-xy-graph.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(xygraph.new=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
+      <rm:uri format="{0}/swt-xy-graph.git,PureJava/{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(xygraph.new=true)(!(source.repository.xygraph=false)))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="https://git.eclipse.org/r/nebula/org.eclipse.nebula.git"/>
+      <rm:uri format="{0}/org.eclipse.nebula.git,widgets/visualization/{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(xygraph.new=true)(source.repository.xygraph=false))" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${eclipse.xygraph.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
   <!--
