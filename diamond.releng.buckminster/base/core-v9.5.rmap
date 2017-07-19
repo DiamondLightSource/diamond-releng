@@ -3853,7 +3853,7 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.py4j=true))(!(source.repository.py4j=true)))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://eclipse-legacy.py4j.org/"/>
+      <rm:uri format="${alfred.url}/sites/eclipse-legacy.py4j.org/"/>
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.py4j=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from py4j.git, but the CQuery specified that this repository should not be used ***">
