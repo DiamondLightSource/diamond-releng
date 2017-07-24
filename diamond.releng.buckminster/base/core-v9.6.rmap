@@ -2399,9 +2399,7 @@
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.derby$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.mina\.core$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.poi(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.sshd\.core$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(dbcp|codec|collections|jxpath|lang|pool)(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.dom4j$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.jdom$" searchPathRef="eclipse_orbit_p2"/>
@@ -2435,9 +2433,10 @@
   <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(beanutils|collections4|configuration|csv|digester|io|jexl|math|math3|net|validator)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.servicemix\.bundles\.spring-.+$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.sshd\.core(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.epics(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.h2(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.jline$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.jline(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mariadb\.jdbc(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="diamond_orbit_p2"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.objenesis(\..+)?" searchPathRef="diamond_orbit_p2"/>
@@ -2457,7 +2456,6 @@
        Target Platform components (published from thirdparty/)
   -->
   <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
-  <rm:locator pattern="^org\.apache\.(mina|servicemix|sshd)\..+$" searchPathRef="tp_noneclipse"/>
   <!-- -->
   <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
   <rm:locator pattern="^javax\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>  <!-- if not found, will look in release and platform repos -->
