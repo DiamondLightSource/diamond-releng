@@ -2425,7 +2425,7 @@
   <!--
        Components to get from Diamond p2 repositories: Orbit
   -->
-  <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|slf4j\.api|me\.moocar\.logback-gelf)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^(ch\.qos\.logback\.(classic|core)|(jcl|log4j)\.over\.slf4j|jul\.to\.slf4j|slf4j\.api|me\.moocar\.logback-gelf)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^com\.github\.tschoonj\.xraylib$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^com\.google\.gson(\..+)?$" searchPathRef="diamond_orbit_p2"/>
