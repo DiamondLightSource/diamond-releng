@@ -1720,6 +1720,17 @@
   <rm:propertyElement key="org.eclipse.launchbar.git.url">
     <bc:constant value="${github.${org.eclipse.launchbar.github.authentication}.url}${org.eclipse.launchbar.github.organization}/org.eclipse.launchbar.git"/>
   </rm:propertyElement>
+  <!-- *** org.eclipse.nebula ***
+    for org.eclipse.nebula.visualization.xygraph*, this is the new repo, the old one is swt-xy-graph -->
+  <rm:propertyElement key="org.eclipse.nebula.github.organization">
+    <bc:constant value="DiamondLightSource"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="org.eclipse.nebula.github.authentication">
+    <bc:constant value="${github.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="org.eclipse.nebula.git.url">
+    <bc:constant value="${github.${org.eclipse.nebula.github.authentication}.url}${org.eclipse.nebula.github.organization}/org.eclipse.nebula.git"/>
+  </rm:propertyElement>
   <!-- *** py4j - net.sf.py4j*(legacy) and org.py4j* (new) *** -->
   <rm:propertyElement key="source.repository.py4j">  <!-- says whether to get net.sf.py4j*/org.py4j* from a source repository, or a p2 site -->
     <bc:constant value="false"/>
@@ -4193,7 +4204,7 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(xygraph.new=true)(!(source.repository.xygraph=false)))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="https://git.eclipse.org/r/nebula/org.eclipse.nebula.git"/>
+      <rm:property key="git.remote.uri" value="${org.eclipse.nebula.git.url}"/>
       <rm:uri format="{0}/org.eclipse.nebula.git,widgets/visualization/{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:propertyRef key="buckminster.component"/>
