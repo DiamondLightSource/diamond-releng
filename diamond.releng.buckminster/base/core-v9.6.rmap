@@ -162,11 +162,14 @@
     <bc:constant value="${dascgerrit.username.from.cquery.translated}"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="diamond.dascgerrit.http.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
+  <rm:propertyElement key="diamond.dascgerrit.host">
     <bc:constant value="gerrit.diamond.ac.uk"/>
   </rm:propertyElement>
+  <rm:propertyElement key="diamond.dascgerrit.http.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
+    <bc:constant value="${diamond.dascgerrit.host}"/>
+  </rm:propertyElement>
   <rm:propertyElement key="diamond.dascgerrit.ssh.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
-    <bc:constant value="gerrit.diamond.ac.uk:29418"/>
+    <bc:constant value="${diamond.dascgerrit.host}:29418"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="diamond.dascgerrit.ssh.url">
