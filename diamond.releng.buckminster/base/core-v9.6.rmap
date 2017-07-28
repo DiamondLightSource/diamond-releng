@@ -2449,6 +2449,7 @@
   <rm:locator pattern="^org\.h2(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.jline(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mariadb\.jdbc(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.mihalis\.opal(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="diamond_orbit_p2"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.objenesis(\..+)?" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^pl\.pragmatists\.JUnitParams(\..+)?$" searchPathRef="diamond_orbit_p2"/>
