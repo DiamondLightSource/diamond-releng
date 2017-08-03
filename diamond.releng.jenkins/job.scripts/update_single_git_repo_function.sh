@@ -85,7 +85,6 @@ update_single_git_repo_function () {
         rm -rf ${repo_path}
         return
     fi
-    set -e  # Turn errexit back on
 
     # At this point, the repository is clean, and up-to-date with the remote. We need to re-establish the correct local branch.
     # We cannot assume that the local branch is tracking the standard branch, since this might be a Gerrit repository previously used to test a change
@@ -94,6 +93,7 @@ update_single_git_repo_function () {
         echo "[${repo_name}] Could not identify branch name to switch to, something is wrong. Is this a repo that is no longer in use?"
         return 1
     fi
+    set -e  # Turn errexit back on
     git -C ${repo_path} checkout --detach --quiet
     git -C ${repo_path} branch -D --quiet ${repo_branch} |& sed "s/^/[${repo_name}] /" || true
     git -C ${repo_path} checkout -b ${repo_branch} remotes/origin/${repo_branch} --no-track --quiet |& sed "s/^/[${repo_name}] /"
