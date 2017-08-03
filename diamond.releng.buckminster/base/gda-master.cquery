@@ -13,7 +13,6 @@
     <cq:property key="target.os" value="*"/>
     <cq:property key="target.ws" value="*"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^org.eclipse.nebula.visualization.xygraph.preference$" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*(i02|i02-1|i02-2|i03|i04|i23|i24|all-mx-configs).*)$" filter="(materialize_skip_list=*allmx*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i11-1.*)$" filter="(materialize_skip_list=*i11-1*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
@@ -247,7 +246,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^org\.eclipse\.launchbar(\..+)?$" useTargetPlatform="false" branchTagPath="dawn">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">org.eclipse.launchbar.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.nebula\.visualization\.xygraph(\..+)?$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">org.eclipse.nebula.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -312,9 +311,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|scisoft\.applications|sda(\.bioclipse\.jmol\.feature)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">sda.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.sda" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.nebula\.visualization\.widgets(\..+)?$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">swt-xy-graph.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^training\.gerrit\.(feature|plugin1|plugin2)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">training-gerrit-1.git repository branch</cq:documentation>

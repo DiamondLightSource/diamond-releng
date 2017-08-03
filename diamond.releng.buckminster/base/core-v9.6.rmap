@@ -2141,16 +2141,6 @@
   <rm:propertyElement key="sda.git.url">
     <bc:constant value="${sda.${sda.git.location.translated}.url}/sda.git"/>
   </rm:propertyElement>
-  <!-- *** swt-xy-graph *** only for for org.eclipse.nebula.visualization.widgets* -->
-  <rm:propertyElement key="swt.xy.graph.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="swt.xy.graph.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="swt.xy.graph.git.url">
-    <bc:constant value="${github.${swt.xy.graph.github.authentication}.url}${swt.xy.graph.github.organization}/swt-xy-graph.git"/>
-  </rm:propertyElement>
   <!-- *** training *** -->
   <rm:propertyElement key="training.gerrit.1.git.url">
     <bc:constant value="${diamond.dascgerrit.url}/training/training-gerrit-1.git"/>
@@ -2342,7 +2332,7 @@
   <!-- *** org.eclipse.launchbar *** -->
   <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
   <!-- *** org.eclipse.nebula *** -->
-  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.xygraph(\..+)?$" searchPathRef="org_eclipse_nebula"/>
+  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="org_eclipse_nebula"/>
   <!-- *** Opt-ID *** -->
   <rm:locator pattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" searchPathRef="opt_id"/>
   <!-- *** py4j *** -->
@@ -2369,8 +2359,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
   <!-- *** sda *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.(dawn\..+|org\.springframework\.bioclipse\.contributions|scisoft\.applications|sda(\.bioclipse\.jmol\.feature)?)$" searchPathRef="sda"/>
-  <!-- *** swt-xy-graph *** -->
-  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.widgets(\..+)?$" searchPathRef="swt_xy_graph"/>
   <!-- *** training *** -->
   <rm:locator pattern="^training\.gerrit\.(feature|plugin1|plugin2)$" searchPathRef="training_gerrit_1"/>
   <!-- *** wychwood *** -->
@@ -4187,19 +4175,6 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.sda=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from sda.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       SWT-XY-GRAPH repository
-  -->
-  <rm:searchPath name="swt_xy_graph">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${swt.xy.graph.git.url}"/>
-      <rm:uri format="{0}/swt-xy-graph.git,PureJava/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
