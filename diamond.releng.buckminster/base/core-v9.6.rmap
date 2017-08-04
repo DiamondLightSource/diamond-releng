@@ -2322,7 +2322,7 @@
   <rm:locator pattern="^uk\.ac\.(diamond\.tomography\.reconstruction(\..+)?|gda\.(client\.tomo|tomography)(\..+)?)$" searchPathRef="gda_tomography"/>
   <rm:locator pattern="^org\.gda\.tango(\..+)?$" searchPathRef="gda_tango"/>
   <rm:locator pattern="^uk\.ac\.gda\.video(\..+)?$" searchPathRef="gda_video"/>
-  <rm:locator pattern="^uk\.ac\.(diamond\.daq\.(client\.microfocus(\..+)?|microfocus\.api|xas\.server\.feature)|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" searchPathRef="gda_xas_core"/>
+  <rm:locator pattern="^uk\.ac\.(diamond\.daq\.(client\.microfocus(\..+)?|microfocus\.api|xas\.server\.feature)|gda\.(beans\.vortex|client\.(exafs|microfocus|vortex|xspress2)(\..+)?|devices\.(andor|hidenrga|xmap(\.api)?|xspress2|xspress3)(\.epics)?(\.test)?|exafs\.(api|datawriter)(\..+)?|server\.exafs(\..+)?))$" searchPathRef="gda_xas_core"/>
   <!-- *** gphl *** -->
   <rm:locator pattern="^com\.globalphasing\.sdcp\.abstract_beamline$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
