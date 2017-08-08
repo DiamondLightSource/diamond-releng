@@ -83,7 +83,6 @@ dawn_publish_function () {
     #  OR the .zip file contains the product directly at the top level of the zip
     # the assumption is controlled by file buckminster.diamond.jenkins.properties in the .site project (see zip.file.name and zip.include.parent.directory properties)
     export publish_module_load_platforms_updated=0
-    export publish_module_load_platforms_skipped=0
     if [[ "${publish_module_load}" == "true" ]]; then
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to module load ***\n"
         initialize_module_load=$(echo ${initialize_module_load:-false} | tr '[:upper:]' '[:lower:]')
@@ -100,35 +99,38 @@ dawn_publish_function () {
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to module load for ${platform} ***\n"
                 publish_module_load_directory_for_type=$(readlink -m ${publish_module_load_directory_parent}/builds)
                 publish_module_load_directory_name=$(basename ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip .zip)
-                publish_module_load_link_name=${name_to_publish_as}-${platform}
                 publish_module_load_directory=${publish_module_load_directory_for_type}/${publish_module_load_directory_name}
-                publish_module_load_link=${publish_module_load_directory_for_type}/${publish_module_load_link_name}
-                if [[ -e "${publish_module_load_directory}" ]]; then
+                suffix_for_duplicate_name=0
+                while [[ -e "${publish_module_load_directory}" ]]; do
                     echo "NOTE: product version already published: \"${publish_module_load_directory}\" exists"
-                    (( publish_module_load_platforms_skipped += 1 ))
+                    (( suffix_for_duplicate_name += 1 ))
+                    # try and create a new name that is not in use
+                    publish_module_load_directory_name="$(basename ${publish_module_load_directory_name} ${platform})${suffix_for_duplicate_name}-${platform}
+                    publish_module_load_directory=${publish_module_load_directory_for_type}/${publish_module_load_directory_name}
+                done
+                publish_module_load_link_name=${name_to_publish_as}-${platform}
+                publish_module_load_link=${publish_module_load_directory_for_type}/${publish_module_load_link_name}
+                # note: "caution: filename not matched" is expected for Windows, that's how we know what to unzip
+                if [[ $(zipinfo -1 ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip ${publish_module_load_directory_name}/) ]]; then
+                    ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory_for_type}
                 else
-                    # note: "caution: filename not matched" is expected for Windows, thats how we know what to unzip
-                    if [[ $(zipinfo -1 ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip ${publish_module_load_directory_name}/) ]]; then
-                        ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory_for_type}
-                    else
-                        ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory}
-                    fi
-                    if [[ "${initialize_module_load}" == "true" ]]; then
-                        if [[ "${running_platform}" == "${platform}" ]]; then
-                            ${publish_module_load_directory_for_type}/${publish_module_load_directory_name}/dawn -initialize
-                        fi
-                    fi
-                    chmod -R ugo-w ${publish_module_load_directory}/ || return 3
-                    if [[ -L "${publish_module_load_link}" ]]; then
-                        rm -v ${publish_module_load_link}
-                    fi
-                    if [[ -e "${publish_module_load_link}" ]]; then
-                        echo "ERROR: exists, but is not a link: \"${publish_module_load_link}\""
-                        return 255
-                    fi
-                    ( cd ${publish_module_load_directory_for_type} && ln -s ${publish_module_load_directory_name} ${publish_module_load_link_name} )
-                    (( publish_module_load_platforms_updated += 1 ))
+                    ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory}
                 fi
+                if [[ "${initialize_module_load}" == "true" ]]; then
+                    if [[ "${running_platform}" == "${platform}" ]]; then
+                        ${publish_module_load_directory_for_type}/${publish_module_load_directory_name}/dawn -initialize
+                    fi
+                fi
+                chmod -R ugo-w ${publish_module_load_directory}/ || return 3
+                if [[ -L "${publish_module_load_link}" ]]; then
+                    rm -v ${publish_module_load_link}
+                fi
+                if [[ -e "${publish_module_load_link}" ]]; then
+                    echo "ERROR: exists, but is not a link: \"${publish_module_load_link}\""
+                    return 255
+                fi
+                ( cd ${publish_module_load_directory_for_type} && ln -s ${publish_module_load_directory_name} ${publish_module_load_link_name} )
+                (( publish_module_load_platforms_updated += 1 ))
             fi
         done
     else
