@@ -105,7 +105,7 @@ dawn_publish_function () {
                     echo "NOTE: product version already published: \"${publish_module_load_directory}\" exists"
                     (( suffix_for_duplicate_name += 1 ))
                     # try and create a new name that is not in use
-                    publish_module_load_directory_name="$(basename ${publish_module_load_directory_name} ${platform})${suffix_for_duplicate_name}-${platform}
+                    publish_module_load_directory_name="$(basename ${publish_module_load_directory_name} ${platform})${suffix_for_duplicate_name}-${platform}"
                     publish_module_load_directory=${publish_module_load_directory_for_type}/${publish_module_load_directory_name}
                 done
                 publish_module_load_link_name=${name_to_publish_as}-${platform}
