@@ -98,29 +98,44 @@ dawn_publish_function () {
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to module load for ${platform} ***\n"
                 publish_module_load_directory_for_type=$(readlink -m ${publish_module_load_directory_parent}/builds)
+
+                # first unzip to a temporary name
+                publish_module_load_directory_tmp=$(mktemp -d --tmpdir=${publish_module_load_directory_for_type} --suffix "-unzip")
+                chmod g+rx,o+rx ${publish_module_load_directory_tmp}
+                ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory_tmp}
+
+                # now work out what to rename the temporary name to
                 publish_module_load_directory_name=$(basename ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip .zip)
+                publish_module_load_directory_name_final=${publish_module_load_directory_name}
                 publish_module_load_directory=${publish_module_load_directory_for_type}/${publish_module_load_directory_name}
+
                 suffix_for_duplicate_name=0
                 while [[ -e "${publish_module_load_directory}" ]]; do
-                    echo "NOTE: product version already published: \"${publish_module_load_directory}\" exists"
+                    echo "NOTE: product version previously published: \"${publish_module_load_directory}\" exists"
                     (( suffix_for_duplicate_name += 1 ))
                     # try and create a new name that is not in use
-                    publish_module_load_directory_name="$(basename ${publish_module_load_directory_name} ${platform})${suffix_for_duplicate_name}-${platform}"
-                    publish_module_load_directory=${publish_module_load_directory_for_type}/${publish_module_load_directory_name}
+                    publish_module_load_directory_name_final="$(basename ${publish_module_load_directory_name} ${platform})${suffix_for_duplicate_name}-${platform}"
+                    publish_module_load_directory=${publish_module_load_directory_for_type}/${publish_module_load_directory_name_final}
                 done
-                publish_module_load_link_name=${name_to_publish_as}-${platform}
-                publish_module_load_link=${publish_module_load_directory_for_type}/${publish_module_load_link_name}
-                # note: "caution: filename not matched" is expected for Windows, that's how we know what to unzip
-                if [[ $(zipinfo -1 ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip ${publish_module_load_directory_name}/) ]]; then
-                    ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory_for_type}
+
+                if [[ "${platform}" == "windows64" ]]; then
+                    echo "Moving ${publish_module_load_directory_tmp}/ ${publish_module_load_directory_name_final}/"
+                    mv ${publish_module_load_directory_tmp}/ ${publish_module_load_directory}/
+                    rmdir ${publish_module_load_directory_tmp}/ || true
                 else
-                    ${unzip} -q ${WORKSPACE}/artifacts_to_publish/*-${platform}.zip -d ${publish_module_load_directory}
+                    echo "Moving ${publish_module_load_directory_tmp}/${publish_module_load_directory_name} ${publish_module_load_directory_name_final}/"
+                    mv ${publish_module_load_directory_tmp}/${publish_module_load_directory_name} ${publish_module_load_directory}/
+                    rmdir ${publish_module_load_directory_tmp}/ || true
                 fi
+
                 if [[ "${initialize_module_load}" == "true" ]]; then
                     if [[ "${running_platform}" == "${platform}" ]]; then
-                        ${publish_module_load_directory_for_type}/${publish_module_load_directory_name}/dawn -initialize
+                        ${publish_module_load_directory_for_type}/${publish_module_load_directory_name_final}/dawn -initialize
                     fi
                 fi
+
+                publish_module_load_link_name=${name_to_publish_as}-${platform}
+                publish_module_load_link=${publish_module_load_directory_for_type}/${publish_module_load_link_name}
                 chmod -R ugo-w ${publish_module_load_directory}/ || return 3
                 if [[ -L "${publish_module_load_link}" ]]; then
                     rm -v ${publish_module_load_link}
@@ -129,7 +144,7 @@ dawn_publish_function () {
                     echo "ERROR: exists, but is not a link: \"${publish_module_load_link}\""
                     return 255
                 fi
-                ( cd ${publish_module_load_directory_for_type} && ln -s ${publish_module_load_directory_name} ${publish_module_load_link_name} )
+                ( cd ${publish_module_load_directory_for_type} && ln -s ${publish_module_load_directory_name_final} ${publish_module_load_link_name} )
                 (( publish_module_load_platforms_updated += 1 ))
             fi
         done
