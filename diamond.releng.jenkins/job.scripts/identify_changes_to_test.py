@@ -166,7 +166,7 @@ class RequestedChangesProcessor():
             return self.cquery_branches[repo]  # should never raise KeyError; something is badly wrong if the repo is not mentioned in the CQuery
 
     def get_override_branch_for_repo(self, repo):
-        """ For the specified repository, returns an alternative point (branch or commit) to materialize, and an action (merge/rebase/checkout)
+        """ For the specified repository, returns an alternative point (branch or commit) to materialize, and an action (merge or checkout)
             (as specified via build parameters)
             Note that this only applies to repositories that do NOT have a Gerrit change under test
             (if they _do_ have a Gerrit change under test, then the change itself determines what branch is used)
@@ -185,7 +185,7 @@ class RequestedChangesProcessor():
                         repo_parms[parm_type] = os.environ.get(parm_name, '').strip()
                 # validate the action, and translate to a one-word form
                 if repo_parms['action']:
-                    for action in ('merge', 'rebase', 'checkout'):
+                    for action in ('merge', 'checkout'):
                         if action in repo_parms['action']:
                             repo_parms['action'] = action
                             break
@@ -195,7 +195,7 @@ class RequestedChangesProcessor():
                         self.errors_found = True
                         continue
                 if any(repo_parms.itervalues()) and not repo_parms['action']:  # at least one, but not all, specified
-                    repo_parms['action'] = 'checkout'  # if the action not specified, default to "checkout"
+                    repo_parms['action'] = 'merge'  # if the action not specified, default to "checkout"
                 if all(repo_parms.itervalues()):  # all specified
                     if repo_parms['name'] not in self.cquery_branches:  # something has gone wrong somewhere
                         self.logger.critical('Internal error with repo naming: ' + repo_parms['name'] + ' not in ' + str(sorted(self.cquery_branches.keys())))
@@ -626,7 +626,7 @@ post_materialize_function_gerrit () {
     repo=${materialize_workspace_path}_git/%(REPO)s.git
 ''' %           {'REPO': os.path.basename(repo),  # something like gda-core (not gda/gda-core)
                  'ALTERNATE_HEAD': head,  # could be a commit as well
-                 'ACTION': action,
+                 'ACTION': action,        # merge, checkout
                  })
 
                 clone_url = None
@@ -671,17 +671,26 @@ post_materialize_function_gerrit () {
                 pre_materialize_script_file.write('''\
     if [[ -d "${repo}" ]]; then
         cd ${repo}
+        action=%(ACTION)s
         git checkout origin/%(STANDARD_BRANCH)s
-        if git branch --list -r | grep /%(ALTERNATE_HEAD)s; then
-          # we are switching to a specific branch
-          git branch --force %(STANDARD_BRANCH)s origin/%(ALTERNATE_HEAD)s
-        else
-          # we are switching to a specific commit
-          git branch --force %(STANDARD_BRANCH)s %(ALTERNATE_HEAD)s
+        git fetch origin %(ALTERNATE_HEAD)s
+        git show --oneline --no-patch $(git rev-parse FETCH_HEAD)
+        git show --oneline --no-patch $(git rev-parse HEAD)
+
+        if [[ "${action}" == "merge" ]]; then
+            git merge --verbose --no-progress --no-edit --log FETCH_HEAD
+        elif [[ "${action}" == "checkout" ]]; then
+            if git branch --list -r | grep /%(ALTERNATE_HEAD)s; then
+              # we are switching to a specific branch
+              git branch --force %(STANDARD_BRANCH)s origin/%(ALTERNATE_HEAD)s
+            else
+              # we are switching to a specific commit
+              git branch --force %(STANDARD_BRANCH)s %(ALTERNATE_HEAD)s
+            fi
+            git checkout %(STANDARD_BRANCH)s
+            git log %(STANDARD_BRANCH)s^.. --topo-order
+            export repo_switched_to_alternate_head_%(REPO_TRANSLATED)s=true
         fi
-        git checkout %(STANDARD_BRANCH)s
-        git log %(STANDARD_BRANCH)s^.. --topo-order
-        export repo_switched_to_alternate_head_%(REPO_TRANSLATED)s=true
     else
         export repo_switched_to_alternate_head_%(REPO_TRANSLATED)s=false
         echo "the repo does not exist, so we will allow the materialize to clone it, and afterwards switch the branch"
@@ -689,6 +698,7 @@ post_materialize_function_gerrit () {
 
 ''' %           {'REPO_TRANSLATED': os.path.basename(repo).replace('-','_'),  # something like gda_core (not gda/gda-core)
                  'ALTERNATE_HEAD': head,  # could be a commit or a branch
+                 'ACTION': action,        # merge or checkout
                  'STANDARD_BRANCH': self.get_expected_branch_for_repo(os.path.basename(repo))
                  })
 
@@ -700,14 +710,28 @@ post_materialize_function_gerrit () {
     echo -e "*** `date +"%%a %%d/%%b/%%Y %%H:%%M:%%S"` post-materialize attempt: switching %(REPO)s to head %(ALTERNATE_HEAD)s (if not already done in pre-materialize) ***\\n"
     if [[ "${repo_switched_to_alternate_head_%(REPO_TRANSLATED)s}" != "true" ]]; then
         repo=${materialize_workspace_path}_git/%(REPO)s.git
+        action=%(ACTION)s
         cd ${repo}
         git checkout origin/%(STANDARD_BRANCH)s
-        if git branch --list -r | grep /%(ALTERNATE_HEAD)s; then
-          # we are switching to a specific branch
-          git branch --force %(STANDARD_BRANCH)s origin/%(ALTERNATE_HEAD)s
-        else
-          # we are switching to a specific commit
-          git branch --force %(STANDARD_BRANCH)s %(ALTERNATE_HEAD)s
+        git branch --force %(STANDARD_BRANCH)s origin/%(STANDARD_BRANCH)s
+        git checkout %(STANDARD_BRANCH)s
+        git fetch origin %(ALTERNATE_HEAD)s
+        git show --oneline --no-patch $(git rev-parse FETCH_HEAD)
+        git show --oneline --no-patch $(git rev-parse HEAD)
+
+        if [[ "${action}" == "merge" ]]; then
+            git merge --verbose --no-progress --no-edit --log FETCH_HEAD
+        elif [[ "${action}" == "checkout" ]]; then
+            if git branch --list -r | grep /%(ALTERNATE_HEAD)s; then
+              # we are switching to a specific branch
+              git branch --force %(STANDARD_BRANCH)s origin/%(ALTERNATE_HEAD)s
+            else
+              # we are switching to a specific commit
+              git branch --force %(STANDARD_BRANCH)s %(ALTERNATE_HEAD)s
+            fi
+            git checkout %(STANDARD_BRANCH)s
+            git log %(STANDARD_BRANCH)s^.. --topo-order
+            export repo_switched_to_alternate_head_%(REPO_TRANSLATED)s=true
         fi
         git checkout %(STANDARD_BRANCH)s
         git log %(STANDARD_BRANCH)s^.. --topo-order
@@ -716,6 +740,7 @@ post_materialize_function_gerrit () {
 ''' %                   {'REPO': os.path.basename(repo),  # something like gda-core (not gda/gda-core)
                          'REPO_TRANSLATED': os.path.basename(repo).replace('-','_'),  # something like gda_core
                          'ALTERNATE_HEAD': head,  # could be a commit or a branch
+                         'ACTION': action,        # merge or checkout
                          'STANDARD_BRANCH': self.get_expected_branch_for_repo(os.path.basename(repo))
                         })
 
