@@ -52,7 +52,8 @@ COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.gda.client.logpanel.site', 'g
 # Caution: categories must never be the same as any component name or component abbreviation
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
-    ('gda', 'master', 'gda-master.cquery', 'v3.2', ('master', '9.master', 'v9.master'), ('1.8.0',)),
+    ('gda', 'master', 'gda-master.cquery', 'v3.3', ('master', '9.master', 'v9.master'), ('1.8.0',)),
+    ('gda', 'v9.5', 'gda-v9.5.cquery', 'v3.3', ('v9.5', '9.5', '95'), ('1.8.0',)),
     ('gda', 'v9.4', 'gda-v9.4.cquery', 'v3.2', ('v9.4', '9.4', '94'), ('1.8.0',)),
     ('gda', 'v9.3', 'gda-v9.3.cquery', 'v3.2', ('v9.3', '9.3', '93'), ('1.8.0',)),
     ('gda', 'v9.2', 'gda-v9.2.cquery', 'v3.1', ('v9.2', '9.2', '92'), ('1.8.0',)),
@@ -76,7 +77,8 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v8.40', 'gda-v8.40.cquery', 'v2.6', ('v8.40', '8.40', '840'), ('1.7.0',)),
     ('gda', 'v8.39', 'gda-v8.39.cquery', 'v2.6', ('v8.39', '8.39', '839'), ('1.7.0',)),
     ('gda', 'v8.38', 'gda-v8.38.cquery', 'v2.6', ('v8.38', '8.38', '838'), ('1.7.0',)),
-    ('dawn', 'master', 'dawn-master.cquery', 'v3.2', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', 'master', 'dawn-master.cquery', 'v3.3', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', '2.6', 'dawn-v2.6.cquery', 'v3.3', ('v2.6', '2.6'), ('1.8.0',)),
     ('dawn', '2.5', 'dawn-v2.5.cquery', 'v3.2', ('v2.5', '2.5'), ('1.8.0',)),
     ('dawn', '2.4', 'dawn-v2.4.cquery', 'v3.2', ('v2.4', '2.4'), ('1.8.0',)),
     ('dawn', '2.3', 'dawn-v2.3.cquery', 'v3.0', ('v2.3', '2.3'), ('1.8.0',)),
@@ -116,8 +118,8 @@ for cat in CATEGORIES_AVAILABLE:
     assert cat not in VERSIONS_AVAILABLE, 'Category "%s" is the same as a version' % (cat,)
 
 INVALID_COMPONENTS = (  # tuple of (component name pattern, (applicable versions pattern), error message) 
-    ('^all-dls-config$', ('^(master|v9\.[5432])$'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
-    ('^all-mx-config$', ('^(master|v9\.[5432])$'), 'all-mx-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    ('^all-dls-config$', ('^(master|v9\.[65432])$'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    ('^all-mx-config$', ('^(master|v9\.[65432])$'), 'all-mx-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
     ('^all-dls-configs$', ('^(v?8\..+|v9\.[01])$'), 'all-dls-configs only applies to GDA 9.2+'),
     ('^all-dls-clients$', ('^(v?8\..+|v9\.[01])$'), 'all-dls-clients only applies to GDA 9.2+'),
     ('^all-dls$', ('^(v?8\..+|v9\.[01])$'), 'all-dls only applies to GDA 9.2+'),
