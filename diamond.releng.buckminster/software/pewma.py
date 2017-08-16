@@ -153,7 +153,7 @@ PLATFORMS_AVAILABLE =  (
     ('macosx,cocoa,x86_64', ('macosx,cocoa,x86_64', 'macosx64', 'mac64',)),
     )
 
-TEMPLATE_URI_PARENT = 'http://www.opengda.org/buckminster/templates/'
+DLS_BUCKMINSTER_URI = 'http://www.opengda.org/buckminster/'  # default, can be overidden by --dls-buckminster-uri option
 
 JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent network problem causing a checkout failure (the affected repository is only sometimes identified)
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+\.git):', 1),  # 1 = first match group is the repository
@@ -348,6 +348,9 @@ class PewmaManager(object):
         self.valid_actions = dict((action, handler) for (action, handler, help) in self.valid_actions_with_help)
 
 
+    def _get_full_uri(self, part):
+        return self.options.dls_buckminster_uri.strip('/') + '/' + part
+
     def _determine_workspace_location_when_not_specified(self):
         # If the caller does not specify the workspace location, work one out, using the following tests in order:
         # (1) if there is no current directory, do not set a default
@@ -433,8 +436,8 @@ class PewmaManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Materialize options")
-        group.add_option('--cquery-uri-parent', dest='cquery_uri_parent', metavar='URI',
-                         default='http://www.opengda.org/buckminster/base/',
+        group.add_option('--dls-buckminster-uri', dest='dls_buckminster_uri', metavar='URI',
+                         default=DLS_BUCKMINSTER_URI,
                          help=optparse.SUPPRESS_HELP)
         if self.isLinux:
             group.add_option('--directories.groupname', dest='directories_groupname', type='string', metavar='<groupname>',
@@ -568,7 +571,7 @@ class PewmaManager(object):
 
         if expand_template_required:
             template_zip = os.path.join( self.workspace_loc, self.template_name )
-            self.download_workspace_template(TEMPLATE_URI_PARENT + self.template_name, template_zip)
+            self.download_workspace_template(self._get_full_uri('templates/' + self.template_name), template_zip)
             self.unzip_workspace_template(template_zip, None, self.workspace_loc)
             self.logger.info('%sDeleting "%s"' % (self.log_prefix, template_zip,))
             if not self.options.dry_run:
@@ -583,7 +586,7 @@ class PewmaManager(object):
             return
         org_eclipse_buckminster_ui_prefs_loc = os.path.join(self.workspace_loc, '.metadata', '.plugins',
           'org.eclipse.core.runtime', '.settings', 'org.eclipse.buckminster.ui.prefs')
-        cquery_to_add = self.options.cquery_uri_parent.replace(':', '\:') + cquery_to_use  # note the escaped : as per Eclipse's file format
+        cquery_to_add = self._get_full_uri('base/' + cquery_to_use).replace(':', '\:')  # note the escaped : as per Eclipse's file format
         if not os.path.exists(org_eclipse_buckminster_ui_prefs_loc):
             # create a new org.eclipse.buckminster.ui.prefs file with the CQuery history
             with open(org_eclipse_buckminster_ui_prefs_loc, 'w') as oebup_file:
@@ -1065,7 +1068,7 @@ class PewmaManager(object):
         """
 
         (_, _, _, cquery_to_use, _) = self._interpret_components_category_version_cquery()
-        source = self.options.cquery_uri_parent + cquery_to_use
+        source = self._get_full_uri('base/' + cquery_to_use)
         if self.options.dry_run:
             self.logger.info('%sDownloading "%s"' % (self.log_prefix, source))
             return
@@ -1184,7 +1187,7 @@ class PewmaManager(object):
                 import_commands += '-Ddownload.location.common=%s ' % (self.options.download_location,)
             for keyval in self.options.system_property:
                 import_commands += '-D%s ' % (keyval,)
-            import_commands += self.options.cquery_uri_parent + cquery_to_use + '\n'
+            import_commands += self._get_full_uri('base/' + cquery_to_use) + '\n'
         self.logger.info('%sWriting buckminster commands to "%s"' % (self.log_prefix, self.script_file_path,))
         if not self.options.dry_run:
             with open(self.script_file_path, 'w') as script_file:
