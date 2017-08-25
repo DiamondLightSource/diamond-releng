@@ -4,7 +4,7 @@
 Runs on the Jenkins slave (always a Linux machine), and dispatches Squish tests on either itself, or another machine (typically a VM, possibly a different platform)
 
 Expects the following environment variables:
-    squish_linux32_zip / squish_linux64_zip / squish_win32_zip / squish_win64_zip - location of the Squish software
+    squish_package_linux64_run / squish_package_win64 - location of the Squish software
     (when running under Jenkins, these are defined in jenkins.control/properties/Common-environment-variables.properties
 
 The Jenkins slave starts off like this:
@@ -14,11 +14,11 @@ The Jenkins slave starts off like this:
         squish_tests.zip               (the actual tests)
     ${WORKSPACE}/squish_framework/     (set up by this script)
         squish_control.zip
-        squish-${squish_version}-java-${squish_platform}.zip
+        squish-${squish_version}-java-${squish_platform}.{run|exe}
     ${scratch}/squish_results/
         initially empty
 
-The Squish host is initialized with these directories, if it is a different machine to the Jenkins slave (e.g., a VM):
+The Squish host is initialized with these directories, if it is a different machine to the Jenkins slave:
     ${scratch}/artifacts_to_test/
         rysnc'd from the Jenkins slave
     ${scratch}/squish_framework/ 
@@ -31,7 +31,7 @@ The Squish host is initialized with these directories:
         unzipped <other application stuff>.zip
     ${scratch}/squish_tmp/
         /squish/
-            unzipped squish_framework/squish-${squish_version}-java-${squish_platform}.zip
+            installed squish_framework/squish-${squish_version}-java-${squish_platform}.run
         /squish_control/
             unzipped squish_control.zip
         /squish_tests/
@@ -107,7 +107,7 @@ class SquishTestManager():
     def __init__(self, squish_hostname=None, squish_platform=None, squish_VMname=None, use_JRE=True, jenkins_workspace=None):
         ''' if this Squish host is *not* the same machine as the Jenkins slave which launches it:
                 squish_hostname:   network name or address of Squish host
-                squish_platform:   platform of Squish host (linux32/linux64/win32/win64)
+                squish_platform:   platform of Squish host (linux64/win64)
                 squish_VMname:     Virtual Machine name (can be None)
             in all cases:
                 use_JRE:           use the JRE bundled with the RCP application
@@ -122,7 +122,7 @@ class SquishTestManager():
             self.squishHostIsJenkins = False
         else:  # None means the current machine
             self.squish_hostname = socket.getfqdn()
-            self.squish_platform = {'linux':'linux', 'windows':'win'}[platform.system().lower()] + ('32','64')[platform.machine().endswith('64')]
+            self.squish_platform = {'linux':'linux', 'windows':'win'}[platform.system().lower()] + '64'
             self.squishHostIsJenkins = True
 
         if self.squish_platform.startswith('linux'):
@@ -169,7 +169,7 @@ class SquishTestManager():
         ''' Generate the shell commands to:
                 On the Jenkins slave, set up ${WORKSPACE}/squish_framework/
                 rsync from the Jenkins slave to the Squish host (if they are different machines)
-                On the Squish host, unzip the zip files
+                On the Squish host, install Squish and unzip any zip files
         '''
 
         # verify that the squish tests, and the application to test, are present in the workspace
@@ -197,22 +197,17 @@ class SquishTestManager():
             os.makedirs(jenkins_squish_framework_abspath)
 
         ### Squish
-        # copy the squish zip to the Jenkins slave workspace
-        squish_zip_origin = os.environ['squish_' + self.squish_platform + '_zip']
-        if not os.path.isfile(squish_zip_origin):
-            raise SquishTestSetupError('ERROR: file does not exist: ' + squish_zip_origin)
-        self.squish_zip_name = os.path.basename(squish_zip_origin)
-        run_cmd('rsync -e "ssh {}" -itv {} {}/'.format(self.ssh_options, squish_zip_origin, jenkins_squish_framework_abspath))
+        # copy the squish software to the Jenkins slave workspace
+        squish_package_origin = os.environ['squish_package_' + self.squish_platform]
+        if not os.path.isfile(squish_package_origin):
+            raise SquishTestSetupError('ERROR: file does not exist: ' + squish_package_origin)
+        self.squish_package_name = os.path.basename(squish_package_origin)
+        run_cmd('rsync -e "ssh {}" -itv {} {}/'.format(self.ssh_options, squish_package_origin, jenkins_squish_framework_abspath))
 
-        # get the name of the directory that squish expands into
-        with zipfile.ZipFile(os.path.join(jenkins_squish_framework_abspath, self.squish_zip_name), 'r') as squishzip:
-            namelist = squishzip.namelist()
-            direct_descendents_dirs = [filename for filename in namelist if (filename.count('/') == 1) and filename.endswith('/')]
-            direct_descendents_files = [filename for filename in namelist if (filename.count('/') == 0)]
-        if (len(direct_descendents_dirs) != 1) or (len(direct_descendents_files) != 0):
-            raise SquishTestSetupError('ERROR: {} does not contain exactly one directory; instead has directories: {}, files: {}'.format
-                                       (self.squish_zip_name, direct_descendents_dirs, direct_descendents_files))
-        self.squish_abspath = self.squish_path.join(self.squish_tmp_abspath, 'squish', direct_descendents_dirs[0].rstrip(self.squish_path.sep))
+        # get the name of the directory to install Squish into
+        squish_install_dirname, ext = os.path.splitext(self.squish_package_name)
+        assert ext == '.run'
+        self.squish_abspath = self.squish_path.join(self.squish_tmp_abspath, 'squish', squish_install_dirname)
 
         ### squish_control
         # zip the squish_control directory
@@ -346,7 +341,7 @@ done
     def squish_host_unzip_script(self):
         '''
         returns a script to run on the Squish host, which
-            unzips the application to test, the squish framework, and the squish tests
+            unzips the application to test, and the squish tests
         '''
 
         if self.squish_isLinux:
@@ -355,7 +350,6 @@ unzip -q -d {aut} {artifacts_to_test}/{aut_zip_name}
 for zip in {aut_other_zip_names}; do
     unzip -q -d {aut_other} {artifacts_to_test}/${{zip}}
 done
-unzip -q -d {squish_tmp}/squish/ {squish_framework}/{squish_zip_name}
 unzip -q -d {squish_tmp}/squish_control/ {squish_framework}/squish_control.zip
 unzip -q -d {squish_tmp}/squish_tests/ {artifacts_to_test}/squish_tests.zip
 '''.format(aut=self.aut_abspath,
@@ -364,8 +358,7 @@ unzip -q -d {squish_tmp}/squish_tests/ {artifacts_to_test}/squish_tests.zip
            aut_zip_name=self.aut_zip_name,
            aut_other_zip_names=''.join(self.aut_other_zip_names),
            squish_tmp=self.squish_tmp_abspath,
-           squish_framework=self.squish_framework_abspath,
-           squish_zip_name=self.squish_zip_name)
+           squish_framework=self.squish_framework_abspath)
         elif self.squish_isWin:
             raise NotImplementedError
         else:
@@ -449,6 +442,7 @@ fi
         if self.squish_isLinux:
             return self.squish_host_setup_java() + '''
 # Initialize application and then make application directory read-only
+rm -f {guidir}/plugins/org.dawnsci.webintro_*.jar  # remove the Dawn welcome page, which uses JavaFX which does not play nicely with Squish (dawn crashes on start-up)
 {guidir}/{aut_name} -initialize
 chmod -R a-w {guidir}/
 
@@ -462,22 +456,21 @@ if [[ -f "${{SQUISH_LICENSE_FILE}}" ]]; then
   fi
 fi
 
-# This is essentially the command that is run by the UI setup in Squish to create the magic squishrt.jar
-java_version=`"${{java}}" -version 2>&1 | grep 'java version' | sed '-es,[^"]*"\\([^"]*\)",\\1,'`
-"${{java}}" -classpath "{squish}/lib/squishjava.jar:{squish}/lib/bcel.jar" com.froglogic.squish.awt.FixMethod \
-  "${{JRE_DIR}}/lib/rt.jar:{squish}/lib/squishjava.jar" "{squish}/lib/squishrt.jar"
+# Install Squish
+chmod +x {squish_framework_abspath}/{squish_package_name}
+rm -rf ~/.squish/
+{squish_framework_abspath}/{squish_package_name} unattended=1 support-applets=0 menushortcut=0 desktopshortcut=0 targetdir={squish} jrepath=${{JRE_DIR}}
 
-{squish}/bin/squishserver --config setJavaVM "$java" 
-{squish}/bin/squishserver --config setJavaVersion "$java_version"
 {squish}/bin/squishserver --config setJavaHookMethod "jvm"
-{squish}/bin/squishserver --config setLibJVM "`find ${{JRE_DIR}} -name libjvm.so | head -1`"
 {squish}/bin/squishserver --config addAUT {aut_name} {guidir}
 {squish}/bin/squishserver --config setAUTTimeout 120
 
 # Some tests (namely those using P2, such as the P2 update tests), need the configuration writeable,
 # therefore export AUT_DIR so that configuration and p2 directories can be copied out
 export AUT_DIR={guidir}
-'''.format(squish_tmp=self.squish_tmp_abspath,
+'''.format(squish_framework_abspath=self.squish_framework_abspath,
+           squish_package_name=self.squish_package_name,
+           squish_tmp=self.squish_tmp_abspath,
            squish=self.squish_abspath,
            aut_name=self.aut_name,
            guidir=self.guidir_abspath)
