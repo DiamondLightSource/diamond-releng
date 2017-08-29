@@ -153,7 +153,7 @@ PLATFORMS_AVAILABLE =  (
     ('macosx,cocoa,x86_64', ('macosx,cocoa,x86_64', 'macosx64', 'mac64',)),
     )
 
-DLS_BUCKMINSTER_URI = 'http://www.opengda.org/buckminster/'  # default, can be overidden by --dls-buckminster-uri option
+DLS_BUCKMINSTER_URI = 'https://alfred.diamond.ac.uk/buckminster/'  # default, can be overidden by --dls-buckminster-uri option (e.g. file:///path)
 
 JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent network problem causing a checkout failure (the affected repository is only sometimes identified)
     ('org\.eclipse\.jgit\.api\.errors\.TransportException: (\S+\.git):', 1),  # 1 = first match group is the repository
@@ -164,7 +164,7 @@ JGIT_ERROR_PATTERNS = ( # JGit error messages that identify an intermittent netw
     ('java\.net\.ConnectException: Connection (refused|timed out)', 'Network error'),  # text = no specific repository identified
     ('java\.net\.SocketTimeoutException: Read timed out', 'Network error'),  # text = no specific repository identified
     ('HttpComponents connection error response code (500|502|503)', 'Server error'),  # text = no specific repository identified
-    ('ERROR:? +No repository found at http://www\.opengda\.org/', 'Server error'),  # text = no specific repository identified
+    ('ERROR:? +No repository found at https://alfred\.diamond\.ac\.uk/', 'Server error'),  # text = no specific repository identified
     ('org\.eclipse\.equinox\.p2\.core\.ProvisionException: No repository found at', 'Network error'),  # text = no specific repository identified
     )
 

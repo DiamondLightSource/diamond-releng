@@ -1,3 +1,6 @@
-- /.project
-- /sync-to-opengda
-- /.rsync-filter
+# only transfer specific directories
++ /base/
++ /software/
++ /templates/
+- /templates/tp/
+- /*

@@ -1,6 +1,7 @@
-This directory is published at http://www.opengda.org/buckminster/
-rsync it with opengda.org:/var/www/html/buckminster/
+This directory is published at https://alfred.diamond.ac.uk/buckminster/
 
-Copying one file e.g. an rmap:
+To publish, rsync your local copy to /dls_sw/dasc/static_pages/buckminster/ as follows:
 
-scp ./base/core-v7.4.rmap opengda.org:/var/www/html/buckminster/base
+    ./publish --dry-run
+    # check result
+    ./publish
