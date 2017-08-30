@@ -117,7 +117,7 @@ class RequestedChangesProcessor():
         try:
             host_sshport = urllib2.urlopen(url).read()
         except (urllib2.HTTPError, urllib2.URLError) as err:
-            self.logger.critical('Invalid response from Gerrit server reading %s: %s' % (url, err))
+            raise Exception('Invalid response from Gerrit server reading %s: %s' % (url, err))
             return None
         return host_sshport.split()[1]
 
