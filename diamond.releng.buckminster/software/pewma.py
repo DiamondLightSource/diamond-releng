@@ -902,7 +902,7 @@ class PewmaManager(object):
         project_names_paths = {}
         for root, dirs, files in os.walk(self.workspace_git_loc):
             for d in dirs[:]:
-                if d.startswith('.') or d.endswith(('.feature', '.site', '-config')):
+                if d.startswith('.') or d.endswith(('.feature', '.site')):
                     dirs.remove(d)
             if 'releng.ant' in files:
                 dirs[:] = []  # projects are not normally nested inside other projects, so no need to look beneath this directory
@@ -928,9 +928,9 @@ class PewmaManager(object):
             If neither --include nor --exclude specified, return the empty string
         """
 
-        if self.options.project_includes or self.options.project_excludes:
-            self.set_all_imported_projects_with_releng_ant()
+        self.set_all_imported_projects_with_releng_ant()
 
+        if self.options.project_includes or self.options.project_excludes:
             if self.options.project_includes:
                 included_projects = self.get_items_matching_glob_patterns(list(self.all_imported_projects_with_releng_ant.keys()), self.options.project_includes)
             else:
@@ -945,10 +945,12 @@ class PewmaManager(object):
 
             if not selected_projects:
                 raise PewmaException("ERROR: no imported projects matching --include=%s --exclude=%s found" % (self.options.project_includes, self.options.project_excludes))
-            return "-Dplugin_list=\"%s\"" % '|'.join([self.all_imported_projects_with_releng_ant[pname] for pname in selected_projects])
 
-        return ""
+        else:
+            selected_projects = sorted(self.all_imported_projects_with_releng_ant.keys())
 
+        self.logger.info('%sSelected: %s projects' % (self.log_prefix, len(selected_projects)))
+        return "-Dplugin_list=\"%s\"" % '|'.join([self.all_imported_projects_with_releng_ant[pname] for pname in selected_projects])
 
     def set_buckminster_properties_path(self, site_name=None):
         """ Sets self.buckminster_properties_path, the absolute path to the buckminster properties file in the specified site
@@ -1962,7 +1964,7 @@ class PewmaManager(object):
         """ Processes using an ant target
         """
 
-        selected_projects = self.get_selected_imported_projects_with_releng_ant()  # might be an empty string to indicate all
+        selected_projects = self.get_selected_imported_projects_with_releng_ant()
         return self.run_ant_in_subprocess((selected_projects, target))
 
 
