@@ -2181,9 +2181,6 @@
   <!--
        Target Platform (published from thirdparty/) URLs
   -->
-  <rm:propertyElement key="target_platform.diamond.release">
-    <bc:constant value="trunk"/>
-  </rm:propertyElement>
   <rm:propertyElement key="target_platform.download.location">
     <bc:replace>
       <bc:constant value="${download.location.common}"/>
@@ -2200,14 +2197,8 @@
   <rm:propertyElement key="target_platform.download.url.selected">
     <bc:constant value="${target_platform.download.url.${target_platform.download.location}}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="target_platform.diamond.bundles.release">
-    <bc:constant value="dls_20160805"/>
-  </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.release">
     <bc:constant value="dls_20160805"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.diamond.bundles.p2.url">
-    <bc:constant value="${target_platform.download.url.selected}/tp_bundles/${target_platform.diamond.bundles.release}"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.diamond.noneclipse.p2.url">
     <bc:constant value="${target_platform.download.url.selected}/tp_noneclipse/${target_platform.diamond.noneclipse.release}"/>
@@ -2367,15 +2358,6 @@
        GDA components for specific beamlines
   -->
   <!--
-       Component uk.ac.diamond.org.springframework, which bundles various org.springframework components
-       These various components must never be materialized as individual bundles (see Jira GDA-4844)
-       Component uk.ac.diamond.org.springframework itself can be materialized either as a source project, or as bundles in the tp
-       - the diamond_springframework locator (above) will materialize into the workspace (listed first, so this is the default)
-       - the GDA_tp_bundles locator will materialize into tp/ (used if an advisor node requests non-mutable for the component)
-  -->
-  <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="GDA_tp_bundles"/>
-  <rm:locator pattern="^org\.springframework\.(aop|asm|beans|context|context.support|core|expression|jdbc|osgi.core|osgi.io|transaction|web)" searchPathRef="fail_springframework_error"/>
-  <!--
        GDA various components
   -->
   <rm:locator pattern="^(builder|builders\..+|documentation\..+|licences|python)$" searchPathRef="extras"/>
@@ -2452,10 +2434,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.(org\.jscience|org\.jscience4|org\.mihalis\.opal|org\.nfunk\.jep|org\.powermock|rxtx)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(com\.artenum|com\.jidesoft|com\.mindprod\.ledatastream|gnu\.regexp|jama|proxyvole)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^xstream$" searchPathRef="diamond_orbit_p2"/>
-  <!--
-       Target Platform components (published from thirdparty/)
-  -->
-  <rm:locator pattern="^org\.apache\.activemq\.activemq-osgi$" searchPathRef="tp_noneclipse"/>
   <!-- -->
   <rm:locator pattern="^org\.hamcrest\.(core|library)(\..+)?$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>
   <rm:locator pattern="^javax\..+$" searchPathRef="eclipse_orbit_p2" failOnError="false"/>  <!-- if not found, will look in release and platform repos -->
@@ -2475,14 +2453,6 @@
   <!--######################################################################-->
   <!--# Search Paths                                                       #-->
   <!--######################################################################-->
-  <rm:searchPath name="fail_springframework_error">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="local">
-      <rm:uri format="{0}/*** ERROR - some component has a plugin dependency on org.springframework ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- ***** -->
   <rm:searchPath name="fail_old_component">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="local">
       <rm:uri format="{0}/*** ERROR - some component has a dependency on {1}, but this is has been superceded and should not be used ***">
@@ -4309,23 +4279,6 @@
       <rm:uri format="${repository.subversion.diamond.download.url}/{0}">
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       Target Platform (published from thirdparty/)
-  -->
-  <rm:searchPath name="GDA_tp_bundles">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${target_platform.diamond.bundles.p2.url}"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="tp_noneclipse">
-    <rm:provider componentTypes="osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
   <!--
