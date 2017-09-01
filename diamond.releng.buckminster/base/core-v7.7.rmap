@@ -1264,12 +1264,15 @@
   <rm:propertyElement key="gda.nexus.git.location.translated">
     <bc:replace>
       <bc:constant value="${gda.nexus.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
+      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
       <bc:match pattern="^public$" replacement="github"/>
     </bc:replace>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.nexus.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
+  <rm:propertyElement key="gda.nexus.dascgerrit.authentication">
+    <bc:constant value="${dascgerrit.authentication.common}"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="gda.nexus.dascgerrit.url">
+    <bc:constant value="${diamond.dascgerrit.${gda.nexus.dascgerrit.authentication}.url}/gda"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.nexus.github.organization">
     <bc:constant value="openGDA"/>
