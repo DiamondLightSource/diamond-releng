@@ -138,12 +138,6 @@
   <!--                              -->
   <!-- p2 properties                -->
   <!--                              -->
-  <rm:propertyElement key="diamond.p2.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
-    <bc:constant value="dawn.diamond.ac.uk"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.p2.url">
-    <bc:constant value="http://${diamond.p2.host.port}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="eclipse.orbit.p2.url">
     <bc:constant value="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository"/>
   </rm:propertyElement>
@@ -1987,10 +1981,10 @@
     </bc:replace>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/updates"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/updates"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.download.url.opengda">
-    <bc:constant value="http://www.opengda.org/updates"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/updates"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.download.url.selected">
     <bc:constant value="${target_platform.download.url.${target_platform.download.location}}"/>
@@ -2030,10 +2024,10 @@
     </bc:replace>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.bioclipse.p2.url.diamond">
-    <bc:constant value="${diamond.p2.url}"/>
+    <bc:constant value="https://alfred.diamond.ac.uk"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.bioclipse.p2.url.opengda">
-    <bc:constant value="http://www.opengda.org"/>
+    <bc:constant value="https://alfred.diamond.ac.uk"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.bioclipse.p2.url.selected">
     <bc:constant value="${target_platform.bioclipse.p2.url.${target_platform.bioclipse.p2.location}}"/>
@@ -2054,16 +2048,16 @@
     <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
   <rm:propertyElement key="pydev.pydev.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/mirrors/pydev"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/mirrors/pydev"/>
   </rm:propertyElement>
   <rm:propertyElement key="pydev.pydev.download.url.public">
-    <bc:constant value="http://www.opengda.org/mirrors/pydev"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/mirrors/pydev"/>
   </rm:propertyElement>
   <rm:propertyElement key="pydev.dls.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/updates/pydev"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/updates/pydev"/>
   </rm:propertyElement>
   <rm:propertyElement key="pydev.dls.download.url.public">
-    <bc:constant value="http://www.opengda.org/updates/pydev"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/updates/pydev"/>
   </rm:propertyElement>
   <rm:propertyElement key="pydev.download.url">
     <bc:constant value="${pydev.${pydev.provider}.download.url.${pydev.download.location}}"/>
@@ -2087,10 +2081,10 @@
     <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/mirrors/eclipse"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/mirrors/eclipse"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.download.url.public">
-    <bc:constant value="http://www.opengda.org/mirrors/eclipse"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/mirrors/eclipse"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.download.url.eclipse">
     <bc:constant value="http://download.eclipse.org"/>
@@ -2122,15 +2116,6 @@
       <bc:match pattern="^ *diamond *$" replacement="diamond"/>
       <bc:match pattern="^(?! *diamond *$).*$" replacement="dawb.p2"/>
     </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawb.p2.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/mirrors/dawb/org.dawb.workbench.p2"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawb.p2.download.url.dawb.p2">
-    <bc:constant value="http://www.opengda.org/mirrors/dawb/org.dawb.workbench.p2"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawb.p2.download.url">
-    <bc:constant value="${dawb.p2.download.url.${dawb.p2.download.location}}"/>
   </rm:propertyElement>
   <!--                                                                      -->
   <!--######################################################################-->
@@ -4210,7 +4195,7 @@
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${dawb.p2.download.url}"/>
+      <rm:uri format="https://alfred.diamond.ac.uk/org.dawb.workbench.p2/"/>
     </rm:provider>
   </rm:searchPath>
 </rm:rmap>

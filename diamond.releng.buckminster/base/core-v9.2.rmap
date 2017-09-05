@@ -175,12 +175,6 @@
   <!--                              -->
   <!-- p2 properties                -->
   <!--                              -->
-  <rm:propertyElement key="diamond.p2.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
-    <bc:constant value="dawn.diamond.ac.uk"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.p2.url">
-    <bc:constant value="http://${diamond.p2.host.port}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="alfred.host.port">  <!-- visible both inside and outside Diamond, so normally no need to override  -->
     <bc:constant value="alfred.diamond.ac.uk"/>
   </rm:propertyElement>
@@ -2118,10 +2112,10 @@
     </bc:replace>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/updates"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/updates"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.download.url.opengda">
-    <bc:constant value="http://www.opengda.org/updates"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/updates"/>
   </rm:propertyElement>
   <rm:propertyElement key="target_platform.download.url.selected">
     <bc:constant value="${target_platform.download.url.${target_platform.download.location}}"/>
@@ -2159,10 +2153,10 @@
     <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.download.url.diamond">
-    <bc:constant value="${diamond.p2.url}/mirrors/eclipse"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/mirrors/eclipse"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.download.url.public">
-    <bc:constant value="http://www.opengda.org/mirrors/eclipse"/>
+    <bc:constant value="https://alfred.diamond.ac.uk/opengda/mirrors/eclipse"/>
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.download.url.eclipse">
     <bc:constant value="http://download.eclipse.org"/>
