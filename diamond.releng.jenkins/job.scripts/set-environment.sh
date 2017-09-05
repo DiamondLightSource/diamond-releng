@@ -162,16 +162,16 @@ set_environment_step () {
         set -x  # Turn on xtrace
         if tty -s; then
             # standard (verbose) output at the terminal
-            wget --timeout=180 --tries=2 --no-cache -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+            wget --timeout=180 --tries=2 --no-cache -P ${WORKSPACE} https://alfred.diamond.ac.uk/buckminster/software/pewma.py
         else
             # non-verbose output in a batch job
             set +e  # Turn off errexit
-            wget --timeout=180 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+            wget --timeout=180 --tries=2 --no-cache -nv -P ${WORKSPACE} https://alfred.diamond.ac.uk/buckminster/software/pewma.py
             RETVAL=$?
             $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
             if [ "${RETVAL}" != "0" ]; then
                 # running under Jenkins at DLS, so write text to log so that job build description is set 
-                echo 'append-build-description: Failure on wget from opengda.org (probable network issue)'
+                echo 'append-build-description: Failure on wget from alfred.diamond.ac.uk (probable network issue)'
                 return ${RETVAL}
             fi
         fi
@@ -192,15 +192,15 @@ set_environment_step () {
         set -x  # Turn on xtrace
         if tty -s; then
             # standard (verbose) output at the terminal
-            wget --timeout=180 --tries=2 --no-cache -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+            wget --timeout=180 --tries=2 --no-cache -P ${WORKSPACE} https://alfred.diamond.ac.uk/buckminster/software/buckminster_headless_install.sh
         else
             # non-verbose output in a batch job
             set +e  # Turn off errexit
-            wget --timeout=180 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+            wget --timeout=180 --tries=2 --no-cache -nv -P ${WORKSPACE} https://alfred.diamond.ac.uk/buckminster/software/buckminster_headless_install.sh
             RETVAL=$?
             $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
             if [ "${RETVAL}" != "0" ]; then
-                echo 'append-build-description: Failure on wget from opengda.org (probable network issue)'
+                echo 'append-build-description: Failure on wget from alfred.diamond.ac.uk (probable network issue)'
                 return ${RETVAL}
             fi
         fi
