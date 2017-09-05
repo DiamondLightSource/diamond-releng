@@ -50,7 +50,7 @@ set_environment_step () {
             return 100
         fi
     done
-    if [ -f "${WORKSPACE}/job-specific-environment-variables.properties" ]; then
+    if [ -s "${WORKSPACE}/job-specific-environment-variables.properties" ]; then
          # if required, job-specific-environment-variables.properties should be written in a previous build step
          echo "running \". ${WORKSPACE}/job-specific-environment-variables.properties\""
          . ${WORKSPACE}/job-specific-environment-variables.properties
@@ -68,48 +68,64 @@ set_environment_step () {
 
         if [[ "${module_load_java_version}" == "none" || -z "${module_load_java_version-arbitrary}" || -z "${module_load_java_version+arbitrary}" ]]; then
             echo 'skipping "module load java"'
-        elif [[ "${module_load_java_version}" == "default" ]]; then
-            echo "issuing \"module load java\""
-            module load java
-        elif [[ "${module_load_java_version+arbitrary}" ]]; then
-            echo "issuing \"module load java/${module_load_java_version}\""
-            module load java/${module_load_java_version}
         else
-            echo 'Error in logic determining "module load java"'
-            return 100
+            echo "issuing \"module unload java\""
+            module unload java
+            if [[ "${module_load_java_version}" == "default" ]]; then
+                echo "issuing \"module load java\""
+                module load java
+            elif [[ "${module_load_java_version+arbitrary}" ]]; then
+                echo "issuing \"module load java/${module_load_java_version}\""
+                module load java/${module_load_java_version}
+            else
+                echo 'Error in logic determining "module load java"'
+                return 100
+            fi
         fi
 
         if [[ "${buckminster_headless_use_public_version:-false}" != "true" ]]; then
             if [[ "${module_load_buckminster_version}" == "none" || -z "${module_load_buckminster_version-arbitrary}" || -z "${module_load_buckminster_version+arbitrary}" ]]; then
                 echo 'skipping "module load buckminster"'
-            elif [[ "${module_load_buckminster_version}" == "default" ]]; then
-                echo "issuing \"module load buckminster\""
-                module load buckminster
-            elif [[ "${module_load_buckminster_version+arbitrary}" ]]; then
-                echo "issuing \"module load buckminster/${module_load_buckminster_version}\""
-                module load buckminster/${module_load_buckminster_version}
             else
-                echo 'Error in logic determining "module load buckminster"'
-                return 100
+                echo "issuing \"module unload buckminster\""
+                module unload buckminster
+                if [[ "${module_load_buckminster_version}" == "default" ]]; then
+                    echo "issuing \"module load buckminster\""
+                    module load buckminster
+                elif [[ "${module_load_buckminster_version+arbitrary}" ]]; then
+                    echo "issuing \"module load buckminster/${module_load_buckminster_version}\""
+                    module load buckminster/${module_load_buckminster_version}
+                else
+                    echo 'Error in logic determining "module load buckminster"'
+                    return 100
+                fi
             fi
         fi
 
         if [[ "${module_load_python_version}" == "none" || -z "${module_load_python_version-arbitrary}" || -z "${module_load_python_version+arbitrary}" ]]; then
             echo 'skipping "module load python"'
-        elif [[ "${module_load_python_version}" == "default" ]]; then
-            echo "issuing \"module load python\""
-            module load python
-        elif [[ "${module_load_python_version+arbitrary}" ]]; then
-            echo "issuing \"module load python/${module_load_python_version}\""
-            module load python/${module_load_python_version}
         else
-            echo 'Error in logic determining "module load python"'
-            return 100
+            echo "issuing \"module unload python\""
+            module unload python
+            if [[ "${module_load_python_version}" == "default" ]]; then
+                echo "issuing \"module load python\""
+                module load python
+            elif [[ "${module_load_python_version+arbitrary}" ]]; then
+                echo "issuing \"module unload python\""
+                module unload python
+                echo "issuing \"module load python/${module_load_python_version}\""
+                module load python/${module_load_python_version}
+            else
+                echo 'Error in logic determining "module load python"'
+                return 100
+            fi
         fi
 
         if [[ "${module_load_dawn_version}" == "none" || -z "${module_load_dawn_version-arbitrary}" || -z "${module_load_dawn_version+arbitrary}" ]]; then
             echo 'skipping "module load dawn"'
         else
+            echo "issuing \"module unload dawn\""
+            module unload dawn
             if [[ "${module_load_dawn_version}" == "default" ]]; then
                 echo "issuing \"module load dawn\""
                 module load dawn
@@ -146,17 +162,16 @@ set_environment_step () {
         set -x  # Turn on xtrace
         if tty -s; then
             # standard (verbose) output at the terminal
-            wget --timeout=60 --tries=2 --no-cache -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+            wget --timeout=180 --tries=2 --no-cache -P ${WORKSPACE} https://alfred.diamond.ac.uk/buckminster/software/pewma.py
         else
             # non-verbose output in a batch job
-            echo "Using environment proxy setting: $""http_proxy=${http_proxy} $""https_proxy=${https_proxy} $""no_proxy=${no_proxy}"
             set +e  # Turn off errexit
-            wget --timeout=60 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/pewma.py
+            wget --timeout=180 --tries=2 --no-cache -nv -P ${WORKSPACE} https://alfred.diamond.ac.uk/buckminster/software/pewma.py
             RETVAL=$?
             $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
             if [ "${RETVAL}" != "0" ]; then
                 # running under Jenkins at DLS, so write text to log so that job build description is set 
-                echo 'set-build-description: Failure on wget (probable network issue)'
+                echo 'append-build-description: Failure on wget from alfred.diamond.ac.uk (probable network issue)'
                 return ${RETVAL}
             fi
         fi
@@ -177,16 +192,15 @@ set_environment_step () {
         set -x  # Turn on xtrace
         if tty -s; then
             # standard (verbose) output at the terminal
-            wget --timeout=60 --tries=2 --no-cache -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+            wget --timeout=180 --tries=2 --no-cache -P ${WORKSPACE} https://alfred.diamond.ac.uk/buckminster/software/buckminster_headless_install.sh
         else
             # non-verbose output in a batch job
-            echo "Using environment proxy setting: $""http_proxy=${http_proxy} $""https_proxy=${https_proxy} $""no_proxy=${no_proxy}"
             set +e  # Turn off errexit
-            wget --timeout=60 --tries=2 --no-cache -nv -P ${WORKSPACE} http://www.opengda.org/buckminster/software/buckminster_headless_install.sh
+            wget --timeout=180 --tries=2 --no-cache -nv -P ${WORKSPACE} https://alfred.diamond.ac.uk/buckminster/software/buckminster_headless_install.sh
             RETVAL=$?
             $([ "$olderrexit" == "0" ]) && set -e || true  # Turn errexit on if it was on at the top of this script
             if [ "${RETVAL}" != "0" ]; then
-                echo 'set-build-description: Failure on wget (probable network issue)'
+                echo 'append-build-description: Failure on wget from alfred.diamond.ac.uk (probable network issue)'
                 return ${RETVAL}
             fi
         fi
@@ -250,7 +264,7 @@ set_environment_step () {
     if [[ "${buckminster_osgi_areas}" == "none" ]]; then
         export buckminster_osgi_areas=
     elif [[ "${buckminster_osgi_areas}" == "default" || -z "${buckminster_osgi_areas+arbitrary}" ]]; then
-        export buckminster_osgi_areas="-Josgi.configuration.area=$(dirname ${materialize_workspace_path})/buckminster-runtime-areas/configuration/ -Josgi.user.area=$(dirname ${materialize_workspace_path})/buckminster-runtime-areas/user/"
+        export buckminster_osgi_areas="-J-Dosgi.configuration.area=$(dirname ${materialize_workspace_path})/buckminster-runtime-areas/configuration/ -J-Dosgi.user.area=$(dirname ${materialize_workspace_path})/buckminster-runtime-areas/user/"
     elif [[ "${buckminster_osgi_areas+arbitrary}" ]]; then
         export buckminster_osgi_areas
     else
@@ -263,7 +277,7 @@ set_environment_step () {
     if [[ "${buckminster_extra_vmargs}" == "none" ]]; then
         export buckminster_extra_vmargs=
     elif [[ "${buckminster_extra_vmargs}" == "default" || -z "${buckminster_extra_vmargs+arbitrary}" ]]; then
-        export buckminster_extra_vmargs="-Jequinox.statechange.timeout=30000"
+        export buckminster_extra_vmargs="-J-Dequinox.statechange.timeout=30000"
     elif [[ "${buckminster_extra_vmargs+arbitrary}" ]]; then
         export buckminster_extra_vmargs
     else
