@@ -2405,6 +2405,7 @@
   <rm:locator pattern="^com\.google\.guava(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^com\.springsource\.(javax\.media\.jai\.(codec|core)|net\.sf\.cglib|org\.apache\.(commons\.vfs|mina.core|sshd)|org\.castor)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.apache\.activemq\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.commons\.(beanutils|collections4|configuration|csv|digester|io|jexl|math|math3|net|validator)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.servicemix\.bundles\.spring-.+$" searchPathRef="diamond_orbit_p2"/>
@@ -2416,9 +2417,10 @@
   <rm:locator pattern="^org\.mihalis\.opal(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="diamond_orbit_p2"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.objenesis(\..+)?" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.osgi\.service\.blueprint(\..+)?" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^pl\.pragmatists\.JUnitParams(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^javassist(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^javax\.vecmath(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^javax\.(management\.j2ee-api|vecmath)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.(boofcv|ddogleg|ejml|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.de\.jaret(\..+)?$" searchPathRef="diamond_orbit_p2"/>
