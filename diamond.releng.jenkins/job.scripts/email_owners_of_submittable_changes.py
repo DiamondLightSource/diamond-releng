@@ -25,10 +25,9 @@ import urllib.parse
 import urllib.error
 
 GERRIT_HOST = 'gerrit.diamond.ac.uk'
-GERRIT_HTTP_PORT = ':8080'
 
 # define module-wide logging
-logger = logging.getLogger('email_owners_of_submittable_changes.py')  # global logger for this module
+logger = logging.getLogger(__name__)
 def setup_logging():
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
     # create console handler
@@ -45,20 +44,15 @@ class SubmittableChangesProcessor():
         setup_logging()
         self.logger = logger
 
-        self.gerrit_url_base = 'http://' + GERRIT_HOST + GERRIT_HTTP_PORT + '/'  # when using the REST API, this is the base URL to use
+        self.gerrit_url_base = 'https://' + GERRIT_HOST + '/'  # when using the REST API, this is the base URL to use
         self.gerrit_url_browser = self.gerrit_url_base  # when generating links, this is the base URL to use
-        self.use_digest_authentication = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
 
-        if self.use_digest_authentication:
-            self.logger.debug('Digest Authentication will be used to access the Gerrit REST API')
-            # If the Gerrit REST API has been secured, then we need to use digest authentication.
-            self.gerrit_url_base += 'a/'
-            handler = urllib.request.HTTPDigestAuthHandler()
-            handler.add_password('Gerrit Code Review', self.gerrit_url_base, *self.get_gerrit_http_username_password())
-            opener = urllib.request.build_opener(handler)
-            urllib.request.install_opener(opener)
-        else:
-            self.logger.debug('No authentication will be used to access the Gerrit REST API')
+        # since the Gerrit REST API has been secured, then we need to use basic authentication
+        self.gerrit_url_base += 'a/'
+        handler = urllib2.HTTPBasicAuthHandler()
+        handler.add_password('Gerrit Code Review', self.gerrit_url_base, *self.get_gerrit_http_username_password())
+        opener = urllib2.build_opener(handler)
+        urllib2.install_opener(opener)
 
     @staticmethod
     def get_gerrit_http_username_password():
@@ -169,7 +163,7 @@ PLEASE CONSIDER EITHER:
         if email_expires_days:
             message['Expiry-Date'] = (datetime.datetime.utcnow() + datetime.timedelta(days=email_expires_days)).strftime("%a, %d %b %Y %H:%M:%S +0000")
 
-        logging.info("Sending email ...")
+        self.logger.info("Sending email ...")
         with smtplib.SMTP('localhost') as smtp:
             smtp.send_message(message)
 
