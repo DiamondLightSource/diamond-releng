@@ -92,21 +92,16 @@ class RequestedChangesProcessor():
         self.gerrit_url_base = 'https://' + GERRIT_HOST + '/'  # when using the REST API, this is the base URL to use
         self.gerrit_url_browser = self.gerrit_url_base  # when generating links, this is the base URL to use
         self.gerrit_ssh_command = 'ssh -p %s %s' % (self.get_gerrit_ssh_port(self.gerrit_url_base), GERRIT_HOST)
-        self.use_digest_authentication = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
         self.gerrit_verified_option = os.environ.get('gerrit_verified_option', 'don\'t post anything to Gerrit').strip().lower()
         self.gerrit_verify_ancestors = os.environ.get('gerrit_verify_ancestors', 'false').strip().lower() == 'true'
         self.errors_found = False
 
-        if self.use_digest_authentication:
-            self.logger.debug('Digest Authentication will be used to access the Gerrit REST API')
-            # If the Gerrit REST API has been secured, then we need to use digest authentication.
-            self.gerrit_url_base += 'a/'
-            handler = urllib2.HTTPDigestAuthHandler()
-            handler.add_password('Gerrit Code Review', self.gerrit_url_base, *self.get_gerrit_http_username_password())
-            opener = urllib2.build_opener(handler)
-            urllib2.install_opener(opener)
-        else:
-            self.logger.debug('No authentication will be used to access the Gerrit REST API')
+        # since the Gerrit REST API has been secured, then we need to use basic authentication
+        self.gerrit_url_base += 'a/'
+        handler = urllib2.HTTPBasicAuthHandler()
+        handler.add_password('Gerrit Code Review', self.gerrit_url_base, *self.get_gerrit_http_username_password())
+        opener = urllib2.build_opener(handler)
+        urllib2.install_opener(opener)
 
     @staticmethod
     def get_gerrit_ssh_port(gerrit_url):

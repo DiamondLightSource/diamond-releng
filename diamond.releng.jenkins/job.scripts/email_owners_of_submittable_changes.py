@@ -46,18 +46,13 @@ class SubmittableChangesProcessor():
 
         self.gerrit_url_base = 'https://' + GERRIT_HOST + '/'  # when using the REST API, this is the base URL to use
         self.gerrit_url_browser = self.gerrit_url_base  # when generating links, this is the base URL to use
-        self.use_digest_authentication = os.environ.get('GERRIT_USE_DIGEST_AUTHENTICATION', 'true').strip().lower() != 'false'
 
-        if self.use_digest_authentication:
-            self.logger.debug('Digest Authentication will be used to access the Gerrit REST API')
-            # If the Gerrit REST API has been secured, then we need to use digest authentication.
-            self.gerrit_url_base += 'a/'
-            handler = urllib.request.HTTPDigestAuthHandler()
-            handler.add_password('Gerrit Code Review', self.gerrit_url_base, *self.get_gerrit_http_username_password())
-            opener = urllib.request.build_opener(handler)
-            urllib.request.install_opener(opener)
-        else:
-            self.logger.debug('No authentication will be used to access the Gerrit REST API')
+        # since the Gerrit REST API has been secured, then we need to use basic authentication
+        self.gerrit_url_base += 'a/'
+        handler = urllib2.HTTPBasicAuthHandler()
+        handler.add_password('Gerrit Code Review', self.gerrit_url_base, *self.get_gerrit_http_username_password())
+        opener = urllib2.build_opener(handler)
+        urllib2.install_opener(opener)
 
     @staticmethod
     def get_gerrit_http_username_password():
