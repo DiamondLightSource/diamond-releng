@@ -77,9 +77,15 @@ archive_beamline () {
     filename_pattern='*.txt'
     compress_files
 
-    # Compress old logs (GDA 9 log locations)
+    # Compress old logs (GDA 9 log locations - pre Aug/2017 naming, using underscores)
     for type in client servers logpanel; do
         parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
+        filename_pattern='*.txt'
+        compress_files
+    done
+    # Compress old logs (GDA 9 log locations - post Aug/2017 naming, using hyphens)
+    for type in client servers logpanel; do
+        parent_dir="/dls_sw/${beamline}/logs/gda-${type}-output"
         filename_pattern='*.txt'
         compress_files
     done
@@ -94,10 +100,16 @@ archive_beamline () {
     archive_dir=/dls/science/groups/das/Archive/${beamline}/logs
     archive_files
 
-    # Move old logs to archive (GDA 9 log locations)
+    # Move old logs to archive (GDA 9 log locations - pre Aug/2017 naming, using underscores)
     for type in client servers logpanel; do
         parent_dir="/dls_sw/${beamline}/logs/gda_${type}_output"
         archive_dir="/dls/science/groups/das/Archive/${beamline}/logs/gda_${type}_output"
+        archive_files
+    done
+    # Move old logs to archive (GDA 9 log locations - post Aug/2017 naming, using hyphens)
+    for type in client servers logpanel; do
+        parent_dir="/dls_sw/${beamline}/logs/gda-${type}-output"
+        archive_dir="/dls/science/groups/das/Archive/${beamline}/logs/gda-${type}-output"
         archive_files
     done
 
