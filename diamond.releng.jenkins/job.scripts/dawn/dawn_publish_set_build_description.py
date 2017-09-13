@@ -17,10 +17,8 @@ try:
     build_description_line_2 = ''
     if os.environ['publish_module_load'] == 'true':
         build_description_line_2 += r', module load'
-    if os.environ['publish_webserver_diamond_zip'] == 'true':
-        build_description_line_2 += r', diamond .zip'
-    if os.environ['publish_webserver_opengda_zip'] == 'true':
-        build_description_line_2 += r', opengda .zip'
+    if os.environ['publish_webserver_zip'] == 'true':
+        build_description_line_2 += r', alfred .zip'
     if os.environ['publish_p2_site'] == 'true':
         build_description_line_2 += r', p2 site'
     if build_description_line_2:
