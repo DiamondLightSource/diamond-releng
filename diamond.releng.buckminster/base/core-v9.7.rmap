@@ -2403,7 +2403,7 @@
   <rm:locator pattern="^com\.googlecode\.efficient-java-matrix-library\..+" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^com\.google\.gson(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^com\.google\.guava(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^com\.springsource\.(javax\.media\.jai\.(codec|core)|net\.sf\.cglib|org\.apache\.(commons\.vfs|mina.core|sshd)|org\.castor)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^com\.springsource\.(javax\.media\.jai\.(codec|core)|net\.sf\.cglib|org\.apache\.(mina.core|sshd)|org\.castor)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^com\.sun\.mail\.javax\.mail(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.activemq\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.aries\..+$" searchPathRef="diamond_orbit_p2"/>
