@@ -46,7 +46,7 @@ for beamline in ('b07-1', 'b16', 'b18', 'b21', 'b24',
 COMPONENT_ABBREVIATIONS.append(('gdaserver', 'uk.ac.diamond.daq.server.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('all-dls', ('all-dls-configs', 'all-dls-clients', 'uk.ac.diamond.daq.server.site', 'gda-orphan-projects'), 'gda'))
 
-COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.gda.client.logpanel.site', 'gda'))
+COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.diamond.daq.logpanel', 'gda'))
 
 # A category+version is one way of specifying a specific CQuery (version can default to "master")
 # Caution: categories must never be the same as any component name or component abbreviation
@@ -196,6 +196,7 @@ GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit w
     ('gda-epics.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-epics.git'),
     ('gda-hrpd.git'               , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-hrpd.git'),
     ('gda-legacy.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-legacy.git'),
+    ('gda-logpanel.git'           , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-logpanel.git'),
     ('gda-mx.git'                 , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-mx.git'),
     ('gda-nexus.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-nexus.git'),
     ('gda-pes.git'                , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-pes.git'),
