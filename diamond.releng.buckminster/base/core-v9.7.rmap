@@ -96,6 +96,9 @@
   <rm:propertyElement key="nebula.incubation.p2.version">  <!-- version of Eclipse Nebula Incubation p2 repository to use, only used when nebula.new=true -->
     <bc:constant value="snapshot-20170912_1003"/>
   </rm:propertyElement>
+  <rm:propertyElement key="nebula.p2.version.prerelease">  <!-- always used -->
+    <bc:constant value="snapshot-20170918_1112"/>
+  </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
     <bc:constant value="5.2.0"/>
@@ -103,17 +106,6 @@
   <!-- ***** -->
   <rm:propertyElement key="py4j.p2.version">  <!-- version of Py4j p2 repository to use -->
     <bc:constant value="0.10.4"/>
-  </rm:propertyElement>
-  <!-- ***** -->
-  <!-- version of Eclipse Nebula xygraph p2 repository to use -->
-    <!-- not used until we have a release version
-    <rm:propertyElement key="eclipse.xygraph.p2.version">
-        <bc:constant value="1.4.0"/>
-    </rm:propertyElement>
-    -->
-  <rm:propertyElement key="eclipse.xygraph.p2.url">
-    <!-- <bc:constant value="${alfred.url}/sites/download.eclipse.org/nebula/snapshot/"/>  -->
-    <bc:constant value="http://download.eclipse.org/nebula/snapshot/"/>
   </rm:propertyElement>
   <!-- ***** -->
   <!--                                                             -->
@@ -1721,16 +1713,6 @@
   <rm:propertyElement key="org.eclipse.launchbar.git.url">
     <bc:constant value="${github.${org.eclipse.launchbar.github.authentication}.url}${org.eclipse.launchbar.github.organization}/org.eclipse.launchbar.git"/>
   </rm:propertyElement>
-  <!-- *** org.eclipse.nebula *** -->
-  <rm:propertyElement key="org.eclipse.nebula.github.organization">
-    <bc:constant value="DiamondLightSource"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="org.eclipse.nebula.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="org.eclipse.nebula.git.url">
-    <bc:constant value="${github.${org.eclipse.nebula.github.authentication}.url}${org.eclipse.nebula.github.organization}/org.eclipse.nebula.git"/>
-  </rm:propertyElement>
   <!-- *** py4j - net.sf.py4j*(legacy) and org.py4j* (new) *** -->
   <rm:propertyElement key="source.repository.py4j">  <!-- says whether to get net.sf.py4j*/org.py4j* from a source repository, or a p2 site -->
     <bc:constant value="false"/>
@@ -2174,57 +2156,9 @@
   </rm:propertyElement>
   <!--                                                                      -->
   <!--######################################################################-->
-  <!--# Target Platform URLs (properties may be overridden)                #-->
-  <!--######################################################################-->
-  <!--
-       Target Platform (published from thirdparty/) URLs
-  -->
-  <rm:propertyElement key="target_platform.download.location">
-    <bc:replace>
-      <bc:constant value="${download.location.common}"/>
-      <bc:match pattern="^ *diamond *$" replacement="diamond"/>
-      <bc:match pattern="^(?! *diamond *$).*$" replacement="opengda"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.download.url.diamond">
-    <bc:constant value="https://alfred.diamond.ac.uk/opengda/updates"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.download.url.opengda">
-    <bc:constant value="https://alfred.diamond.ac.uk/opengda/updates"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.download.url.selected">
-    <bc:constant value="${target_platform.download.url.${target_platform.download.location}}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.diamond.noneclipse.release">
-    <bc:constant value="dls_20160805"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="target_platform.diamond.noneclipse.p2.url">
-    <bc:constant value="${target_platform.download.url.selected}/tp_noneclipse/${target_platform.diamond.noneclipse.release}"/>
-  </rm:propertyElement>
-  <!--
-       Target Platform (Eclipse) URLs
-  -->
-  <!-- eclipse.download.location can be "diamond" (DLS internal servers) [default], "public" (opengda.org), or "eclipse (eclipse.org)" -->
-  <!-- Use of "eclipse" is NOT recommended, since we don't know if/when that gets changed - use our internal or opengda mirror instead -->
-  <rm:propertyElement key="eclipse.download.location">
-    <bc:constant value="${download.location.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.download.url.diamond">
-    <bc:constant value="https://alfred.diamond.ac.uk/opengda/mirrors/eclipse"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.download.url.public">
-    <bc:constant value="https://alfred.diamond.ac.uk/opengda/mirrors/eclipse"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.download.url.eclipse">
-    <bc:constant value="http://download.eclipse.org"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="nebula.download.url">
-    <bc:constant value="${eclipse.download.url.${eclipse.download.location}}"/>  <!-- This entire section not used when nebula.new=true -->
-  </rm:propertyElement>
-  <!--                                                                      -->
-  <!--######################################################################-->
   <!--# Locators                                                           #-->
   <!--######################################################################-->
+  <!--                                                                      -->
   <rm:locator pattern="^tp$" searchPathRef="tp"/>
   <!--
        Components that should not be used
@@ -2321,8 +2255,6 @@
   <rm:locator pattern="^org\.eclipse\.january(\..+)?$" searchPathRef="january"/>  <!-- depending on source.repository.january, will materialize either source projects, or jars into tp/ -->
   <!-- *** org.eclipse.launchbar *** -->
   <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
-  <!-- *** org.eclipse.nebula *** -->
-  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="org_eclipse_nebula"/>
   <!-- *** Opt-ID *** -->
   <rm:locator pattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" searchPathRef="opt_id"/>
   <!-- *** py4j *** -->
@@ -2393,6 +2325,7 @@
   <!--
        Nebula, which can come for various places, mostly governed by property nebula.new (true or otherwise)
   -->
+  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="eclipse_nebula_prerelease"/>
   <!-- This set is for nebula.new=true -->
   <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula_incubation" failOnError="false"/>
@@ -3840,24 +3773,6 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       org.eclipse.nebula - repository
-  -->
-  <rm:searchPath name="org_eclipse_nebula">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(source.repository.xygraph=false))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${org.eclipse.nebula.git.url}"/>
-      <rm:uri format="{0}/org.eclipse.nebula.git,widgets/visualization/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(source.repository.xygraph=false)" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.xygraph.p2.url}"/>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
        PY4J- repository or p2 site; legacy or new
   -->
   <rm:searchPath name="py4j">  <!-- either source or jars can be materialized, as specified by a property -->
@@ -4336,6 +4251,13 @@
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/nattable/releases/${nattable.p2.version}/repository"/>
     </rm:provider>
   </rm:searchPath>
+  <rm:searchPath name="eclipse_nebula_prerelease">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/releases/${nebula.p2.version.prerelease}"/>
+    </rm:provider>
+  </rm:searchPath>
   <rm:searchPath name="eclipse_nebula">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(nebula.new=true)" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
@@ -4355,7 +4277,7 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(nebula.new=true))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${nebula.download.url}/technology/nebula/snapshot_20140205"/>
+      <rm:uri format="${alfred.url}/opengda/mirrors/eclipse/technology/nebula/snapshot_20140205"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nebula_incubation_snapshot_20140205">
@@ -4363,14 +4285,14 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(nebula.new=true))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${nebula.download.url}/technology/nebula/incubation/snapshot_20140205"/>
+      <rm:uri format="${alfred.url}/opengda/mirrors/eclipse/technology/nebula/incubation/snapshot_20140205"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nebula_old">
     <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(nebula.new=true))" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${target_platform.diamond.noneclipse.p2.url}"/>
+      <rm:uri format="${alfred.url}/opengda/updates/tp_noneclipse/dls_20160805"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_release">
