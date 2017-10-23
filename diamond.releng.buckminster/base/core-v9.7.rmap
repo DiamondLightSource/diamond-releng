@@ -49,15 +49,12 @@
     <bc:constant value="continuous"/>  <!-- For a release, should be a value like R201701200926 -->
   </rm:propertyElement>
   <!-- ***** -->
-  <!-- version of Eclipse Orbit p2 repository to use -->
-  <rm:propertyElement key="eclipse.orbit.p2.version.mars">  
+  <!-- versions of Eclipse Orbit p2 repository that are available -->
+  <rm:propertyElement key="eclipse.orbit.p2.version.mars2">
     <bc:constant value="R20151221205849"/>  <!-- Mars.2 -->
   </rm:propertyElement>
-  <rm:propertyElement key="eclipse.orbit.p2.version.neon">
-    <bc:constant value="R20160520211859"/>  <!-- Neon -->
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.orbit.p2.version">
-    <bc:constant value="${eclipse.orbit.p2.version.${eclipse.release}}"/>
+  <rm:propertyElement key="eclipse.orbit.p2.version.oxygen1a">
+    <bc:constant value="R20170919201930"/>  <!-- Oxygen 1.a -->
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="eclipse.eclipselink.p2.version">  <!-- version of Eclipse EclipseLink p2 repository to use -->
@@ -75,15 +72,9 @@
     <bc:constant value="${alfred.url}/sites/download.eclipse.org/january/releases/${eclipse.january.p2.version}/repository/"/>
   </rm:propertyElement>
   <!-- ***** -->
-  <!-- version of Eclipse Jetty 9 p2 repository to use -->
-  <rm:propertyElement key="eclipse.jetty9.p2.version.mars">
+  <!-- versions of Eclipse Jetty 9 p2 repositories that are available -->
+  <rm:propertyElement key="eclipse.jetty9.p2.version.mars2">
     <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars SR2 depends on -->
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.jetty9.p2.version.neon">
-    <bc:constant value="9.3.9.v20160517"/>  <!-- matches the version that Neon depends on -->
-  </rm:propertyElement>
-  <rm:propertyElement key="eclipse.jetty9.p2.version">
-    <bc:constant value="${eclipse.jetty9.p2.version.${eclipse.release}}"/>
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="nattable.p2.version">  <!-- version of Eclipse NatTable p2 repository to use -->
@@ -2307,6 +2298,7 @@
   <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^javax\.(transaction|xml(\..+)?)$" searchPathRef="eclipse_orbit_p2"/>
+  <rm:locator pattern="^javax\.measure\.unit-api(\..+)?$" searchPathRef="eclipse_orbit_p2_oxygen1a"/>
   <rm:locator pattern="^org\.aopalliance$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.derby$" searchPathRef="eclipse_orbit_p2"/>
@@ -2378,7 +2370,7 @@
   -->
   <rm:locator pattern="^(com|org)\.python\.pydev(\..+)?" searchPathRef="tp_pydev"/>
   <!--
-       Target Platform components: Eclipse)
+       Target Platform components: Eclipse
        Target Platform components: Eclipse Orbit (which contains third-party jars which have passed Eclipse IP checks, and been turned in OSGI bundles)
        Some Eclipse components are published both as part of the platform release, and separately. Put the platform release last so we can get a newer release.
   -->
@@ -4228,7 +4220,14 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version}/repository/"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version.mars2}/repository/"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_orbit_p2_oxygen1a">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version.oxygen1a}/repository/"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_eclipselink_p2">
@@ -4242,7 +4241,7 @@
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/jetty/updates/jetty-bundles-9.x/${eclipse.jetty9.p2.version}/"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/jetty/updates/jetty-bundles-9.x/${eclipse.jetty9.p2.version.mars2}/"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nattable">
