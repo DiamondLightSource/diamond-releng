@@ -153,6 +153,31 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		</sort></first>
 	</path>
 
+	<path id="tp.jscience.path">
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="uk.ac.diamond.org.jscience_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
+	</path>
+	<path id="tp.jscience4.path">
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="uk.ac.diamond.org.jscience4_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
+	</path>
+	<path id="tp.javax.measure.unit.path">
+		<first count="1"><sort>
+			<fileset dir="${workspace.loc}/tp/plugins" includes="javax.measure.unit-api_*.jar" />
+			<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+				<name/>  <!-- 'name' inherits reverse's namespace -->
+			</reverse>
+		</sort></first>
+	</path>
+
 	<!-- Target platform, with a few exclusions -->
 	<path id="tp.path">
 		<fileset dir="${workspace.loc}/tp/plugins">
@@ -162,10 +187,12 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<exclude name="org.eclipse.ant*" />
 			<exclude name="org.junit*" />                <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
 			<exclude name="org.eclipse.jdt.junit*" />    <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
+			<!-- <exclude name="*org.jscience*" />            Use tp.jscience.path or tp.jscience4.path if required -->
+			<exclude name="javax.measure.unit-api*" />   <!-- Use tp.javax.measure.unit.path if required -->
 			<exclude name="org.hamcrest.*" />            <!-- Use tp.hamcrest.path if you need Hamcrest -->
 			<exclude name="org.eclipse.swt.*" />         <!-- Use tp.swt.path if you need SWT -->
 			<exclude name="org.eclipse.swtbot.*.jar" />  <!-- Use tp.swtbot.path if you need SWTBot -->
-			<exclude name="org.apache.batik*" />       <!-- org.apache.batik.pdf has it's own copy of org.apache.commons.io so exclude it -->
+			<exclude name="org.apache.batik*" />         <!-- org.apache.batik.pdf has it's own copy of org.apache.commons.io so exclude it -->
 		</fileset>
 	</path>
 
