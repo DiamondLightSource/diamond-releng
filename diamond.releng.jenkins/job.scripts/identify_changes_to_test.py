@@ -293,8 +293,10 @@ class RequestedChangesProcessor():
                                                   {'gerrit_url': self.gerrit_url_browser, 'summary': change_summary,
                                                     'change': ci['_number'], 'patchset': ci['revisions'].values()[0]['_number'],
                                                     'change_uploader_initials': change_uploader_initials})
-            self.jenkins_build_description += (GERRIT_ICON_HTML + ' topic <a href="%(gerrit_url)s#/q/topic:%(topic)s" target="_blank">%(topic)s</a><br>' %
-                                               {'gerrit_url': self.gerrit_url_browser, 'topic': urllib.quote(build_param_value)})
+            self.jenkins_build_description += (GERRIT_ICON_HTML + ' topic <a href="%(gerrit_url)s#/q/topic:%(topic_quoted)s" target="_blank">%(topic)s</a><br>' %
+                                               {'gerrit_url': self.gerrit_url_browser,
+                                                'topic_quoted': urllib.quote(build_param_value),
+                                                'topic': build_param_value})
             self.jenkins_build_description += '<span style="padding-left: 2em">(comprises</span> ' + component_changes_description.strip() + ')<br>'
 
         # Build the query URL for each change number specified (passed in environment variables - these are created by Jenkins from the build parameters)
