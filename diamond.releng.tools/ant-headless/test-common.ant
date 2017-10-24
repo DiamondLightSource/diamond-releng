@@ -187,7 +187,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 			<exclude name="org.eclipse.ant*" />
 			<exclude name="org.junit*" />                <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
 			<exclude name="org.eclipse.jdt.junit*" />    <!-- Use junitjar.loc, not tp.path, to add JUnit to the classpath -->
-			<!-- <exclude name="*org.jscience*" />            Use tp.jscience.path or tp.jscience4.path if required -->
+			<exclude name="*org.jscience*" />            <!-- Use tp.jscience.path or tp.jscience4.path if required -->
 			<exclude name="javax.measure.unit-api*" />   <!-- Use tp.javax.measure.unit.path if required -->
 			<exclude name="org.hamcrest.*" />            <!-- Use tp.hamcrest.path if you need Hamcrest -->
 			<exclude name="org.eclipse.swt.*" />         <!-- Use tp.swt.path if you need SWT -->
