@@ -2442,10 +2442,13 @@ class PewmaManager(object):
             # we should abandon without deleting anything.
             if os.path.isdir(self.workspace_loc):
                 for root, dirs, files in os.walk(self.workspace_loc):
+                    if root == os.path.join(self.workspace_loc, '.recommenders', 'snipmatch', 'repositories'):  # don't worry about git repositories inside here
+                        dirs[:] = []
+                        continue
                     if any((# if there is any directory called "workspace" BELOW the workspace directory, it's probably wrong
                             'workspace' in dirs,
                             # .metadata ok immediately below specified workspace directory, but not any deeper
-                            '.metadata' in dirs if root != self.workspace_loc else False,
+                            '.metadata' in dirs and root != self.workspace_loc,
                             # if there is any directory called "*_git" BELOW the workspace directory, it's probably wrong
                             [d for d in dirs if d.endswith('_git')],
                             # if there is any directory called ".git" BELOW the workspace directory, it's probably wrong
