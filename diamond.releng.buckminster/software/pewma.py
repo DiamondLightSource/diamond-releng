@@ -53,6 +53,7 @@ COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.diamond.daq.logpanel', 'gda')
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
     ('gda', 'master', 'gda-master.cquery', 'v3.3', ('master', '9.master', 'v9.master'), ('1.8.0',)),
+    ('gda', 'v9.6', 'gda-v9.6.cquery', 'v3.3', ('v9.6', '9.6', '96'), ('1.8.0',)),
     ('gda', 'v9.5', 'gda-v9.5.cquery', 'v3.3', ('v9.5', '9.5', '95'), ('1.8.0',)),
     ('gda', 'v9.4', 'gda-v9.4.cquery', 'v3.2', ('v9.4', '9.4', '94'), ('1.8.0',)),
     ('gda', 'v9.3', 'gda-v9.3.cquery', 'v3.2', ('v9.3', '9.3', '93'), ('1.8.0',)),
@@ -67,6 +68,7 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844'), ('1.7.0',)),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842'), ('1.7.0',)),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.3', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', 'v2.7', 'dawn-v2.7.cquery', 'v3.3', ('v2.7', '2.7'), ('1.8.0',)),
     ('dawn', 'v2.6', 'dawn-v2.6.cquery', 'v3.3', ('v2.6', '2.6'), ('1.8.0',)),
     ('dawn', 'v2.5', 'dawn-v2.5.cquery', 'v3.2', ('v2.5', '2.5'), ('1.8.0',)),
     ('dawn', 'v2.4', 'dawn-v2.4.cquery', 'v3.2', ('v2.4', '2.4'), ('1.8.0',)),
@@ -101,8 +103,8 @@ for cat in CATEGORIES_AVAILABLE:
     assert cat not in VERSIONS_AVAILABLE, 'Category "%s" is the same as a version' % (cat,)
 
 INVALID_COMPONENTS = (  # tuple of (component name pattern, (applicable versions pattern), error message) 
-    ('^all-dls-config$', ('^(master|v9\.[65432])$'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
-    ('^all-mx-config$', ('^(master|v9\.[65432])$'), 'all-mx-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    ('^all-dls-config$', ('^(master|v9\.[98765432])$'), 'all-dls-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
+    ('^all-mx-config$', ('^(master|v9\.[98765432])$'), 'all-mx-config no longer exists in GDA 9.2+; see Jira DAQ-328'),
     ('^all-dls-configs$', ('^(v?8\..+|v9\.[01])$'), 'all-dls-configs only applies to GDA 9.2+'),
     ('^all-dls-clients$', ('^(v?8\..+|v9\.[01])$'), 'all-dls-clients only applies to GDA 9.2+'),
     ('^all-dls$', ('^(v?8\..+|v9\.[01])$'), 'all-dls only applies to GDA 9.2+'),
