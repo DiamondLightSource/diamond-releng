@@ -459,16 +459,6 @@
   <rm:propertyElement key="dawn.ui.git.url">
     <bc:constant value="${github.${dawn.ui.github.authentication}.url}${dawn.ui.github.organization}/dawn-ui.git"/>
   </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.workflow.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.workflow.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.workflow.git.url">
-    <bc:constant value="${github.${dawn.workflow.github.authentication}.url}${dawn.workflow.github.organization}/dawn-workflow.git"/>
-  </rm:propertyElement>
   <!-- *** (eclipse/)dawnsci *** -->
   <rm:propertyElement key="dawnsci.github.organization">
     <bc:constant value="eclipse"/>
@@ -2158,7 +2148,6 @@
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
   <rm:locator pattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
   <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\..+)?|conversion\.ui\.api|datavis(\..+)?|dde\..+|dedi|fileviewer(\.feature)?|isosurface(\..+)?|mapping\..+|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|python\.ui|ui(\..+)?)|python\.feature|slicing(\..+)?|spectrum\..+|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.screenshot\..+)$" searchPathRef="dawn_ui"/>
-  <rm:locator pattern="^(com\.isencia\.feature|org\.dawb\.(passerelle\.(actors(\.test|\.ui)?|common(\.ui)?|ui)|workbench\.jmx|workflow\.feature)|org\.dawnsci\.passerelle\.(actors\.plot|tools))$" searchPathRef="dawn_workflow"/>
   <!-- *** dawnsci *** -->
   <rm:locator pattern="^org\.eclipse\.dawnsci(\..+)?$" searchPathRef="dawnsci"/>
   <!-- *** diamond- *** -->
@@ -2711,22 +2700,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-ui=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from dawn-ui.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="dawn_workflow">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-workflow=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.workflow.git.url}"/>
-      <rm:uri format="{0}/dawn-workflow.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-workflow=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-workflow.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
