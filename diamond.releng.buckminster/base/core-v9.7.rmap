@@ -1308,35 +1308,6 @@
     <bc:constant value="${github.${gda.ispyb.api.github.authentication}.url}${gda.ispyb.api.github.organization}/gda-ispyb-api.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="gda.legacy.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.legacy.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${gda.legacy.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.legacy.dascgerrit.authentication">
-    <bc:constant value="${dascgerrit.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.legacy.dascgerrit.url">
-    <bc:constant value="${diamond.dascgerrit.${gda.legacy.dascgerrit.authentication}.url}/gda"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.legacy.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.legacy.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.legacy.github.url">
-    <bc:constant value="${github.${gda.legacy.github.authentication}.url}${gda.legacy.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.legacy.git.url">
-    <bc:constant value="${gda.legacy.${gda.legacy.git.location.translated}.url}/gda-legacy.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="gda.logpanel.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-logpanel.git"/>
   </rm:propertyElement>
@@ -2227,7 +2198,6 @@
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
   <rm:locator pattern="^(imca-cat-config|gov\.anl\.aps\.beamline\.(imca-cat(\..+)?))$" searchPathRef="gda_imca_cat"/>
   <rm:locator pattern="^uk\.ac\.diamond\.ispyb\.(.+)$" searchPathRef="gda_ispyb_api"/>  <!-- if source.repository.gda_ispyb_api=true, materializes source projects, otherwise materializes jars into tp/ -->
-  <rm:locator pattern="^uk\.ac\.gda\.((client\.)?oe(\.test)?|swingclient(\.test)?)$" searchPathRef="gda_legacy"/>
   <rm:locator pattern="^uk\.ac\.diamond\.daq\.logpanel(\..+)?$" searchPathRef="gda_logpanel"/>
   <rm:locator pattern="^((b16|b24|i06|i06-1|i07|i10|i15|i15-1|i16|mt|optics)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
   <rm:locator pattern="^((i02|i02-1|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.wf-prototype-.+|uk\.ac\.(diamond\.(daq\.mx\..+|dna|stac)|gda\.(beamline\.(i02|i02-1|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" searchPathRef="gda_mx"/>
@@ -3381,22 +3351,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-ispyb-api=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-ispyb-api.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_legacy">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-legacy=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.legacy.git.url}"/>
-      <rm:uri format="{0}/gda-legacy.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-legacy=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-legacy.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
