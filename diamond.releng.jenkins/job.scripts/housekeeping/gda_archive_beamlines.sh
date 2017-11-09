@@ -14,9 +14,9 @@ archive_files () {
     # parent_dir        must be set and non-empty
     # archive_dir       must be set and non-empty
     if [[ -d "${parent_dir}" ]]; then
-        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 30 days from ${parent_dir} to ${archive_dir} ..."
+        echo -e "\n$(date '+%a %d/%b/%Y %H:%M:%S %z') Moving files older than 15 days from ${parent_dir} to ${archive_dir} ..."
 
-        find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f -mtime +30"
+        find_command="${parent_dir} -mindepth 1 -maxdepth 1 -type f \( -name '*.gz' -o -name '*.xz' -o -name '*.zip' \) -mtime +15"
         count=$(find ${find_command} | wc -l)
         echo "${count} items found by: find ${find_command}"
         if [[ "${count}" != "0" ]]; then
