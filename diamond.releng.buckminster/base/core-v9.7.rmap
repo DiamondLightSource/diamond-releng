@@ -2151,7 +2151,7 @@
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- *** daq- *** -->
   <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.activemq$" searchPathRef="daq_eclipse"/>
-  <rm:locator pattern="^(gda-orphan-projects|uk\.ac\.diamond\.(activemq\.feature|daq\.((analysis\.server|arpes\.server|common|core|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|hrpd|imaging\.server|lde|mx|pes\.server|scisoftpy|scm|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml)|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|tomography\.datacollection(\..+)?)))$" searchPathRef="daq_platform"/>
+  <rm:locator pattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|common|core|crystal|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|hrpd|imaging\.server|lde|mx|pes\.server|scisoftpy|scm|server|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml)|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|splitpackagesresolver|tomography\.datacollection(\..+)?))$" searchPathRef="daq_platform"/>
   <!-- *** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python(\.test)?|services|ui|util)|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv(\..+)?|common\.(services|ui)\.feature|conversion(\.feature|\.test|\.ui)?|io|jexl(\.test)?|jgoogleanalytics(\.test)?|macro(\..+)?|nexus\.ispyb(\..+)?|persistence(\..+)?|processing\.(docgenerator|python)|python.rpc(\.test)?|thirdparty\.xml\.feature))$" searchPathRef="dawn_common"/>
@@ -2198,7 +2198,7 @@
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
   <rm:locator pattern="^(i12-config|uk\.ac\.gda\.beamline\.i12(\..+)?)$" searchPathRef="gda_dls_beamlines_i12"/>
   <rm:locator pattern="^(i13(i|j)-config|uk\.ac\.gda\.beamline\.i13(i|j)(\..+)?)$" searchPathRef="gda_dls_beamlines_i13x"/>
-  <rm:locator pattern="^(i19(.|-).+|uk\.ac\.gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator))$" searchPathRef="gda_dls_beamlines_i19"/>
+  <rm:locator pattern="^(i19(.|-).+|uk\.ac\.(diamond\.org\.springframework\.fragment\.i19-shared-config|gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator)))$" searchPathRef="gda_dls_beamlines_i19"/>
   <rm:locator pattern="^(i21-(config|python)|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" searchPathRef="gda_dls_beamlines_i21"/>
   <rm:locator pattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" searchPathRef="gda_dls_beamlines_xas"/>
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
