@@ -82,10 +82,10 @@
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="nebula.p2.version.prerelease">  <!-- version of Eclipse Nebula p2 repository to use for selected components only -->
-    <bc:constant value="snapshot-20171025_1305"/>
+    <bc:constant value="snapshot-yyyymmdd_hhmm"/>          <!-- the value is just whatever directory name we created on alfred -->
   </rm:propertyElement>
   <rm:propertyElement key="nebula.p2.version">  <!-- version of Eclipse Nebula p2 repository to use -->
-    <bc:constant value="1.3.0"/>
+    <bc:constant value="1.4.0"/>
   </rm:propertyElement>
   <rm:propertyElement key="nebula.incubation.p2.version">  <!-- version of Eclipse Nebula Incubation p2 repository to use -->
     <bc:constant value="snapshot-20171025_1305"/>
@@ -2292,9 +2292,9 @@
   <rm:locator pattern="^org\.eclipse\.persistence\..+$" searchPathRef="eclipse_eclipselink_p2"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
-  <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(widgets|xygraph)(\..+)?$" searchPathRef="eclipse_nebula_prerelease"/>
+  <!-- <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(whatever|you|select)(\..+)?$" searchPathRef="eclipse_nebula_prerelease"/> -->
   <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula" failOnError="false"/>
-  <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula_incubation" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula_incubation"/>
   <!--
        Components to get from Diamond p2 repositories: Orbit
   -->
