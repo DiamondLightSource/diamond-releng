@@ -163,6 +163,11 @@ BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermitten
     ('ERROR\s+\[\d+\]\s:\sjava\.lang\.IllegalStateException: Preference node ".+" has been removed.', 'Buckminster intermittent failure - try rerunning'),
     )
 
+COMPILE_ERROR_DUE_TO_BUCKMINSTER_BUG_PATTERNS = ( # Error messages that identify a compile error caused by a prior intermittent Buckminster bug
+    # compile error caused by earlier materialize bug that silently fails to import uk.ac.gda.api into the workspace
+     ('Bundle ''uk.ac.gda.api'' cannot be resolved', 'Compile errors due to earlier intermittent materialize bug (uk.ac.gda.api not recognised)'),
+    )
+
 SYSTEM_PROBLEM_ERROR_PATTERNS = ( # Error messages that identify a problem with the environment; e.g. resource depletion
     ('java\.lang\.OutOfMemoryError: unable to create new native thread', 'System problem - out of threads'),  # sometimes occurs in Jenkins
     )
@@ -172,7 +177,7 @@ OUTPUT_LINES_TO_SUPPRESS = (
     "WARN:  There are no proxy settings to import.\n",
     'SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".\n',
     "SLF4J: Defaulting to no-operation (NOP) logger implementation\n",
-    "SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.\n"
+    "SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.\n"  # once last item seen in the output, we stop scanning for matches
     )
 
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
@@ -1196,7 +1201,7 @@ class PewmaManager(object):
             script_file_path_to_pass = self.script_file_path
 
         # get buckminster to run the materialize(s)
-        rc = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=True)
+        rc = self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=True, scan_compile_messages=False)
 
         self.add_cquery_to_history(cquery_to_use)
         for component in components_to_use:
@@ -1717,7 +1722,7 @@ class PewmaManager(object):
     def action_clean(self):
         """ Processes command: clean
         """
-        return self.run_buckminster_in_subprocess(('clean',), scan_for_materialize_errors=False)
+        return self.run_buckminster_in_subprocess(('clean',), scan_for_materialize_errors=False, scan_compile_messages=False)
 
 
     def action_bmclean(self):
@@ -1749,7 +1754,7 @@ class PewmaManager(object):
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False)
+        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False, scan_compile_messages=False)
 
 
     def action_buildthorough(self):
@@ -1777,7 +1782,7 @@ class PewmaManager(object):
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False)
+        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False, scan_compile_messages=True)
 
 
     def action_target(self):
@@ -1785,7 +1790,7 @@ class PewmaManager(object):
         """
 
         if not self.arguments:
-            return self.run_buckminster_in_subprocess(('listtargetdefinitions',), scan_for_materialize_errors=False)
+            return self.run_buckminster_in_subprocess(('listtargetdefinitions',), scan_for_materialize_errors=False, scan_compile_messages=False)
 
         if len(self.arguments) > 1:
             raise PewmaException('ERROR: target command has too many arguments')
@@ -1803,7 +1808,8 @@ class PewmaManager(object):
         if not os.path.isfile(path):
             raise PewmaException('ERROR: target file "%s" ("%s") does not exist' % (target, path))
 
-        return self.run_buckminster_in_subprocess(('importtargetdefinition', '--active', path[len(self.workspace_loc)+1:]), scan_for_materialize_errors=False)  # +1 for os.sep
+        return self.run_buckminster_in_subprocess(('importtargetdefinition', '--active',
+                                                   path[len(self.workspace_loc)+1:]), scan_for_materialize_errors=False, scan_compile_messages=False)  # +1 for os.sep
 
 
     def action_sites(self):
@@ -2063,9 +2069,9 @@ class PewmaManager(object):
             return None
 
 
-    def run_buckminster_in_subprocess(self, buckminster_args, scan_for_materialize_errors=True):
+    def run_buckminster_in_subprocess(self, buckminster_args, scan_for_materialize_errors=True, scan_compile_messages=True):
         """ Generates and runs the buckminster command
-            scan_for_materialize_errors is just an optimisation; set to False if not materializing
+            scan_for_materialize_errors/scan_compile_messages are just an optimisation; set to False if not materializing/building
         """
 
         self.report_executable_location('buckminster')
@@ -2131,6 +2137,8 @@ class PewmaManager(object):
         jgit_errors_general = []
         project_error_projects = []
         buckminster_bugs = []
+        compile_error_bugs = []  # compile errors caused by Buckminster bugs
+        compile_errors_seen = False  # regular compile errors
         if not self.options.dry_run:
             sys.stdout.flush()
             sys.stderr.flush()
@@ -2138,7 +2146,7 @@ class PewmaManager(object):
             try:
                 process = subprocess.Popen(buckminster_command, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
                 last_text_to_suppress = OUTPUT_LINES_TO_SUPPRESS[-1]
-                seen_last_text_to_suppress = False
+                seen_last_text_to_suppress = False  # optimisation to avoid looking for OUTPUT_LINES_TO_SUPPRESS once we've seen them all
                 for line in iter(process.stdout.readline, b''):
                     # sometimes there are system problems
                     # sometimes JGit gets intermittent failures (network?) when cloning a repository
@@ -2167,17 +2175,27 @@ class PewmaManager(object):
                             buckminster_bug = re.search(error_pattern, line)
                             if buckminster_bug:
                                 buckminster_bugs.append(error_summary)
-                    if not (self.options.suppress_compile_warnings and line.startswith('Warning: file ')):
-                        if seen_last_text_to_suppress:
-                            print(line, end='')  # don't add an extra newline
+                    if self.options.suppress_compile_warnings and line.startswith('Warning: file '):
+                        continue  # finished with this line of output
+                    if scan_compile_messages:
+                        for (error_pattern, error_summary) in COMPILE_ERROR_DUE_TO_BUCKMINSTER_BUG_PATTERNS:
+                            compile_error_bug = re.search(error_pattern, line)
+                            if compile_error_bug:
+                                compile_error_bugs.append(error_summary)
+                                break
                         else:
-                            for x in OUTPUT_LINES_TO_SUPPRESS:
-                                if line == x:
-                                    if line == last_text_to_suppress:
-                                        seen_last_text_to_suppress = True
-                                    break
-                            else:
-                                print(line, end='')  # don't add an extra newline
+                            if line.startswith('Error: file '):
+                                compile_errors_seen = True
+                    if seen_last_text_to_suppress:
+                        print(line, end='')  # don't add an extra newline
+                    else:
+                        for x in OUTPUT_LINES_TO_SUPPRESS:
+                            if line == x:
+                                if line == last_text_to_suppress:
+                                    seen_last_text_to_suppress = True
+                                break
+                        else:
+                            print(line, end='')  # don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
                 retcode = process.returncode
             except OSError:
@@ -2191,7 +2209,7 @@ class PewmaManager(object):
         else:
             retcode = 0
 
-        if any((system_problems, jgit_errors_repos, jgit_errors_general, project_error_projects, buckminster_bugs)):
+        if any((system_problems, jgit_errors_repos, jgit_errors_general, project_error_projects, buckminster_bugs, compile_error_bugs)):
             retcode = max(int(retcode), 2)
             for error_summary in set(system_problems):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary)
@@ -2202,6 +2220,8 @@ class PewmaManager(object):
             for project in set(project_error_projects):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error('Failure importing ' +  project + ' (might be invalid project metadata): take a careful look at the error details before retrying')
             for error_summary in set(buckminster_bugs):  # Use set, since multiple errors could have the same text, and only need logging once
+                self.logger.error(error_summary)
+            for error_summary in set(compile_error_bugs):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary)
             if (self.options.prepare_jenkins_build_description_on_error or
                 # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
@@ -2226,11 +2246,15 @@ class PewmaManager(object):
                     text += ' (bad project metadata, or intermittent Buckminster bug)'
                 elif buckminster_bugs:
                     text = 'Failure (intermittent Buckminster bug)'
+                elif compile_error_bugs:
+                    text = 'Failure - compile errors, probably due to earlier intermittent Buckminster bug'
                 if self.options.prepare_jenkins_build_description_on_error:
                     print('append-build-description: ' + text)
                 elif self.options.prepare_jenkins_build_description_on_materialize_error:
                     # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
                     print('set-build-description: ' + text)
+        elif compile_errors_seen and self.options.prepare_jenkins_build_description_on_error:
+            print('set-build-description: Failure - compile errors')
         return retcode
 
 
