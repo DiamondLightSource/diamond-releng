@@ -207,7 +207,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mt" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((i02|i02-1|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.wf-prototype-.+|uk\.ac\.(diamond\.(daq\.mx\..+|dna|stac)|gda\.(beamline\.(i02|i02-1|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^((i02|i02-1|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.wf-prototype-.+|uk\.ac\.(diamond\.(activemq\.fragment\.mx|daq\.mx\..+|dna|stac)|gda\.(beamline\.(i02|i02-1|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mx.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mx" value="true"/>
     </cq:advisorNode>
