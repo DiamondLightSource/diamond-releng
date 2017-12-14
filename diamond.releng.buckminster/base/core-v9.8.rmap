@@ -148,10 +148,10 @@
   <rm:propertyElement key="diamond.dascgerrit.host">
     <bc:constant value="gerrit.diamond.ac.uk"/>
   </rm:propertyElement>
-  <rm:propertyElement key="diamond.dascgerrit.http.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
+  <rm:propertyElement key="diamond.dascgerrit.http.host.port">  <!-- visible both inside and outside Diamond, so normally no need to override -->
     <bc:constant value="${diamond.dascgerrit.host}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="diamond.dascgerrit.ssh.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
+  <rm:propertyElement key="diamond.dascgerrit.ssh.host.port">  <!-- visible both inside and outside Diamond, so normally no need to override -->
     <bc:constant value="${diamond.dascgerrit.host}:29418"/>
   </rm:propertyElement>
   <!-- -->
@@ -188,8 +188,8 @@
   <rm:propertyElement key="github.authentication.common">
     <bc:constant value="${github.authentication.from.cquery.translated}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="github.anonymous.protocol">  <!-- can be "git" (fastest) or "https" (suitable if TCP port 9418 is blocked) -->
-    <bc:constant value="git"/>
+  <rm:propertyElement key="github.anonymous.protocol">
+    <bc:constant value="https"/>
   </rm:propertyElement>
   <rm:propertyElement key="github.anonymous.url">
     <bc:constant value="${github.anonymous.protocol}://github.com/"/>
@@ -200,7 +200,7 @@
   <!--                              -->
   <!-- p2 properties                -->
   <!--                              -->
-  <rm:propertyElement key="alfred.host.port">  <!-- visible both inside and outside Diamond, so normally no need to override  -->
+  <rm:propertyElement key="alfred.host.port">  <!-- visible both inside and outside Diamond, so normally no need to override -->
     <bc:constant value="alfred.diamond.ac.uk"/>
   </rm:propertyElement>
   <rm:propertyElement key="alfred.url">
