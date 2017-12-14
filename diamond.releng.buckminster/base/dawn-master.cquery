@@ -30,7 +30,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.apache\.activemq$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|common|core|crystal|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|hrpd|imaging\.server|lde|mx|pes\.server|scisoftpy|scm|server|thirdparty\.(apachecommons|computation|logging|network|rpc|springbase|test|utils|xml)|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|splitpackagesresolver|tomography\.datacollection(\..+)?))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|common|core|crystal|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|hrpd|imaging\.server|lde|mx|pes\.server|scisoftpy|scm|server|thirdparty\..*|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|splitpackagesresolver|tomography\.datacollection(\..+)?))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">daq-platform.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" useTargetPlatform="false">
