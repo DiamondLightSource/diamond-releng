@@ -18,6 +18,7 @@
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i24.*)$" filter="(materialize_skip_list=*i24*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
+    <cq:advisorNode namePattern="^org\.eclipse\.jetty\.jaspi$" filter="(eclipse.release=oxygen)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*\.tests?|org\.eclipse\.dawnsci\.analysis\.examples)$" filter="(|(skip_ALL_test_fragments=true)(skip_ALL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|uk\.ac\.diamond\.(daq\.activemq\.connector|scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(|(skip_DAWN_test_fragments=true)(skip_DAWN_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.eclipse\.((.*\.)?tests?|dawnsci\.analysis\.examples))$" filter="(|(skip_EXTERNAL_test_fragments=true)(skip_EXTERNAL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>

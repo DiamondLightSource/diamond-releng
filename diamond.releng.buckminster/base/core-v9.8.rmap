@@ -57,7 +57,7 @@
     <bc:constant value="R20170919201930"/>  <!-- Oxygen.1a, also used for Oxygen.2 -->
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.orbit.p2.version">
-    <bc:constant value="${eclipse.orbit.p2.version.${eclipse.release}}"/>
+    <bc:propertyRef key="eclipse.orbit.p2.version.${eclipse.release}"/>
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="eclipse.eclipselink.p2.version">  <!-- version of Eclipse EclipseLink p2 repository to use -->
@@ -83,7 +83,7 @@
     <bc:constant value="9.4.7.v20170914"/>  <!-- matches the version that Oxygen SR2 depends on -->
   </rm:propertyElement>
   <rm:propertyElement key="eclipse.jetty9.p2.version">
-    <bc:constant value="${eclipse.jetty9.p2.version.${eclipse.release}}"/>
+    <bc:propertyRef key="eclipse.jetty9.p2.version.${eclipse.release}"/>
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="nattable.p2.version">  <!-- version of Eclipse NatTable p2 repository to use -->
@@ -1545,7 +1545,6 @@
   <rm:locator pattern="^javax\.(transaction|xml(\..+)?)$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^javax\.measure\.unit-api(\..+)?$" searchPathRef="eclipse_orbit_p2_oxygen"/>  <!-- always get from Orbit oxygen.2, since not available in mars.2 --> 
   <rm:locator pattern="^org\.aopalliance$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^org\.apache\.batik\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.derby$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.poi(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
@@ -1556,6 +1555,8 @@
   <rm:locator pattern="^org\.quartz$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.xmlpull$" searchPathRef="eclipse_orbit_p2"/>
   <!-- "^org\.eclipse\.january(\..+)?$" is in eclipse_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
+  <rm:locator pattern="^org\.eclipse\.fx\.javafx(\..+)?" searchPathRef="eclipse_mars_always" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.mylyn(\..+)?" searchPathRef="eclipse_mars_always" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.persistence\..+$" searchPathRef="eclipse_eclipselink_p2"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
@@ -3477,16 +3478,18 @@
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/incubation/${nebula.incubation.p2.version}"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_release">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=mars)" readerType="p2" source="false" mutable="false">
+  <rm:searchPath name="eclipse_mars_always">  <!-- For Oxygen, get from Mars p2 site -->
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=oxygen)" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/releases/mars"/>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(eclipse.release=oxygen)" readerType="p2" source="false" mutable="false">
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_release">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/eclipse/updates/4.7"/>
+      <rm:uri format="${alfred.url}/sites/download.eclipse.org/releases/${eclipse.release}"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="tp_pydev">
