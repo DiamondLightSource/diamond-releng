@@ -165,7 +165,7 @@ BUCKMINSTER_BUG_ERROR_PATTERNS = ( # Error messages that identify an intermitten
 
 COMPILE_ERROR_DUE_TO_BUCKMINSTER_BUG_PATTERNS = ( # Error messages that identify a compile error caused by a prior intermittent Buckminster bug
     # compile error caused by earlier materialize bug that silently fails to import uk.ac.gda.api into the workspace
-    ('Bundle \'uk.ac.gda.api\' cannot be resolved', 'Compile errors due to earlier intermittent materialize bug (uk.ac.gda.api not recognised)'),
+    ("Bundle 'uk.ac.gda.(api|core)' cannot be resolved", 'Compile errors due to earlier intermittent materialize bug (uk.ac.gda.api/core not recognised)'),
     )
 
 SYSTEM_PROBLEM_ERROR_PATTERNS = ( # Error messages that identify a problem with the environment; e.g. resource depletion
