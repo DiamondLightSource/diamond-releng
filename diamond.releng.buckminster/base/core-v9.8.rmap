@@ -1590,6 +1590,7 @@
   <rm:locator pattern="^pl\.pragmatists\.JUnitParams(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^javassist(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^javax\.(management\.j2ee-api|vecmath)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.(jogamp|jzy3d)\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.(boofcv|ddogleg|ejml|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.de\.jaret(\..+)?$" searchPathRef="diamond_orbit_p2"/>
