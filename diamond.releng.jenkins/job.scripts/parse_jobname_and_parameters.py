@@ -113,6 +113,8 @@ def parse_jenkins_jobname(jobname):
                     product_site = 'uk.ac.gda.beamline.i20_1.site'
                 elif beamline == 'p45':
                     product_site = 'uk.ac.diamond.daq.beamline.p45.site'
+                elif beamline == 'p99':
+                    product_site = 'uk.ac.diamond.daq.beamline.p99.site'
                 else:
                     product_site = 'uk.ac.gda.beamline.' + beamline + '.site'
             elif site == 'GDA':
@@ -120,12 +122,8 @@ def parse_jenkins_jobname(jobname):
                     product_site = 'uk.ac.gda.client.' + beamline + '.site'
                 else:
                     product_site = 'uk.ac.gda.' + beamline + '.site'
-            elif site == 'APS':
-                product_site = 'gov.aps.gda.beamline.' + beamline + '.site'
             elif site == 'ESRF':
                 product_site = 'fr.esrf.gda.beamline.' + beamline + '.site'
-            elif site == 'RAL':
-                product_site = 'uk.ac.rl.gda.' + beamline + '.site'
             parse_result.append(('materialize_components', (config_project + ' ' + product_site).strip()))
             parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true'))
             parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments=true'))  # retained for versions prior to Dawn 2.2 / GDA 9.2
