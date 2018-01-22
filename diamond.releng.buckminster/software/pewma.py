@@ -2253,7 +2253,7 @@ class PewmaManager(object):
                     print('append-build-description: ' + text)
                 elif self.options.prepare_jenkins_build_description_on_materialize_error:
                     # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                    print('set-build-description: ' + text)
+                    print('append-build-description: ' + text)
         elif compile_errors_seen and self.options.prepare_jenkins_build_description_on_error:
             print('set-build-description: Failure - compile errors')
         return retcode
