@@ -80,6 +80,10 @@ def generate_cleanup_script(parent_directories_to_cleanup):
 
                 # for each product directory, there is a minimum number of versions to keep
                 try:
+                    try:
+                        skip_platform_specific_processing = config.getboolean('DEFAULT', 'skip_platform_specific_processing')
+                    except ConfigParser.NoOptionError:
+                        skip_platform_specific_processing = False
                     minimum_number_of_versions_per_platform_to_keep = config.getint('DEFAULT', 'minimum_number_of_versions_per_platform_to_keep')
                     keep_all_versions_newer_than_days = config.getint('DEFAULT', 'keep_all_versions_newer_than_days')
                 except ValueError as e:
@@ -92,9 +96,8 @@ def generate_cleanup_script(parent_directories_to_cleanup):
                     continue  # skip this directory, and continue
 
                 today_date = datetime.date.today()
-                for platform in ('linux32', 'linux64', 'mac32', 'mac64', 'windows32', 'windows64'):  # note that mac32 exists in old releases
-                    products_kept_for_platform = 0
-                    for productdir in sorted((dir for dir in os.listdir(root) if dir.endswith(platform)), reverse=True):
+                if skip_platform_specific_processing:
+                    for productdir in sorted(os.listdir(root), reverse=True):
                         productdir_path = os.path.join(root, productdir)
                         productdir_stat = os.lstat(productdir_path)
                         if not stat.S_ISDIR(productdir_stat.st_mode):
@@ -104,15 +107,12 @@ def generate_cleanup_script(parent_directories_to_cleanup):
                                 reason_to_keep = '(target of symlink %s)' % targets_of_symbolic_links[productdir][0]
                             else:
                                 reason_to_keep = '(target of symlinks %s)' % map(str, targets_of_symbolic_links[productdir])
-                        elif products_kept_for_platform < minimum_number_of_versions_per_platform_to_keep:
-                            reason_to_keep = '(keep at least %s versions per platform)' % minimum_number_of_versions_per_platform_to_keep
                         elif (today_date - datetime.date.fromtimestamp(productdir_stat.st_mtime)).days < keep_all_versions_newer_than_days:
                             reason_to_keep = '(keep versions newer than %s days)' % keep_all_versions_newer_than_days
                         else:
                             reason_to_keep = None
                         if reason_to_keep:
                             print('  : keeping      %-95s %s' % (productdir_path, reason_to_keep))
-                            products_kept_for_platform += 1
                             products_kept += 1
                         else:
                             print('  : will delete  %s' % (productdir_path,))
@@ -120,6 +120,35 @@ def generate_cleanup_script(parent_directories_to_cleanup):
                             script_file.write('  chmod -R u+w %s\n' % productdir_path)
                             script_file.write('  rm -rf       %s\n' % productdir_path)
                             products_deleted += 1
+                else:
+                    for platform in ('linux32', 'linux64', 'mac32', 'mac64', 'windows32', 'windows64'):  # note that mac32 exists in old releases
+                        products_kept_for_platform = 0
+                        for productdir in sorted((dir for dir in os.listdir(root) if dir.endswith(platform)), reverse=True):
+                            productdir_path = os.path.join(root, productdir)
+                            productdir_stat = os.lstat(productdir_path)
+                            if not stat.S_ISDIR(productdir_stat.st_mode):
+                                continue
+                            if (productdir in targets_of_symbolic_links):
+                                if len(targets_of_symbolic_links[productdir]) == 1:
+                                    reason_to_keep = '(target of symlink %s)' % targets_of_symbolic_links[productdir][0]
+                                else:
+                                    reason_to_keep = '(target of symlinks %s)' % map(str, targets_of_symbolic_links[productdir])
+                            elif products_kept_for_platform < minimum_number_of_versions_per_platform_to_keep:
+                                reason_to_keep = '(keep at least %s versions per platform)' % minimum_number_of_versions_per_platform_to_keep
+                            elif (today_date - datetime.date.fromtimestamp(productdir_stat.st_mtime)).days < keep_all_versions_newer_than_days:
+                                reason_to_keep = '(keep versions newer than %s days)' % keep_all_versions_newer_than_days
+                            else:
+                                reason_to_keep = None
+                            if reason_to_keep:
+                                print('  : keeping      %-95s %s' % (productdir_path, reason_to_keep))
+                                products_kept_for_platform += 1
+                                products_kept += 1
+                            else:
+                                print('  : will delete  %s' % (productdir_path,))
+                                script_file.write('  date +"%a %d/%b/%Y %H:%M:%S %z"\n')
+                                script_file.write('  chmod -R u+w %s\n' % productdir_path)
+                                script_file.write('  rm -rf       %s\n' % productdir_path)
+                                products_deleted += 1
         script_file.write('  date +"%a %d/%b/%Y %H:%M:%S %z"\n')
         script_file.write('\n  echo "append-build-description: ')
         if error_count:
