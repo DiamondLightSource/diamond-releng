@@ -26,7 +26,7 @@ dawn_make_windows_installer_function () {
     ###
 
     cd ${buckminster_root_prefix}/products/
-    for pdir in DawnDiamond-*-windows64; do
+    for pdir in $(shopt -s nullglob; echo DawnDiamond-*-windows64); do
         # write product version number into installer script
         cd /dls_sw/dasc/WindowsInstaller/DawnDiamond-scripts/
         rm -vf DawnWindowsInstaller.iss
