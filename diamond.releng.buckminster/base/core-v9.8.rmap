@@ -264,16 +264,6 @@
     <bc:constant value="${diamond.dascgit.url}/beamlines/b22-rsync.git"/>
   </rm:propertyElement>
   <!-- *** daq- *** -->
-  <rm:propertyElement key="daq.eclipse.github.organization">
-    <bc:constant value="DiamondLightSource"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.eclipse.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="daq.eclipse.git.url">
-    <bc:constant value="${github.${daq.eclipse.github.authentication}.url}${daq.eclipse.github.organization}/daq-eclipse.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="daq.platform.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/daq/daq-platform.git"/>
   </rm:propertyElement>
@@ -1417,7 +1407,6 @@
   <!-- *** beamlines *** -->
   <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- *** daq- *** -->
-  <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.activemq$" searchPathRef="daq_eclipse"/>
   <rm:locator pattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|common|core|crystal|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|hrpd|imaging\.server|lde|mx|pes\.server|scisoftpy|scm|server|thirdparty\..*|vmxi\.server)\.feature|guigenerator(\..+)?|microscopy\.xraymicroscopyexperiment(\..+)?|scripting(\..+)?|server(\..+)?|splitpackagesresolver|tomography\.datacollection(\..+)?))$" searchPathRef="daq_platform"/>
   <!-- *** dawn- *** -->
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
@@ -1711,22 +1700,6 @@
   <!--
        DAQ- repositories
   -->
-  <rm:searchPath name="daq_eclipse">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.daq-eclipse=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${daq.eclipse.git.url}"/>
-      <rm:uri format="{0}/daq-eclipse.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.daq-eclipse=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from daq-eclipse.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
   <rm:searchPath name="daq_platform">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.daq-platform=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
