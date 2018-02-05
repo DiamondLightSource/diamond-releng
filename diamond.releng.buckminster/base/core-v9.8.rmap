@@ -34,9 +34,6 @@
     <bc:constant value="${download.location.from.cquery.translated}"/>
   </rm:propertyElement>
   <!-- ***** -->
-  <rm:propertyElement key="training.repository.user">  <!-- used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide) -->
-    <bc:constant value="template"/>
-  </rm:propertyElement>
   <!--                                    -->
   <!-- Target Platform version properties -->
   <!--                                    -->
@@ -227,12 +224,6 @@
   </rm:propertyElement>
   <rm:propertyElement key="repository.subversion.diamond.download.url">
     <bc:constant value="https://svn.diamond.ac.uk/subversion/gda"/>
-  </rm:propertyElement>
-  <!--
-       Training URLs
-  -->
-  <rm:propertyElement key="training.download.url">
-    <bc:constant value="${repository.git.download.url.diamond}"/>  <!-- used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide) -->
   </rm:propertyElement>
   <!--                                                                      -->
   <!--#######################################################################################-->
@@ -1376,7 +1367,7 @@
   </rm:propertyElement>
   <!-- *** training *** -->
   <rm:propertyElement key="training.gerrit.1.git.url">
-    <bc:constant value="${diamond.dascgerrit.url}/training/training-gerrit-1.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/training/training-gerrit-1.git"/>
   </rm:propertyElement>
   <!-- *** wychwood *** -->
   <rm:propertyElement key="wychwood.git.url">
@@ -1393,13 +1384,6 @@
        net.sourceforge.nattable.core is superceded by org.eclipse.nebula.widgets.nattable.core (but the former is still in various p2 sites, even in Eclipse Neon)
    -->
   <rm:locator pattern="^(net\.sourceforge\.nattable\.core)$" searchPathRef="fail_old_component"/>  <!-- superceded by org.eclipse.nebula.widgets.nattable.core -->
-  <!--
-       Training repository components used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide)
-   -->
-  <rm:locator pattern="^workflow\.small$" searchPathRef="training_small"/>
-  <rm:locator pattern="^workflow\.a\..+$" searchPathRef="training_a"/>
-  <rm:locator pattern="^workflow\.b\..+$" searchPathRef="training_b"/>
-  <rm:locator pattern="^workflow\.master\..+$" searchPathRef="training_master"/>
   <!--
         Components in Git repositories (note: patterns should match those in the CQuery advisor nodes)
         Please keep locators in sorted order of repository name
@@ -1631,48 +1615,6 @@
       <rm:property key="git.remote.uri" value="${repository.git.download.url}/uk.ac.diamond.gda.hc"/>
       <rm:uri format="{0}/uk.ac.diamond.gda.hc">
         <bc:propertyRef key="repository.git.checkout.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       Training components used by the command line training using the gitolite-hosted repositories (see Infrastructure Guide)
-  -->
-  <rm:searchPath name="training_small">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${training.download.url}/training/${training.repository.user}/workflow.small.git"/>
-      <rm:uri format="{0}/training/${training.repository.user}/workflow.small.git">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="training_a">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${training.download.url}/training/${training.repository.user}/workflow.a.git"/>
-      <rm:uri format="{0}/training/${training.repository.user}/workflow.a.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="training_b">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${training.download.url}/training/${training.repository.user}/workflow.b.git"/>
-      <rm:uri format="{0}/training/${training.repository.user}/workflow.b.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="training_master">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${training.download.url}/training/${training.repository.user}/workflow.master.git"/>
-      <rm:uri format="{0}/training/${training.repository.user}/workflow.master.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
