@@ -1396,7 +1396,7 @@
   <rm:locator pattern="^(org\.dawnsci\.commandserver(\..+)?|uk\.ac\.ccp4\.commandserver\.mrbump)$" searchPathRef="dawn_commandserver"/>
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python(\.test)?|services|ui|util)|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv(\..+)?|common\.(services|ui)\.feature|conversion(\.feature|\.test|\.ui)?|io|jexl(\.test)?|jgoogleanalytics(\.test)?|macro(\..+)?|nexus\.ispyb(\..+)?|persistence(\..+)?|processing\.(docgenerator|python)|python.rpc(\.test)?|thirdparty\.xml\.feature))$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
-  <rm:locator pattern="^hdf\.(hdf5lib|object)(\..+)?$" searchPathRef="dawn_hdf"/>
+  <rm:locator pattern="^hdf\.hdf5lib$" searchPathRef="dawn_hdf"/>
   <rm:locator pattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" searchPathRef="dawn_hpc"/>
   <rm:locator pattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|project\.repository\..+|runtime(\..+)?)|org\.dawnsci\.passerelle\.(testsupport|parallel\.actor(\..+)?))$" searchPathRef="dawn_isencia"/>
   <rm:locator pattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" searchPathRef="dawn_isenciaui"/>
@@ -2318,16 +2318,6 @@
       <rm:uri format="{0}/gda-dls-beamlines-i11.git,{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i11=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i11.git.url}"/>
-      <rm:uri format="{0}/gda-dls-beamlines-i11.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:replace pattern="^i11-config$" replacement="i11">
-          <bc:propertyRef key="buckminster.component"/>
-        </bc:replace>
       </rm:uri>
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dls-beamlines-i11=true)" readerType="local">
