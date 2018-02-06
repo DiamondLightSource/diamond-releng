@@ -2317,6 +2317,14 @@
       <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i11.git.url}"/>
       <rm:uri format="{0}/gda-dls-beamlines-i11.git,{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i11=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i11.git.url}"/>
+      <rm:uri format="{0}/gda-dls-beamlines-i11.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:replace pattern="^i11-config$" replacement="i11">
           <bc:propertyRef key="buckminster.component"/>
         </bc:replace>
