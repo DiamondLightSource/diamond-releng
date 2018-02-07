@@ -18,7 +18,6 @@
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i24.*)$" filter="(materialize_skip_list=*i24*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
-    <cq:advisorNode namePattern="^org\.eclipse\.jetty\.jaspi$" filter="(eclipse.release=oxygen)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*\.tests?|org\.eclipse\.dawnsci\.analysis\.examples)$" filter="(|(skip_ALL_test_fragments=true)(skip_ALL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|uk\.ac\.diamond\.(daq\.activemq\.connector|scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(|(skip_DAWN_test_fragments=true)(skip_DAWN_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.eclipse\.((.*\.)?tests?|dawnsci\.analysis\.examples))$" filter="(|(skip_EXTERNAL_test_fragments=true)(skip_EXTERNAL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
@@ -92,6 +91,9 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\..+)?|conversion\.ui\.api|datavis(\..+)?|dde\..+|dedi|fileviewer(\.feature)?|isosurface(\..+)?|jzy3d(\..+)?|mapping\..+|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|python\.ui|ui(\..+)?)|python\.feature|slicing(\..+)?|spectrum\..+|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.screenshot\..+)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-ui.git repository branch</cq:documentation>
+    </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci(\..+)?$" filter="(eclipse.release=oxygen)" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="DAWNSCI-6015-jetty">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawnsci.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.dawnsci(\..+)?$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawnsci.git repository branch</cq:documentation>
