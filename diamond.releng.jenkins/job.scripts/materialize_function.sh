@@ -69,6 +69,11 @@ materialize_function () {
         export materialize_properties_extra
     fi
 
+    # job_variant is determined by parse_jobname_and_parameters.py, and it's the last part of the Jenkins job name, from a "~" onwards
+    if [[ "${job_variant}" == "~oxygen" ]]; then
+        export materialize_properties_extra="${materialize_properties_extra} -Declipse.release=oxygen"
+    fi
+
     if [[ "${materialize_dawnsci_from_DawnScience}" == "true" ]]; then
         export materialize_properties_extra="${materialize_properties_extra} -Ddawnsci.github.organization=DawnScience"
     fi
