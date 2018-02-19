@@ -187,7 +187,7 @@ GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit w
     ('diamond-jacorb.git'         , 'ssh://gerrit.diamond.ac.uk:29418/diamond/diamond-jacorb.git',          None),
     ('diamond-jython.git'         , 'ssh://gerrit.diamond.ac.uk:29418/diamond/diamond-jython.git',          None),
     ('diamond-springframework.git', 'ssh://gerrit.diamond.ac.uk:29418/diamond/diamond-springframework.git', None),
-    ('scanning.git'               , 'ssh://gerrit.diamond.ac.uk:29418/eclipse/scanning.git',                'git://github.com/DiamondLightSource/scanning.git'),
+    ('scanning.git'               , 'ssh://gerrit.diamond.ac.uk:29418/eclipse/scanning.git',                None),
     ('gda-bimorph.git'            , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-bimorph.git',                 None),
     ('gda-common.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-common.git',                  None),
     ('gda-common-rcp.git'         , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-common-rcp.git',              None),
@@ -213,6 +213,7 @@ GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit w
     ('gda-tomography.git'         , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-tomography.git',              None),
     ('gda-video.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-video.git',                   None),
     ('gda-xas-core.git'           , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-xas-core.git',                None),
+    ('richbeans.git'              , 'ssh://gerrit.diamond.ac.uk:29418/richbeans.git',                       None),
     ('wychwood.git'               , 'ssh://gerrit.diamond.ac.uk:29418/gda/wychwood.git',                    None),
     ('training-gerrit-1.git'      , 'ssh://gerrit.diamond.ac.uk:29418/training/training-gerrit-1.git',      None),
     )
@@ -1424,7 +1425,7 @@ class PewmaManager(object):
         selected_repos = sorted(set(repos_included) - set(repos_excluded))
 
         # work out whether this workspace did a "--location=public materialize" (i.e. everything from GitHub)
-        # if so, repositories such as scanning may need their origina updated
+        # if so, repositories such as scanning may need their origin updated
         workspace_materialized_from_github = False
         for (repo_name, git_dir) in sorted(git_directories):
             if repo_name == 'daq-platform.git':
@@ -1623,7 +1624,7 @@ class PewmaManager(object):
                     self.logger.debug('%sSkipped: is Gerrit, but --non-gerrit-only specified: %s' % (self.log_prefix, git_dir))
                     continue
             if self.options.gerrit_only:
-                if repo_name not in [gerrit_repo_name for (gerrit_repo_name, gerrit_repo_url) in GERRIT_REPOSITORIES]:
+                if repo_name not in [gerrit_repo_name for (gerrit_repo_name, gerrit_repo_url, _) in GERRIT_REPOSITORIES]:
                     self.logger.debug('%sSkipped: is not Gerrit, but --gerrit-only specified: %s' % (self.log_prefix, git_dir))
                     continue
             if repo_name not in selected_repos:

@@ -1690,15 +1690,9 @@
   <rm:propertyElement key="py4j.new.git.url">
     <bc:constant value="${github.${py4j.new.github.authentication}.url}${py4j.new.github.organization}/py4j.git"/>
   </rm:propertyElement>
-  <!-- *** (eclipse/)richbeans *** -->
-  <rm:propertyElement key="richbeans.github.organization">
-    <bc:constant value="eclipse"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="richbeans.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
+  <!-- *** richbeans *** -->
   <rm:propertyElement key="richbeans.git.url">
-    <bc:constant value="${github.${richbeans.github.authentication}.url}${richbeans.github.organization}/richbeans.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/richbeans.git"/>
   </rm:propertyElement>
   <!-- *** (eclipse/)scanning *** -->
   <rm:propertyElement key="scanning.git.url">
@@ -3724,7 +3718,7 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       (eclipse/)RICHBEANS repository
+       RICHBEANS repository
   -->
   <rm:searchPath name="richbeans">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.richbeans=true))" readerType="git">

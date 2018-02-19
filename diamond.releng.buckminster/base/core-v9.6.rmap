@@ -1751,44 +1751,13 @@
   <rm:propertyElement key="py4j.new.git.url">
     <bc:constant value="${github.${py4j.new.github.authentication}.url}${py4j.new.github.organization}/py4j.git"/>
   </rm:propertyElement>
-  <!-- *** (eclipse/)richbeans *** -->
-  <rm:propertyElement key="richbeans.github.organization">
-    <bc:constant value="eclipse"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="richbeans.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
+  <!-- *** richbeans *** -->
   <rm:propertyElement key="richbeans.git.url">
-    <bc:constant value="${github.${richbeans.github.authentication}.url}${richbeans.github.organization}/richbeans.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/richbeans.git"/>
   </rm:propertyElement>
   <!-- *** (eclipse/)scanning *** -->
-  <rm:propertyElement key="scanning.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scanning.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scanning.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgerrit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scanning.dascgerrit.authentication">
-    <bc:constant value="${dascgerrit.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scanning.dascgerrit.url">
-    <bc:constant value="${diamond.dascgerrit.${scanning.dascgerrit.authentication}.url}/eclipse"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scanning.github.organization">
-    <bc:constant value="DiamondLightSource"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scanning.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scanning.github.url">
-    <bc:constant value="${github.${scanning.github.authentication}.url}${scanning.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="scanning.git.url">
-    <bc:constant value="${scanning.${scanning.git.location.translated}.url}/scanning.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/eclipse/scanning.git"/>
   </rm:propertyElement>
   <!-- *** scisoft- *** -->
   <rm:propertyElement key="scisoft.2ddpr.git.location">
@@ -3898,7 +3867,7 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       (eclipse/)RICHBEANS repository
+       RICHBEANS repository
   -->
   <rm:searchPath name="richbeans">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.richbeans=true))" readerType="git">
