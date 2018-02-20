@@ -182,43 +182,45 @@ OUTPUT_LINES_TO_SUPPRESS = (
     )
 
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
-    # repository                    Gerrit URL
-    ('daq-platform.git'           , 'ssh://gerrit.diamond.ac.uk:29418/daq/daq-platform.git',                ),
-    ('diamond-jacorb.git'         , 'ssh://gerrit.diamond.ac.uk:29418/diamond/diamond-jacorb.git',          ),
-    ('diamond-jython.git'         , 'ssh://gerrit.diamond.ac.uk:29418/diamond/diamond-jython.git',          ),
-    ('diamond-springframework.git', 'ssh://gerrit.diamond.ac.uk:29418/diamond/diamond-springframework.git', ),
-    ('scanning.git'               , 'ssh://gerrit.diamond.ac.uk:29418/eclipse/scanning.git',                ),
-    ('gda-bimorph.git'            , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-bimorph.git',                 ),
-    ('gda-common.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-common.git',                  ),
-    ('gda-common-rcp.git'         , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-common-rcp.git',              ),
-    ('gda-core.git'               , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-core.git',                    ),
-    ('gda-devices-cirrus.git'     , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-cirrus.git',          ),
-    ('gda-devices-mythen.git'     , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-mythen.git',          ),
-    ('gda-devices-pco.git'        , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-pco.git',             ),
-    ('gda-devices-peem.git'       , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-peem.git',            ),
-    ('gda-devices-pixium.git'     , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-pixium.git',          ),
-    ('gda-devices-prosilica.git'  , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-devices-prosilica.git',       ),
-    ('gda-diamond.git'            , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-diamond.git',                 ),
-    ('gda-dls-beamlines-i19.git'  , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-dls-beamlines-i19.git',       ),
-    ('gda-dls-beamlines-xas.git'  , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-dls-beamlines-xas.git',       ),
-    ('gda-dls-excalibur.git'      , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-dls-excalibur.git',           ),
-    ('gda-epics.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-epics.git',                   ),
-    ('gda-hrpd.git'               , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-hrpd.git',                    ),
-    ('gda-legacy.git'             , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-legacy.git',                  ),
-    ('gda-logpanel.git'           , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-logpanel.git',                ),
-    ('gda-mx.git'                 , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-mx.git',                      ),
-    ('gda-nexus.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-nexus.git',                   ),
-    ('gda-pes.git'                , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-pes.git',                     ),
-    ('gda-tango.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-tango.git',                   ),
-    ('gda-tomography.git'         , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-tomography.git',              ),
-    ('gda-video.git'              , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-video.git',                   ),
-    ('gda-xas-core.git'           , 'ssh://gerrit.diamond.ac.uk:29418/gda/gda-xas-core.git',                ),
-    ('richbeans.git'              , 'ssh://gerrit.diamond.ac.uk:29418/richbeans.git',                       ),
-    ('wychwood.git'               , 'ssh://gerrit.diamond.ac.uk:29418/gda/wychwood.git',                    ),
-    ('training-gerrit-1.git'      , 'ssh://gerrit.diamond.ac.uk:29418/training/training-gerrit-1.git',      ),
+    # repository                    Gerrit URL (after prefix)
+    ('daq-platform.git'           , 'daq/daq-platform.git',                ),
+    ('diamond-jacorb.git'         , 'diamond/diamond-jacorb.git',          ),
+    ('diamond-jython.git'         , 'diamond/diamond-jython.git',          ),
+    ('diamond-springframework.git', 'diamond/diamond-springframework.git', ),
+    ('scanning.git'               , 'eclipse/scanning.git',                ),
+    ('gda-bimorph.git'            , 'gda/gda-bimorph.git',                 ),
+    ('gda-common.git'             , 'gda/gda-common.git',                  ),
+    ('gda-common-rcp.git'         , 'gda/gda-common-rcp.git',              ),
+    ('gda-core.git'               , 'gda/gda-core.git',                    ),
+    ('gda-devices-cirrus.git'     , 'gda/gda-devices-cirrus.git',          ),
+    ('gda-devices-mythen.git'     , 'gda/gda-devices-mythen.git',          ),
+    ('gda-devices-pco.git'        , 'gda/gda-devices-pco.git',             ),
+    ('gda-devices-peem.git'       , 'gda/gda-devices-peem.git',            ),
+    ('gda-devices-pixium.git'     , 'gda/gda-devices-pixium.git',          ),
+    ('gda-devices-prosilica.git'  , 'gda/gda-devices-prosilica.git',       ),
+    ('gda-diamond.git'            , 'gda/gda-diamond.git',                 ),
+    ('gda-dls-beamlines-i19.git'  , 'gda/gda-dls-beamlines-i19.git',       ),
+    ('gda-dls-beamlines-xas.git'  , 'gda/gda-dls-beamlines-xas.git',       ),
+    ('gda-dls-excalibur.git'      , 'gda/gda-dls-excalibur.git',           ),
+    ('gda-epics.git'              , 'gda/gda-epics.git',                   ),
+    ('gda-hrpd.git'               , 'gda/gda-hrpd.git',                    ),
+    ('gda-legacy.git'             , 'gda/gda-legacy.git',                  ),
+    ('gda-logpanel.git'           , 'gda/gda-logpanel.git',                ),
+    ('gda-mx.git'                 , 'gda/gda-mx.git',                      ),
+    ('gda-nexus.git'              , 'gda/gda-nexus.git',                   ),
+    ('gda-pes.git'                , 'gda/gda-pes.git',                     ),
+    ('gda-tango.git'              , 'gda/gda-tango.git',                   ),
+    ('gda-tomography.git'         , 'gda/gda-tomography.git',              ),
+    ('gda-video.git'              , 'gda/gda-video.git',                   ),
+    ('gda-xas-core.git'           , 'gda/gda-xas-core.git',                ),
+    ('richbeans.git'              , 'richbeans.git',                       ),
+    ('wychwood.git'               , 'gda/wychwood.git',                    ),
+    ('training-gerrit-1.git'      , 'training/training-gerrit-1.git',      ),
     )
 
-GERRIT_URI_HTTPS_PREFIX = 'https://gerrit.diamond.ac.uk/'  # typically used for anonymous checkout (we use SSH for authenticated checkout)
+GERRIT_URI_HTTPS_PREFIX = 'https://gerrit.diamond.ac.uk/'      # typically used for anonymous checkout (we use SSH for authenticated checkout)
+GERRIT_URI_SSH_PREFIX   = 'ssh://gerrit.diamond.ac.uk:29418/'
+GERRIT_OLD_ANON_PREFIX  = 'git://github.com'                   # old mirror of Gerrit-hosted repo, not managed by Gerrit
 
 class GitConfigParser(ConfigParser.RawConfigParser):
     """ Subclass of the regular ConfigParser that handles the leading tab characters in .git/config files """
@@ -1461,12 +1463,14 @@ class PewmaManager(object):
                     current_branch = (line.rsplit('/')[-1] or 'master').strip()  # strip() to get rid of newline
                     break
 
+            # set push URL
             git_config_commands = []
+            gerrit_repo_url_push = GERRIT_URI_SSH_PREFIX + gerrit_repo_url
             config_changes = (
                 # section         , option          , name                   , required_value                   , action_if_already_exists
                 ('gerrit'         , 'createchangeid', 'gerrit.createchangeid', 'true'                           , 'replace'),
                 ('remote "origin"', 'fetch'         , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*'      , 'append'),
-                ('remote "origin"', 'pushurl'       , 'remote.origin.pushurl', gerrit_repo_url                  , 'append'),
+                ('remote "origin"', 'pushurl'       , 'remote.origin.pushurl', gerrit_repo_url_push             , 'append'),
                 ('remote "origin"', 'push'          , 'remote.origin.push'   , 'HEAD:refs/for/' + current_branch, 'keep'),
                 ('merge'          , 'log'           , 'merge.log'            , '50'                             , 'replace'),
                 # the following 2 options commented out, since command line git works correctly,
@@ -1476,11 +1480,15 @@ class PewmaManager(object):
                 ### ('pull'           , 'ff'            , 'pull.ff'              , 'true'                           , True),  # pulls should fast-forward if possible
                 )
 
-            if not origin_url.startswith(GERRIT_URI_HTTPS_PREFIX):
-                # make sure that URL is correctly set
+            # set fetch URL
+            if not origin_url.startswith((GERRIT_URI_HTTPS_PREFIX, GERRIT_URI_SSH_PREFIX)):
+                if origin_url.startswith(GERRIT_OLD_ANON_PREFIX):
+                    gerrit_repo_url_pull = GERRIT_URI_HTTPS_PREFIX  + gerrit_repo_url
+                else:
+                    gerrit_repo_url_pull = GERRIT_URI_SSH_PREFIX  + gerrit_repo_url
                 config_changes += (
                 # section         , option          , name                   , required_value                   , action_if_already_exists
-                ('remote "origin"', 'url'           , 'remote.origin.url'    , gerrit_repo_url                  , 'replace'),)
+                ('remote "origin"', 'url'           , 'remote.origin.url'    , gerrit_repo_url_pull             , 'replace'),)
 
             for (section, option, name, required_value, action_if_already_exists) in config_changes:
                 self.logger.debug('%sGetting: %s in: %s' % (self.log_prefix, (section, option, name, required_value, action_if_already_exists), git_dir))
@@ -1588,11 +1596,11 @@ class PewmaManager(object):
         return_code_count = {}  # dictionary with key=return_code, value=repositories it occurred in
         for (repo_name, git_dir) in sorted(git_directories):
             if self.options.non_gerrit_only:
-                if repo_name in [gerrit_repo_name for (gerrit_repo_name, gerrit_repo_url) in GERRIT_REPOSITORIES]:
+                if repo_name in [gerrit_repo_name for (gerrit_repo_name, _) in GERRIT_REPOSITORIES]:
                     self.logger.debug('%sSkipped: is Gerrit, but --non-gerrit-only specified: %s' % (self.log_prefix, git_dir))
                     continue
             if self.options.gerrit_only:
-                if repo_name not in [gerrit_repo_name for (gerrit_repo_name, gerrit_repo_url) in GERRIT_REPOSITORIES]:
+                if repo_name not in [gerrit_repo_name for (gerrit_repo_name, _) in GERRIT_REPOSITORIES]:
                     self.logger.debug('%sSkipped: is not Gerrit, but --gerrit-only specified: %s' % (self.log_prefix, git_dir))
                     continue
             if repo_name not in selected_repos:
