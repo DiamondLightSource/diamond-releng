@@ -292,7 +292,7 @@ class PewmaManager(object):
                  )),
             ('print-workspace-path', None,
                 ('print-workspace-path',
-                 'Prints the workspace directory path (explicit or determined), without a trailing newline',
+                 'Prints the workspace directory path (explicit or determined)',
                  )),
             ('get-branches-expected', None,
                 ('get-branches-expected <component> [<category> [<version>] | <cquery>]',
@@ -1055,7 +1055,7 @@ class PewmaManager(object):
         """
 
         assert self.workspace_loc
-        print(self.workspace_loc, end='')
+        print(self.workspace_loc)
         return
 
 
