@@ -2350,6 +2350,14 @@
         </bc:replace>
       </rm:uri>
     </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i13=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i13x.git.url}"/>
+      <rm:uri format="{0}/gda-dls-beamlines-i13x.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dls-beamlines-i13x=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-dls-beamlines-i13x.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
