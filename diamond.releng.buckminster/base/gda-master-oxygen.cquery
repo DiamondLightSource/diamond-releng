@@ -195,7 +195,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.ispyb\.(.+)$">  <!-- if source.repository.gda-ispyb-api=true, materializes source projects, otherwise materializes jars into tp/ -->
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-ispyb-api.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((b16|b24|i06|i06-1|i07|i10|i15|i15-1|i16|mt|optics)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i15|i15-1|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^((b16|b24|i06|i06-1|i07|i10|i16|mt|optics)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^((i02|i02-1|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.wf-prototype-.+|uk\.ac\.(diamond\.(activemq\.fragment\.mx|daq\.mx\..+|dna|stac)|gda\.(beamline\.(i02|i02-1|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" useTargetPlatform="false">
