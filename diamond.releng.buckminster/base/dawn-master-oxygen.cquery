@@ -272,9 +272,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding(\.test)?|plotserver(\.test)?|powder\.(indexer(\.test)?|matcher\.ccdc)|processing(\.(actor|feature|test))?|test|xmlrpc(\.test)?))?|core\.feature|deprecated|jython|python(\..+)?|surfacescatter(\..+)?|xpdf(\..+)?))$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-core.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.icat.*$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-icat.git repository branch</cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ispyb.git repository branch</cq:documentation>
     </cq:advisorNode>

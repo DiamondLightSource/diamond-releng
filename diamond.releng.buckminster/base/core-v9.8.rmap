@@ -1048,32 +1048,6 @@
     <bc:constant value="${scisoft.core.${scisoft.core.git.location.translated}.url}/scisoft-core.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="scisoft.icat.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.icat.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.icat.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.icat.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.icat.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.icat.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.icat.github.url">
-    <bc:constant value="${github.${scisoft.icat.github.authentication}.url}${scisoft.icat.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.icat.git.url">
-    <bc:constant value="${scisoft.icat.${scisoft.icat.git.location.translated}.url}/scisoft-icat.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="scisoft.ispyb.git.location">
     <bc:constant value="${scisoft.git.location}"/>
   </rm:propertyElement>
@@ -1419,7 +1393,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" searchPathRef="scisoft_2ddpr"/>
   <rm:locator pattern="^uk\.ac\.diamond\.CBFlib$" searchPathRef="scisoft_cbflib"/>
   <rm:locator pattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding(\.test)?|plotserver(\.test)?|powder\.(indexer(\.test)?|matcher\.ccdc)|processing(\.(actor|feature|test))?|test|xmlrpc(\.test)?))?|core\.feature|deprecated|jython|python(\..+)?|surfacescatter(\..+)?|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.icat.*$" searchPathRef="scisoft_icat"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" searchPathRef="scisoft_ispyb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" searchPathRef="scisoft_mx"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ncd(\..+)?$" searchPathRef="scisoft_ncd"/>
@@ -2933,22 +2906,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-core=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from scisoft-core.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="scisoft_icat">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.scisoft-icat=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${scisoft.icat.git.url}"/>
-      <rm:uri format="{0}/scisoft-icat.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-icat=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from scisoft-icat.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
