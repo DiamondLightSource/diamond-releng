@@ -145,17 +145,13 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-prosilica.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-devices-prosilica" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(all-dls-(configs|clients)|(dls|b07|b07-shared|i09|i09-2|i15|i15-1|p99)-config|uk\.ac\.(diamond\.daq\.(beamline|dls)(\..+)?|gda\.(beamline\.(b07|i09|i09-2|i15|i15-1)|diamond|dls)(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(all-dls-(configs|clients)|(dls|b07|b07-shared|i09|i09-2|i15|i15-1|p99)-config|uk\.ac\.(diamond\.daq\.(beamline\.(b07|i09|i09-2|i15|i15-1|p99)|dls\.controls)(\..+)?|gda\.(beamline\.(b07|i09|i09-2|i15|i15-1)|diamond|dls)(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-diamond.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-diamond" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-b23.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-dls-beamlines-b23" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^(i09(-1|-2)?-config|uk\.ac\.gda\.(beamline\.i09(-1|-2)?(\..+)?|sisa\.client))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i09.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.gda-dls-beamlines-i09" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i11.git repository branch</cq:documentation>

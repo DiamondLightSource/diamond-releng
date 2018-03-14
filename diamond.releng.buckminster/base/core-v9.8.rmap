@@ -604,32 +604,6 @@
     <bc:constant value="${gda.dls.beamlines.b23.${gda.dls.beamlines.b23.git.location.translated}.url}/gda-dls-beamlines-b23.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="gda.dls.beamlines.i09.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i09.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="gda.dls.beamlines.i09.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i09.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i09.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i09.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i09.github.url">
-    <bc:constant value="${github.${gda.dls.beamlines.i09.github.authentication}.url}${gda.dls.beamlines.i09.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i09.git.url">
-    <bc:constant value="${gda.dls.beamlines.i09.${gda.dls.beamlines.i09.git.location.translated}.url}/gda-dls-beamlines-i09.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="gda.dls.beamlines.i11.git.location">
     <bc:constant value="${gda.git.location}"/>
   </rm:propertyElement>
@@ -1426,9 +1400,8 @@
   <rm:locator pattern="^uk\.ac\.gda\..+\.peem(\..+)?$" searchPathRef="gda_devices_peem"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.pixium$" searchPathRef="gda_devices_pixium"/>
   <rm:locator pattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" searchPathRef="gda_devices_prosilica"/>
-  <rm:locator pattern="^(all-dls-(configs|clients)|(dls|b07|b07-shared|i09|i09-2|i15|i15-1|p99)-config|uk\.ac\.(diamond\.daq\.(beamline|dls)(\..+)?|gda\.(beamline\.(b07|i09|i09-2|i15|i15-1)|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond" failOnError="false"/>
+  <rm:locator pattern="^(all-dls-(configs|clients)|(dls|b07|b07-shared|i09|i09-2|i15|i15-1|p99)-config|uk\.ac\.(diamond\.daq\.(beamline\.(b07|i09|i09-2|i15|i15-1|p99)|dls\.controls)(\..+)?|gda\.(beamline\.(b07|i09|i09-2|i15|i15-1)|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond"/>
   <rm:locator pattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" searchPathRef="gda_dls_beamlines_b23"/>
-  <rm:locator pattern="^(i09(-1|-2)?-config|uk\.ac\.gda\.(beamline\.i09(-1|-2)?(\..+)?|sisa\.client))$" searchPathRef="gda_dls_beamlines_i09"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
   <rm:locator pattern="^(i12-config|uk\.ac\.gda\.beamline\.i12(\..+)?)$" searchPathRef="gda_dls_beamlines_i12"/>
   <rm:locator pattern="^(i13(-1)?-config|uk\.ac\.gda\.beamline\.i13(-1)?(\..+)?)$" searchPathRef="gda_dls_beamlines_i13x"/>
@@ -2284,22 +2257,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dls-beamlines-b23=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-dls-beamlines-b23.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_dls_beamlines_i09">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i09=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i09.git.url}"/>
-      <rm:uri format="{0}/gda-dls-beamlines-i09.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dls-beamlines-i09=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-dls-beamlines-i09.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
