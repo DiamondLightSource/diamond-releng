@@ -1431,7 +1431,7 @@
   <rm:locator pattern="^(i09(-1|-2)?-config|uk\.ac\.gda\.(beamline\.i09(-1|-2)?(\..+)?|sisa\.client))$" searchPathRef="gda_dls_beamlines_i09"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
   <rm:locator pattern="^(i12-config|uk\.ac\.gda\.beamline\.i12(\..+)?)$" searchPathRef="gda_dls_beamlines_i12"/>
-  <rm:locator pattern="^(i13(i|j|-1)?-config|uk\.ac\.gda\.beamline\.i13(i|j|-1)?(\..+)?)$" searchPathRef="gda_dls_beamlines_i13x"/>
+  <rm:locator pattern="^(i13(-1)?-config|uk\.ac\.gda\.beamline\.i13(-1)?(\..+)?)$" searchPathRef="gda_dls_beamlines_i13x"/>
   <rm:locator pattern="^(i19(.|-).+|uk\.ac\.(diamond\.org\.springframework\.fragment\.i19-shared-config|gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator)))$" searchPathRef="gda_dls_beamlines_i19"/>
   <rm:locator pattern="^(i21-(config|python)|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" searchPathRef="gda_dls_beamlines_i21"/>
   <rm:locator pattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" searchPathRef="gda_dls_beamlines_xas"/>
@@ -2341,16 +2341,6 @@
   <!-- -->
   <rm:searchPath name="gda_dls_beamlines_i13x">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i13x=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i13x.git.url}"/>
-      <rm:uri format="{0}/gda-dls-beamlines-i13x.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:replace pattern="^(.+)-config$" replacement="$1">
-          <bc:propertyRef key="buckminster.component"/>
-        </bc:replace>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i13=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i13x.git.url}"/>
       <rm:uri format="{0}/gda-dls-beamlines-i13x.git,{1}">
