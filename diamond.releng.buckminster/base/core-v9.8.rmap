@@ -996,32 +996,6 @@
     <bc:constant value="${scisoft.2ddpr.${scisoft.2ddpr.git.location.translated}.url}/scisoft-2ddpr.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="scisoft.arpes.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.arpes.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.arpes.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.arpes.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.arpes.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.arpes.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.arpes.github.url">
-    <bc:constant value="${github.${scisoft.arpes.github.authentication}.url}${scisoft.arpes.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.arpes.git.url">
-    <bc:constant value="${scisoft.arpes.${scisoft.arpes.git.location.translated}.url}/scisoft-arpes.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="scisoft.cbflib.git.location">
     <bc:constant value="${scisoft.git.location}"/>
   </rm:propertyElement>
@@ -1443,7 +1417,6 @@
   <!-- *** scisoft- *** -->
   <rm:redirect pattern="uk\.ac\.diamond\.scisoft\.deprecated(\.rcp)?$" resolutionFilter="(disallow.scisoft.deprecated=true)" href="/***.ERROR.-.something.has.a.dependency.on.a-scisoft.deprecated-component,.but.the.CQuery.does.not.allow.this***"/>  <!-- See DASCTEST-212 -->
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.diffraction\.powder(\..+)?$" searchPathRef="scisoft_2ddpr"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.arpes(\.(feature|workflow\.feature))?$" searchPathRef="scisoft_arpes"/>
   <rm:locator pattern="^uk\.ac\.diamond\.CBFlib$" searchPathRef="scisoft_cbflib"/>
   <rm:locator pattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding(\.test)?|plotserver(\.test)?|powder\.(indexer(\.test)?|matcher\.ccdc)|processing(\.(actor|feature|test))?|test|xmlrpc(\.test)?))?|core\.feature|deprecated|jython|python(\..+)?|surfacescatter(\..+)?|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.icat.*$" searchPathRef="scisoft_icat"/>
@@ -2928,22 +2901,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-2ddpr=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from scisoft-2ddpr.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="scisoft_arpes">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.scisoft-arpes=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${scisoft.arpes.git.url}"/>
-      <rm:uri format="{0}/scisoft-arpes.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-arpes=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from scisoft-arpes.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
