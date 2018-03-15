@@ -1425,6 +1425,8 @@
   <rm:locator pattern="^org\.(jogamp|jzy3d)\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.(boofcv|ddogleg|ejml|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^tech\.uom\.lib\.uom-lib-common(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^tec\.units\.unit-ri(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.de\.jaret(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <!-- "^uk\.ac\.diamond\.ispyb\.(.+)$" is in diamond_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
   <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.(ws\.commons\.util|xmlrpc\.(client|common|server))(\..+)?$" searchPathRef="diamond_orbit_p2"/>
