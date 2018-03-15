@@ -366,7 +366,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<attribute name="Xvfb-display-number" default="dummy.for.Xvfb-display-number" />
 		<attribute name="fork" default="on" />
 		<attribute name="forkmode" default="perBatch" />
-		<attribute name="maxmemory" default="512m" />
+		<attribute name="maxmemory" default="1024m" />
 		<attribute name="timeout" default="900000" />
 		<attribute name="printSummary" default="on" />
 		<attribute name="showoutput" default="true" />
