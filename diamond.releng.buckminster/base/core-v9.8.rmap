@@ -1074,32 +1074,6 @@
     <bc:constant value="${scisoft.ispyb.${scisoft.ispyb.git.location.translated}.url}/scisoft-ispyb.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="scisoft.mx.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.mx.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.mx.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.mx.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.mx.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.mx.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.mx.github.url">
-    <bc:constant value="${github.${scisoft.mx.github.authentication}.url}${scisoft.mx.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.mx.git.url">
-    <bc:constant value="${scisoft.mx.${scisoft.mx.git.location.translated}.url}/scisoft-mx.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="scisoft.peema.git.location">
     <bc:constant value="${scisoft.git.location}"/>
   </rm:propertyElement>
@@ -1368,7 +1342,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.CBFlib$" searchPathRef="scisoft_cbflib"/>
   <rm:locator pattern="^(de\.desy\.file\.loader(\..+)?|uk\.ac\.diamond\.scisoft\.(analysis(\.(feature|osgi|peakfinding(\.test)?|plotserver(\.test)?|powder\.(indexer(\.test)?|matcher\.ccdc)|processing(\.(actor|feature|test))?|test|xmlrpc(\.test)?))?|core\.feature|deprecated|jython|python(\..+)?|surfacescatter(\..+)?|xpdf(\..+)?))$" searchPathRef="scisoft_core"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ispyb.*$" searchPathRef="scisoft_ispyb"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.(scisoft\.ida|scisoft\.mx(v1)?\.rcp|scisoft\.processing\.singlecrystal(\.test)?|sda.mxlive)$" searchPathRef="scisoft_mx"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" searchPathRef="scisoft_peema"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ptychography(\..+)?$" searchPathRef="scisoft_ptychography"/>
   <rm:locator pattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" searchPathRef="scisoft_spectroscopy"/>
@@ -2895,22 +2868,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-ispyb=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from scisoft-ispyb.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="scisoft_mx">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.scisoft-mx=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${scisoft.mx.git.url}"/>
-      <rm:uri format="{0}/scisoft-mx.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-mx=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from scisoft-mx.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
