@@ -54,6 +54,7 @@ COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.diamond.daq.logpanel', 'gda')
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
     ('gda', 'master', 'gda-master.cquery', 'v3.3', ('master', '9.master', 'v9.master'), ('1.8.0',)),
+    ('gda', 'v9.7', 'gda-v9.7.cquery', 'v3.3', ('v9.7', '9.7', '97'), ('1.8.0',)),
     ('gda', 'v9.6', 'gda-v9.6.cquery', 'v3.3', ('v9.6', '9.6', '96'), ('1.8.0',)),
     ('gda', 'v9.5', 'gda-v9.5.cquery', 'v3.3', ('v9.5', '9.5', '95'), ('1.8.0',)),
     ('gda', 'v9.4', 'gda-v9.4.cquery', 'v3.2', ('v9.4', '9.4', '94'), ('1.8.0',)),
@@ -69,6 +70,7 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844'), ('1.7.0',)),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842'), ('1.7.0',)),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.3', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', 'v2.8', 'dawn-v2.8.cquery', 'v3.3', ('v2.8', '2.8'), ('1.8.0',)),
     ('dawn', 'v2.7', 'dawn-v2.7.cquery', 'v3.3', ('v2.7', '2.7'), ('1.8.0',)),
     ('dawn', 'v2.6', 'dawn-v2.6.cquery', 'v3.3', ('v2.6', '2.6'), ('1.8.0',)),
     ('dawn', 'v2.5', 'dawn-v2.5.cquery', 'v3.2', ('v2.5', '2.5'), ('1.8.0',)),
