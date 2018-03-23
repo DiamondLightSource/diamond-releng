@@ -95,7 +95,7 @@ git push --verbose -u origin %(branch_name)s
     repository_names_to_include_pattern = os.environ.get('repository_names_to_include_pattern','')
     repository_names_to_exclude_pattern = os.environ.get('repository_names_to_exclude_pattern','')
 
-    github_anonymous_prefix = 'git://github.com/'
+    github_anonymous_prefix = ('https://github.com/', 'git://github.com/')
     github_authenticated_prefix = 'git@github.com:'
 
     # generate the bash script to branch the Git repositories
@@ -186,9 +186,10 @@ git push --verbose -u origin %(branch_name)s
             comment_prefix = ''
         else:
             comment_prefix = '# '
-        if repos_to_action[repo_name]['URL'].startswith(github_anonymous_prefix):
-            # convert URL from anonymous clone to authenticated
-            repos_to_action[repo_name]['URL'] = github_authenticated_prefix + repos_to_action[repo_name]['URL'][len(github_anonymous_prefix):]
+        for scheme in github_anonymous_prefix:
+            if repos_to_action[repo_name]['URL'].startswith(scheme):
+                # convert URL from anonymous clone to authenticated
+                repos_to_action[repo_name]['URL'] = github_authenticated_prefix + repos_to_action[repo_name]['URL'][len(scheme):]
         if repos_to_action[repo_name]['URL'] in UPSTREAM_URL_REWRITES:
             repos_to_action[repo_name]['URL'] = UPSTREAM_URL_REWRITES[repos_to_action[repo_name]['URL']]
         lines = BASH_GIT_PREAMBLE % {'repository': repo_name,
