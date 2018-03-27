@@ -50,12 +50,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-hpc.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|project\.repository\..+|runtime(\..+)?)|org\.dawnsci\.passerelle\.(testsupport|parallel\.actor(\..+)?))$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isencia.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isenciaui.git repository branch</cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawnsci\.marketplace(\.(core|server|ui))?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-marketplace-server.git repository branch</cq:documentation>
     </cq:advisorNode>

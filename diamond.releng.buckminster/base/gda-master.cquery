@@ -59,13 +59,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-hpc.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-hpc" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|project\.repository\..+|runtime(\..+)?)|org\.dawnsci\.passerelle\.(testsupport|parallel\.actor(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isencia.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.dawn-isencia" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-isenciaui.git repository branch</cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawnsci\.marketplace(\.(core|server|ui))?$" useMaterialization="false"  useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-marketplace-server.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-marketplace-server" value="true"/>

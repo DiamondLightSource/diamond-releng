@@ -335,36 +335,6 @@
     <bc:constant value="${github.${dawn.hpc.github.authentication}.url}${dawn.hpc.github.organization}/dawn-hpc.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.isencia.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.isencia.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.isencia.git.url">
-    <bc:constant value="${github.${dawn.isencia.github.authentication}.url}${dawn.isencia.github.organization}/dawn-isencia.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.isenciaui.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.isenciaui.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.isenciaui.git.url">
-    <bc:constant value="${github.${dawn.isenciaui.github.authentication}.url}${dawn.isenciaui.github.organization}/dawn-isenciaui.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.marketplace.server.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.marketplace.server.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.marketplace.server.git.url">
-    <bc:constant value="${github.${dawn.marketplace.server.github.authentication}.url}${dawn.marketplace.server.github.organization}/dawn-marketplace-server.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="dawn.mx.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -1262,8 +1232,6 @@
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
   <rm:locator pattern="^hdf\.hdf5lib$" searchPathRef="dawn_hdf"/>
   <rm:locator pattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" searchPathRef="dawn_hpc"/>
-  <rm:locator pattern="^(com\.isencia\.passerelle\.(actor(\..+)?|commons(\.ume)?|domain\.et|engine|project\.repository\..+|runtime(\..+)?)|org\.dawnsci\.passerelle\.(testsupport|parallel\.actor(\..+)?))$" searchPathRef="dawn_isencia"/>
-  <rm:locator pattern="^com\.isencia\.passerelle\.(editor\.common|resources|workbench\..+)$" searchPathRef="dawn_isenciaui"/>
   <rm:locator pattern="^org\.dawnsci\.mx\..+$" searchPathRef="dawn_mx"/>
   <rm:locator pattern="^org\.dawnsci\.marketplace(\.(core|server|ui))?$" searchPathRef="dawn_marketplace_server"/>
   <rm:locator pattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|logging\.feature|nano\.product(\..+)?|product\.(logging|plugin)))$" searchPathRef="dawn_product"/>
@@ -1612,38 +1580,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-hpc=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from dawn-hpc.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="dawn_isencia">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-isencia=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.isencia.git.url}"/>
-      <rm:uri format="{0}/dawn-isencia.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-isencia=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-isencia.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="dawn_isenciaui">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-isenciaui=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.isenciaui.git.url}"/>
-      <rm:uri format="{0}/dawn-isenciaui.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-isenciaui=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-isenciaui.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
