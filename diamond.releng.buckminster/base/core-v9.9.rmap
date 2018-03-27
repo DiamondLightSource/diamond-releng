@@ -87,14 +87,17 @@
     <bc:constant value="1.5.0"/>
   </rm:propertyElement>
   <!-- ***** -->
-  <rm:propertyElement key="nebula.p2.version.prerelease">  <!-- version of Eclipse Nebula p2 repository to use for selected components only -->
-    <bc:constant value="snapshot-yyyymmdd_hhmm"/>          <!-- the value is just whatever directory name we created on alfred -->
-  </rm:propertyElement>
   <rm:propertyElement key="nebula.p2.version">  <!-- version of Eclipse Nebula p2 repository to use -->
     <bc:constant value="1.4.0"/>
   </rm:propertyElement>
+  <rm:propertyElement key="nebula.p2.url">
+    <bc:constant value="${alfred.url}/sites/download.eclipse.org/nebula/releases/${nebula.p2.version}"/>
+  </rm:propertyElement>
   <rm:propertyElement key="nebula.incubation.p2.version">  <!-- version of Eclipse Nebula Incubation p2 repository to use -->
     <bc:constant value="snapshot-20171025_1305"/>
+  </rm:propertyElement>
+  <rm:propertyElement key="nebula.incubation.p2.url">
+    <bc:constant value="${alfred.url}/sites/download.eclipse.org/nebula/incubation/${nebula.incubation.p2.version}"/>
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
@@ -1349,7 +1352,6 @@
   <rm:locator pattern="^org\.eclipse\.persistence\..+$" searchPathRef="eclipse_eclipselink_p2"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
   <rm:locator pattern="^org\.eclipse\.nebula\.widgets\.nattable\..+$" searchPathRef="eclipse_nattable"/>
-  <!-- <rm:locator pattern="^org\.eclipse\.nebula\.visualization\.(whatever|you|select)(\..+)?$" searchPathRef="eclipse_nebula_prerelease"/> -->
   <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.nebula(\..+)?$" searchPathRef="eclipse_nebula_incubation"/>
   <!--
@@ -3059,25 +3061,18 @@
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/nattable/releases/${nattable.p2.version}/repository"/>
     </rm:provider>
   </rm:searchPath>
-  <rm:searchPath name="eclipse_nebula_prerelease">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/releases/${nebula.p2.version.prerelease}"/>
-    </rm:provider>
-  </rm:searchPath>
   <rm:searchPath name="eclipse_nebula">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/releases/${nebula.p2.version}"/>
+      <rm:uri format="${nebula.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_nebula_incubation">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/nebula/incubation/${nebula.incubation.p2.version}"/>
+      <rm:uri format="${nebula.incubation.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_mars_always">  <!-- For Oxygen, get from Mars p2 site -->
