@@ -325,16 +325,6 @@
     <bc:constant value="${github.${dawn.hdf.github.authentication}.url}${dawn.hdf.github.organization}/dawn-hdf.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.hpc.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.hpc.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.hpc.git.url">
-    <bc:constant value="${github.${dawn.hpc.github.authentication}.url}${dawn.hpc.github.organization}/dawn-hpc.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="dawn.mx.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -1231,7 +1221,6 @@
   <rm:locator pattern="^(org\.dawb\.(common\.(gpu|python(\.test)?|services|ui|util)|pydev\.extensions|workbench\.examples)|org\.dawnsci\.(boofcv(\..+)?|common\.(services|ui)\.feature|conversion(\.feature|\.test|\.ui)?|io|jexl(\.test)?|jgoogleanalytics(\.test)?|macro(\..+)?|nexus\.ispyb(\..+)?|persistence(\..+)?|processing\.(docgenerator|python)|python.rpc(\.test)?|thirdparty\.xml\.feature))$" searchPathRef="dawn_common"/>
   <rm:locator pattern="^org\.dawnsci\.documentation(\..+)?$" searchPathRef="dawn_doc"/>
   <rm:locator pattern="^hdf\.hdf5lib$" searchPathRef="dawn_hdf"/>
-  <rm:locator pattern="^((com\.sun\.grid|org\.dawnsci|org\.ggf)(\.drmaa|\.hpc|\.passerelle\.cluster)(\..+)?)$" searchPathRef="dawn_hpc"/>
   <rm:locator pattern="^org\.dawnsci\.mx\..+$" searchPathRef="dawn_mx"/>
   <rm:locator pattern="^org\.dawnsci\.marketplace(\.(core|server|ui))?$" searchPathRef="dawn_marketplace_server"/>
   <rm:locator pattern="^org\.(dawb\.workbench\.(application(\.feature)?|config\.feature)|dawnsci\.(base\..+|intro(\..+)?|logging\.feature|nano\.product(\..+)?|product\.(logging|plugin)))$" searchPathRef="dawn_product"/>
@@ -1564,22 +1553,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-hdf=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from dawn-hdf.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="dawn_hpc">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-hpc=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.hpc.git.url}"/>
-      <rm:uri format="{0}/dawn-hpc.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-hpc=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-hpc.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
