@@ -105,12 +105,9 @@ def parse_jenkins_jobname(jobname):
             site = m.group('GDA_site')
             beamline = m.group('GDA_beamline')
             parse_result.append(('GDA_beamline', beamline))
-            if beamline not in ('logpanel', 'synoptic'):
-                config_project = beamline + '-config'
-            else:
-                config_project = ''
+            config_project = beamline + '-config'
             if site == 'DLS':
-                if beamline in ('excalibur', 'synoptic'):
+                if beamline in ('excalibur',):
                     product_site = 'uk.ac.gda.client.' + beamline + '.site'
                 elif beamline == 'i06-1':
                     product_site = 'uk.ac.gda.beamline.i06_1.site'
@@ -123,10 +120,7 @@ def parse_jenkins_jobname(jobname):
                 else:
                     product_site = 'uk.ac.gda.beamline.' + beamline + '.site'
             elif site == 'GDA':
-                if beamline == 'logpanel':
-                    product_site = 'uk.ac.gda.client.' + beamline + '.site'
-                else:
-                    product_site = 'uk.ac.gda.' + beamline + '.site'
+                product_site = 'uk.ac.gda.' + beamline + '.site'
             elif site == 'ESRF':
                 product_site = 'fr.esrf.gda.beamline.' + beamline + '.site'
             parse_result.append(('materialize_components', (config_project + ' ' + product_site).strip()))
@@ -152,9 +146,6 @@ def parse_jenkins_jobname(jobname):
                 if product_name == 'gdaserver':
                     materialize_components = 'uk.ac.diamond.daq.server.site'
                     product_site = materialize_components
-                elif product_name == 'logpanel':
-                    materialize_components = 'uk.ac.gda.client.logpanel.site'
-                    product_site = materialize_components
                 parse_result.append(('non_beamline_product', product_name))
                 parse_result.append(('materialize_components', materialize_components))
                 parse_result.append(('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true -Dskip_ALL_test_fragments=true'))
@@ -169,7 +160,7 @@ def parse_jenkins_jobname(jobname):
         # if this is any publish job, work out the name of the upstream job (the create.product job), and where to publish to
         if '-publish.' in jobname:
             m = re.match('^(?P<prefix>.+)-publish.[a-z]+-(?P<product_name>.+)(?P<suffix>.?)$', jobname)
-            if m.group('product_name') not in ('gdaserver', 'logpanel'):
+            if m.group('product_name') not in ('gdaserver',):
                 parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product.beamline-' + m.group('product_name') + m.group('suffix')))
                 directory_product_name = 'gdaclient'
             else:
