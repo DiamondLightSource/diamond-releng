@@ -121,6 +121,8 @@ def parse_jenkins_jobname(jobname):
                     product_site = 'uk.ac.gda.beamline.' + beamline + '.site'
             elif site == 'GDA':
                 product_site = 'uk.ac.gda.' + beamline + '.site'
+            elif site == 'ANL':
+                product_site = 'gov.anl.aps.beamline.' + beamline + '.site'
             elif site == 'ESRF':
                 product_site = 'fr.esrf.gda.beamline.' + beamline + '.site'
             parse_result.append(('materialize_components', (config_project + ' ' + product_site).strip()))
@@ -531,6 +533,25 @@ def test_parse_jenkins_jobname():
         ]
     write_parse_result(p, output)
 
+    p = parse_jenkins_jobname('GDA.9.7-create.product.beamline-DLS-b16')
+    assert p == [
+        ('download.public', False),
+        ('GDA_release', '9.7'),
+        ('job_variant', None),
+        ('GDA_beamline', 'b16'),
+        ('materialize_components', 'b16-config uk.ac.gda.beamline.b16.site'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true -Dskip_ALL_test_fragments=true'),
+        ('build_options_extra', '--suppress-compile-warnings'),
+        ('product_site', 'uk.ac.gda.beamline.b16.site'),
+        ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.jenkins.properties'),
+        ('publish_snapshot_job_to_trigger', 'GDA.9.7-publish.snapshot-DLS-b16'),
+        ('squish_trigger_job_to_trigger', 'GDA.9.7-squish.trigger-DLS-b16'),
+        ('at_least_one_publish_parameter_selected', False),
+        ('at_least_one_trigger_squish_parameter_selected', False),
+        ]
+    write_parse_result(p, output)
+
     p = parse_jenkins_jobname('GDA.master-create.product.beamline-DLS-b16')
     assert p == [
         ('download.public', False),
@@ -545,6 +566,44 @@ def test_parse_jenkins_jobname():
         ('buckminster_properties_filename', 'buckminster.jenkins.properties'),
         ('publish_snapshot_job_to_trigger', 'GDA.master-publish.snapshot-DLS-b16'),
         ('squish_trigger_job_to_trigger', 'GDA.master-squish.trigger-DLS-b16'),
+        ('at_least_one_publish_parameter_selected', False),
+        ('at_least_one_trigger_squish_parameter_selected', False),
+        ]
+    write_parse_result(p, output)
+
+    p = parse_jenkins_jobname('GDA.9.7-create.product.beamline-ANL-imca-cat')
+    assert p == [
+        ('download.public', False),
+        ('GDA_release', '9.7'),
+        ('job_variant', None),
+        ('GDA_beamline', 'imca-cat'),
+        ('materialize_components', 'imca-cat-config gov.anl.aps.beamline.imca-cat.site'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true -Dskip_ALL_test_fragments=true'),
+        ('build_options_extra', '--suppress-compile-warnings'),
+        ('product_site', 'gov.anl.aps.beamline.imca-cat.site'),
+        ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.jenkins.properties'),
+        ('publish_snapshot_job_to_trigger', 'GDA.9.7-publish.snapshot-ANL-imca-cat'),
+        ('squish_trigger_job_to_trigger', 'GDA.9.7-squish.trigger-ANL-imca-cat'),
+        ('at_least_one_publish_parameter_selected', False),
+        ('at_least_one_trigger_squish_parameter_selected', False),
+        ]
+    write_parse_result(p, output)
+
+    p = parse_jenkins_jobname('GDA.master-create.product.beamline-ANL-imca-cat')
+    assert p == [
+        ('download.public', False),
+        ('GDA_release', 'master'),
+        ('job_variant', None),
+        ('GDA_beamline', 'imca-cat'),
+        ('materialize_components', 'imca-cat-config gov.anl.aps.beamline.imca-cat.site'),
+        ('materialize_properties_extra', '-Dskip_ALL_test_fragments.common=true -Dskip_ALL_test_fragments=true'),
+        ('build_options_extra', '--suppress-compile-warnings'),
+        ('product_site', 'gov.anl.aps.beamline.imca-cat.site'),
+        ('product_options_extra', '--suppress-compile-warnings'),
+        ('buckminster_properties_filename', 'buckminster.jenkins.properties'),
+        ('publish_snapshot_job_to_trigger', 'GDA.master-publish.snapshot-ANL-imca-cat'),
+        ('squish_trigger_job_to_trigger', 'GDA.master-squish.trigger-ANL-imca-cat'),
         ('at_least_one_publish_parameter_selected', False),
         ('at_least_one_trigger_squish_parameter_selected', False),
         ]

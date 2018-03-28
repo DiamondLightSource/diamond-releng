@@ -190,6 +190,7 @@ git push --verbose -u origin %(branch_name)s
             if repos_to_action[repo_name]['URL'].startswith(scheme):
                 # convert URL from anonymous clone to authenticated
                 repos_to_action[repo_name]['URL'] = github_authenticated_prefix + repos_to_action[repo_name]['URL'][len(scheme):]
+                break
         if repos_to_action[repo_name]['URL'] in UPSTREAM_URL_REWRITES:
             repos_to_action[repo_name]['URL'] = UPSTREAM_URL_REWRITES[repos_to_action[repo_name]['URL']]
         lines = BASH_GIT_PREAMBLE % {'repository': repo_name,
