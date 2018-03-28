@@ -31,12 +31,14 @@ import zipfile
 
 COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, actual component name to use, category)
 
+# keep entries if they are used in ANY active release, even if they have been removed in master
 COMPONENT_ABBREVIATIONS.append(('dawnvanilla', 'org.dawnsci.base.site', 'dawn'))
 COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'uk.ac.diamond.dawn.site', 'dawn'))
 
 COMPONENT_ABBREVIATIONS.append(('example-client', 'uk.ac.gda.example.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('p45-client', 'uk.ac.diamond.daq.beamline.p45.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('p99-client', 'uk.ac.diamond.daq.beamline.p99.site', 'gda'))
+COMPONENT_ABBREVIATIONS.append(('imca-cat-client', 'gov.anl.aps.beamline.imca-cat.site', 'gda'))
 for beamline in ('b07', 'b07-1', 'b16', 'b18', 'b21', 'b24',
                  'i02', 'i02-1', 'i02-2', 'i03', 'i04', 'i04-1',
                  'i05', 'i05-1', 'i06', 'i06_1', 'i07', 'i08', 'i09', 'i09-2',
