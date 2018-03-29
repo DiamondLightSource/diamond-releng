@@ -41,7 +41,7 @@ COMPONENT_ABBREVIATIONS.append(('p99-client', 'uk.ac.diamond.daq.beamline.p99.si
 COMPONENT_ABBREVIATIONS.append(('imca-cat-client', 'gov.anl.aps.beamline.imca-cat.site', 'gda'))
 for beamline in ('b07', 'b07-1', 'b16', 'b18', 'b21', 'b24',
                  'i02', 'i02-1', 'i02-2', 'i03', 'i04', 'i04-1',
-                 'i05', 'i05-1', 'i06', 'i06_1', 'i07', 'i08', 'i09', 'i09-2',
+                 'i05', 'i05-1', 'i06', 'i06_1', 'i07', 'i08', 'i09', 'i09-1', 'i09-2',
                  'i10', 'i11', 'i11-1', 'i12', 'i13', 'i13-1','i13i', 'i13j', 'i14', 'i15', 'i15-1', 'i16', 'i18', 'i19-1', 'i19-2',
                  'i20', 'i20_1', 'i21', 'i22', 'i23', 'i24', 'lab11',
                  ):
