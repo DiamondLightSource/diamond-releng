@@ -1274,16 +1274,8 @@
   <rm:propertyElement key="gda.hrpd.git.url">
     <bc:constant value="${gda.hrpd.${gda.hrpd.git.location.translated}.url}/gda-hrpd.git"/>
   </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="gda.imca.cat.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.imca.cat.github.authentication">
-    <!-- <bc:constant value="${github.authentication.common}"/> -->
-    <bc:constant value="ssh"/>  <!-- by default, assume that we might want to push back to upstream -->
-  </rm:propertyElement>
   <rm:propertyElement key="gda.imca.cat.git.url">
-    <bc:constant value="${github.${gda.imca.cat.github.authentication}.url}${gda.imca.cat.github.organization}/gda-imca-cat.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-imca-cat.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="source.repository.gda_ispyb_api">  <!-- says whether to get uk.ac.diamond.ispyb.* from a source repository, or a p2 site -->

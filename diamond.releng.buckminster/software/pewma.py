@@ -208,6 +208,7 @@ GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit w
     ('gda-dls-excalibur.git'      , 'gda/gda-dls-excalibur.git',           ),
     ('gda-epics.git'              , 'gda/gda-epics.git',                   ),
     ('gda-hrpd.git'               , 'gda/gda-hrpd.git',                    ),
+    ('gda-imca-cat.git'           , 'gda/gda-imca-cat.git',                ),
     ('gda-legacy.git'             , 'gda/gda-legacy.git',                  ),
     ('gda-logpanel.git'           , 'gda/gda-logpanel.git',                ),
     ('gda-mx.git'                 , 'gda/gda-mx.git',                      ),
