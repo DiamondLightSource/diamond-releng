@@ -88,13 +88,13 @@
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="nebula.p2.version">  <!-- version of Eclipse Nebula p2 repository to use -->
-    <bc:constant value="1.4.0"/>
+    <bc:constant value="2.0.0"/>
   </rm:propertyElement>
   <rm:propertyElement key="nebula.p2.url">
     <bc:constant value="${alfred.url}/sites/download.eclipse.org/nebula/releases/${nebula.p2.version}"/>
   </rm:propertyElement>
   <rm:propertyElement key="nebula.incubation.p2.version">  <!-- version of Eclipse Nebula Incubation p2 repository to use -->
-    <bc:constant value="snapshot-20171025_1305"/>
+    <bc:constant value="snapshot-20180323_1500"/>
   </rm:propertyElement>
   <rm:propertyElement key="nebula.incubation.p2.url">
     <bc:constant value="${alfred.url}/sites/download.eclipse.org/nebula/incubation/${nebula.incubation.p2.version}"/>
