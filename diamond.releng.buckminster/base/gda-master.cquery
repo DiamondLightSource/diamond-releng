@@ -162,7 +162,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^(i21-(config|python)|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-i21.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((b18|i08|i14|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?|uk\.ac\.gda\.beamline\.(b18|i08|i14|i18|i20|i20(_1)?)(\..+)?)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^((b18|i08|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.(b18|i08|i18|i20|i20(_1)?)(\..+)?|uk\.ac\.gda\.beamline\.(b18|i08|i18|i20|i20(_1)?)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-xas.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" useTargetPlatform="false">
