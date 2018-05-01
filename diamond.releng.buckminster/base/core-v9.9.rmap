@@ -1349,7 +1349,6 @@
   <rm:locator pattern="^org\.h2(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.jline(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mariadb\.jdbc(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^org\.mihalis\.opal(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.mockito\..+$" searchPathRef="diamond_orbit_p2"/>  <!-- most of GDA/Dawn uses org.mockito.mockito-core -->
   <rm:locator pattern="^org\.objenesis(\..+)?" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.osgi\.service\.blueprint(\..+)?" searchPathRef="diamond_orbit_p2"/>
@@ -1365,7 +1364,7 @@
   <!-- "^uk\.ac\.diamond\.ispyb\.(.+)$" is in diamond_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
   <rm:locator pattern="^uk\.ac\.diamond\.org\.apache\.(ws\.commons\.util|xmlrpc\.(client|common|server))(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(org\.jfree|org.jfree\.chart)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.(org\.jscience|org\.jscience4|org\.mihalis\.opal|org\.nfunk\.jep|org\.powermock|rxtx)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.(org\.jscience|org\.jscience4|org\.nfunk\.jep|org\.powermock|rxtx)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(com\.artenum|com\.jidesoft|com\.mindprod\.ledatastream|gnu\.regexp|jama|proxyvole)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^xstream$" searchPathRef="diamond_orbit_p2"/>
   <!-- -->
