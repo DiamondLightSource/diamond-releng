@@ -218,6 +218,7 @@ GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit w
     ('gda-tomography.git'         , 'gda/gda-tomography.git',              ),
     ('gda-video.git'              , 'gda/gda-video.git',                   ),
     ('gda-xas-core.git'           , 'gda/gda-xas-core.git',                ),
+    ('scisoft-spectroscopy.git'   , 'scisoft/scisoft-spectroscopy.git',    ),
     ('richbeans.git'              , 'richbeans.git',                       ),
     ('wychwood.git'               , 'gda/wychwood.git',                    ),
     ('training-gerrit-1.git'      , 'training/training-gerrit-1.git',      ),

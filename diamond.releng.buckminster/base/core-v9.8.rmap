@@ -1118,30 +1118,8 @@
     <bc:constant value="${scisoft.ptychography.${scisoft.ptychography.git.location.translated}.url}/scisoft-ptychography.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="scisoft.spectroscopy.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.spectroscopy.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.spectroscopy.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.spectroscopy.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.spectroscopy.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.spectroscopy.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.spectroscopy.github.url">
-    <bc:constant value="${github.${scisoft.spectroscopy.github.authentication}.url}${scisoft.spectroscopy.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="scisoft.spectroscopy.git.url">
-    <bc:constant value="${scisoft.spectroscopy.${scisoft.spectroscopy.git.location.translated}.url}/scisoft-spectroscopy.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/scisoft-spectroscopy.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="scisoft.ui.git.location">
