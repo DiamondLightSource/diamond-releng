@@ -86,12 +86,6 @@ def parse_jenkins_jobname(jobname):
             parse_result.append((part, jm.groupdict()[part]))
         job_subname = jm.group(2)
 
-        # if this is a gerrit-trigger job, work out the name of the downstream job (the junit.tests-gerrit job)
-        if 'gerrit-trigger' in jobname:
-            parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerrit-trigger', '-junit.tests-gerrit')))
-        elif 'gerritbeta-trigger' in jobname:
-            parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerritbeta-trigger', '-junit.tests-gerritbeta')))
-
         if 'junit' in jobname:
             if 'training' in jobname:
                 parse_result.append(('materialize_components', 'training.gerrit.feature'))
@@ -193,6 +187,16 @@ def parse_jenkins_jobname(jobname):
         elif '-squish' in jobname:
             m = re.match('^(?P<prefix>.+)-squish(-subset)?(?P<suffix>.+)$', jobname)
             parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product' + m.group('suffix')))
+
+    ######################################
+    # Parsing for both GDA and DAWN jobs #
+    ######################################
+
+    # if this is a gerrit-trigger job, work out the name of the downstream job (the junit.tests-gerrit job)
+    if 'gerrit-trigger' in jobname:
+        parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerrit-trigger', '-junit.tests-gerrit')))
+    elif 'gerritbeta-trigger' in jobname:
+        parse_result.append(('gerrit_job_to_trigger', jobname.replace('-gerritbeta-trigger', '-junit.tests-gerritbeta')))
 
     # For JUnit jobs, post-build should scan for compiler warnings, and for open tasks, only in master
     if 'junit' in jobname:
@@ -317,6 +321,26 @@ def test_parse_jenkins_jobname():
     write_parse_result(p, output)
 
     # Tests for DAWN master branch
+    p = parse_jenkins_jobname('DawnDiamond.master-gerrit-trigger')
+    assert p == [
+        ('download.public', False),
+        ('DAWN_flavour', 'Diamond'),
+        ('DAWN_release', 'master'),
+        ('job_variant', None),
+        ('gerrit_job_to_trigger', 'DawnDiamond.master-junit.tests-gerrit'),
+        ]
+    write_parse_result(p, output)
+
+    p = parse_jenkins_jobname('DawnDiamond.master-gerritbeta-trigger')
+    assert p == [
+        ('download.public', False),
+        ('DAWN_flavour', 'Diamond'),
+        ('DAWN_release', 'master'),
+        ('job_variant', None),
+        ('gerrit_job_to_trigger', 'DawnDiamond.master-junit.tests-gerritbeta'),
+        ]
+    write_parse_result(p, output)
+
     p = parse_jenkins_jobname('DawnDiamond.master-junit.tests')
     assert p == [
         ('download.public', False),
