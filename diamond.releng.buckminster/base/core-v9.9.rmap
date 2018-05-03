@@ -209,11 +209,8 @@
   <!--                              -->
   <!-- p2 properties                -->
   <!--                              -->
-  <rm:propertyElement key="alfred.host.port">  <!-- visible both inside and outside Diamond, so normally no need to override -->
-    <bc:constant value="alfred.diamond.ac.uk"/>
-  </rm:propertyElement>
   <rm:propertyElement key="alfred.url">
-    <bc:constant value="https://${alfred.host.port}"/>
+    <bc:constant value="https://alfred.diamond.ac.uk"/>  <!-- visible both inside and outside Diamond (at different IP addresses!), so normally no need to override -->
   </rm:propertyElement>
   <!--                                                                      -->
   <!--######################################################################-->
@@ -1066,7 +1063,7 @@
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="scisoft.spectroscopy.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/scisoft-spectroscopy.git"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/scisoft/scisoft-spectroscopy.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="scisoft.ui.git.location">
