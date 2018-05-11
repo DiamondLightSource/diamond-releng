@@ -62,7 +62,8 @@ set_environment_step () {
     
     if [[ "${MODULEPATH}" == */dls_sw/apps/Modules/modulefiles* ]]; then
 
-        # do not issue "module load xxx" if module_load_xxx_version is not set, or is set to null, or is set to "none"
+        # do not issue "module load xxx" if module_load_xxx_version is not set, or is set to null, or is set to "none" (keep any previous "module load xxx")
+        # issue "module unload xxx" and do not issue "module load xxx", if module_load_xxx_version is "unload" (so, use system install) 
         # issue "module load xxx" if module_load_xxx_version is set to "default"
         # issue "module load xxx/version" if module_load_xxx_version is set
 
@@ -71,7 +72,9 @@ set_environment_step () {
         else
             echo "issuing \"module unload java\""
             module unload java
-            if [[ "${module_load_java_version}" == "default" ]]; then
+            if [[ "${module_load_java_version}" == "unload" ]]; then
+                echo 'skipping "module load java"'
+            elif [[ "${module_load_java_version}" == "default" ]]; then
                 echo "issuing \"module load java\""
                 module load java
             elif [[ "${module_load_java_version+arbitrary}" ]]; then
@@ -83,7 +86,10 @@ set_environment_step () {
             fi
         fi
 
-        if [[ "${buckminster_headless_use_public_version:-false}" != "true" ]]; then
+        if [[ "${module_load_buckminster_version}" == "unload" ]]; then
+            echo "issuing \"module unload buckminster\""
+            module unload buckminster
+        elif [[ "${buckminster_headless_use_public_version:-false}" != "true" ]]; then
             if [[ "${module_load_buckminster_version}" == "none" || -z "${module_load_buckminster_version-arbitrary}" || -z "${module_load_buckminster_version+arbitrary}" ]]; then
                 echo 'skipping "module load buckminster"'
             else
@@ -107,7 +113,9 @@ set_environment_step () {
         else
             echo "issuing \"module unload python\""
             module unload python
-            if [[ "${module_load_python_version}" == "default" ]]; then
+            if [[ "${module_load_python_version}" == "unload" ]]; then
+                echo 'skipping "module load python"'
+            elif [[ "${module_load_python_version}" == "default" ]]; then
                 echo "issuing \"module load python\""
                 module load python
             elif [[ "${module_load_python_version+arbitrary}" ]]; then
@@ -126,7 +134,9 @@ set_environment_step () {
         else
             echo "issuing \"module unload dawn\""
             module unload dawn
-            if [[ "${module_load_dawn_version}" == "default" ]]; then
+            if [[ "${module_load_dawn_version}" == "unload" ]]; then
+                echo 'skipping "module load dawn"'
+            elif [[ "${module_load_dawn_version}" == "default" ]]; then
                 echo "issuing \"module load dawn\""
                 module load dawn
             elif [[ "${module_load_dawn_version+arbitrary}" ]]; then
