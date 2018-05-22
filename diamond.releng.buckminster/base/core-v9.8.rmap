@@ -259,34 +259,14 @@
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/daq/daq-platform.git"/>
   </rm:propertyElement>
   <!-- *** dawn- *** -->
-  <rm:propertyElement key="dawn.commandserver.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.commandserver.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.commandserver.git.url">
-    <bc:constant value="${github.${dawn.commandserver.github.authentication}.url}${dawn.commandserver.github.organization}/dawn-commandserver.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.common.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.common.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-commandserver.git"/>
   </rm:propertyElement>
   <rm:propertyElement key="dawn.common.git.url">
-    <bc:constant value="${github.${dawn.common.github.authentication}.url}${dawn.common.github.organization}/dawn-common.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.doc.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.doc.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-common.git"/>
   </rm:propertyElement>
   <rm:propertyElement key="dawn.doc.git.url">
-    <bc:constant value="${github.${dawn.doc.github.authentication}.url}${dawn.doc.github.organization}/dawn-doc.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-doc.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.eclipse.git.location">
@@ -315,14 +295,8 @@
     <bc:constant value="${dawn.eclipse.${dawn.eclipse.git.location.translated}.url}/dawn-eclipse.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.hdf.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.hdf.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.hdf.git.url">
-    <bc:constant value="${github.${dawn.hdf.github.authentication}.url}${dawn.hdf.github.organization}/dawn-hdf.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-hdf.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.hpc.github.organization">
@@ -365,14 +339,8 @@
     <bc:constant value="${github.${dawn.marketplace.server.github.authentication}.url}${dawn.marketplace.server.github.organization}/dawn-marketplace-server.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.mx.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.mx.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.mx.git.url">
-    <bc:constant value="${github.${dawn.mx.github.authentication}.url}${dawn.mx.github.organization}/dawn-mx.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-mx.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.product.github.organization">
@@ -405,14 +373,8 @@
     <bc:constant value="${github.${dawn.test.github.authentication}.url}${dawn.test.github.organization}/dawn-test.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.third.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.third.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.third.git.url">
-    <bc:constant value="${github.${dawn.third.github.authentication}.url}${dawn.third.github.organization}/dawn-third.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-third.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.ui.github.organization">
@@ -962,56 +924,11 @@
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/eclipse/scanning.git"/>
   </rm:propertyElement>
   <!-- *** scisoft- *** -->
-  <rm:propertyElement key="scisoft.2ddpr.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.2ddpr.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.2ddpr.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.2ddpr.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.2ddpr.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.2ddpr.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.2ddpr.github.url">
-    <bc:constant value="${github.${scisoft.2ddpr.github.authentication}.url}${scisoft.2ddpr.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="scisoft.2ddpr.git.url">
-    <bc:constant value="${scisoft.2ddpr.${scisoft.2ddpr.git.location.translated}.url}/scisoft-2ddpr.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="scisoft.cbflib.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.cbflib.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.cbflib.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.cbflib.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.cbflib.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.cbflib.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.cbflib.github.url">
-    <bc:constant value="${github.${scisoft.cbflib.github.authentication}.url}${scisoft.cbflib.github.organization}"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/scisoft-2ddpr.git"/>
   </rm:propertyElement>
   <rm:propertyElement key="scisoft.cbflib.git.url">
-    <bc:constant value="${scisoft.cbflib.${scisoft.cbflib.git.location.translated}.url}/scisoft-cbflib.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/scisoft-cbflib.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="scisoft.core.git.location">
@@ -1066,58 +983,12 @@
     <bc:constant value="${scisoft.ispyb.${scisoft.ispyb.git.location.translated}.url}/scisoft-ispyb.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="scisoft.peema.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.peema.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.peema.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.peema.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.peema.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.peema.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.peema.github.url">
-    <bc:constant value="${github.${scisoft.peema.github.authentication}.url}${scisoft.peema.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="scisoft.peema.git.url">
-    <bc:constant value="${scisoft.peema.${scisoft.peema.git.location.translated}.url}/scisoft-peema.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="scisoft.ptychography.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ptychography.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.ptychography.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ptychography.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ptychography.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ptychography.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ptychography.github.url">
-    <bc:constant value="${github.${scisoft.ptychography.github.authentication}.url}${scisoft.ptychography.github.organization}"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/scisoft/scisoft-peema.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <rm:propertyElement key="scisoft.ptychography.git.url">
-    <bc:constant value="${scisoft.ptychography.${scisoft.ptychography.git.location.translated}.url}/scisoft-ptychography.git"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/scisoft/scisoft-ptychography.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="scisoft.spectroscopy.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/scisoft-spectroscopy.git"/>
   </rm:propertyElement>
@@ -1148,30 +1019,8 @@
     <bc:constant value="${scisoft.ui.${scisoft.ui.git.location.translated}.url}/scisoft-ui.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="scisoft.ws.git.location">
-    <bc:constant value="${scisoft.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ws.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${scisoft.ws.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ws.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/scisoft"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ws.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ws.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.ws.github.url">
-    <bc:constant value="${github.${scisoft.ws.github.authentication}.url}${scisoft.ws.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="scisoft.ws.git.url">
-    <bc:constant value="${scisoft.ws.${scisoft.ws.git.location.translated}.url}/scisoft-ws.git"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/scisoft/scisoft-ws.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <!-- *** sda *** -->
   <rm:propertyElement key="sda.git.location">

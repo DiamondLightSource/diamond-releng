@@ -259,34 +259,14 @@
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/daq/daq-platform.git"/>
   </rm:propertyElement>
   <!-- *** dawn- *** -->
-  <rm:propertyElement key="dawn.commandserver.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.commandserver.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.commandserver.git.url">
-    <bc:constant value="${github.${dawn.commandserver.github.authentication}.url}${dawn.commandserver.github.organization}/dawn-commandserver.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.common.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.common.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-commandserver.git"/>
   </rm:propertyElement>
   <rm:propertyElement key="dawn.common.git.url">
-    <bc:constant value="${github.${dawn.common.github.authentication}.url}${dawn.common.github.organization}/dawn-common.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.doc.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.doc.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-common.git"/>
   </rm:propertyElement>
   <rm:propertyElement key="dawn.doc.git.url">
-    <bc:constant value="${github.${dawn.doc.github.authentication}.url}${dawn.doc.github.organization}/dawn-doc.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-doc.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.eclipse.git.location">
@@ -315,14 +295,8 @@
     <bc:constant value="${dawn.eclipse.${dawn.eclipse.git.location.translated}.url}/dawn-eclipse.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.hdf.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.hdf.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.hdf.git.url">
-    <bc:constant value="${github.${dawn.hdf.github.authentication}.url}${dawn.hdf.github.organization}/dawn-hdf.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-hdf.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.marketplace.server.github.organization">
@@ -335,14 +309,8 @@
     <bc:constant value="${github.${dawn.marketplace.server.github.authentication}.url}${dawn.marketplace.server.github.organization}/dawn-marketplace-server.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.mx.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.mx.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.mx.git.url">
-    <bc:constant value="${github.${dawn.mx.github.authentication}.url}${dawn.mx.github.organization}/dawn-mx.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-mx.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.product.github.organization">
@@ -375,14 +343,8 @@
     <bc:constant value="${github.${dawn.test.github.authentication}.url}${dawn.test.github.organization}/dawn-test.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.third.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.third.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.third.git.url">
-    <bc:constant value="${github.${dawn.third.github.authentication}.url}${dawn.third.github.organization}/dawn-third.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-third.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="dawn.ui.github.organization">

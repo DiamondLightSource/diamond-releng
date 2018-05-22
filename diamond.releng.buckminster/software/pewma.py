@@ -188,6 +188,12 @@ OUTPUT_LINES_TO_SUPPRESS = (
 GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
     # repository                    Gerrit URL (after prefix)              Must use SSH (when repo is not public, so anonymous access via HTTPS not available)
     ('daq-platform.git'           , 'daq/daq-platform.git',                False, ),
+    ('dawn-commandserver.git'     , 'scisoft/dawn-commandserver.git',      False, ),
+    ('dawn-common.git'            , 'scisoft/dawn-common.git',             False, ),
+    ('dawn-doc.git'               , 'scisoft/dawn-doc.git',                False, ),
+    ('dawn-hdf.git'               , 'scisoft/dawn-hdf.git',                False, ),
+    ('dawn-mx.git'                , 'scisoft/dawn-mx.git',                 False, ),
+    ('dawn-third.git'             , 'scisoft/dawn-third.git',              False, ),
     ('diamond-jacorb.git'         , 'diamond/diamond-jacorb.git',          False, ),
     ('diamond-jython.git'         , 'diamond/diamond-jython.git',          False, ),
     ('diamond-springframework.git', 'diamond/diamond-springframework.git', False, ),
