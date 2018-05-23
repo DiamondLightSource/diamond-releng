@@ -269,32 +269,6 @@
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-doc.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.eclipse.git.location">
-    <bc:constant value="${dawn.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${dawn.eclipse.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/dawn"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.github.url">
-    <bc:constant value="${github.${dawn.eclipse.github.authentication}.url}${dawn.eclipse.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.eclipse.git.url">
-    <bc:constant value="${dawn.eclipse.${dawn.eclipse.git.location.translated}.url}/dawn-eclipse.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="dawn.hdf.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-hdf.git"/>
   </rm:propertyElement>
@@ -438,16 +412,6 @@
   </rm:propertyElement>
   <rm:propertyElement key="diffcalc.git.url">
     <bc:constant value="${github.${diffcalc.github.authentication}.url}${diffcalc.github.organization}/diffcalc.git"/>
-  </rm:propertyElement>
-  <!-- *** embl- *** -->
-  <rm:propertyElement key="embl.cca.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="embl.cca.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="embl.cca.git.url">
-    <bc:constant value="${github.${embl.cca.github.authentication}.url}${embl.cca.github.organization}/embl-cca.git"/>
   </rm:propertyElement>
   <!-- *** epp- *** -->
   <rm:propertyElement key="epp.usagedata.git.location">
@@ -989,8 +953,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="diamond_springframework" failOnError="false"/>
   <!-- *** diffcalc *** -->
   <rm:locator pattern="^diffcalc$" searchPathRef="diffcalc"/>
-  <!-- *** embl- *** -->
-  <rm:locator pattern="^org\.embl\.cca\..+$" searchPathRef="embl_cca"/>
   <!-- *** epp- *** -->
   <rm:locator pattern="^org\.eclipse\.epp\.usagedata\..+$" searchPathRef="epp_usagedata"/>
   <!-- *** gda- *** -->
@@ -1272,22 +1234,6 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="dawn_eclipse">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-eclipse=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.eclipse.git.url}"/>
-      <rm:uri format="{0}/dawn-eclipse.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-eclipse=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-eclipse.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
   <rm:searchPath name="dawn_hdf">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-hdf=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
@@ -1528,24 +1474,6 @@
     </rm:provider>
     <rm:provider componentTypes="buckminster" resolutionFilter="(disallow.repo.diffcalc=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from diffcalc.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       EMBL- repositories
-  -->
-  <rm:searchPath name="embl_cca">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.embl-cca=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${embl.cca.git.url}"/>
-      <rm:uri format="{0}/embl-cca.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.embl-cca=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from embl-cca.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
