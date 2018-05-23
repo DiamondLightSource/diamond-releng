@@ -2172,8 +2172,11 @@ class PewmaManager(object):
                             buckminster_bug = re.search(error_pattern, line)
                             if buckminster_bug:
                                 buckminster_bugs.append(error_summary)
-                    if self.options.suppress_compile_warnings and line.startswith('Warning: file '):
-                        continue  # finished with this line of output
+                    try:
+                        if self.options.suppress_compile_warnings and line[0:len('Error: file ')] == 'Error: file ':
+                            continue  # finished with this line of output
+                    except UnicodeDecodeError:
+                        pass
                     if scan_compile_messages:
                         for (error_pattern, error_summary) in COMPILE_ERROR_DUE_TO_BUCKMINSTER_BUG_PATTERNS:
                             compile_error_bug = re.search(error_pattern, line)
@@ -2181,8 +2184,11 @@ class PewmaManager(object):
                                 compile_error_bugs.append(error_summary)
                                 break
                         else:
-                            if line.startswith('Error: file '):
-                                compile_errors_seen = True
+                            try:
+                                if line[0:len('Error: file ')] == 'Error: file ':
+                                    compile_errors_seen = True
+                            except UnicodeDecodeError:
+                                pass
                     if seen_last_text_to_suppress:
                         print(line, end='')  # don't add an extra newline
                     else:
