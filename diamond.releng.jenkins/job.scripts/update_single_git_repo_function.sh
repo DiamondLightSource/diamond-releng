@@ -36,6 +36,16 @@ update_single_git_repo_function () {
         return
     fi
 
+    # Check whether this repository is even required by this job. If not, just delete it and return.
+    # This handles the case where the repository was required the previous time this workspace was used, but no longer is.
+    repo_branch=$(grep "${repo_name%.git}" ${WORKSPACE}/artifacts_to_archive/cquery-branches-file.txt | head -n 1 | cut -d "=" -f 2)
+    if [[ -z "${repo_branch}" ]]; then
+        echo "[${repo_name}] Could not identify branch name to switch to: repository presumably no longer required, so deleting repo"
+        ls -ld ${repo_path} || true
+        rm -rf ${repo_path}
+        return
+    fi
+
     # abort any prior failed operation
     git -C ${repo_path} rebase --abort > /dev/null 2>&1 || true
     git -C ${repo_path} merge --abort > /dev/null 2>&1 || true
@@ -87,12 +97,7 @@ update_single_git_repo_function () {
     fi
 
     # At this point, the repository is clean, and up-to-date with the remote. We need to re-establish the correct local branch.
-    # We cannot assume that the local branch is tracking the standard branch, since this might be a Gerrit repository previously used to test a change
-    repo_branch=$(grep "${repo_name%.git}" ${WORKSPACE}/artifacts_to_archive/cquery-branches-file.txt | head -n 1 | cut -d "=" -f 2)
-    if [[ -z "${repo_branch}" ]]; then
-        echo "[${repo_name}] Could not identify branch name to switch to, something is wrong. Is this a repo that is no longer in use?"
-        return 1
-    fi
+    # We cannot assume that the local branch is tracking the standard branch, since this might be a Gerrit repository previously used to test a change.
     set -e  # Turn errexit back on
     git -C ${repo_path} checkout --detach --quiet
     git -C ${repo_path} branch -D --quiet ${repo_branch} |& sed "s/^/[${repo_name}] /" || true
