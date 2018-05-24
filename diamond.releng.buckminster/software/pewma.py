@@ -1563,10 +1563,14 @@ class PewmaManager(object):
             # get the commit hook, for people who use command line Git rather than EGit #
             #############################################################################
 
-            hooks_commit_msg_loc = os.path.join(git_dir, '.git', 'hooks', 'commit-msg')
+            hooks_loc = os.path.join(git_dir, '.git', 'hooks')
+            hooks_commit_msg_loc = os.path.join(hooks_loc, 'commit-msg')
             if os.path.exists(hooks_commit_msg_loc):
                 self.logger.debug('%scommit-msg hook already set up: %s' % (self.log_prefix, hooks_commit_msg_loc))
             else:
+                if not os.path.isdir(hooks_loc):
+                    self.logger.info('%screating repository hooks directory: %s' % (self.log_prefix, hooks_loc))
+                    os.mkdir(hooks_loc, 0775)
                 commit_hook = self.gerrit_commit_hook()
                 if not self.options.dry_run:
                     with open(hooks_commit_msg_loc, 'w') as commit_msg_file:
