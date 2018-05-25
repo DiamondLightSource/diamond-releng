@@ -196,6 +196,7 @@ GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit w
     ('dawn-hdf.git'               , 'scisoft/dawn-hdf.git',                False, ),
     ('dawn-mx.git'                , 'scisoft/dawn-mx.git',                 False, ),
     ('dawn-third.git'             , 'scisoft/dawn-third.git',              False, ),
+    ('dawn-ui.git'                , 'scisoft/dawn-ui.git',                 False, ),
     ('diamond-jacorb.git'         , 'diamond/diamond-jacorb.git',          False, ),
     ('diamond-jython.git'         , 'diamond/diamond-jython.git',          False, ),
     ('diamond-springframework.git', 'diamond/diamond-springframework.git', False, ),

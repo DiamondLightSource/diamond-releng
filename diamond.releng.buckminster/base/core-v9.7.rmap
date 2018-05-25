@@ -411,15 +411,8 @@
   <rm:propertyElement key="dawn.third.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-third.git"/>
   </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="dawn.ui.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.ui.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="dawn.ui.git.url">
-    <bc:constant value="${github.${dawn.ui.github.authentication}.url}${dawn.ui.github.organization}/dawn-ui.git"/>
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-ui.git"/>
   </rm:propertyElement>
   <!-- *** (eclipse/)dawnsci *** -->
   <rm:propertyElement key="dawnsci.github.organization">
