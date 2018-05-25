@@ -2179,7 +2179,7 @@ class PewmaManager(object):
                             if buckminster_bug:
                                 buckminster_bugs.append(error_summary)
                     try:
-                        if self.options.suppress_compile_warnings and line[0:len('Error: file ')] == 'Error: file ':
+                        if self.options.suppress_compile_warnings and line[0:len('Warning: file ')] == 'Warning: file ':
                             continue  # finished with this line of output
                     except UnicodeDecodeError:
                         pass
@@ -2198,13 +2198,21 @@ class PewmaManager(object):
                     if seen_last_text_to_suppress:
                         print(line, end='')  # don't add an extra newline
                     else:
-                        for x in OUTPUT_LINES_TO_SUPPRESS:
-                            if line == x:
-                                if line == last_text_to_suppress:
-                                    seen_last_text_to_suppress = True
-                                break
-                        else:
+                        # Hack: if line contains non-ASCII characters, then "if line == x:" will emit the following warning:
+                        # UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them as being unequal
+                        # So, test explicitly whether a line contains non-ASCII characters, and hand that ourselves
+                        try:
+                            unicode(line)
+                        except UnicodeDecodeError:
                             print(line, end='')  # don't add an extra newline
+                        else:
+                            for x in OUTPUT_LINES_TO_SUPPRESS:
+                                if line == x:
+                                    if line == last_text_to_suppress:
+                                        seen_last_text_to_suppress = True
+                                    break
+                            else:
+                                print(line, end='')  # don't add an extra newline
                 process.communicate() # close p.stdout, wait for the subprocess to exit                
                 retcode = process.returncode
             except OSError:
