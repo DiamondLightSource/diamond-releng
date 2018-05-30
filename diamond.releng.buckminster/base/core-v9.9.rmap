@@ -911,10 +911,9 @@
   <rm:locator pattern="^uk\.ac\.gda\..+\.peem(\..+)?$" searchPathRef="gda_devices_peem"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.pixium$" searchPathRef="gda_devices_pixium"/>
   <rm:locator pattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" searchPathRef="gda_devices_prosilica"/>
-  <rm:locator pattern="^(all-dls-(configs|clients)|(dls|b07|b07-shared|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|p45|p99)-config|uk\.ac\.(diamond\.daq\.(beamline\.(i15|i15-1|p45|p99)|dls\.controls)(\..+)?|gda\.(beamline\.(b07|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1)|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond" failOnError="false"/>
+  <rm:locator pattern="^(all-dls-(configs|clients)|(dls|b07|b07-shared|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|p45|p99)-config|uk\.ac\.(diamond\.daq\.(beamline\.(i15|i15-1|p45|p99)|dls\.controls)(\..+)?|gda\.(beamline\.(b07|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1)|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond"/>
   <rm:locator pattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" searchPathRef="gda_dls_beamlines_b23"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
-  <rm:locator pattern="^(i19(.|-).+|uk\.ac\.(diamond\.org\.springframework\.fragment\.i19-shared-config|gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator)))$" searchPathRef="gda_dls_beamlines_i19"/>
   <rm:locator pattern="^(i21-(config|python)|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" searchPathRef="gda_dls_beamlines_i21"/>
   <rm:locator pattern="^((b18|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.i18\..+|uk\.ac\.gda\.beamline\.(b18|i18|i20|i20(_1)?)(\..+)?)$" searchPathRef="gda_dls_beamlines_xas"/>
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
@@ -924,7 +923,8 @@
   <rm:locator pattern="^uk\.ac\.diamond\.ispyb\.(.+)$" searchPathRef="gda_ispyb_api"/>  <!-- if source.repository.gda_ispyb_api=true, materializes source projects, otherwise materializes jars into tp/ -->
   <rm:locator pattern="^uk\.ac\.diamond\.daq\.logpanel(\..+)?$" searchPathRef="gda_logpanel"/>
   <rm:locator pattern="^((b16|b24|i06|i06-1|i07|i10|i16|mt|optics)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
-  <rm:locator pattern="^((i02|i02-1|i02-2|i03|i04|i04-1|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.wf-prototype-.+|uk\.ac\.(diamond\.(activemq\.fragment\.mx|daq\.mx\..+|dna|stac)|gda\.(beamline\.(i02|i02-1|i02-2|i03|i04|i04-1|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.(insitu|irelec|xspress3\.mx)(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.hutch|vmxi(\..+)?)))$" searchPathRef="gda_mx"/>
+  <rm:locator pattern="^(mx-gda-tools|(i02-1|i02-2|i03|i04|i04-1|i19-1|i19-2|i19-shared|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.wf-prototype-.+|uk\.ac\.(diamond\.(org\.springframework\.fragment\.i19-shared-config|daq\.mx\..+|dna|stac)|gda\.(beamline\.(i02-1|i02-2|i03|i04|i04-1|i19|i19-1|i19-2|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.insitu(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.(attenuator|hutch)|vmxi(\..+)?)))$" searchPathRef="gda_mx" failOnError="false"/>
+  <rm:locator pattern="^(i19(.|-).+|uk\.ac\.(diamond\.org\.springframework\.fragment\.i19-shared-config|gda\.((beamline|eventbus)\.i19((.|-).+)?|component\.busmanager|stage\.attenuator)))$" searchPathRef="gda_dls_beamlines_i19"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
   <rm:locator pattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.(detectors\.vgscienta\.electronanalyser|devices\.specs\.phoibos)|gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta))(\..+)?)$" searchPathRef="gda_pes"/>
   <rm:locator pattern="^((bm26a?|b21|i22)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|uk\.ac\.(diamond\.(activemq\.fragment\.ncd|daq\.scm\.api)|gda\.(beamline\.(b21|i22)(\..+)?|devices\.(bssc|hatsaxs|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)))$" searchPathRef="gda_scm"/>
@@ -1948,7 +1948,7 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="buckminster" resolutionFilter="(|(!(disallow.repo.gda-mx=true))(buckminster.component=mx-gda-tools))" readerType="git">
+    <rm:provider componentTypes="buckminster" resolutionFilter="(&amp;(!(disallow.repo.gda-mx=true))(buckminster.component=mx-gda-tools))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${gda.mx.git.url}"/>
       <rm:uri format="{0}/gda-mx.git,tools">
