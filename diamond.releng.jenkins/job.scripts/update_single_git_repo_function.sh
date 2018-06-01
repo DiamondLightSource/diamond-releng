@@ -100,7 +100,7 @@ update_single_git_repo_function () {
     # We cannot assume that the local branch is tracking the standard branch, since this might be a Gerrit repository previously used to test a change.
     set -e  # Turn errexit back on
     git -C ${repo_path} checkout --detach --quiet
-    if git show-ref --verify --quiet "refs/heads/${repo_branch}"; then
+    if git -C ${repo_path} show-ref --verify --quiet "refs/heads/${repo_branch}"; then
         git -C ${repo_path} branch -D --quiet ${repo_branch} |& sed "s/^/[${repo_name}] /" || true
     fi
     git -C ${repo_path} checkout -b ${repo_branch} remotes/origin/${repo_branch} --no-track --quiet |& sed "s/^/[${repo_name}] /"
