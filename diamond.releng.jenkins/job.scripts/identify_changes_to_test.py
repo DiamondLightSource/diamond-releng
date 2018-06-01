@@ -231,13 +231,30 @@ class RequestedChangesProcessor():
         # self.logger.debug(json.dumps(standard_json, indent=2))
         return standard_json
 
-    def get_change_uploader_initials(self, ci):
+    def get_change_owner_uploader_initials(self, ci):
         ''' Return an HTML fragment consisting of a change owner's initials, with their full name as hover text
+            If the last uploader is a different person, include their details as well
         '''
         try:
+            change_owner_fullname = ci['owner']['name']
+            change_owner_initials = ''.join(map(lambda x: x[0], change_owner_fullname.split()))
             change_uploader_fullname = ci['revisions'].values()[0]['uploader']['name']
+            if change_uploader_fullname == change_owner_fullname:
+                return \
+                    '(<span title="' + \
+                    cgi.escape(change_owner_fullname, quote=True) + \
+                    '">' + \
+                    cgi.escape(change_owner_initials, quote=True) + \
+                    '</span>)'
             change_uploader_initials = ''.join(map(lambda x: x[0], change_uploader_fullname.split()))
-            return '(<span title="' + cgi.escape(change_uploader_fullname, quote=True) + '">' + cgi.escape(change_uploader_initials, quote=True) + '</span>)'
+            return \
+                '(<span title="' + \
+                cgi.escape(change_owner_fullname, quote=True) + '/' + \
+                cgi.escape(change_uploader_fullname, quote=True) + \
+                '">' + \
+                cgi.escape(change_owner_initials, quote=True) + '/' + \
+                cgi.escape(change_uploader_initials, quote=True) + \
+                '</span>)'
         except:
             return ''
 
@@ -285,7 +302,7 @@ class RequestedChangesProcessor():
             component_changes_description = ''
             for ci in sorted(changeinfos, key=lambda ci: os.path.basename(ci['project'])):  # there can be multiple changeinfos for a topic
                 self.changes_to_test.append(ci)
-                change_uploader_initials = self.get_change_uploader_initials(ci)
+                change_uploader_initials = self.get_change_owner_uploader_initials(ci)
                 change_summary = self.get_change_summary(ci)
                 self.logger.info('Build parameter %s=%s will test change "%s" in "%s", branch "%s", patch set "%s"' %
                                 (build_param_name, build_param_value, ci['_number'], os.path.basename(ci['project']), ci['branch'], ci['revisions'].values()[0]['_number']))
@@ -324,7 +341,7 @@ class RequestedChangesProcessor():
             for ci in changeinfos:
                 self.changes_to_test.append(ci)
                 changes_specified_count += 1
-                change_uploader_initials = self.get_change_uploader_initials(ci)
+                change_uploader_initials = self.get_change_owner_uploader_initials(ci)
                 change_summary = self.get_change_summary(ci)
                 self.logger.info('Build parameter %s=%s will test change "%s" in "%s", branch "%s", patch set "%s"' %
                                 (build_param_name, build_param_value, ci['_number'], os.path.basename(ci['project']), ci['branch'], ci['revisions'].values()[0]['_number']))
