@@ -248,8 +248,8 @@ class RequestedChangesProcessor():
                     '</span>)'
             change_uploader_initials = ''.join(map(lambda x: x[0], change_uploader_fullname.split()))
             return \
-                '(<span title="' + \
-                cgi.escape(change_owner_fullname, quote=True) + '/' + \
+                '(<span title="Owner: ' + \
+                cgi.escape(change_owner_fullname, quote=True) + ' / Uploader: ' + \
                 cgi.escape(change_uploader_fullname, quote=True) + \
                 '">' + \
                 cgi.escape(change_owner_initials, quote=True) + '/' + \
