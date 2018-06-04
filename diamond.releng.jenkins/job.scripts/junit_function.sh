@@ -67,8 +67,18 @@ junit_function () {
     #
     echo "$`date +"%a %d/%b/%Y %H:%M:%S %z"` (start of job) MARK_BUILD_AS_UNSTABLE (this text will be cleared if no problems found)" > ${WORKSPACE}/post_build_status_marker.txt
 
+    # source the scripts that identify_changes_to_test_function.py possibly wrote
+    #   gerrit_set.junit.options.sh  sets an environment variable of tests are to be skipped in the scanning repo
+
+    for generated_script in gerrit_set.junit.options.sh; do
+        if [ -f "${WORKSPACE}/artifacts_to_archive/${generated_script}" ]; then
+            echo "Sourcing artifacts_to_archive/${generated_script}"
+            . ${WORKSPACE}/artifacts_to_archive/${generated_script}
+        fi
+    done
+
     # Run JUnit tests
-    ${pewma_py} -w ${materialize_workspace_path} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} ${GDALargeTestFilesLocation_param:-} all-tests
+    ${pewma_py} -w ${materialize_workspace_path} ${junit_tests_skip_scanning:-} ${junit_tests_extra_parameters:-} ${junit_tests_system_properties:-} ${GDALargeTestFilesLocation_param:-} all-tests
 
     # If we get this far, clear the signal that tells Jenkins that this build is to be marked UNSTABLE
     echo "`date +"%a %d/%b/%Y %H:%M:%S %z"` (after build and tests) no need for Jenkins Text-finder plugin to override the build status" > ${WORKSPACE}/post_build_status_marker.txt

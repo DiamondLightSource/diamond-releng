@@ -60,6 +60,7 @@ PRE_MATERIALIZE_FUNCTION_FILE_PATH        = os.path.join(artifacts_to_archive_DI
 POST_MATERIALIZE_FUNCTION_FILE_PATH       = os.path.join(artifacts_to_archive_DIR_PATH, 'gerrit_post.materialize.function.sh')
 NOTIFY_GERRIT_AT_START_FUNCTION_FILE_PATH = os.path.join(artifacts_to_archive_DIR_PATH, 'notify_to_gerrit_at_start.sh')
 NOTIFY_GERRIT_AT_END_FUNCTION_FILE_PATH   = os.path.join(artifacts_to_archive_DIR_PATH, 'notify_to_gerrit_at_end.sh')
+SET_JUNIT_OPTIONS_FILE_PATH               = os.path.join(artifacts_to_archive_DIR_PATH, 'gerrit_set.junit.options.sh')
 CHANGE_OWNER_EMAIL_ADDRESSES_FILE_PATH    = os.path.join(artifacts_to_archive_DIR_PATH, 'change_owners_emails.txt')
 
 GERRIT_HOST = 'gerrit.diamond.ac.uk'
@@ -774,6 +775,19 @@ post_materialize_function_gerrit () {
 
 ''')
 
+    def generate_gerrit_junit_options_command(self):
+        ''' generate the environment variable for any extra test options
+        '''
+
+        with open(SET_JUNIT_OPTIONS_FILE_PATH, 'w') as junit_options_file:
+            junit_options_file.write(self.generated_header)
+            for ci in self.changes_to_fetch:
+                if ci[0]['project'] == 'eclipse/scanning':
+                    junit_options_file.write('# eclipse/scanning included in changes to test, so do NOT skip any tests\n')
+                    return
+            junit_options_file.write('# eclipse/scanning NOT included in changes to test, so skip tests in it\n')
+            junit_options_file.write('junit_tests_skip_scanning=\'--exclude=org.eclipse.scanning.*\'\n')
+
     def generate_gerrit_ssh_command(self):
         ''' generate the first part of the ssh commands to post the verified status for the changes we tested
             note that we don't just post the result for the changes that we fetched, but possibly for earlier changes in the chain too
@@ -912,6 +926,7 @@ post_materialize_function_gerrit () {
         if not (self.changes_to_test or self.get_override_branch_for_repo(None)):
             return 0  # no changes requested
         self.write_pre_post_materialize_functions()
+        self.generate_gerrit_junit_options_command()
         self.generate_gerrit_ssh_command()
         self.write_gerrit_at_start_function()
         self.write_gerrit_at_end_functions()

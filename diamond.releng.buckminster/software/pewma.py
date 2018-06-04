@@ -498,9 +498,9 @@ class PewmaManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Test/Corba options")
-        group.add_option('--include', dest='project_includes', type='string', metavar='<pattern>,<pattern>,...', default="",
+        group.add_option('--include', dest='project_includes', action='append', metavar='<pattern>,<pattern>,...', default=[],
                                help='Only process project names matching one or more of the glob patterns')
-        group.add_option('--exclude', dest='project_excludes', type='string', metavar='<pattern>,<pattern>,...', default="",
+        group.add_option('--exclude', dest='project_excludes', action='append', metavar='<pattern>,<pattern>,...', default=[],
                                help='Do not process project names matching any of the glob patterns')
         default_GDALargeTestFilesLocation = '/dls_sw/dasc/GDALargeTestFiles/'  # location at Diamond
         if not os.path.isdir(default_GDALargeTestFilesLocation):
@@ -510,9 +510,9 @@ class PewmaManager(object):
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "General options")
-        group.add_option('-D', dest='system_property', action='append', metavar='key=value',
+        group.add_option('-D', dest='system_property', action='append', metavar='key=value', default=[],
                                help='Pass a system property to Buckminster or Ant')
-        group.add_option('-J', dest='jvmargs', action='append', metavar='jvmarg',
+        group.add_option('-J', dest='jvmargs', action='append', metavar='jvmarg', default=[],
                                help='Pass an additional JVM argument')
         group.add_option('-h', '--help', dest='help', action='store_true', default=False, help='Show help information and exit')
         group.add_option('-n', '--dry-run', dest='dry_run', action='store_true', default=False,
@@ -891,8 +891,10 @@ class PewmaManager(object):
 
 
     def validate_glob_patterns(self, include_patterns, exclude_patterns, err_msg_prefix):
-        for glob_patterns in (include_patterns, exclude_patterns):
-            if glob_patterns:
+        """ There can be multiple in/exclude_patterns, each of which is a comma-separated list of glob patterns
+        """
+        for glob_pattern_list in (include_patterns, exclude_patterns):
+            for glob_patterns in glob_pattern_list:
                 for pattern in glob_patterns.split(","):
                     if not pattern:
                         raise PewmaException('ERROR: %s contains an empty plugin pattern' % (err_msg_prefix,))
@@ -948,14 +950,15 @@ class PewmaManager(object):
 
         if self.options.project_includes or self.options.project_excludes:
             if self.options.project_includes:
-                included_projects = self.get_items_matching_glob_patterns(list(self.all_imported_projects_with_releng_ant.keys()), self.options.project_includes)
+                included_projects = []
+                for inc_patterns in self.options.project_includes:
+                        included_projects += self.get_items_matching_glob_patterns(list(self.all_imported_projects_with_releng_ant.keys()), inc_patterns)
             else:
                 included_projects = self.all_imported_projects_with_releng_ant
 
-            if self.options.project_excludes:
-                excluded_projects = self.get_items_matching_glob_patterns(list(self.all_imported_projects_with_releng_ant.keys()), self.options.project_excludes)
-            else:
-                excluded_projects = []
+            excluded_projects = []
+            for exc_patterns in self.options.project_excludes:
+                excluded_projects += self.get_items_matching_glob_patterns(list(self.all_imported_projects_with_releng_ant.keys()), exc_patterns)
 
             selected_projects = sorted(set(included_projects) - set(excluded_projects))
 
@@ -2438,10 +2441,6 @@ class PewmaManager(object):
         if self.options.system_property:
             if any((keyval.find('=') == -1) for keyval in self.options.system_property):
                 raise PewmaException('ERROR: the -D option must specify a property and value as "key=value"')
-        else:
-            self.options.system_property = []  # use [] rather than None so we can iterate over it
-        if not self.options.jvmargs:
-            self.options.jvmargs = []  # use [] rather than None so we can iterate over it
         if self.options.debug_options_file:
             self.options.debug_options_file = os.path.abspath(self.options.debug_options_file)
             if not os.path.isfile(self.options.debug_options_file):
