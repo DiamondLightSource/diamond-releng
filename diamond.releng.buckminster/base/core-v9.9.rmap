@@ -340,31 +340,8 @@
   <rm:propertyElement key="diamond.jython.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/diamond/diamond-jython.git"/>
   </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="diamond.miniconda.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.miniconda.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="diamond.miniconda.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.miniconda.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/diamond"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.miniconda.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.miniconda.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.miniconda.github.url">
-    <bc:constant value="${github.${diamond.miniconda.github.authentication}.url}${diamond.miniconda.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="diamond.miniconda.git.url">
-    <bc:constant value="${diamond.miniconda.${diamond.miniconda.git.location.translated}.url}/diamond-miniconda.git"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/diamond/diamond-miniconda.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="diamond.releng.git.location">
@@ -743,14 +720,8 @@
     <bc:constant value="${github.${january.github.authentication}.url}${january.github.organization}/january.git"/>
   </rm:propertyElement>
   <!-- *** Opt-ID *** -->
-  <rm:propertyElement key="opt.id.github.organization">
-    <bc:constant value="DiamondLightSource"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="opt.id.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="opt.id.git.url">
-    <bc:constant value="${github.${opt.id.github.authentication}.url}${opt.id.github.organization}/Opt-ID.git"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/diamond/Opt-ID.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <!-- *** org.eclipse.launchbar *** -->
   <rm:propertyElement key="org.eclipse.launchbar.github.organization">
