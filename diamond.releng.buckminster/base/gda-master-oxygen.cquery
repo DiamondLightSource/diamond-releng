@@ -64,10 +64,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-mx.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-mx" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-tango.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.dawn-tango" value="true"/>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-test.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.dawn-test" value="true"/>

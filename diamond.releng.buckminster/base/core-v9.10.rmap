@@ -287,16 +287,6 @@
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-mx.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="dawn.tango.github.organization">
-    <bc:constant value="DawnScience"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.tango.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="dawn.tango.git.url">
-    <bc:constant value="${github.${dawn.tango.github.authentication}.url}${dawn.tango.github.organization}/dawn-tango.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="dawn.test.github.organization">
     <bc:constant value="DawnScience"/>
   </rm:propertyElement>
@@ -814,7 +804,6 @@
   <rm:locator pattern="^hdf\.hdf5lib$" searchPathRef="dawn_hdf"/>
   <rm:locator pattern="^org\.dawnsci\.mx\..+$" searchPathRef="dawn_mx"/>
   <rm:locator pattern="^org\.dawnsci\.marketplace(\.(core|server|ui))?$" searchPathRef="dawn_marketplace_server"/>
-  <rm:locator pattern="^org\.dawb\.(passerelle\.actors\.tango|tango\..+)$" searchPathRef="dawn_tango"/>
   <rm:locator pattern="^(eu\.esrf\.test|org\.(dawb\.test|dawnsci\.squishtests))$" searchPathRef="dawn_test"/>
   <rm:locator pattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" searchPathRef="dawn_third"/>
   <rm:locator pattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|base\.(product\.feature|site)|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\..+)?|conversion\.ui\.api|datavis(\..+)?|dde\..+|dedi|fileviewer(\.feature)?|isosurface(\..+)?|jzy3d(\..+)?|logging\.feature|mapping\..+|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|python\.ui|ui(\..+)?)|python\.feature|product\.(logging|plugin)|slicing(\..+)?|spectrum\..+|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.(dawn\.(base\.product.feature|(product\.feature|site))|scisoft\.applications|screenshot\..+))$" searchPathRef="dawn_ui"/>
@@ -1149,22 +1138,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-mx=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from dawn-mx.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="dawn_tango">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.dawn-tango=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${dawn.tango.git.url}"/>
-      <rm:uri format="{0}/dawn-tango.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.dawn-tango=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from dawn-tango.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
