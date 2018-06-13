@@ -187,60 +187,68 @@ OUTPUT_LINES_TO_SUPPRESS = (
     "SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.\n"  # once last item seen in the output, we stop scanning for matches
     )
 
-GERRIT_REPOSITORIES = (  # repositories whose origin can be switched to Gerrit when gerrit-config is run
-    # repository                    Gerrit URL (after prefix)              Must use SSH (when repo is not public, so anonymous access via HTTPS not available)
-    ('daq-platform.git'           , 'daq/daq-platform.git',                False, ),
-    ('dawn-commandserver.git'     , 'scisoft/dawn-commandserver.git',      False, ),
-    ('dawn-common.git'            , 'scisoft/dawn-common.git',             False, ),
-    ('dawn-doc.git'               , 'scisoft/dawn-doc.git',                False, ),
-    ('dawn-hdf.git'               , 'scisoft/dawn-hdf.git',                False, ),
-    ('dawn-mx.git'                , 'scisoft/dawn-mx.git',                 False, ),
-    ('dawn-third.git'             , 'scisoft/dawn-third.git',              False, ),
-    ('dawn-ui.git'                , 'scisoft/dawn-ui.git',                 False, ),
-    ('diamond-jacorb.git'         , 'diamond/diamond-jacorb.git',          False, ),
-    ('diamond-jython.git'         , 'diamond/diamond-jython.git',          False, ),
-    ('diamond-miniconda.git'      , 'diamond/diamond-miniconda.git',       False, ),
-    ('diamond-springframework.git', 'diamond/diamond-springframework.git', False, ),
-    ('scanning.git'               , 'eclipse/scanning.git',                False, ),
-    ('gda-bimorph.git'            , 'gda/gda-bimorph.git',                 False, ),
-    ('gda-common.git'             , 'gda/gda-common.git',                  False, ),
-    ('gda-common-rcp.git'         , 'gda/gda-common-rcp.git',              False, ),
-    ('gda-core.git'               , 'gda/gda-core.git',                    False, ),
-    ('gda-devices-cirrus.git'     , 'gda/gda-devices-cirrus.git',          False, ),
-    ('gda-devices-mythen.git'     , 'gda/gda-devices-mythen.git',          False, ),
-    ('gda-devices-pco.git'        , 'gda/gda-devices-pco.git',             False, ),
-    ('gda-devices-peem.git'       , 'gda/gda-devices-peem.git',            False, ),
-    ('gda-devices-pixium.git'     , 'gda/gda-devices-pixium.git',          False, ),
-    ('gda-devices-prosilica.git'  , 'gda/gda-devices-prosilica.git',       False, ),
-    ('gda-diamond.git'            , 'gda/gda-diamond.git',                 False, ),
-    ('gda-dls-beamlines-i19.git'  , 'gda/gda-dls-beamlines-i19.git',       False, ),
-    ('gda-dls-beamlines-xas.git'  , 'gda/gda-dls-beamlines-xas.git',       False, ),
-    ('gda-dls-excalibur.git'      , 'gda/gda-dls-excalibur.git',           False, ),
-    ('gda-epics.git'              , 'gda/gda-epics.git',                   False, ),
-    ('gda-hrpd.git'               , 'gda/gda-hrpd.git',                    False, ),
-    ('gda-imca-cat.git'           , 'gda/gda-imca-cat.git',                False, ),
-    ('gda-legacy.git'             , 'gda/gda-legacy.git',                  False, ),
-    ('gda-logpanel.git'           , 'gda/gda-logpanel.git',                False, ),
-    ('gda-mx.git'                 , 'gda/gda-mx.git',                      False, ),
-    ('gda-nexus.git'              , 'gda/gda-nexus.git',                   False, ),
-    ('gda-pes.git'                , 'gda/gda-pes.git',                     False, ),
-    ('gda-tango.git'              , 'gda/gda-tango.git',                   False, ),
-    ('gda-tomography.git'         , 'gda/gda-tomography.git',              False, ),
-    ('gda-video.git'              , 'gda/gda-video.git',                   False, ),
-    ('gda-xas-core.git'           , 'gda/gda-xas-core.git',                False, ),
-    ('Opt-ID.git'                 , 'diamond/Opt-ID.git',                  False, ),
-    ('scisoft-2ddpr.git'          , 'scisoft/scisoft-2ddpr.git',           False, ),
-    ('scisoft-cbflib.git'         , 'scisoft/scisoft-cbflib.git',          False, ),
-    ('scisoft-core.git'           , 'scisoft/scisoft-core.git',            False, ),
-    ('scisoft-peema.git'          , 'scisoft/scisoft-peema.git',           True,  ),
-    ('scisoft-ptychography.git'   , 'scisoft/scisoft-ptychography.git',    True,  ),
-    ('scisoft-spectroscopy.git'   , 'scisoft/scisoft-spectroscopy.git',    True,  ),
-    ('scisoft-ui.git'             , 'scisoft/scisoft-ui.git',              False, ),
-    ('scisoft-ws.git'             , 'scisoft/scisoft-ws.git',              True,  ),
-    ('richbeans.git'              , 'richbeans.git',                       False, ),
-    ('wychwood.git'               , 'gda/wychwood.git',                    False, ),
-    ('training-gerrit-1.git'      , 'training/training-gerrit-1.git',      False, ),
-    )
+GERRIT_REPOSITORIES = {
+    # repository                     url_part:     Gerrit URL (after prefix)
+    #                                keep_origin:  if current repo origin is not Gerrit, don't change it to point to Gerrit (Gerrit version had repo history rewritten)
+    #                                must_use_ssh: Must use SSH (repo is not public, hance anonymous access via HTTPS not available)
+    'daq-platform.git'           : {'url_part': 'daq/daq-platform.git'},
+    'dawn-commandserver.git'     : {'url_part': 'scisoft/dawn-commandserver.git'},
+    'dawn-common.git'            : {'url_part': 'scisoft/dawn-common.git'},
+    'dawn-doc.git'               : {'url_part': 'scisoft/dawn-doc.git'},
+    'dawn-hdf.git'               : {'url_part': 'scisoft/dawn-hdf.git'},
+    'dawn-mx.git'                : {'url_part': 'scisoft/dawn-mx.git'},
+    'dawn-third.git'             : {'url_part': 'scisoft/dawn-third.git'},
+    'dawn-ui.git'                : {'url_part': 'scisoft/dawn-ui.git'},
+    'dawnsci.git'                : {'url_part': 'scisoft/dawnsci.git',
+                                    'keep_origin': True},
+    'diamond-jacorb.git'         : {'url_part': 'diamond/diamond-jacorb.git'},
+    'diamond-jython.git'         : {'url_part': 'diamond/diamond-jython.git'},
+    'diamond-miniconda.git'      : {'url_part': 'diamond/diamond-miniconda.git'},
+    'diamond-springframework.git': {'url_part': 'diamond/diamond-springframework.git'},
+    'scanning.git'               : {'url_part': 'eclipse/scanning.git'},
+    'gda-bimorph.git'            : {'url_part': 'gda/gda-bimorph.git'},
+    'gda-common.git'             : {'url_part': 'gda/gda-common.git'},
+    'gda-common-rcp.git'         : {'url_part': 'gda/gda-common-rcp.git'},
+    'gda-core.git'               : {'url_part': 'gda/gda-core.git'},
+    'gda-devices-cirrus.git'     : {'url_part': 'gda/gda-devices-cirrus.git'},
+    'gda-devices-mythen.git'     : {'url_part': 'gda/gda-devices-mythen.git'},
+    'gda-devices-pco.git'        : {'url_part': 'gda/gda-devices-pco.git'},
+    'gda-devices-peem.git'       : {'url_part': 'gda/gda-devices-peem.git'},
+    'gda-devices-pixium.git'     : {'url_part': 'gda/gda-devices-pixium.git'},
+    'gda-devices-prosilica.git'  : {'url_part': 'gda/gda-devices-prosilica.git'},
+    'gda-diamond.git'            : {'url_part': 'gda/gda-diamond.git'},
+    'gda-dls-beamlines-i19.git'  : {'url_part': 'gda/gda-dls-beamlines-i19.git'},
+    'gda-dls-beamlines-xas.git'  : {'url_part': 'gda/gda-dls-beamlines-xas.git'},
+    'gda-dls-excalibur.git'      : {'url_part': 'gda/gda-dls-excalibur.git'},
+    'gda-epics.git'              : {'url_part': 'gda/gda-epics.git'},
+    'gda-hrpd.git'               : {'url_part': 'gda/gda-hrpd.git'},
+    'gda-imca-cat.git'           : {'url_part': 'gda/gda-imca-cat.git'},
+    'gda-legacy.git'             : {'url_part': 'gda/gda-legacy.git'},
+    'gda-logpanel.git'           : {'url_part': 'gda/gda-logpanel.git'},
+    'gda-mx.git'                 : {'url_part': 'gda/gda-mx.git'},
+    'gda-nexus.git'              : {'url_part': 'gda/gda-nexus.git'},
+    'gda-pes.git'                : {'url_part': 'gda/gda-pes.git'},
+    'gda-tango.git'              : {'url_part': 'gda/gda-tango.git'},
+    'gda-tomography.git'         : {'url_part': 'gda/gda-tomography.git'},
+    'gda-video.git'              : {'url_part': 'gda/gda-video.git'},
+    'gda-xas-core.git'           : {'url_part': 'gda/gda-xas-core.git'},
+    'Opt-ID.git'                 : {'url_part': 'diamond/Opt-ID.git'},
+    'scisoft-2ddpr.git'          : {'url_part': 'scisoft/scisoft-2ddpr.git'},
+    'scisoft-cbflib.git'         : {'url_part': 'scisoft/scisoft-cbflib.git'},
+    'scisoft-core.git'           : {'url_part': 'scisoft/scisoft-core.git'},
+    'scisoft-peema.git'          : {'url_part': 'scisoft/scisoft-peema.git',
+                                    'must_use_ssh': True},
+    'scisoft-ptychography.git'   : {'url_part': 'scisoft/scisoft-ptychography.git',
+                                    'must_use_ssh': True},
+    'scisoft-spectroscopy.git'   : {'url_part': 'scisoft/scisoft-spectroscopy.git',
+                                    'must_use_ssh': True},
+    'scisoft-ui.git'             : {'url_part': 'scisoft/scisoft-ui.git'},
+    'scisoft-ws.git'             : {'url_part': 'scisoft/scisoft-ws.git',
+                                    'must_use_ssh': True},
+    'richbeans.git'              : {'url_part': 'richbeans.git'},
+    'wychwood.git'               : {'url_part': 'gda/wychwood.git'},
+    'training-gerrit-1.git'      : {'url_part': 'training/training-gerrit-1.git'},
+    }
 
 GERRIT_URI_HTTPS_PREFIX = 'https://gerrit.diamond.ac.uk/'      # typically used for anonymous checkout (we use SSH for authenticated checkout)
 GERRIT_URI_SSH_PREFIX   = 'ssh://gerrit.diamond.ac.uk:29418/'
@@ -1452,14 +1460,11 @@ class PewmaManager(object):
         selected_repos = sorted(set(repos_included) - set(repos_excluded))
 
         for (repo_name, git_dir) in sorted(git_directories):
-            for (gerrit_repo_name, gerrit_repo_url_path, must_use_ssh) in GERRIT_REPOSITORIES:
-                if repo_name == gerrit_repo_name:
-                    break
-            else:
+            if repo_name not in GERRIT_REPOSITORIES:
                 # self.logger.debug('%sSkipped: not in Gerrit: %s' % (self.log_prefix, git_dir))
                 continue
             if repo_name not in selected_repos:
-                self.logger.debug('%sSkipped: does not satisfy --repo-include/--repo-include: %s' % (self.log_prefix, git_dir))
+                self.logger.debug('%sSkipped: does not satisfy --repo-include/--repo-exclude: %s' % (self.log_prefix, git_dir))
                 continue
             config_file_loc = os.path.join(git_dir, '.git', 'config')
             if not os.path.isfile(config_file_loc):
@@ -1490,6 +1495,9 @@ class PewmaManager(object):
                     current_branch = (line.rsplit('/')[-1] or 'master').strip()  # strip() to get rid of newline
                     break
 
+            gerrit_repo_details = GERRIT_REPOSITORIES[repo_name]
+            gerrit_repo_url_path = gerrit_repo_details['url_part']
+
             # set push URL
             git_config_commands = []
             gerrit_repo_url_push = GERRIT_URI_SSH_PREFIX + gerrit_repo_url_path
@@ -1509,7 +1517,10 @@ class PewmaManager(object):
 
             # set fetch URL
             if not origin_url.startswith((GERRIT_URI_HTTPS_PREFIX, GERRIT_URI_SSH_PREFIX)):
-                if origin_url.startswith(GERRIT_OLD_ANON_PREFIX) and not must_use_ssh:
+                if gerrit_repo_details.get('keep_origin', False):
+                    self.logger.info('%sSkipped: unable to change remote origin to Gerrit, requires a fresh clone: %s' % (self.log_prefix, git_dir))
+                    continue
+                if origin_url.startswith(GERRIT_OLD_ANON_PREFIX) and not gerrit_repo_details.get('must_use_ssh', False):
                     gerrit_repo_url_pull = GERRIT_URI_HTTPS_PREFIX  + gerrit_repo_url_path # the default scheme for all repos unless they are private, and need SSH
                 else:
                     gerrit_repo_url_pull = GERRIT_URI_SSH_PREFIX  + gerrit_repo_url_path
@@ -1635,7 +1646,7 @@ class PewmaManager(object):
                     self.logger.debug('%sSkipped: is not Gerrit, but --gerrit-only specified: %s' % (self.log_prefix, git_dir))
                     continue
             if repo_name not in selected_repos:
-                self.logger.debug('%sSkipped: does not satisfy --repo-include/--repo-include: %s' % (self.log_prefix, git_dir))
+                self.logger.debug('%sSkipped: does not satisfy --repo-include/--repo-exclude: %s' % (self.log_prefix, git_dir))
                 continue
 
             git_command = 'git ' + ' '.join(self.arguments)
