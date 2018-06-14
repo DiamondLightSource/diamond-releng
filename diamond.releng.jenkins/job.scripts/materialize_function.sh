@@ -74,10 +74,6 @@ materialize_function () {
     #    export materialize_properties_extra="${materialize_properties_extra} -Dproperty=value"
     #fi
 
-    if [[ "${materialize_dawnsci_from_DawnScience}" == "true" ]]; then
-        export materialize_properties_extra="${materialize_properties_extra} -Ddawnsci.github.organization=DawnScience"
-    fi
-
     if [[ "${materialize_skip_list}" == "none" || -z "${materialize_skip_list+arbitrary}" ]]; then
         export materialize_skip_list_property=
     else

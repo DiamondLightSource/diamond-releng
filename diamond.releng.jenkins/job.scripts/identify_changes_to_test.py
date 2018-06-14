@@ -661,11 +661,6 @@ post_materialize_function_gerrit () {
                     except Exception as err:
                         self.logger.error('Error getting Gerrit fetch URL: ' % str(err))
                 # otherwise, hard-code a few URLs for common checkout cases
-                # dawnsci is a special case, not yet handled here, since there is an option to get if from GitHub DawnScience not eclipse
-                elif repo in ('daq-eclipse',):
-                    clone_url = 'git@github.com:DiamondLightSource/' + repo + '.git'
-                elif repo in ('richbeans',):
-                    clone_url = 'git@github.com:eclipse/' + repo + '.git'
                 elif repo in ('gda-ispyb-api',):
                     clone_url = 'git://github.com/DiamondLightSource/' + repo + '.git'
 

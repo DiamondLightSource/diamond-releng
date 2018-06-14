@@ -11,7 +11,7 @@ Testing notes:
       export tag_commitmsg="Tag for DAWN release 2.2 and GDA release 9.2"
       export branch_name=gda-9.2
       export repository_names_to_include_pattern=
-      export repository_names_to_exclude_pattern="^(dawn-|dawnsci|embl-|gphl-|org.eclipse.launchbar|py4j|richbeans|scisoft-|sda|swt-xy-graph).*$"
+      export repository_names_to_exclude_pattern="^(dawn-|dawnsci|diffcalc|gphl-|scisoft-).*$"
 
    Populate file ~/artifacts_to_archive/materialized_head_commits.txt (get a copy from any Jenkins build job)
 
