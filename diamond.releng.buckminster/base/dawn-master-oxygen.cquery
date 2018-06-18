@@ -5,7 +5,7 @@
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
     <cq:property key="disallow.scisoft.deprecated" value="true"/>
     <cq:property key="download.location" value="Default is 'diamond'. Change this to 'public' if required."/>
-    <cq:property key="eclipse.release" value="oxygen"/>
+    <cq:property key="eclipse.release" value="oxygen3"/>
     <cq:property key="github.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
     <cq:property key="skip_ALL_test_fragments" value="false"/>
     <cq:property key="skip_DAWN_test_fragments" value="false"/>
@@ -60,10 +60,10 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-third.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|base\.(product\.feature|site)|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\..+)?|conversion\.ui\.api|datavis(\..+)?|dde\..+|dedi|fileviewer(\.feature)?|isosurface(\..+)?|jzy3d(\..+)?|logging\.feature|mapping\..+|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|python\.ui|ui(\..+)?)|python\.feature|product\.(logging|plugin)|slicing(\..+)?|spectrum\..+|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.(dawn\.(base\.product.feature|(product\.feature|site))|scisoft\.applications|screenshot\..+))$" filter="(eclipse.release=oxygen)" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="DASCTEST-361">
+    <cq:advisorNode namePattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|base\.(product\.feature|site)|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\..+)?|conversion\.ui\.api|datavis(\..+)?|dde\..+|dedi|fileviewer(\.feature)?|isosurface(\..+)?|jzy3d(\..+)?|logging\.feature|mapping\..+|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|python\.ui|ui(\..+)?)|python\.feature|product\.(logging|plugin)|slicing(\..+)?|spectrum\..+|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.(dawn\.(base\.product.feature|(product\.feature|site))|scisoft\.applications|screenshot\..+))$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci(\..+)?$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="DAWNSCI-6015-jetty">
+    <cq:advisorNode namePattern="^org\.eclipse\.dawnsci(\..+)?$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawnsci.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.jacorb$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
@@ -218,7 +218,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <!-- only applicable if source.repository.january=true, otherwise org\.eclipse\.january is supplied by jars in the target platform -->
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">january.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.launchbar(\..+)?$" useTargetPlatform="false" branchTagPath="dawn">
+    <cq:advisorNode namePattern="^org\.eclipse\.launchbar(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">org.eclipse.launchbar.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" useTargetPlatform="false">
