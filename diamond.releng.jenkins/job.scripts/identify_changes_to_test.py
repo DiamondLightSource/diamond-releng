@@ -37,6 +37,7 @@ import collections
 import itertools
 import json
 import logging
+import re
 import operator
 import os
 import os.path
@@ -140,26 +141,37 @@ class RequestedChangesProcessor():
     def get_expected_branch_for_repo(self, repo):
         """ For the specified repository, returns the branch that a specific CQuery would materialize
             (as previously extracted from a CQuery by pewma.py and written to a file)
+            If the repository is not materialized by the specific CQuery, return None
         """
 
         if not hasattr(self, 'cquery_branches'):
             # read and save the contents of cquery-branches-file.txt, and never re-read
             with open(CQUERY_BRANCHES_FILE, 'r') as cquery_branches_file:
+                self.cquery_name = ''
                 self.cquery_branches = {}
                 for line in cquery_branches_file:
                     line_cleaned = line.lstrip().rstrip()
-                    if line_cleaned.startswith('#') or (not line_cleaned):  # comment or empty line
+                    if not line_cleaned:  # empty line
+                        continue
+                    if line_cleaned.startswith('#'):  # comment
+                        # extract the CQuery name from a line of the form '# branches as specified by cquery=gda-master.cquery'
+                        m = re.match(r'^#.*\bcquery=(\S+)\.cquery$', line_cleaned)
+                        if m:
+                            assert not self.cquery_name  # we only expect to see the CQuery name once
+                            self.cquery_name = m.group(1) + '.cquery'
                         continue
                     (reponame, equals_sign, branch) = line_cleaned.partition('=')
                     if (not reponame) or (equals_sign != '=') or (not branch):
-                        self.logger.error('Unexpected line format in %s: "%s"' % (CQUERY_BRANCHES_FILE, line))
+                        self.logger.critical('Unexpected line format in %s: "%s"' % (CQUERY_BRANCHES_FILE, line))
                         continue
                     self.cquery_branches[reponame] = branch
+                if not self.cquery_name:
+                    self.logger.critical('Could not determine the CQuery name that was used to create %s' % (CQUERY_BRANCHES_FILE,))
 
         if not repo:
             return None  # caller not interested in a specific repo, but just wanted self.cquery_branches created
         else:
-            return self.cquery_branches[repo]  # should never raise KeyError; something is badly wrong if the repo is not mentioned in the CQuery
+            return self.cquery_branches.get(repo, None)
 
     def get_override_branch_for_repo(self, repo):
         """ For the specified repository, returns an alternative point (branch or commit) to materialize, and an action (merge or checkout)
@@ -402,7 +414,10 @@ class RequestedChangesProcessor():
             per_project_branches.setdefault(project,set()).add(ci['branch'])
             per_project_changes.setdefault(project,[]).append(ci)
             expected_branch = self.get_expected_branch_for_repo(os.path.basename(project))  # basename required since repos are named something like gda/gda-core
-            if not ((ci['branch'] == expected_branch) or ci['branch'].startswith(expected_branch + '-')):
+            if expected_branch is None:
+                self.logger.warn('Change "%s" in repository "%s" is not used by CQuery "%s"' %
+                                  (ci['_number'], os.path.basename(project), self.cquery_name))
+            elif not ((ci['branch'] == expected_branch) or ci['branch'].startswith(expected_branch + '-')):
                 self.logger.error('Change "%s" in repository "%s" branch "%s" does not match the branch used by this test job ("%s")' %
                                   (ci['_number'], os.path.basename(project), ci['branch'], expected_branch))
                 self.errors_found = True
@@ -576,6 +591,8 @@ post_materialize_function_gerrit () {
             # write the pre_materialize function for Gerrit changes
             for ci in self.changes_to_fetch:
                 project = os.path.basename(ci[0]['project'])
+                if not self.get_expected_branch_for_repo(project):
+                    continue  # this change is in a repo that is not materialized by the CQuery in use
                 url = 'changes/%s/revisions/current/submit_type' % (ci[0]['_number'])
                 submit_type = self.gerrit_REST_api(url)
 
@@ -632,6 +649,8 @@ post_materialize_function_gerrit () {
             # (2) if the repo is in Gerrit, we can ask Gerrit how to clone it, get a clone, and then we can switch the HEAD as requested
             # (3) if the repo is not in Gerrit, we will let Buckminster do the materialize, and switch the HEAD _after_ the materialize
             for (repo, (head, action)) in sorted(self.get_override_branch_for_repo(None).iteritems()):
+                if not self.get_expected_branch_for_repo(os.path.basename(repo)):
+                    continue  # this change is in a repo that is not materialized by the CQuery in use
                 # generate the commands necessary to switch the repo to the requested branch
 
                 pre_materialize_script_file.write('''\
@@ -817,7 +836,7 @@ post_materialize_function_gerrit () {
             started_script_file.write('  # this function is invoked at the start of the testing\n')
             started_script_file.write('  # post a status message back to each Gerrit change to be tested\n\n')
             if "don't post anything" in self.gerrit_verified_option:
-                started_script_file.write('  return  # job parameters specified not to post to Gerrit\n\n')
+                started_script_file.write('  return  # job parameters specified not to post anything to Gerrit\n\n')
 
             started_script_file.write('  set -x  # Turn on xtrace\n')
             started_script_file.write('  # clear any existing verified status\n')
@@ -855,7 +874,7 @@ post_materialize_function_gerrit () {
             finished_script_file.write('  # this function is invoked at the end of successful testing\n')
             finished_script_file.write('  # post a status message back to each Gerrit change tested\n\n')
             if "don't post anything" in self.gerrit_verified_option:
-                finished_script_file.write('  return  # job parameters specified not to post to Gerrit\n\n')
+                finished_script_file.write('  return  # job parameters specified not to post anything to Gerrit\n\n')
 
             finished_script_file.write('  set -x  # Turn on xtrace\n')
             finished_script_file.write('  # set the verified status to +1\n')
