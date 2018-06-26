@@ -483,10 +483,6 @@ class PewmaManager(object):
                          help='Override Buckminster default')
         group.add_option('--maxParallelResolutions', dest='maxParallelResolutions', type='int', metavar='<value>',
                          help='Override Buckminster default')
-        group.add_option('--prepare-jenkins-build-description-on-materialize-error',
-                         # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                         dest='prepare_jenkins_build_description_on_materialize_error', action='store_true', default=False,
-                         help=optparse.SUPPRESS_HELP)
         group.add_option('--prepare-jenkins-build-description-on-error',
                          dest='prepare_jenkins_build_description_on_error', action='store_true', default=False,
                          help=optparse.SUPPRESS_HELP)
@@ -779,10 +775,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
-            elif self.options.prepare_jenkins_build_description_on_materialize_error:
-                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                text = 'set-build-description: Failure downloading template workspace (probable network issue)'
-                print(text)
             raise PewmaException('Workspace template download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (small enough to do in one chunk)
@@ -793,10 +785,6 @@ class PewmaManager(object):
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading template workspace (probable network issue)'
-                print(text)
-            elif self.options.prepare_jenkins_build_description_on_materialize_error:
-                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                text = 'set-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
             raise PewmaException('Workspace template download failed (network or proxy error, possibly transient): please retry')
         finally:
@@ -1118,10 +1106,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
-            elif self.options.prepare_jenkins_build_description_on_materialize_error:
-                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                text = 'set-build-description: Failure downloading CQuery (probable network issue)'
-                print(text)
             raise PewmaException('CQuery download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (it's small enough to do in one chunk)
@@ -1132,10 +1116,6 @@ class PewmaManager(object):
             self.logger.error('Error downloading from "%s": %s' % (source, str(e)))
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading CQuery (probable network issue)'
-                print(text)
-            elif self.options.prepare_jenkins_build_description_on_materialize_error:
-                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                text = 'set-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
             raise PewmaException('CQuery download failed (network or proxy error, possibly transient): please retry')
         finally:
@@ -2342,11 +2322,8 @@ class PewmaManager(object):
                     text = 'Failure - compile errors, probably due to earlier intermittent Buckminster bug'
                 if self.options.prepare_jenkins_build_description_on_error:
                     print('append-build-description: ' + text)
-                elif self.options.prepare_jenkins_build_description_on_materialize_error:
-                    # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                    print('append-build-description: ' + text)
         elif compile_errors_seen and self.options.prepare_jenkins_build_description_on_error:
-            print('set-build-description: Failure - compile errors')
+            print('append-build-description: Failure - compile errors')
         return retcode
 
 
@@ -2423,10 +2400,6 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
-            elif self.options.prepare_jenkins_build_description_on_materialize_error:
-                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
-                print(text)
             raise PewmaException('Gerrit commit hook download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (it's small enough to do in one chunk)
@@ -2437,10 +2410,6 @@ class PewmaManager(object):
             self.logger.error('Error downloading from "%s": %s' % (commit_hook_url, str(e)))
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading Gerrit commit hook (probable network issue)'
-                print(text)
-            elif self.options.prepare_jenkins_build_description_on_materialize_error:
-                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                text = 'set-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
             raise PewmaException('Gerrit commit hook download failed (network or proxy error, possibly transient): please retry')
         finally:

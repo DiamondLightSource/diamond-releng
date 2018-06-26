@@ -114,7 +114,7 @@ install_buckminster () {
         if [ "${RETVAL}" != "0" ]; then
             if [[ "${JENKINS_URL}" = *diamond.ac.uk* ]]; then
                 # running under Jenkins at DLS, so write text to log so that job build description is set 
-                echo "set-build-description: Failure on wget from $(echo ${director_download} | awk -F/ '{print $3}') (${director_download_location}) (probable network issue)"
+                echo "append-build-description: Failure on wget from $(echo ${director_download} | awk -F/ '{print $3}') (${director_download_location}) (probable network issue)"
             fi
             return ${RETVAL}
         fi
