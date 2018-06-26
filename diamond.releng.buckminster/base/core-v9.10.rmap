@@ -944,7 +944,7 @@
   <rm:locator pattern="^org\.(jogamp|jzy3d)\..+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.uncommons\.maths$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.(boofcv|ddogleg|ejml|georegression)(\..+)?$" searchPathRef="diamond_orbit_p2"/>
-  <rm:locator pattern="^si\.uom\.si-units.*$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^si\.uom\.si-(quantity|units).*$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^tech\.uom\.lib\.uom-lib-common.*$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^tech\.units\.indriya.*$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^tec\.units\.unit-ri.*$" searchPathRef="diamond_orbit_p2"/>
