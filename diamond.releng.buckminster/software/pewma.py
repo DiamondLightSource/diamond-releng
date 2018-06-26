@@ -9,6 +9,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import ConfigParser
 import datetime
 import errno
+import filecmp
 import fnmatch
 import grp
 import logging
@@ -55,6 +56,7 @@ COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.diamond.daq.logpanel', 'gda')
 # Caution: categories must never be the same as any component name or component abbreviation
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
+    ('gda', 'oxygen', 'gda-master-oxygen.cquery', 'v3.4', ('oxygen',), ('1.8.0',)),
     ('gda', 'master', 'gda-master.cquery', 'v3.3', ('master', '9.master', 'v9.master'), ('1.8.0',)),
     ('gda', 'v9.8', 'gda-v9.8.cquery', 'v3.3', ('v9.8', '9.8', '98'), ('1.8.0',)),
     ('gda', 'v9.7', 'gda-v9.7.cquery', 'v3.3', ('v9.7', '9.7', '97'), ('1.8.0',)),
@@ -72,6 +74,7 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v8.50', 'gda-v8.50.cquery', 'v2.10', ('v8.50', '8.50', '850'), ('1.8.0',)),
     ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844'), ('1.7.0',)),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842'), ('1.7.0',)),
+    ('dawn', 'oxygen', 'dawn-master-oxygen.cquery', 'v3.4', ('oxygen',), ('1.8.0',)),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.3', ('master', '2.master', 'v2.master'), ('1.8.0',)),
     ('dawn', 'v2.9', 'dawn-v2.9.cquery', 'v3.3', ('v2.9', '2.9'), ('1.8.0',)),
     ('dawn', 'v2.8', 'dawn-v2.8.cquery', 'v3.3', ('v2.8', '2.8'), ('1.8.0',)),
@@ -95,6 +98,11 @@ CATEGORIES_AVAILABLE = []  # dedupe COMPONENT_CATEGORIES while preserving order
 for c in COMPONENT_CATEGORIES:
     if c[0] not in CATEGORIES_AVAILABLE:
         CATEGORIES_AVAILABLE.append(c[0])
+
+# template names must be of the form vx.y
+for c in COMPONENT_CATEGORIES:
+    assert c[3].startswith('v')
+    assert c[3].count('.') == 1
 
 VERSIONS_AVAILABLE = set()  # dedupe version_synonyms
 for c in COMPONENT_CATEGORIES:
@@ -128,12 +136,12 @@ CQUERY_PATTERNS_TO_SKIP_p2_mirrors_false = (
     '^gda-v9\.[01]\..*cquery$',
     )
 
-# template names must be of the form vx.y in order for us to sort them
+# the template name for master is the default template
 for c in COMPONENT_CATEGORIES:
-    assert c[3].startswith('v')
-    assert c[3].count('.') == 1
-TEMPLATES_AVAILABLE = sorted(set(c[3] for c in COMPONENT_CATEGORIES), key=lambda t: list(map(int, (t[1:].split('.')))))
-DEFAULT_TEMPLATE = TEMPLATES_AVAILABLE[-1]  # the highest number
+    if c[1] == 'master':
+        DEFAULT_TEMPLATE = c[3]
+        break
+assert DEFAULT_TEMPLATE   # must have been set
 
 PLATFORMS_AVAILABLE =  (
     # os/ws/arch, acceptable abbreviations
@@ -1798,11 +1806,63 @@ class PewmaManager(object):
             else:
                 script_file.write('build\n')
 
+        # if the workspace has a settings file specifically for Eclipse Mars (which is what Buckminster is), use that. See DAQ-1511.
+        # the code below attempts to cope with a previous run having abended at some point
+        need_to_restore_settings = False
+        settings_dir = os.path.join( self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings')
+        if os.path.isdir(settings_dir):
+            pde_settings_default = os.path.join(settings_dir, 'org.eclipse.pde.prefs')
+            pde_settings_MARS = os.path.join(settings_dir, 'org.eclipse.pde.prefs.MARS')
+            pde_settings_original = os.path.join(settings_dir, 'org.eclipse.pde.prefs.ORIGINAL')
+            if os.path.isfile(pde_settings_MARS):
+                # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.ORIGINAL
+                if os.path.isfile(pde_settings_default):
+                    if not os.path.isfile(pde_settings_original):
+                        try:
+                            self.logger.info('Renaming "%s" to "%s"' % (pde_settings_default, pde_settings_original))
+                            os.rename(pde_settings_default, pde_settings_original)
+                        except (OSError) as e:
+                             self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_default, pde_settings_original))
+                             return 2
+                    else:
+                        if filecmp.cmp(pde_settings_default, pde_settings_original, shallow=False):
+                            self.logger.info('Removing "%s"' % (pde_settings_default,))
+                            os.remove(pde_settings_default)
+                        else:
+                            self.logger.critical('Error renaming "%s" to "%s": latter already exists' % (pde_settings_default, pde_settings_original))
+                            return 2
+                # rename org.eclipse.pde.prefs.MARS --> org.eclipse.pde.prefs
+                try:
+                    self.logger.info('Renaming "%s" to "%s"' % (pde_settings_MARS, pde_settings_default))
+                    os.rename(pde_settings_MARS, pde_settings_default)
+                except (OSError) as e:
+                    self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_MARS, pde_settings_default))
+                    return 2
+                need_to_restore_settings = True
+
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False, scan_compile_messages=True)
+        bm_exit_code =  self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False, scan_compile_messages=True)
+
+        if need_to_restore_settings:
+            # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.MARS
+            try:
+                self.logger.info('Renaming "%s" to "%s"' % (pde_settings_default, pde_settings_MARS))
+                os.rename(pde_settings_default, pde_settings_MARS)
+            except (OSError) as e:
+                 self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_default, pde_settings_MARS))
+                 return 2
+            # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.MARS
+            try:
+                self.logger.info('Renaming "%s" to "%s"' % (pde_settings_original, pde_settings_default))
+                os.rename(pde_settings_original, pde_settings_default)
+            except (OSError) as e:
+                 self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_original, pde_settings_default))
+                 return 2
+
+        return bm_exit_code
 
 
     def action_target(self):
