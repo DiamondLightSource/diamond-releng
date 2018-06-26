@@ -57,7 +57,7 @@ COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.diamond.daq.logpanel', 'gda')
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
     ('gda', 'oxygen', 'gda-master-oxygen.cquery', 'v3.4', ('oxygen',), ('1.8.0',)),
-    ('gda', 'master', 'gda-master.cquery', 'v3.3', ('master', '9.master', 'v9.master'), ('1.8.0',)),
+    ('gda', 'master', 'gda-master.cquery', 'v3.4', ('master', '9.master', 'v9.master'), ('1.8.0',)),
     ('gda', 'v9.8', 'gda-v9.8.cquery', 'v3.3', ('v9.8', '9.8', '98'), ('1.8.0',)),
     ('gda', 'v9.7', 'gda-v9.7.cquery', 'v3.3', ('v9.7', '9.7', '97'), ('1.8.0',)),
     ('gda', 'v9.6', 'gda-v9.6.cquery', 'v3.3', ('v9.6', '9.6', '96'), ('1.8.0',)),
@@ -75,7 +75,7 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844'), ('1.7.0',)),
     ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842'), ('1.7.0',)),
     ('dawn', 'oxygen', 'dawn-master-oxygen.cquery', 'v3.4', ('oxygen',), ('1.8.0',)),
-    ('dawn', 'master', 'dawn-master.cquery', 'v3.3', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', 'master', 'dawn-master.cquery', 'v3.4', ('master', '2.master', 'v2.master'), ('1.8.0',)),
     ('dawn', 'v2.9', 'dawn-v2.9.cquery', 'v3.3', ('v2.9', '2.9'), ('1.8.0',)),
     ('dawn', 'v2.8', 'dawn-v2.8.cquery', 'v3.3', ('v2.8', '2.8'), ('1.8.0',)),
     ('dawn', 'v2.7', 'dawn-v2.7.cquery', 'v3.3', ('v2.7', '2.7'), ('1.8.0',)),
@@ -90,8 +90,6 @@ COMPONENT_CATEGORIES = (
     ('dawn', 'v1.14', 'dawn-v1.14.cquery', 'v2.13', ('v1.14', '1.14'), ('1.8.0',)),
     ('dawn', 'v1.13', 'dawn-v1.13.cquery', 'v2.12', ('v1.13', '1.13'), ('1.8.0',)),
     ('dawn', 'v1.11', 'dawn-v1.11.cquery', 'v2.12', ('v1.11', '1.11'), ('1.8.0',)),
-    ('training', 'master', 'training-trunk.cquery', 'v2.0', ('master', 'trunk'), None),
-    ('training', 'v8.16', 'training-v8.16.cquery', 'v2.0', ('v8.16', '8.16', '816'), None),
     )
 
 CATEGORIES_AVAILABLE = []  # dedupe COMPONENT_CATEGORIES while preserving order
