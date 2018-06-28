@@ -207,6 +207,9 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Opt-ID.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.Opt-ID" value="true"/>
     </cq:advisorNode>
+    <cq:advisorNode namePattern="^org\.py4j\.defaultserver.*$" useTargetPlatform="false" branchTagPath="new-namespace">
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">py4j-eclipse.git repository branch</cq:documentation>
+    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.richbeans\..+$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">richbeans.git repository branch</cq:documentation>
     </cq:advisorNode>

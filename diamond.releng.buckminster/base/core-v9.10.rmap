@@ -702,19 +702,15 @@
   <rm:propertyElement key="org.eclipse.launchbar.git.url">
     <bc:constant value="${github.${org.eclipse.launchbar.github.authentication}.url}${org.eclipse.launchbar.github.organization}/org.eclipse.launchbar.git"/>
   </rm:propertyElement>
-  <!-- *** py4j - org.py4j* (new) *** -->
-  <rm:propertyElement key="source.repository.py4j">  <!-- says whether to get org.py4j* from a source repository, or a p2 site -->
-    <bc:constant value="false"/>
+  <!-- *** py4j-eclipse - Py4J (new) *** -->
+  <rm:propertyElement key="py4j.eclipse.github.organization">
+    <bc:constant value="DiamondLightSource"/>  <!-- upstream is bartdag -->
   </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="py4j.github.organization">
-    <bc:constant value="bartdag"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="py4j.github.authentication">
+  <rm:propertyElement key="py4j.eclipse.github.authentication">
     <bc:constant value="${github.authentication.common}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="py4j.git.url">
-    <bc:constant value="${github.${py4j.github.authentication}.url}${py4j.github.organization}/py4j.git"/>
+  <rm:propertyElement key="py4j.eclipse.git.url">
+    <bc:constant value="${github.${py4j.eclipse.github.authentication}.url}${py4j.eclipse.github.organization}/py4j-eclipse.git"/>
   </rm:propertyElement>
   <!-- *** richbeans *** -->
   <rm:propertyElement key="richbeans.git.url">
@@ -839,9 +835,10 @@
   <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
   <!-- *** Opt-ID *** -->
   <rm:locator pattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" searchPathRef="opt_id"/>
-  <!-- *** py4j *** -->
-  <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j"/>  <!-- materializes jars into tp/ -->
-  <rm:locator pattern="^(org\.)?py4j([.-].+)?$" searchPathRef="py4j_new"/>  <!-- if source.repository.py4j=true, materializes source projects, otherwise materializes jars into tp/ -->
+  <!-- *** Py4J *** -->
+  <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j_legacy"/>
+  <rm:locator pattern="^org\.py4j\.defaultserver.*$" searchPathRef="py4j_new_source"/>
+  <rm:locator pattern="^(org\.)?py4j([.-].+)?$" searchPathRef="py4j_new_tp"/>
   <!-- *** richbeans *** -->
   <rm:locator pattern="^org\.eclipse\.richbeans\..+$" searchPathRef="richbeans"/>
   <!-- *** scanning *** -->
@@ -2047,39 +2044,36 @@
     </rm:provider>
   </rm:searchPath>
   <!--
-       PY4J- repository or p2 site; legacy or new
+       Py4J - legacy or new
   -->
-  <rm:searchPath name="py4j">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.py4j=true))" readerType="p2" source="false" mutable="false">
+  <rm:searchPath name="py4j_legacy">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${alfred.url}/sites/eclipse-legacy.py4j.org/"/>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.py4j=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from py4j.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="py4j_new">  <!-- either source or jars can be materialized, as specified by a property -->
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.py4j=true))(source.repository.py4j=true))" readerType="git">
+  <rm:searchPath name="py4j_new_source">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.py4j=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${py4j.git.url}"/>
-      <rm:uri format="{0}/py4j.git,{1}">
+      <rm:property key="git.remote.uri" value="${py4j.eclipse.git.url}"/>
+      <rm:uri format="{0}/py4j-eclipse.git,{1}">
         <bc:propertyRef key="repository.git.checkout.root"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.py4j=true))(!(source.repository.py4j=true)))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="http://eclipse.py4j.org/"/>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.py4j=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from py4j.git, but the CQuery specified that this repository should not be used ***">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.py4j.eclipse=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from py4j-eclipse.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="py4j_new_tp">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="https://eclipse.py4j.org/"/>
     </rm:provider>
   </rm:searchPath>
   <!--
