@@ -21,6 +21,6 @@
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern=".*" attributes="containsDocumentationSource" prune="true" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Specifies the branch of the subversion repository</cq:documentation>
+        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">For projects that are checked out from subversion, prior to the materialize</cq:documentation>
     </cq:advisorNode>
 </cq:componentQuery>

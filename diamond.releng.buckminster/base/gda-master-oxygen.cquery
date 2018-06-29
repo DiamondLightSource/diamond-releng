@@ -5,7 +5,7 @@
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
     <cq:property key="download.location" value="Default is 'diamond'. Change this to 'public' if required."/>
     <cq:property key="eclipse.release" value="oxygen3"/>
-    <cq:property key="github.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required (access control is by SSH key pair)."/>
+    <cq:property key="github.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required."/>
     <cq:property key="skip_ALL_test_fragments" value="false"/>
     <cq:property key="skip_DAWN_test_fragments" value="true"/>
     <cq:property key="skip_EXTERNAL_test_fragments" value="false"/>
@@ -18,15 +18,10 @@
     <cq:advisorNode namePattern="^(.*i11-1.*)$" filter="(materialize_skip_list=*i11-1*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i23.*)$" filter="(materialize_skip_list=*i23*)" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*i24.*)$" filter="(materialize_skip_list=*i24*)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^builders\.dawn$" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*\.tests?|org\.eclipse\.dawnsci\.analysis\.examples)$" filter="(|(skip_ALL_test_fragments=true)(skip_ALL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|uk\.ac\.diamond\.(daq\.activemq\.connector|scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(|(skip_DAWN_test_fragments=true)(skip_DAWN_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.eclipse\.((.*\.)?tests?|dawnsci\.analysis\.examples))$" filter="(|(skip_EXTERNAL_test_fragments=true)(skip_EXTERNAL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.(opengda|tango)\.|uk\.ac\.diamond\.scisoft\.mappingexplorer\.|uk\.ac\.gda\.)(.*\.)?tests?$" filter="(|(skip_GDA_test_fragments=true)(skip_GDA_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(beamline\.i05\.dashboard|bimorph|dls\.client\.test|devices\.hidenrga(\..+)?)$" filter="(|(download.location=public)(download.location.common=public))" componentType="osgi.bundle" skipComponent="true">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">Exclude certain components that are not mirrored externally to Diamond Light Source.
-Used for public downloads.</cq:documentation>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.apache\.commons\.codec\.source$" componentType="osgi.bundle" skipComponent="true">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">This is to avoid what appear to be a Buckminster bug (noticed 2014/02/06 using Eclipse 4.3.1).
 If you materialize, and then materialize again, the second materialize can fail. See DASCTEST-211.</cq:documentation>
@@ -195,10 +190,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     </cq:advisorNode>
     <cq:advisorNode namePattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" useTargetPlatform="false" branchTagPath="gda-master">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-sdcp-common.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.january(\..+)?$">
-        <!-- only applicable if source.repository.january=true, otherwise org\.eclipse\.january is supplied by jars in the target platform -->
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">january.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.launchbar(\..+)?$" useTargetPlatform="false" branchTagPath="dawn">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">org.eclipse.launchbar.git repository branch</cq:documentation>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="core-e4-latest.rmap" properties="file:${user.home}/.dawn-master.cquery.properties" shortDesc="CQuery for Dawn master">
     <cq:rootRequest name="${component}"/>
-    <cq:property key="dascgerrit.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required."/>
+    <cq:property key="dascgerrit.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
     <cq:property key="disallow.scisoft.deprecated" value="true"/>
     <cq:property key="download.location" value="Default is 'diamond'. Change this to 'public' if required."/>
-    <cq:property key="github.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
+    <cq:property key="github.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required."/>
     <cq:property key="skip_ALL_test_fragments" value="false"/>
     <cq:property key="skip_DAWN_test_fragments" value="false"/>
     <cq:property key="skip_EXTERNAL_test_fragments" value="false"/>
@@ -14,7 +14,6 @@
     <cq:property key="target.os" value="*"/>
     <cq:property key="target.ws" value="*"/>
     <cq:advisorNode namePattern="^(?!full\.name\.of\.only\.component\.to\.materialize$).*" filter="(to_materialize_one_component_without_dependencies=delete.this.Filter..edit.Name.pattern)" skipComponent="true"/>
-    <cq:advisorNode namePattern="^builder(s\.(dawn|diamond))?$" skipComponent="true"/>
     <cq:advisorNode namePattern="^(.*\.tests?|org\.eclipse\.dawnsci\.analysis\.examples)$" filter="(|(skip_ALL_test_fragments=true)(skip_ALL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.dawb\.|org\.dawnsci\.|uk\.ac\.diamond\.(daq\.activemq\.connector|scisoft(?!\.mappingexplorer\.)|sda|tomography)\.)(.*\.)?tests?$" filter="(|(skip_DAWN_test_fragments=true)(skip_DAWN_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
     <cq:advisorNode namePattern="^(org\.eclipse\.((.*\.)?tests?|dawnsci\.analysis\.examples))$" filter="(|(skip_EXTERNAL_test_fragments=true)(skip_EXTERNAL_test_fragments.common=true))" componentType="osgi.bundle" skipComponent="true"/>
@@ -59,7 +58,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^(com\.amd\.aparapi|org\.dawb\.((apache|eclipse)\.feature|jlchart|jmol|misc\.feature|wst\.feature)|org\.dawnsci\.usagedata\..+|org\.freehep\.j3d|org\.monte\.media)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-third.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|base\.(product\.feature|site)|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\..+)?|conversion\.ui\.api|datavis(\..+)?|dde\..+|dedi|fileviewer(\.feature)?|isosurface(\..+)?|jzy3d(\..+)?|logging\.feature|mapping\..+|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|python\.ui|ui(\..+)?)|python\.feature|product\.(logging|plugin)|slicing(\..+)?|spectrum\..+|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.(dawn\.(base\.product.feature|(product\.feature|site))|scisoft\.applications|screenshot\..+))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^(org\.dawb\.(visualization\.feature|workbench\.ui(\.test)?)|org\.dawnsci\.(algorithm\.ui|base\.(product\.feature|site)|breadcrumb\.navigation|browser(\..+)?|common\.widgets(\..+)?|conversion\.ui\.api|datavis(\..+)?|dde\..+|dedi|fileviewer(\.feature)?|isosurface(\..+)?|jzy3d(\..+)?|logging\.feature|mapping\..+|marketplaceclient(\..+)?|plotting(\..+)?|processing\.(feature|python\.ui|ui(\..+)?)|python\.feature|product\.(logging|plugin)|slicing(\..+)?|spectrum\..+|surfacescatter\.ui(\..+)?|webintro(\..+)?)|uk\.ac\.diamond\.(dawn\.(base\.product.feature|(product\.feature|site))|scisoft\.applications|screenshot\..+))$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">dawn-ui.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.dawnsci(\..+)?$" allowCircularDependency="true" useTargetPlatform="false">
@@ -212,10 +211,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gphl-sdcp-common.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gphl-sdcp-common" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.eclipse\.january(\..+)?$" allowCircularDependency="true">
-        <!-- only applicable if source.repository.january=true, otherwise org\.eclipse\.january is supplied by jars in the target platform -->
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">january.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.launchbar(\..+)?$" useTargetPlatform="false" branchTagPath="dawn">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">org.eclipse.launchbar.git repository branch</cq:documentation>

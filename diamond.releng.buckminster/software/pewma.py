@@ -50,8 +50,6 @@ for beamline in ('b07', 'b07-1', 'b16', 'b18', 'b21', 'b24',
 COMPONENT_ABBREVIATIONS.append(('gdaserver', 'uk.ac.diamond.daq.server.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('all-dls', ('all-dls-configs', 'all-dls-clients', 'uk.ac.diamond.daq.server.site', 'gda-orphan-projects'), 'gda'))
 
-COMPONENT_ABBREVIATIONS.append(('logpanel', 'uk.ac.diamond.daq.logpanel', 'gda'))
-
 # A category+version is one way of specifying a specific CQuery (version can default to "master")
 # Caution: categories must never be the same as any component name or component abbreviation
 COMPONENT_CATEGORIES = (
@@ -194,7 +192,7 @@ OUTPUT_LINES_TO_SUPPRESS = (
 GERRIT_REPOSITORIES = {
     # repository                     url_part:     Gerrit URL (after prefix)
     #                                keep_origin:  if current repo origin is not Gerrit, don't change it to point to Gerrit (Gerrit version had repo history rewritten)
-    #                                must_use_ssh: Must use SSH (repo is not public, hance anonymous access via HTTPS not available)
+    #                                must_use_ssh: Must use SSH (repo is not public, hence anonymous access via HTTPS not available)
     'daq-platform.git'           : {'url_part': 'daq/daq-platform.git'},
     'dawn-commandserver.git'     : {'url_part': 'scisoft/dawn-commandserver.git'},
     'dawn-common.git'            : {'url_part': 'scisoft/dawn-common.git'},
@@ -228,7 +226,6 @@ GERRIT_REPOSITORIES = {
     'gda-hrpd.git'               : {'url_part': 'gda/gda-hrpd.git'},
     'gda-imca-cat.git'           : {'url_part': 'gda/gda-imca-cat.git'},
     'gda-legacy.git'             : {'url_part': 'gda/gda-legacy.git'},
-    'gda-logpanel.git'           : {'url_part': 'gda/gda-logpanel.git'},
     'gda-mx.git'                 : {'url_part': 'gda/gda-mx.git'},
     'gda-nexus.git'              : {'url_part': 'gda/gda-nexus.git'},
     'gda-pes.git'                : {'url_part': 'gda/gda-pes.git'},

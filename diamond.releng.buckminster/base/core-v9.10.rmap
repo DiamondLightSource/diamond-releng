@@ -62,9 +62,6 @@
   </rm:propertyElement>
   <!-- ***** -->
   <!-- version of Eclipse January p2 repository to use -->
-  <rm:propertyElement key="source.repository.january">  <!-- says whether to get org.eclipse.january* from a source repository, or a p2 site -->
-    <bc:constant value="false"/>
-  </rm:propertyElement>
   <rm:propertyElement key="eclipse.january.p2.version">
     <bc:constant value="2.1.4RC1"/>
   </rm:propertyElement>
@@ -193,11 +190,8 @@
   <rm:propertyElement key="github.authentication.common">
     <bc:constant value="${github.authentication.from.cquery.translated}"/>
   </rm:propertyElement>
-  <rm:propertyElement key="github.anonymous.protocol">
-    <bc:constant value="https"/>
-  </rm:propertyElement>
   <rm:propertyElement key="github.anonymous.url">
-    <bc:constant value="${github.anonymous.protocol}://github.com/"/>
+    <bc:constant value="https://github.com/"/>
   </rm:propertyElement>
   <rm:propertyElement key="github.ssh.url">
     <bc:constant value="git@github.com:"/>
@@ -209,19 +203,6 @@
     <bc:constant value="https://alfred.diamond.ac.uk"/>  <!-- visible both inside and outside Diamond (at different IP addresses!), so normally no need to override -->
   </rm:propertyElement>
   <!--                                                                      -->
-  <!--######################################################################-->
-  <!--# Source Repository URLs (properties may be overridden)              #-->
-  <!--######################################################################-->
-  <!--                              -->
-  <!-- Subversion repositories      -->
-  <!--                              -->
-  <rm:propertyElement key="diamond.subversion.location">
-    <bc:constant value="${download.location.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="repository.subversion.diamond.download.url">
-    <bc:constant value="https://svn.diamond.ac.uk/subversion/gda"/>
-  </rm:propertyElement>
-  <!--                                                                      -->
   <!--#######################################################################################-->
   <!--# Git (Gitolite and Gerrit) Repository URLs (keep in sorted order of repository name) #-->
   <!--#######################################################################################-->
@@ -231,17 +212,11 @@
   <rm:propertyElement key="githubgphl.github.authentication">
     <bc:constant value="ssh"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
-  <rm:propertyElement key="dawn.git.location">  <!-- can be "diamond" or "public" -->
-    <bc:constant value="public"/>  <!-- Dawn repositories exist only on GitHub -->
-  </rm:propertyElement>
   <rm:propertyElement key="gda.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
   <rm:propertyElement key="githubgphl.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="diamond"/>  <!-- always materialize from DLS unless specifically overridden -->
-  </rm:propertyElement>
-  <rm:propertyElement key="scisoft.git.location">  <!-- can be "diamond" or "public" -->
-    <bc:constant value="${download.location.common}"/>
   </rm:propertyElement>
   <!--
        Git repositories
@@ -494,7 +469,6 @@
   <rm:propertyElement key="gda.dls.beamlines.xas.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-dls-beamlines-xas.git"/>
   </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="gda.dls.excalibur.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-dls-excalibur.git"/>
   </rm:propertyElement>
@@ -519,10 +493,6 @@
   </rm:propertyElement>
   <rm:propertyElement key="gda.ispyb.api.git.url">
     <bc:constant value="${github.${gda.ispyb.api.github.authentication}.url}${gda.ispyb.api.github.organization}/gda-ispyb-api.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="gda.logpanel.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-logpanel.git"/>
   </rm:propertyElement>
   <!-- -->
   <rm:propertyElement key="gda.mt.git.location">
@@ -677,17 +647,6 @@
   <rm:propertyElement key="gphl.sdcp.common.git.url">
     <bc:constant value="${gphl.sdcp.common.${gphl.sdcp.common.git.location.translated}.url}/gphl-sdcp-common.git"/>
   </rm:propertyElement>
-  <!-- *** (eclipse/)january *** -->
-  <!-- only applicable if source.repository.january=true, otherwise org\.eclipse\.january is supplied by jars in the target platform -->
-  <rm:propertyElement key="january.github.organization">
-    <bc:constant value="eclipse"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="january.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="january.git.url">
-    <bc:constant value="${github.${january.github.authentication}.url}${january.github.organization}/january.git"/>
-  </rm:propertyElement>
   <!-- *** Opt-ID *** -->
   <rm:propertyElement key="opt.id.git.url">
     <bc:constant value="${diamond.dascgerrit.ssh.url}/diamond/Opt-ID.git"/>  <!-- private repository, so ssh must be used -->
@@ -815,7 +774,6 @@
   <rm:locator pattern="^uk\.ac\.gda\.(client\.)?hrpd$" searchPathRef="gda_hrpd"/>
   <rm:locator pattern="^(imca-cat-config|gov\.anl\.aps\.beamline\.(imca-cat(\..+)?))$" searchPathRef="gda_imca_cat"/>
   <rm:locator pattern="^uk\.ac\.diamond\.ispyb\.(.+)$" searchPathRef="gda_ispyb_api"/>  <!-- if source.repository.gda_ispyb_api=true, materializes source projects, otherwise materializes jars into tp/ -->
-  <rm:locator pattern="^uk\.ac\.diamond\.daq\.logpanel(\..+)?$" searchPathRef="gda_logpanel"/>
   <rm:locator pattern="^((b16|b24|i06|i06-1|i07|i10|i16|mt|optics)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" searchPathRef="gda_mt"/>
   <rm:locator pattern="^(mx-gda-tools|(i02-1|i02-2|i03|i04|i04-1|i19-1|i19-2|i19-shared|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.wf-prototype-.+|uk\.ac\.(diamond\.(org\.springframework\.fragment\.i19-shared-config|daq\.mx\..+|dna|stac)|gda\.(beamline\.(i02-1|i02-2|i03|i04|i04-1|i19|i19-1|i19-2|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.insitu(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.(attenuator|hutch)|vmxi(\..+)?)))$" searchPathRef="gda_mx"/>
   <rm:locator pattern="^uk\.ac\.gda\.nexus(\..+)?$" searchPathRef="gda_nexus"/>
@@ -829,8 +787,6 @@
   <rm:locator pattern="^com\.globalphasing\.sdcp\.abstract_beamline$" searchPathRef="gphl_abstract_beamline"/>
   <rm:locator pattern="^com\.globalphasing\.(astra|f90_namelist)(\..+)?$" searchPathRef="gphl_astra"/>
   <rm:locator pattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" searchPathRef="gphl_sdcp_common"/>
-  <!-- *** january *** -->
-  <rm:locator pattern="^org\.eclipse\.january(\..+)?$" searchPathRef="january"/>  <!-- depending on source.repository.january, will materialize either source projects, or jars into tp/ -->
   <!-- *** org.eclipse.launchbar *** -->
   <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
   <!-- *** Opt-ID *** -->
@@ -863,16 +819,8 @@
   <!--
        GDA various components
   -->
-  <rm:locator pattern="^(builder|builders\..+|documentation\..+|licences|python)$" searchPathRef="extras"/>
-  <rm:locator pattern="^(GDALargeTestFiles|thirdparty)$" searchPathRef="extras_root"/>
+  <rm:locator pattern="^(builders\..+|documentation\..+|GDALargeTestFiles)$" searchPathRef="extras"/>
   <rm:locator pattern="^uk\.ac\.diamond\.gda\.hc$" searchPathRef="diamond_gda_hc"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ida\.feature$" searchPathRef="core_svn"/>
-  <rm:locator pattern="^uk\.ac\.gda\.(client\.extensions|daresbury|developer\.tools|libs\.deps)$" searchPathRef="core_svn"/>
-  <!--
-       Components using in publishing from thirdparty/ to a p2 site from which Target Platform components can be materialized
-  -->
-  <rm:locator pattern="^tp\..+\.site$" searchPathRef="sites"/>
-  <rm:locator pattern="^tp\..+\.feature$" searchPathRef="core_svn"/>
   <!--
        Components to get from Eclipse p2 repositories: Orbit, EclipseLink, Jetty, NatTable
   -->
@@ -890,7 +838,7 @@
   <rm:locator pattern="^org\.objectweb\.asm(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.quartz$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.xmlpull$" searchPathRef="eclipse_orbit_p2"/>
-  <!-- "^org\.eclipse\.january(\..+)?$" is in eclipse_orbit_p2, but handled above, as either source or jars can be materialized, as specified by a property -->
+  <rm:locator pattern="^org\.eclipse\.january.*$" searchPathRef="eclipse_january"/>
   <rm:locator pattern="^org\.eclipse\.fx\.javafx(\..+)?" searchPathRef="eclipse_mars_always" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.mylyn(\..+)?" searchPathRef="eclipse_mars_always" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.persistence\..+$" searchPathRef="eclipse_eclipselink_p2"/>
@@ -1680,22 +1628,6 @@
     </rm:provider>
   </rm:searchPath>
   <!-- -->
-  <rm:searchPath name="gda_logpanel">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-logpanel=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.logpanel.git.url}"/>
-      <rm:uri format="{0}/gda-logpanel.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-logpanel=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-logpanel.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
   <rm:searchPath name="gda_mt">
     <rm:provider componentTypes="buckminster" resolutionFilter="(!(disallow.repo.gda-mt=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
@@ -1964,29 +1896,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(disallow.repo.gphl-sdcp-common=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gphl-sdcp-common.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       (eclipse/)JANUARY repository, or p2 site
-  -->
-  <rm:searchPath name="january">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.january=true))(source.repository.january=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${january.git.url}"/>
-      <rm:uri format="{0}/january.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(&amp;(!(disallow.repo.january=true))(!(source.repository.january=true)))" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${eclipse.january.p2.url}"/>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.january=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from january.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
@@ -2299,55 +2208,8 @@
   <!--# Other Search Paths                                                 #-->
   <!--######################################################################-->
   <!--
-       GDA sites and configurations
+       Manually checked out (from subversion) prior to materialize, and put at root level of workspace/
   -->
-  <rm:searchPath name="sites">
-    <rm:provider componentTypes="eclipse.feature" readerType="local">
-      <rm:uri format="file://{0}/sites/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" readerType="local">
-      <rm:uri format="file://{0}/features/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
-      <rm:uri format="${repository.subversion.diamond.download.url}/trunk/sites/{0}?moduleAfterBranch&amp;moduleAfterTag">
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       Subversion
-  -->
-  <rm:searchPath name="core_svn">
-    <rm:provider componentTypes="eclipse.feature" readerType="local">
-      <rm:uri format="file://{0}/features/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle" readerType="local">
-      <rm:uri format="file://{0}/plugins/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
-      <rm:uri format="${repository.subversion.diamond.download.url}/trunk/features/{0}?moduleAfterBranch&amp;moduleAfterTag">
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
-      <rm:uri format="${repository.subversion.diamond.download.url}/trunk/plugins/{0}?moduleAfterBranch&amp;moduleAfterTag">
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- ***** -->
   <rm:searchPath name="extras">
     <rm:provider componentTypes="buckminster" readerType="local">
       <rm:uri format="file://{0}/{1}">
@@ -2355,28 +2217,9 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="buckminster" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
-      <rm:uri format="${repository.subversion.diamond.download.url}/trunk/{0}?moduleAfterBranch&amp;moduleAfterTag">
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- ***** -->
-  <rm:searchPath name="extras_root">
-    <rm:provider componentTypes="buckminster" readerType="local">
-      <rm:uri format="file://{0}/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="buckminster" resolutionFilter="(diamond.subversion.location=diamond)" readerType="svn">
-      <rm:uri format="${repository.subversion.diamond.download.url}/{0}">
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
   </rm:searchPath>
   <!--
-       Target Platform (Diamond, Eclipse, PyDev)
+       Target Platform (Diamond, Eclipse, January, PyDev)
   -->
   <rm:searchPath name="diamond_orbit_p2">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
@@ -2404,6 +2247,13 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/rt/eclipselink/updates/${eclipse.eclipselink.p2.version}/"/>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="eclipse_january">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
+      <rm:property key="buckminster.source" value="false"/>
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="${eclipse.january.p2.url}"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_jetty9_p2">
