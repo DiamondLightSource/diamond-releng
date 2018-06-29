@@ -704,10 +704,6 @@
   <rm:propertyElement key="scisoft.ws.git.url">
     <bc:constant value="${diamond.dascgerrit.ssh.url}/scisoft/scisoft-ws.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
-  <!-- *** training *** -->
-  <rm:propertyElement key="training.gerrit.1.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/training/training-gerrit-1.git"/>
-  </rm:propertyElement>
   <!-- *** wychwood *** -->
   <rm:propertyElement key="wychwood.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/wychwood.git"/>
@@ -809,8 +805,6 @@
   <rm:locator pattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" searchPathRef="scisoft_spectroscopy"/>
   <rm:locator pattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|powder\.(indexer\.(feature|rcp)|matcher\.ccdc\.(feature|rcp))|rcp(\.(contributions|test))?)|arpes\.calibration|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rixs\.(feature|rcp)|rp|system\.info|ui\.feature|pydev\.rcp(\..+)?))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
-  <!-- *** training *** -->
-  <rm:locator pattern="^training\.gerrit\.(feature|plugin1|plugin2)$" searchPathRef="training_gerrit_1"/>
   <!-- *** wychwood *** -->
   <rm:locator pattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" searchPathRef="wychwood"/>
   <!--
@@ -2147,24 +2141,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.scisoft-ws=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from scisoft-ws.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       Training repositories
-  -->
-  <rm:searchPath name="training_gerrit_1">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.training-gerrit-1=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${training.gerrit.1.git.url}"/>
-      <rm:uri format="{0}/training-gerrit-1.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.training-gerrit-1=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from training-gerrit-1.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
