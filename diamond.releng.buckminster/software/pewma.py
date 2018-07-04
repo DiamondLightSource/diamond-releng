@@ -1,10 +1,34 @@
-#!/usr/bin/env python2
-from __future__ import absolute_import, division, print_function, unicode_literals
+#! /bin/sh
+# -*- mode: python; coding: utf-8 -*-
 
 ###
 ### Python Eclipse Workspace MAnager
 ### platform-independent script to manage development of Eclipse-based products such as GDA and Dawn
 ###
+
+# This file is used as both a shell script and as a Python script.
+
+""":"
+# This part is run by the shell.  It looks for an appropriate Python
+# interpreter then uses it to re-exec this script. Note that dls-python
+# is a python install at Diamond Light Source which includes pygelf.
+# If not available, use whatever python is found on the system path.
+
+if type dls-python >/dev/null 2>/dev/null; then
+  exec dls-python "$0" "$@"
+elif type python2 >/dev/null 2>/dev/null; then
+  exec python2 "$0" "$@"
+elif type python >/dev/null 2>/dev/null; then
+  exec python "$0" "$@"
+else
+  echo 1>&2 "No usable Python interpreter was found!"
+  exit 1
+fi
+
+" """
+
+# The rest of the file is run by the Python interpreter.
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import ConfigParser
 import datetime
