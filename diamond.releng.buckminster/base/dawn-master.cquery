@@ -162,8 +162,9 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-imca-cat.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-imca-cat" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.diamond\.ispyb\.(.+)$">  <!-- if source.repository.gda-ispyb-api=true, materializes source projects, otherwise materializes jars into tp/ -->
+    <cq:advisorNode namePattern="^uk\.ac\.diamond\.ispyb\.(.+)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-ispyb-api.git repository branch</cq:documentation>
+        <cq:property key="disallow.repo.gda-ispyb-api" value="true"/>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^((b16|b24|i06|i06-1|i07|i10|i16|mt|optics)-(config|shared)|all-mt-configs|uk\.ac\.gda\.(beamline\.(b16|b24|i06|i06_1|i07|i10|i16)(\..+)?|client\.(nano(\.test)?|sixd)|server\.nano))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>

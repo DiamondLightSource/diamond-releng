@@ -1958,7 +1958,7 @@
   </rm:searchPath>
   <!-- -->
   <rm:searchPath name="py4j_new_source">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.py4j=true))" readerType="git">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.py4j-eclipse=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
       <rm:property key="git.remote.uri" value="${py4j.eclipse.git.url}"/>
       <rm:uri format="{0}/py4j-eclipse.git,{1}">
@@ -1966,7 +1966,7 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.py4j.eclipse=true)" readerType="local">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.py4j-eclipse=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from py4j-eclipse.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
