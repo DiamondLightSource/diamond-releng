@@ -2652,7 +2652,7 @@ class PewmaManager(object):
             if (not self.options.quiet) or exit_code:
                 self.logger.log(logging.ERROR if exit_code else logging.INFO, final_message)
             if use_graylog:
-                extra_fields = {'elapsed_time': seconds}
+                extra_fields = {'elapsed_time': run_time.seconds}
                 jenkins_build_tag = os.environ.get('BUILD_TAG', None)
                 jenkins_build_url = os.environ.get('BUILD_URL', None)
                 if jenkins_build_tag and jenkins_build_url:
