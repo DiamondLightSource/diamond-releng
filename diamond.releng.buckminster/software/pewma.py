@@ -413,7 +413,7 @@ class PewmaManager(object):
             from pkg_resources import require
             require('pygelf')
             from pygelf import GelfUdpHandler
-        except ImportError:
+        except:
             return False  # pygelf not installed in the version of Python we are running
 
         self.logger_graylog = logging.getLogger(__name__ + '-graylog')
@@ -2652,7 +2652,13 @@ class PewmaManager(object):
             if (not self.options.quiet) or exit_code:
                 self.logger.log(logging.ERROR if exit_code else logging.INFO, final_message)
             if use_graylog:
-                self.logger_graylog.log(logging.ERROR if exit_code else logging.INFO, final_message)
+                extra_fields = {'elapsed_time': seconds}
+                jenkins_build_tag = os.environ.get('BUILD_TAG', None)
+                jenkins_build_url = os.environ.get('BUILD_URL', None)
+                if jenkins_build_tag and jenkins_build_url:
+                    extra_fields['jenkins_build_tag'] = jenkins_build_tag
+                    extra_fields['jenkins_build_url'] = jenkins_build_url
+                self.logger_graylog.log(logging.ERROR if exit_code else logging.INFO, final_message, extra = extra_fields)
         return exit_code
 
 ###############################################################################
