@@ -35,6 +35,7 @@ import datetime
 import errno
 import filecmp
 import fnmatch
+import getpass
 import grp
 import logging
 import optparse
@@ -53,6 +54,9 @@ import urllib2
 import xml.etree.ElementTree as ET
 from xml.parsers.expat import ExpatError
 import zipfile
+
+GRAYLOG_SERVER = 'graylog2.diamond.ac.uk'
+GRAYLOG_PORT   = 12251
 
 COMPONENT_ABBREVIATIONS = [] # tuples of (abbreviation, actual component name to use, category)
 
@@ -300,16 +304,6 @@ class PewmaException(Exception):
 class PewmaManager(object):
 
     def __init__(self):
-        # Set up logger
-        self.logger = logging.getLogger("Pewma")
-        self.logger.setLevel(1)
-
-        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
-        # create console handler
-        self.logging_console_handler = logging.StreamHandler()
-        self.logging_console_handler.setFormatter(formatter)
-        self.logger.addHandler(self.logging_console_handler)
-
         self.system = platform.system()
         self.isLinux = self.system == 'Linux'
         self.isWindows = self.system == 'Windows'
@@ -334,70 +328,111 @@ class PewmaManager(object):
         self.valid_actions_with_help = (
             # 1st item in tuple is the action verb
             # 2nd item in tuple is the action special handler (either "ant" or None)
-            # 3rd item in tuple is a tuple of help text lines
-            ('setup', None,
+            # 3rd item in tuple is a boolean, set to True if the elapsed time for this action is to be logged to Graylog
+            # 4rd item in tuple is a tuple of help text lines
+            ('setup', None, False,
                 ('setup [<category> [<version>] | <cquery>]',
                  'Set up a new workspace, with the target platform defined, but otherwise empty',
                  '(parameters are the same as for the "materialize" action)',
                  )),
-            ('materialize', None,
+            ('materialize', None, True,
                 ('materialize {<component> ...} [<category> [<version>] | <cquery>]',
                  'Materialize component(s) and their dependencies into a new or existing workspace',
                  'Category can be one of "%s"' % '/'.join(CATEGORIES_AVAILABLE),
                  'Version defaults to master',
                  'CQuery is only required if you don\'t want to use Category or Category+Version',
                  )),
-            ('print-workspace-path', None,
+            ('print-workspace-path', None, False,
                 ('print-workspace-path',
                  'Prints the workspace directory path (explicit or determined)',
                  )),
-            ('get-branches-expected', None,
+            ('get-branches-expected', None, False,
                 ('get-branches-expected <component> [<category> [<version>] | <cquery>]',
                  'Determine the CQuery to use, and return from it a list of repositories and branches',
                  )),
-            ('gerrit-config', None, ('gerrit-config', 'Switch applicable repositories to origin Gerrit and configure for Eclipse',)),
-            ('git', None, ('git <command>', 'Issue "git <command>" for all git clones',)),
-            ('clean', None, ('clean', 'Clean the workspace',)),
-            ('bmclean', None, ('bmclean <site>', 'Clean previous buckminster output',)),
-            ('build', None, ('build', '[alias for buildthorough]',)),
-            ('buildthorough', None, ('buildthorough', 'Build the workspace (do full build if first incremental build fails)',)),
-            ('buildinc', None, ('buildinc', 'Build the workspace (incremental build)',)),
-            ('target', None, ('target', 'List target definitions known in the workspace',)),
-            ('target', None, ('target path/to/name.target', 'Set the target platform for the workspace',)),
-            ('sites', None, ('sites', 'List the available site projects in the workspace',)),
-            ('site.p2', None,
+            ('gerrit-config', None, False, ('gerrit-config', 'Switch applicable repositories to origin Gerrit and configure for Eclipse',)),
+            ('git', None, True, ('git <command>', 'Issue "git <command>" for all git clones',)),
+            ('clean', None, True, ('clean', 'Clean the workspace',)),
+            ('bmclean', None, True, ('bmclean <site>', 'Clean previous buckminster output',)),
+            ('build', None, True, ('build', '[alias for buildthorough]',)),
+            ('buildthorough', None, True, ('buildthorough', 'Build the workspace (do full build if first incremental build fails)',)),
+            ('buildinc', None, True, ('buildinc', 'Build the workspace (incremental build)',)),
+            ('target', None, False, ('target', 'List target definitions known in the workspace',)),
+            ('target', None, False, ('target path/to/name.target', 'Set the target platform for the workspace',)),
+            ('sites', None, False, ('sites', 'List the available site projects in the workspace',)),
+            ('site.p2', None, True,
                 ('site.p2 <site>',
                  'Build the workspace and an Eclipse p2 site',
                  'Site can be omitted if there is just one site project, and abbreviated in most other cases',
                 )),
-            ('site.p2.zip', None,
+            ('site.p2.zip', None, True,
                 ('site.p2.zip <site>',
                  'Build the workspace and an Eclipse p2 site, then zip the p2 site',
                  'Site can be omitted if there is just one site project, and abbreviated in most other cases',
                 )),
-            ('product', None,
+            ('product', None, True,
                 ('product <site> [ <platform> ... ]',
                  'Build the workspace and an Eclipse product',
                  'Site can be omitted if there is just one site project, and abbreviated in most other cases',
                  'Platform can be something like linux64/mac64/win64/all (defaults to current platform)',
                 )),
-            ('product.zip', None,
+            ('product.zip', None, True,
                 ('product.zip <site> [ <platform> ... ]',
                  'Build the workspace and an Eclipse product, then zip the product',
                 )),
-            ('tests-clean', self._iterate_ant, ('tests-clean', 'Delete test output and results files from JUnit/JyUnit tests',)),
-            ('junit-tests', self._iterate_ant, ('junit-tests', 'Run Java JUnit tests for all (or selected) projects',)),
-            ('jyunit-tests', self._iterate_ant, ('jyunit-tests', 'Runs JyUnit tests for all (or selected) projects',)),
-            ('all-tests', self._iterate_ant, ('all-tests', 'Runs both Java and JyUnit tests for all (or selected) projects',)),
-            ('corba-make-jar', self._iterate_ant, ('corba-make-jar', '(Re)generate the corba .jar(s) in all or selected projects',)),
-            ('corba-validate-jar', self._iterate_ant, ('corba-validate-jar', 'Check that the corba .jar(s) in all or selected plugins match the source',)),
-            ('corba-clean', self._iterate_ant, ('corba-clean', 'Remove temporary files from workspace left over from corba-make-jar',)),
-            ('dummy', self._iterate_ant, ()),
-            ('developer-test', None, ()),
+            ('tests-clean', self._iterate_ant, False, ('tests-clean', 'Delete test output and results files from JUnit/JyUnit tests',)),
+            ('junit-tests', self._iterate_ant, True, ('junit-tests', 'Run Java JUnit tests for all (or selected) projects',)),
+            ('jyunit-tests', self._iterate_ant, True, ('jyunit-tests', 'Runs JyUnit tests for all (or selected) projects',)),
+            ('all-tests', self._iterate_ant, True, ('all-tests', 'Runs both Java and JyUnit tests for all (or selected) projects',)),
+            ('corba-make-jar', self._iterate_ant, False, ('corba-make-jar', '(Re)generate the corba .jar(s) in all or selected projects',)),
+            ('corba-validate-jar', self._iterate_ant, False, ('corba-validate-jar', 'Check that the corba .jar(s) in all or selected plugins match the source',)),
+            ('corba-clean', self._iterate_ant, False, ('corba-clean', 'Remove temporary files from workspace left over from corba-make-jar',)),
+            ('dummy', self._iterate_ant, False, ()),
+            ('developer-test', None, False, ()),
             )
 
-        self.valid_actions = dict((action, handler) for (action, handler, help) in self.valid_actions_with_help)
+        self.valid_actions = dict((action, (handler, attempt_graylog)) for (action, handler, attempt_graylog, _) in self.valid_actions_with_help)
 
+    def setup_standard_logging(self):
+        # create logger with console handler, and formatter to match
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(1)
+        console_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
+        self.logging_console_handler = logging.StreamHandler()
+        self.logging_console_handler.setFormatter(console_formatter)
+        self.logger.addHandler(self.logging_console_handler)
+
+    def setup_graylog_logging(self):
+        # create logger with Graylog handler, and formatter to match
+        # we use a separate logger, rather than an additional handler on the standard logger
+        if self.options.no_graylog:
+            return False  # command line option said not to write to Graylog
+        if not socket.getfqdn().endswith('.diamond.ac.uk'):
+            return False  # not at Diamond Light Source
+        try:
+            from pkg_resources import require
+            require('pygelf')
+            from pygelf import GelfUdpHandler
+        except ImportError:
+            return False  # pygelf not installed in the version of Python we are running
+
+        self.logger_graylog = logging.getLogger(__name__ + '-graylog')
+        self.logger_graylog.setLevel(1)
+        graylog_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
+        action_index = sys.argv.index(self.action)
+        self.logging_graylog_handler = GelfUdpHandler(
+            host = GRAYLOG_SERVER,
+            port = GRAYLOG_PORT,
+            _application_name = 'pewma',
+            _username = getpass.getuser(),
+            _workspace_loc = self.workspace_loc,
+            _pewma_options = ' '.join(sys.argv[1:action_index]),
+            _pewma_action = '%s %s' % (self.action, ' '.join(self.arguments)),
+            include_extra_fields = True)
+        self.logging_graylog_handler.setFormatter(graylog_formatter)
+        self.logger_graylog.addHandler(self.logging_graylog_handler)
+        self.logger.debug('Performance data will be logged to Graylog')
+        return True
 
     def _get_full_uri(self, part):
         return self.options.dls_buckminster_uri.strip('/') + '/' + part
@@ -496,8 +531,6 @@ class PewmaManager(object):
                              help='Linux group to set on directories that are created (default: %default)')
         group.add_option('-l', '--location', dest='download_location', choices=('diamond', 'public'), metavar='<location>',
                          help='Download location ("diamond" or "public")')
-        group.add_option('-k', '--keyring', dest='keyring', type='string', metavar='<ignored>',
-                         help=optparse.SUPPRESS_HELP)  # Obsolete parameter that is ignored
         group.add_option('--maxParallelMaterializations', dest='maxParallelMaterializations', type='int', metavar='<value>',
                          help='Override Buckminster default')
         group.add_option('--maxParallelResolutions', dest='maxParallelResolutions', type='int', metavar='<value>',
@@ -562,6 +595,7 @@ class PewmaManager(object):
                                default='INFO', help='Logging level (default: %default)')
         group.add_option('--debug-options-file', dest='debug_options_file', type='string', metavar='<path>',
                                help='File containing debug options for Buckminster')
+        group.add_option('-g', '--no-graylog', dest='no_graylog', action='store_true', default=False, help='Never log to DLS Graylog, even if available')
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Git options (when using the git subcommand)")
@@ -2444,33 +2478,33 @@ class PewmaManager(object):
 #  Main driver                                                                #
 ###############################################################################
 
-    def main(self, call_args):
+    def main(self):
         """ Process any command line arguments and run program.
-            call_args[0] == the directory the script is running from.
-            call_args[1:] == build options and parameters. """
+            sys.argv[0] == the directory the script is running from.
+            sys.argv[1:] == build options and parameters. """
 
         if (sys.version < "2.6") or (sys.version >= "3"):
             raise PewmaException("ERROR: This script must be run using Python 2.6 or higher.")
         try:
-            if not len(call_args):
+            if not len(sys.argv):
                 raise TypeError
         except TypeError:
-            raise PewmaException("ERROR: PewmaManager.main() called with incorrect argument.")
+            raise PewmaException("ERROR: PewmaManager.main() called with incorrect argument")
 
         # process command line arguments (prompt if necessary):
         self.define_parser()
-        (self.options, positional_arguments) = self.parser.parse_args(call_args[1:])
-
+        (self.options, positional_arguments) = self.parser.parse_args()
         # print help if requested, or if no arguments
         if self.options.help or not positional_arguments:
             self.parser.print_help()
             print('\nActions and Arguments:')
-            for (_, _, help) in self.valid_actions_with_help:
+            for (_, _, _, help) in self.valid_actions_with_help:
                 if help:
                      print('    %s' % (help[0]))
                      for line in help[1:]:
                         print('      %s' % (line,))
             return
+        self.setup_standard_logging()
 
         if sys.stdin.encoding is not None:
             positional_arguments = [item.decode(sys.stdin.encoding) for item in positional_arguments]  # in case any unicode characters in input string
@@ -2483,8 +2517,6 @@ class PewmaManager(object):
         if self.action == 'print-workspace-path': self.options.quiet = True  #  the output of print-workspace-path is used in scripts, so be quiet
 
         # validation of options and action
-        if self.options.keyring:
-            self.logger.warn('"--keyring" and "-k" options obsolete; ignored')
         self.validate_glob_patterns(self.options.project_includes, self.options.project_excludes, '--include or --exclude')
         self.validate_glob_patterns(self.options.repo_includes, self.options.repo_excludes, '--repo-include or --repo-exclude')
         if self.options.delete and self.options.recreate:
@@ -2601,13 +2633,14 @@ class PewmaManager(object):
 
         # invoke function to perform the requested action
         start_time = datetime.datetime.now()
-        action_handler = self.valid_actions[self.action]
+        (action_handler, attempt_graylog) = self.valid_actions[self.action]
+        use_graylog = attempt_graylog and self.setup_graylog_logging()  # returns True if graylog logging actually available 
         if action_handler:
             exit_code = action_handler(target=self.action)
         else:
             exit_code = getattr(self, 'action_'+self.action.replace('.', '_').replace('-', '_'))()
 
-        if not self.options.quiet:
+        if (not self.options.quiet) or use_graylog:
             end_time = datetime.datetime.now()
             run_time = end_time - start_time
             seconds = (run_time.days * 86400) + run_time.seconds
@@ -2616,7 +2649,10 @@ class PewmaManager(object):
             final_message = '%sRun time was %02d:%02d:%02d [%s]' % (self.log_prefix, hours, minutes, seconds, self.action)
             if exit_code:
                 final_message += ' (Return code: %s)' % (exit_code,)
-            self.logger.log(logging.ERROR if exit_code else logging.INFO, final_message)
+            if (not self.options.quiet) or exit_code:
+                self.logger.log(logging.ERROR if exit_code else logging.INFO, final_message)
+            if use_graylog:
+                self.logger_graylog.log(logging.ERROR if exit_code else logging.INFO, final_message)
         return exit_code
 
 ###############################################################################
@@ -2626,7 +2662,7 @@ class PewmaManager(object):
 if __name__ == '__main__':
     pewma = PewmaManager()
     try:
-        sys.exit(pewma.main(sys.argv))
+        sys.exit(pewma.main())
     except PewmaException as e:
         print(e)
         sys.exit(3)
