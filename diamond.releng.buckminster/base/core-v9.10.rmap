@@ -647,10 +647,6 @@
   <rm:propertyElement key="gphl.sdcp.common.git.url">
     <bc:constant value="${gphl.sdcp.common.${gphl.sdcp.common.git.location.translated}.url}/gphl-sdcp-common.git"/>
   </rm:propertyElement>
-  <!-- *** Opt-ID *** -->
-  <rm:propertyElement key="opt.id.git.url">
-    <bc:constant value="${diamond.dascgerrit.ssh.url}/diamond/Opt-ID.git"/>  <!-- private repository, so ssh must be used -->
-  </rm:propertyElement>
   <!-- *** org.eclipse.launchbar *** -->
   <rm:propertyElement key="org.eclipse.launchbar.github.organization">
     <bc:constant value="Itema-as"/>
@@ -785,8 +781,6 @@
   <rm:locator pattern="^com\.globalphasing\.(gcal\.aux|sdcp\.common)$" searchPathRef="gphl_sdcp_common"/>
   <!-- *** org.eclipse.launchbar *** -->
   <rm:locator pattern="^org\.eclipse\.launchbar(\..+)?$" searchPathRef="org_eclipse_launchbar"/>
-  <!-- *** Opt-ID *** -->
-  <rm:locator pattern="^(IDSort|uk\.ac\.diamond\.optid(\..+)?)$" searchPathRef="opt_id"/>
   <!-- *** Py4J *** -->
   <rm:locator pattern="^net\.sf\.py4j(\..+)?$" searchPathRef="py4j_legacy"/>
   <rm:locator pattern="^org\.py4j\.defaultserver.*$" searchPathRef="py4j_new_source"/>
@@ -803,7 +797,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" searchPathRef="scisoft_peema"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ptychography(\..+)?$" searchPathRef="scisoft_ptychography"/>
   <rm:locator pattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" searchPathRef="scisoft_spectroscopy"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.(scisoft(\.(analysis\.(plotclient|polling|powder\.(indexer\.(feature|rcp)|matcher\.ccdc\.(feature|rcp))|rcp(\.(contributions|test))?)|arpes\.calibration|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rixs\.(feature|rcp)|rp|system\.info|ui\.feature|pydev\.rcp(\..+)?))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.(optid(\..+)?|scisoft(\.(analysis\.(plotclient|polling|powder\.(indexer\.(feature|rcp)|matcher\.ccdc\.(feature|rcp))|rcp(\.(contributions|test))?)|arpes\.calibration|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rixs\.(feature|rcp)|rp|system\.info|ui\.feature|pydev\.rcp(\..+)?))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
   <!-- *** wychwood *** -->
   <rm:locator pattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" searchPathRef="wychwood"/>
@@ -1890,24 +1884,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster,unknown" resolutionFilter="(disallow.repo.gphl-sdcp-common=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gphl-sdcp-common.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       Opt-ID- repository
-  -->
-  <rm:searchPath name="opt_id">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(!(disallow.repo.Opt-ID=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${opt.id.git.url}"/>
-      <rm:uri format="{0}/Opt-ID.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.Opt-ID=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from Opt-ID.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
