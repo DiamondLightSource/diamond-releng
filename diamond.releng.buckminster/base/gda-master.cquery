@@ -163,7 +163,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^uk\.ac\.gda\.nexus(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-nexus.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((b07-1|i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.(detectors\.vgscienta\.electronanalyser|devices\.specs\.phoibos)|gda\.(arpes|beamline\.(b07-1|i05|i05-1)|devices\.vgscienta))(\..+)?)$" allowCircularDependency="true" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^((i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.(detectors\.vgscienta\.electronanalyser|devices\.specs\.phoibos)|gda\.(arpes|beamline\.(i05|i05-1)|devices\.vgscienta))(\..+)?)$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-pes.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^((bm26a?|b21|i22)-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|uk\.ac\.(diamond\.(activemq\.fragment\.ncd|daq\.scm\.api)|gda\.(beamline\.(b21|i22)(\..+)?|devices\.(bssc|hatsaxs|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)))$" useTargetPlatform="false">
