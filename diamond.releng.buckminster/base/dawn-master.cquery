@@ -3,6 +3,7 @@
     <cq:rootRequest name="${component}"/>
     <cq:property key="dascgerrit.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
+    <cq:property key="diamond.releng.git.location" value="public"/>
     <cq:property key="disallow.scisoft.deprecated" value="true"/>
     <cq:property key="download.location" value="Default is 'diamond'. Change this to 'public' if required."/>
     <cq:property key="github.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required."/>
