@@ -2497,7 +2497,7 @@ class PewmaManager(object):
 
             if new_tmpdir:
                 try:
-                    os.rmdir(path)  # remove the directory if it's empty (i.e. if we never used it)
+                    os.rmdir(new_tmpdir)  # remove the directory if it's empty (i.e. if we never used it)
                 except OSError:
                     pass
 
