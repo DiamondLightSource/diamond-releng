@@ -307,8 +307,9 @@ class PewmaManager(object):
         self.system = platform.system()
         self.isLinux = self.system == 'Linux'
         self.isWindows = self.system == 'Windows'
+        self.java_inspected = False
+        self.java_default_tmpdir = None
         self.java_version_current = None
-        self.java_version_current_logged = False
         self.valid_java_versions = None
         self.executable_locations = {}
 
@@ -2136,20 +2137,31 @@ class PewmaManager(object):
             Returns the version number string
         """
 
-        if not self.java_version_current_logged:
+        if not self.java_inspected:
             try:
-                javarun = subprocess.Popen(('java', '-version'), stderr=subprocess.PIPE)  #  java -version writes to stderr
+                javarun = subprocess.Popen(('java', '-XshowSettings:properties', '-version'), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  #  java -version writes to stderr
                 (stdout, stderr) = javarun.communicate(None)
                 if not javarun.returncode:
-                    if stderr.startswith('java version "'):
-                        self.java_version_current = stderr[len('java version "'):].partition('"')[0]
+                    for line in stdout.splitlines():
+                        line = line.strip()
+                        if line.startswith('java.io.tmpdir = '):
+                            self.java_default_tmpdir = line[len('java.io.tmpdir = '):]
+                            continue
+                        if line.startswith('java version "'):
+                            self.java_version_current = line[len('java version "'):].partition('"')[0]
+                            if self.java_default_tmpdir:
+                                break  # we've found both items we were looking for
             except:
                 pass
             if self.java_version_current:
                 self.logger.info('%sJava version that will be used: %s' % (self.log_prefix, self.java_version_current))
             else:
                 self.logger.warn('%sJava version to use could not be determined' % (self.log_prefix,))
-            self.java_version_current_logged = True
+            if self.java_default_tmpdir:
+                self.logger.debug('%sJava default java.io.tmpdir: %s' % (self.log_prefix, self.java_default_tmpdir))
+            else:
+                self.logger.warn('%sJava default java.io.tmpdir could not be determined' % (self.log_prefix,))
+            self.java_inspected = True
 
         if not self.options.skip_java_version_check:
             if self.java_version_current and self.valid_java_versions:  # if we know the java version, and the acceptable versions
@@ -2161,6 +2173,44 @@ class PewmaManager(object):
                                          (self.java_version_current, self.valid_java_versions,))
 
         return self.java_version_current
+
+
+    def determine_java_io_tmpdir(self):
+        """ If the environment variable "JENKINS_java_io_tmpdir_alternative" was specified,
+            determine the amount of free space there, and use that for java.io.tmpdir if
+            there's more free space than the default location.
+        """
+
+        java_io_tmpdir_alternative = os.environ.get('JENKINS_java_io_tmpdir_alternative')  # specified in the Jenkins agent configuration
+        if (not java_io_tmpdir_alternative) or (not self.java_default_tmpdir):
+            return
+
+        # determine free space in alternative location
+        try:
+            statvfs = os.statvfs(java_io_tmpdir_alternative)
+        except OSError:
+            return
+        alternative_free = (statvfs.f_frsize * statvfs.f_bavail) // 1024  # the number of free 1K blocks on the volume
+        if alternative_free < 4*1024*1024:  # look for at least 4GB free
+            return
+
+        # an alternative was specified, and it has at least 4GB free
+        # determine free space in default location 
+        try:
+            statvfs = os.statvfs(self.java_default_tmpdir)
+        except OSError:
+            return
+        default_free = (statvfs.f_frsize * statvfs.f_bavail) // 1024  # the number of free 1K blocks on the volume
+
+        if alternative_free <= default_free:
+            return
+
+        new_tmpdir = os.path.join(java_io_tmpdir_alternative, datetime.datetime.today().strftime("%Y%m%d_%H%M%S_") + os.environ.get('BUILD_TAG', ''))
+        try:
+            os.mkdir(new_tmpdir)
+        except:
+            return
+        return new_tmpdir
 
 
     def Xvfb_display_number_calculate(self):
@@ -2415,6 +2465,10 @@ class PewmaManager(object):
         if display_number:
             ant_command.extend(("-DXvfb-display-number=%s" % display_number,))  # used by diamond.releng.tools/ant-headless/test-common.ant
 
+        new_tmpdir = self.determine_java_io_tmpdir()
+        if new_tmpdir:
+            ant_command.extend(("-Djava.io.tmpdir=" + new_tmpdir,))
+
         for keyval in self.options.system_property:
             ant_command.extend(("-D%s " % (keyval,),))
 
@@ -2440,6 +2494,13 @@ class PewmaManager(object):
                 self.logger.error('Return Code: %s' % (retcode,))
             else:
                 self.logger.debug('Return Code: %s' % (retcode,))
+
+            if new_tmpdir:
+                try:
+                    os.rmdir(path)  # remove the directory if it's empty (i.e. if we never used it)
+                except OSError:
+                    pass
+
             return retcode
 
 

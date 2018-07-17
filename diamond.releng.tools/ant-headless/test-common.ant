@@ -400,6 +400,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 				<!-- Use "-verbose:class" if you need to determine where classes are loaded from (produces a lot of output) -->
 				<!-- <jvmarg value="-verbose:class" /> -->
 				<syspropertyset>
+					<propertyref name="java.io.tmpdir" />
 					<propertyref name="GDALargeTestFilesLocation" />
 					<propertyref name="uk.ac.diamond.jython.location" />
 					<propertyref name="run.in.eclipse" />
