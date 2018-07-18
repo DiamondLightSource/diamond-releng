@@ -850,6 +850,7 @@
   <rm:locator pattern="^org\.apache\.servicemix\.bundles\.spring-.+$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.servicemix\.bundles\.(janino|commons-compiler).*$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.sshd\.core(\..+)?$" searchPathRef="diamond_orbit_p2"/>
+  <rm:locator pattern="^org\.codehaus\.janino\.(janino|commons-compiler).*$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.epics(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.h2(\..+)?$" searchPathRef="diamond_orbit_p2"/>
   <rm:locator pattern="^org\.jline(\..+)?$" searchPathRef="diamond_orbit_p2"/>
