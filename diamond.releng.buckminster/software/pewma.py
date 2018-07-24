@@ -231,6 +231,7 @@ GERRIT_REPOSITORIES = {
     'dawn-ui.git'                : {'url_part': 'scisoft/dawn-ui.git'},
     'dawnsci.git'                : {'url_part': 'scisoft/dawnsci.git',
                                     'keep_origin': True},
+    'diamond-cpython.git'        : {'url_part': 'diamond/diamond-cpython.git'},
     'diamond-jacorb.git'         : {'url_part': 'diamond/diamond-jacorb.git'},
     'diamond-jython.git'         : {'url_part': 'diamond/diamond-jython.git'},
     'diamond-miniconda.git'      : {'url_part': 'diamond/diamond-miniconda.git'},

@@ -278,6 +278,9 @@
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawnsci.git"/>
   </rm:propertyElement>
   <!-- *** diamond- *** -->
+  <rm:propertyElement key="diamond.cpython.git.url">
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/diamond/diamond-cpython.git"/>
+  </rm:propertyElement>
   <rm:propertyElement key="diamond.jacorb.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/diamond/diamond-jacorb.git"/>
   </rm:propertyElement>
@@ -736,6 +739,7 @@
   <!-- *** dawnsci *** -->
   <rm:locator pattern="^org\.eclipse\.dawnsci(\..+)?$" searchPathRef="dawnsci"/>
   <!-- *** diamond- *** -->
+  <rm:locator pattern="^uk\.ac\.diamond\.cpython(\..+)?$" searchPathRef="diamond_cpython"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.jacorb$" searchPathRef="diamond_jacorb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.jython(\..+)?$" searchPathRef="diamond_jython"/>
   <rm:locator pattern="^org\.dawnsci\.miniconda(\..+)?$" searchPathRef="diamond_miniconda"/>
@@ -1124,6 +1128,22 @@
   <!--
        DIAMOND- repositories
   -->
+  <rm:searchPath name="diamond_cpython">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.diamond-cpython=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${diamond.cpython.git.url}"/>
+      <rm:uri format="{0}/diamond-cpython.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.diamond-cpython=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from diamond-cpython.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
   <rm:searchPath name="diamond_jacorb">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.diamond-jacorb=true))" readerType="git">
       <rm:property key="git.auto.fetch" value="true"/>
