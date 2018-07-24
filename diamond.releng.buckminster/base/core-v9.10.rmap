@@ -38,7 +38,7 @@
   <!-- Target Platform version properties -->
   <!--                                    -->
   <rm:propertyElement key="eclipse.release">
-    <bc:constant value="mars"/>  <!-- Mars SR 2 -->
+    <bc:constant value="oxygen3"/>  <!-- Oxygen SR 3a -->
   </rm:propertyElement>
   <!-- ***** -->
   <!-- version of Diamond Orbit p2 repository to use -->
