@@ -36,12 +36,18 @@ import errno
 import filecmp
 import fnmatch
 import getpass
-import grp
+try:
+    import grp
+except ImportError:
+    pass  # grp not available on Windows
 import logging
 import optparse
 import os
 import platform
-import pwd
+try:
+    import pwd
+except ImportError:
+    pass  # grp not available on Windows
 import re
 import shlex
 import socket
