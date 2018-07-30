@@ -1565,7 +1565,7 @@ class PewmaManager(object):
                 )
 
             # set fetch URL
-            if not origin_url.startswith((GERRIT_URI_HTTPS_PREFIX, GERRIT_URI_SSH_PREFIX)):
+            if 'gerrit.diamond.ac.uk' not in origin_url:
                 if gerrit_repo_details.get('keep_origin', False):
                     if repo_name == 'dawnsci.git':
                         if current_branch.startswith(('gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-', 'gda-8')):
