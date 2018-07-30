@@ -1488,11 +1488,12 @@ class PewmaManager(object):
             raise PewmaException('ERROR: gerrit-config command does not take any arguments')
 
         self.logger.info('%sLooking for repositories that need switching to Gerrit, and/or configuring for EGit/JGit and git' % (self.log_prefix,))
+        rc = 0  # return code, will be 0 or 1
 
         git_directories = self._get_git_directories()
         if not git_directories:
             self.logger.info('%sSkipped: %s' % (self.log_prefix, self.workspace_loc + '_git (does not contain any repositories)'))
-            return
+            return rc
         repo_names = [repo_name for (repo_name, _) in git_directories]
         prefix= "%%%is: " % max([len(r) for r in repo_names]) if self.options.repo_prefix else ""
 
@@ -1535,6 +1536,7 @@ class PewmaManager(object):
             HEAD_file_loc = os.path.join(git_dir, '.git', 'HEAD')
             if not os.path.isfile(HEAD_file_loc):
                 self.logger.error('%sSkipped: %s should exist, but does not' % (self.log_prefix, HEAD_file_loc))
+                rc = 1
                 continue
             current_branch = 'master'  # in case of problems parsing HEAD file
             with open(HEAD_file_loc, 'r') as HEAD_file:
@@ -1570,6 +1572,7 @@ class PewmaManager(object):
                             self.logger.info('%sSkipped: did not change remote origin to Gerrit, since old branch (%s) uses pre-Gerrit remote: %s' % (self.log_prefix, current_branch, git_dir))
                         else:
                             self.logger.error('%sSkipped: unable to change remote origin to Gerrit, requires a fresh clone: %s' % (self.log_prefix, git_dir))
+                            rc = 1
                         continue
                     else:
                         raise PewmaException('ERROR: internal bug: keep_origin not handled for ' + repo_name)
@@ -1662,7 +1665,9 @@ class PewmaManager(object):
                         self.logger.info('%sDone: %s: %s' % (self.log_prefix, message, git_dir))
                     elif repo_status[action] == FAILED:
                         self.logger.error('%sFailed: %s: %s' % (self.log_prefix, message, git_dir))
+                        rc = 1
 
+        return rc
 
     def action_git(self):
         """ Processes command: git <command>
