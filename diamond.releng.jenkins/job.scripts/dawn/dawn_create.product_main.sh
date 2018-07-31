@@ -8,7 +8,8 @@
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/record_materialization_functions.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/build_function.sh
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/create_p2_site_product_function.sh
-. ${WORKSPACE}/diamond-releng.git//diamond.releng.jenkins/job.scripts/dawn/dawn_make_windows_installer_function.sh
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/dawn/dawn_make_windows_installer_function.sh
+. ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/dawn/dawn_make_macosx_zipfile_function.sh
 
 materialized_info_path=${WORKSPACE}/artifacts_to_archive
 
@@ -45,6 +46,7 @@ create_p2_site_product_function
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/dawn/dawn_create.product_save-product-version-number.sh
 
 dawn_make_windows_installer_function
+dawn_make_macosx_zipfile_function
 
 . ${WORKSPACE}/diamond-releng.git/diamond.releng.jenkins/job.scripts/create.product_set-build-description.sh
 
