@@ -91,7 +91,9 @@ dawn_publish_function () {
                 running_platform=unknown
             fi
         fi
-        for platform in linux64 windows64 mac64; do
+        # no point in publishing non-linux64 platforms
+        # for platform in linux64 windows64 mac64; do
+        for platform in linux64; do
             platform__indirect="platform_${platform}"
             if [[ "${!platform__indirect}" == "true" ]]; then
                 echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Publishing to module load for ${platform} ***\n"
