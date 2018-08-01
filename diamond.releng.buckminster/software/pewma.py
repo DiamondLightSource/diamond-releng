@@ -242,6 +242,7 @@ GERRIT_REPOSITORIES = {
     'diamond-jython.git'         : {'url_part': 'diamond/diamond-jython.git'},
     'diamond-miniconda.git'      : {'url_part': 'diamond/diamond-miniconda.git'},
     'diamond-springframework.git': {'url_part': 'diamond/diamond-springframework.git'},
+    'Opt-ID.git'                 : {'url_part': 'diamond/Opt-ID.git'},
     'scanning.git'               : {'url_part': 'eclipse/scanning.git'},
     'gda-bimorph.git'            : {'url_part': 'gda/gda-bimorph.git'},
     'gda-common.git'             : {'url_part': 'gda/gda-common.git'},
@@ -268,7 +269,6 @@ GERRIT_REPOSITORIES = {
     'gda-tomography.git'         : {'url_part': 'gda/gda-tomography.git'},
     'gda-video.git'              : {'url_part': 'gda/gda-video.git'},
     'gda-xas-core.git'           : {'url_part': 'gda/gda-xas-core.git'},
-    'Opt-ID.git'                 : {'url_part': 'diamond/Opt-ID.git'},
     'scisoft-2ddpr.git'          : {'url_part': 'scisoft/scisoft-2ddpr.git'},
     'scisoft-cbflib.git'         : {'url_part': 'scisoft/scisoft-cbflib.git'},
     'scisoft-core.git'           : {'url_part': 'scisoft/scisoft-core.git'},
@@ -283,7 +283,6 @@ GERRIT_REPOSITORIES = {
                                     'must_use_ssh': True},
     'richbeans.git'              : {'url_part': 'richbeans.git'},
     'wychwood.git'               : {'url_part': 'gda/wychwood.git'},
-    'training-gerrit-1.git'      : {'url_part': 'training/training-gerrit-1.git'},
     }
 
 GERRIT_URI_HTTPS_PREFIX = 'https://gerrit.diamond.ac.uk/'      # typically used for anonymous checkout (we use SSH for authenticated checkout)
@@ -2520,7 +2519,7 @@ class PewmaManager(object):
         """ Returns a string containing the Gerrit commit hook (which adds a ChangeId to a commit)
         """
 
-        # we cache the commit_hook and never refetch it from the Gerrit server
+        # we cache the commit_hook and never re-fetch it from the Gerrit server
         if hasattr(self, '_gerrit_commit_hook'):
             return self._gerrit_commit_hook
 
