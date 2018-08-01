@@ -98,7 +98,7 @@
   </rm:propertyElement>
   <!-- ***** -->
   <rm:propertyElement key="pydev.p2.version">  <!-- version of PyDev p2 repository to use -->
-    <bc:constant value="5.2.0"/>
+    <bc:constant value="6.4.4"/>
   </rm:propertyElement>
   <!-- ***** -->
   <!--                                                             -->
