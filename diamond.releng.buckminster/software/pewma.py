@@ -285,9 +285,8 @@ GERRIT_REPOSITORIES = {
     'wychwood.git'               : {'url_part': 'gda/wychwood.git'},
     }
 
-GERRIT_URI_HTTPS_PREFIX = 'https://gerrit.diamond.ac.uk/'      # typically used for anonymous checkout (we use SSH for authenticated checkout)
-GERRIT_URI_SSH_PREFIX   = 'ssh://gerrit.diamond.ac.uk:29418/'
-GERRIT_OLD_ANON_PREFIX  = 'git://github.com'                   # old mirror of Gerrit-hosted repo, not managed by Gerrit
+GERRIT_URI_HTTPS = 'https://gerrit.diamond.ac.uk/'      # typically used for anonymous clone (we use SSH for authenticated clone)
+GERRIT_URI_SSH   = 'ssh://gerrit.diamond.ac.uk:29418/'  # used for authenticated clone and push
 
 class GitConfigParser(ConfigParser.RawConfigParser):
     """ Subclass of the regular ConfigParser that handles the leading tab characters in .git/config files """
@@ -1516,6 +1515,7 @@ class PewmaManager(object):
             config_file_loc = os.path.join(git_dir, '.git', 'config')
             if not os.path.isfile(config_file_loc):
                 self.logger.error('%sSkipped: %s should exist, but does not' % (self.log_prefix, config_file_loc))
+                rc = 1  # when we're finished, exit with return code 1 to indicate an error
                 continue
 
             #####################################################
@@ -1523,19 +1523,24 @@ class PewmaManager(object):
             #####################################################
             config = GitConfigParser()
             config.readgit(config_file_loc)
-            # we only need to process repositories that are Gerrit repos
             try:
                 origin_url = config.get('remote "origin"', 'url')
             except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
                 self.logger.warn('%sSkipped: no [remote "origin"]: %s' % (self.log_prefix, config_file_loc))
                 continue
 
+            # origin_url can be ssh or https. ssh might or might not include a username. server might be gerrit or gerritbeta
+            # examples:
+            # ssh://mwebber@gerritbeta.diamond.ac.uk:29418/gda/gda-core.git
+            # ssh://gerrit.diamond.ac.uk:29418/gda/gda-core.git
+            # https://gerrit.diamond.ac.uk:29418/gda/gda-core.git
+
             # get the current branch (so we can set up the push branch correctly)
-            # the HEAD file contains one line which looks like "ref: refs/heads/gda-8.44" (probably)
+            # the HEAD file contains one line which looks like "ref: refs/heads/gda-9.8" (probably)
             HEAD_file_loc = os.path.join(git_dir, '.git', 'HEAD')
             if not os.path.isfile(HEAD_file_loc):
                 self.logger.error('%sSkipped: %s should exist, but does not' % (self.log_prefix, HEAD_file_loc))
-                rc = 1
+                rc = 1  # when we're finished, exit with return code 1 to indicate an error
                 continue
             current_branch = 'master'  # in case of problems parsing HEAD file
             with open(HEAD_file_loc, 'r') as HEAD_file:
@@ -1546,10 +1551,42 @@ class PewmaManager(object):
             gerrit_repo_details = GERRIT_REPOSITORIES[repo_name]
             gerrit_repo_url_path = gerrit_repo_details['url_part']
 
-            # set push URL
-            git_config_commands = []
-            gerrit_repo_url_push = GERRIT_URI_SSH_PREFIX + gerrit_repo_url_path
-            config_changes = (
+            # this repo might have been cloned before the repo was moved to Gerrit
+            # In that case, change the upstream to point to Gerrit (unless keep_origin == True)
+            if all(g not in origin_url for g in ('gerrit.diamond.ac.uk', 'gerritbeta.diamond.ac.uk')):
+                if gerrit_repo_details.get('keep_origin'):
+                    if repo_name == 'dawnsci.git':
+                        if current_branch.startswith(('gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-', 'gda-8')):
+                            self.logger.info('%sSkipped: did not change remote origin to Gerrit, since old branch (%s) uses pre-Gerrit remote: %s' % (self.log_prefix, current_branch, git_dir))
+                        else:
+                            self.logger.error('%sSkipped: unable to change remote origin to Gerrit, requires a fresh clone: %s' % (self.log_prefix, git_dir))
+                            rc = 1
+                        continue
+                    else:
+                        raise PewmaException('ERROR: internal bug: keep_origin not handled for ' + repo_name)
+                if gerrit_repo_details.get('must_use_ssh'):
+                    gerrit_repo_url_pull = GERRIT_URI_SSH + gerrit_repo_url_path
+                else:
+                    gerrit_repo_url_pull = GERRIT_URI_HTTPS + gerrit_repo_url_path  # the default scheme for all repos unless they are private, and need SSH
+                config_changes = [
+                # section         , option          , name                   , required_value                   , action_if_already_exists
+                ('remote "origin"', 'url'           , 'remote.origin.url'    , gerrit_repo_url_pull             , 'replace'),]
+
+                # set push URL
+                gerrit_repo_url_push = GERRIT_URI_SSH + gerrit_repo_url_path  # push is always authenticated, i.e. SSH
+
+            else:
+                config_changes = []
+                # set push URL
+                if origin_url.startswith('ssh://'):
+                    gerrit_repo_url_push = origin_url
+                elif origin_url.startswith('https://'):
+                    origin_url_parts = origin_url[8:].split('/',1)
+                    gerrit_repo_url_push = 'ssh://' + origin_url_parts[0] + ':29418/' + origin_url_parts[1]  # works for both gerrit and gerritbeta
+                else:
+                    raise PewmaException('ERROR: internal bug: ' + repo_name + ' has unrecognised URI scheme in ' + origin_url)
+
+            config_changes.extend((
                 # section         , option          , name                   , required_value                   , action_if_already_exists
                 ('gerrit'         , 'createchangeid', 'gerrit.createchangeid', 'true'                           , 'replace'),
                 ('remote "origin"', 'fetch'         , 'remote.origin.fetch'  , 'refs/notes/*:refs/notes/*'      , 'append'),
@@ -1561,36 +1598,14 @@ class PewmaManager(object):
                 ### ('merge'          , 'ff'            , 'merge.ff'             , 'false'                          , True),  # merges from branches should not fast-forward
                 ### # NB: if you have merge.ff=false, you also need pull.ff=true, so that you do not get a merge commit on every pull!
                 ### ('pull'           , 'ff'            , 'pull.ff'              , 'true'                           , True),  # pulls should fast-forward if possible
-                )
+                ),)
 
-            # set fetch URL
-            if 'gerrit.diamond.ac.uk' not in origin_url:
-                if gerrit_repo_details.get('keep_origin', False):
-                    if repo_name == 'dawnsci.git':
-                        if current_branch.startswith(('gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-', 'gda-8')):
-                            self.logger.info('%sSkipped: did not change remote origin to Gerrit, since old branch (%s) uses pre-Gerrit remote: %s' % (self.log_prefix, current_branch, git_dir))
-                        else:
-                            self.logger.error('%sSkipped: unable to change remote origin to Gerrit, requires a fresh clone: %s' % (self.log_prefix, git_dir))
-                            rc = 1
-                        continue
-                    else:
-                        raise PewmaException('ERROR: internal bug: keep_origin not handled for ' + repo_name)
-                if origin_url.startswith(GERRIT_OLD_ANON_PREFIX) and not gerrit_repo_details.get('must_use_ssh', False):
-                    gerrit_repo_url_pull = GERRIT_URI_HTTPS_PREFIX  + gerrit_repo_url_path # the default scheme for all repos unless they are private, and need SSH
-                else:
-                    gerrit_repo_url_pull = GERRIT_URI_SSH_PREFIX  + gerrit_repo_url_path
-                config_changes += (
-                # section         , option          , name                   , required_value                   , action_if_already_exists
-                ('remote "origin"', 'url'           , 'remote.origin.url'    , gerrit_repo_url_pull             , 'replace'),)
-
+            git_config_commands = []
             for (section, option, name, required_value, action_if_already_exists) in config_changes:
-                self.logger.debug('%sGetting: %s in: %s' % (self.log_prefix, (section, option, name, required_value, action_if_already_exists), git_dir))
+                self.logger.debug('%sProcessing: %s in: %s' % (self.log_prefix, (section, option, name, required_value, action_if_already_exists), git_dir))
                 try:
                     option_value = config.get(section, option)
-                    self.logger.debug('%sGot: %s' % (self.log_prefix, option_value))
-                    # I think at one point there was an issue with repeated keys in .git/config (which ConfigParser does not handle). Debugging statements left in
-                    option_value_plural = config.items(section)
-                    self.logger.debug('%sMany: %s' % (self.log_prefix, option_value_plural))
+                    self.logger.debug('%sGot: %s=%s' % (self.log_prefix, option, option_value))
 
                 except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
                     git_config_commands.append('git config -f %s %s %s' % (config_file_loc, name, required_value))
@@ -2523,7 +2538,7 @@ class PewmaManager(object):
         if hasattr(self, '_gerrit_commit_hook'):
             return self._gerrit_commit_hook
 
-        commit_hook_url = GERRIT_URI_HTTPS_PREFIX + 'tools/hooks/commit-msg'
+        commit_hook_url = GERRIT_URI_HTTPS + 'tools/hooks/commit-msg'
         try:
             resp = urllib2.urlopen(commit_hook_url, timeout=30)
         except (urllib2.URLError, urllib2.HTTPError, socket.timeout) as e:
