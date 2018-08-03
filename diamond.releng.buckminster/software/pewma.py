@@ -2430,9 +2430,7 @@ class PewmaManager(object):
                 self.logger.error(error_summary)
             for error_summary in set(compile_error_bugs):  # Use set, since multiple errors could have the same text, and only need logging once
                 self.logger.error(error_summary)
-            if (self.options.prepare_jenkins_build_description_on_error or
-                # old name for option used in Jenkins Dawn 1.10 / GDA 8.48 and earlier; can eventually be deleted
-                self.options.prepare_jenkins_build_description_on_materialize_error):
+            if self.options.prepare_jenkins_build_description_on_error:
                 if system_problems:
                     text = system_problems[0]
                 elif jgit_errors_repos:
