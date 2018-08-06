@@ -443,32 +443,6 @@
     <bc:constant value="${gda.dls.beamlines.i11.${gda.dls.beamlines.i11.git.location.translated}.url}/gda-dls-beamlines-i11.git"/>
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="gda.dls.beamlines.i21.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i21.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="gda.dls.beamlines.i21.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i21.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gda"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i21.github.organization">
-    <bc:constant value="openGDA"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i21.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i21.github.url">
-    <bc:constant value="${github.${gda.dls.beamlines.i21.github.authentication}.url}${gda.dls.beamlines.i21.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.dls.beamlines.i21.git.url">
-    <bc:constant value="${gda.dls.beamlines.i21.${gda.dls.beamlines.i21.git.location.translated}.url}/gda-dls-beamlines-i21.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="gda.dls.beamlines.xas.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-dls-beamlines-xas.git"/>
   </rm:propertyElement>
@@ -763,7 +737,6 @@
   <rm:locator pattern="^(all-dls-(configs|clients)|(dls|b07(-1)?|i05(-1)?|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|i21|p45|p99)-config|i21-python|uk\.ac\.(diamond\.daq\.(beamline\.(i15|i15-1|p45|p99)|dls\.controls|ispyb\.scan\.info)(\..+)?|gda\.(beamline\.(b07(-1)?|i05(-1)?|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|i21)|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond" failOnError="false"/>
   <rm:locator pattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" searchPathRef="gda_dls_beamlines_b23"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
-  <rm:locator pattern="^(i21-(config|python)|uk\.ac\.gda\.(beamline\.i21(\..+)?))$" searchPathRef="gda_dls_beamlines_i21"/>
   <rm:locator pattern="^((b18|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.i18\..+|uk\.ac\.gda\.beamline\.(b18|i18|i20|i20(_1)?)(\..+)?)$" searchPathRef="gda_dls_beamlines_xas"/>
   <rm:locator pattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" searchPathRef="gda_dls_excalibur"/>
   <rm:locator pattern="^(uk\.ac\.gda\.epics(\.(adviewer|client|test))?|org\.epics\.jca\.fragment\.gov\.aps\.jca\.event)$" searchPathRef="gda_epics"/>
@@ -1512,22 +1485,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dls-beamlines-i11=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-dls-beamlines-i11.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_dls_beamlines_i21">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-dls-beamlines-i21=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.dls.beamlines.i21.git.url}"/>
-      <rm:uri format="{0}/gda-dls-beamlines-i21.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-dls-beamlines-i21=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-dls-beamlines-i21.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
