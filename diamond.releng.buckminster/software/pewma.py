@@ -1556,8 +1556,8 @@ class PewmaManager(object):
             if all(g not in origin_url for g in ('gerrit.diamond.ac.uk', 'gerritbeta.diamond.ac.uk')):
                 if gerrit_repo_details.get('keep_origin'):
                     if repo_name == 'dawnsci.git':
-                        if current_branch.startswith(('gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-', 'gda-8')):
-                            self.logger.info('%sSkipped: did not change remote origin to Gerrit, since old branch (%s) uses pre-Gerrit remote: %s' % (self.log_prefix, current_branch, git_dir))
+                        if current_branch.startswith(('gda-9.8', 'gda-9.7', 'gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-', 'gda-8')):
+                            self.logger.info('%sSkipped: did not change remote origin to Gerrit, since old branch (%s) can use pre-Gerrit remote: %s' % (self.log_prefix, current_branch, git_dir))
                         else:
                             self.logger.error('%sSkipped: unable to change remote origin to Gerrit, requires a fresh clone: %s' % (self.log_prefix, git_dir))
                             rc = 1
