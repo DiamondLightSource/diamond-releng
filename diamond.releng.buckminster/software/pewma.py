@@ -248,6 +248,7 @@ GERRIT_REPOSITORIES = {
     'gda-common.git'             : {'url_part': 'gda/gda-common.git'},
     'gda-common-rcp.git'         : {'url_part': 'gda/gda-common-rcp.git'},
     'gda-core.git'               : {'url_part': 'gda/gda-core.git'},
+    'gda-devices.git'            : {'url_part': 'gda/gda-devices.git'},
     'gda-devices-cirrus.git'     : {'url_part': 'gda/gda-devices-cirrus.git'},
     'gda-devices-mythen.git'     : {'url_part': 'gda/gda-devices-mythen.git'},
     'gda-devices-pco.git'        : {'url_part': 'gda/gda-devices-pco.git'},

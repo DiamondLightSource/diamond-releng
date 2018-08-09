@@ -369,6 +369,9 @@
   <rm:propertyElement key="gda.core.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-core.git"/>
   </rm:propertyElement>
+  <rm:propertyElement key="gda.devices.git.url">
+    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices.git"/>
+  </rm:propertyElement>
   <rm:propertyElement key="gda.devices.cirrus.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices-cirrus.git"/>
   </rm:propertyElement>
@@ -728,6 +731,7 @@
   <rm:locator pattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" searchPathRef="gda_common"/>
   <rm:locator pattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" searchPathRef="gda_common_rcp"/>
   <rm:locator pattern="^((core|example)-config|documentation\.gda|org\.apache\.derby\.fragment\.daq\.persistence|uk\.ac\.(diamond\.(daq\.(client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|persistence(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api(\.test)?|(client(\.(closeactions|commandinfo|experimentdefinition|feature|live\.stream|test))?)|common\.client|core(\.test)?|edxd\.(calibration|common|detector)|epics\.dxp\.client|eventbus(\.api)?|example(\..+)?|logging\.dependencies\.fragment|phantom.detector|xmleditor\.feature)))$" searchPathRef="gda_core"/>
+  <rm:locator pattern="^uk\.ac\.gda\.(devices\.(cirrus|mythen|pco|peem|pixium)(\..+)?|epics\.client\.(mythen|pco|pixium))$" searchPathRef="gda_devices" failOnError="false"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.cirrus$" searchPathRef="gda_devices_cirrus"/>
   <rm:locator pattern="^uk\.ac\.gda\.(devices\.mythen(\..+)?|epics\.client\.mythen)$" searchPathRef="gda_devices_mythen"/>
   <rm:locator pattern="^uk\.ac\.gda\..+\.pco$" searchPathRef="gda_devices_pco"/>
@@ -1309,6 +1313,22 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.gda-core=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-core.git, but the CQuery specified that this repository should not be used ***">
+        <bc:propertyRef key="workspace.root"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <!-- -->
+  <rm:searchPath name="gda_devices">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-devices=true))" readerType="git">
+      <rm:property key="git.auto.fetch" value="true"/>
+      <rm:property key="git.remote.uri" value="${gda.devices.git.url}"/>
+      <rm:uri format="{0}/gda-devices.git,{1}">
+        <bc:propertyRef key="repository.git.checkout.root"/>
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices=true)" readerType="local">
+      <rm:uri format="{0}/*** ERROR a component was requested from gda-devices.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
