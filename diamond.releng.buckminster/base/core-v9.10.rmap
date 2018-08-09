@@ -372,9 +372,6 @@
   <rm:propertyElement key="gda.devices.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices.git"/>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.prosilica.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices-prosilica.git"/>
-  </rm:propertyElement>
   <rm:propertyElement key="gda.diamond.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-diamond.git"/>
   </rm:propertyElement>
@@ -717,7 +714,6 @@
   <rm:locator pattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" searchPathRef="gda_common_rcp"/>
   <rm:locator pattern="^((core|example)-config|documentation\.gda|org\.apache\.derby\.fragment\.daq\.persistence|uk\.ac\.(diamond\.(daq\.(client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|persistence(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api(\.test)?|(client(\.(closeactions|commandinfo|experimentdefinition|feature|live\.stream|test))?)|common\.client|core(\.test)?|edxd\.(calibration|common|detector)|epics\.dxp\.client|eventbus(\.api)?|example(\..+)?|logging\.dependencies\.fragment|phantom.detector|xmleditor\.feature)))$" searchPathRef="gda_core"/>
   <rm:locator pattern="^uk\.ac\.gda\.(devices\.(cirrus|mythen|pco|peem|pixium)(\..+)?|epics\.client\.(mythen|pco|pixium))$" searchPathRef="gda_devices" failOnError="false"/>
-  <rm:locator pattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" searchPathRef="gda_devices_prosilica"/>
   <rm:locator pattern="^(all-dls-(configs|clients)|(dls|b07(-1)?|i05(-1)?|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|i21|p45|p99)-config|i21-python|uk\.ac\.(diamond\.daq\.(beamline\.(i15|i15-1|p45|p99)|dls\.controls|ispyb\.scan\.info)(\..+)?|gda\.(beamline\.(b07(-1)?|i05(-1)?|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|i21)|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond" failOnError="false"/>
   <rm:locator pattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" searchPathRef="gda_dls_beamlines_b23"/>
   <rm:locator pattern="^(i11(-1)?-config|org.opengda.lde(\..+)?|uk\.ac\.gda\.beamline\.(i11(-1)?(\..+)?|synoptics))$" searchPathRef="gda_dls_beamlines_i11"/>
@@ -1309,22 +1305,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-devices.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_devices_prosilica">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-devices-prosilica=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.devices.prosilica.git.url}"/>
-      <rm:uri format="{0}/gda-devices-prosilica.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices-prosilica=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-devices-prosilica.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
