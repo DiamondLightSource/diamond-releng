@@ -991,7 +991,11 @@ class PewmaManager(object):
                 if os.path.basename(root) in projects_imported:  # only include this project if it was imported into the workspace
                     if os.path.basename(root).startswith('org.eclipse.scanning') and ('/daq-eclipse.git/' in root):
                         continue # ignore org.eclipse.scanning projects in the old (un-imported) location (daq-eclipse.git); the imported version is in scanning.git
-                    assert os.path.basename(root) not in project_names_paths  # we should not have seen this project before
+                    if os.path.basename(root) in project_names_paths:  # we have seen this project before
+                        raise PewmaException('ERROR: releng.ant for project "%s" found in 2 locations: "%s/", "%s/"' %
+                                             (os.path.basename(root),
+                                              os.path.relpath(root, self.workspace_git_loc),
+                                              project_names_paths[os.path.basename(root)]))
                     project_names_paths[os.path.basename(root)] = os.path.relpath(root, self.workspace_git_loc)
         self.all_imported_projects_with_releng_ant = project_names_paths
 
