@@ -110,26 +110,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-devices" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\..+\.cirrus$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-cirrus.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.gda-devices-cirrus" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(devices\.mythen(\..+)?|epics\.client\.mythen)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-mythen.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.gda-devices-mythen" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\..+\.pco$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-pco.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.gda-devices-pco" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\..+\.peem(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-peem.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.gda-devices-peem" value="true"/>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\..+\.pixium$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-pixium.git repository branch</cq:documentation>
-        <cq:property key="disallow.repo.gda-devices-pixium" value="true"/>
-    </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices-prosilica.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-devices-prosilica" value="true"/>

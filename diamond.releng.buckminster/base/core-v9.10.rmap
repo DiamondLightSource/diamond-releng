@@ -372,21 +372,6 @@
   <rm:propertyElement key="gda.devices.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices.git"/>
   </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.cirrus.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices-cirrus.git"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.mythen.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices-mythen.git"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.pco.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices-pco.git"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.peem.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices-peem.git"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gda.devices.pixium.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices-pixium.git"/>
-  </rm:propertyElement>
   <rm:propertyElement key="gda.devices.prosilica.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-devices-prosilica.git"/>
   </rm:propertyElement>
@@ -732,11 +717,6 @@
   <rm:locator pattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" searchPathRef="gda_common_rcp"/>
   <rm:locator pattern="^((core|example)-config|documentation\.gda|org\.apache\.derby\.fragment\.daq\.persistence|uk\.ac\.(diamond\.(daq\.(client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|persistence(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api(\.test)?|(client(\.(closeactions|commandinfo|experimentdefinition|feature|live\.stream|test))?)|common\.client|core(\.test)?|edxd\.(calibration|common|detector)|epics\.dxp\.client|eventbus(\.api)?|example(\..+)?|logging\.dependencies\.fragment|phantom.detector|xmleditor\.feature)))$" searchPathRef="gda_core"/>
   <rm:locator pattern="^uk\.ac\.gda\.(devices\.(cirrus|mythen|pco|peem|pixium)(\..+)?|epics\.client\.(mythen|pco|pixium))$" searchPathRef="gda_devices" failOnError="false"/>
-  <rm:locator pattern="^uk\.ac\.gda\..+\.cirrus$" searchPathRef="gda_devices_cirrus"/>
-  <rm:locator pattern="^uk\.ac\.gda\.(devices\.mythen(\..+)?|epics\.client\.mythen)$" searchPathRef="gda_devices_mythen"/>
-  <rm:locator pattern="^uk\.ac\.gda\..+\.pco$" searchPathRef="gda_devices_pco"/>
-  <rm:locator pattern="^uk\.ac\.gda\..+\.peem(\..+)?$" searchPathRef="gda_devices_peem"/>
-  <rm:locator pattern="^uk\.ac\.gda\..+\.pixium$" searchPathRef="gda_devices_pixium"/>
   <rm:locator pattern="^uk\.ac\.(diamond|gda\.devices)\.prosilica(\..+)?$" searchPathRef="gda_devices_prosilica"/>
   <rm:locator pattern="^(all-dls-(configs|clients)|(dls|b07(-1)?|i05(-1)?|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|i21|p45|p99)-config|i21-python|uk\.ac\.(diamond\.daq\.(beamline\.(i15|i15-1|p45|p99)|dls\.controls|ispyb\.scan\.info)(\..+)?|gda\.(beamline\.(b07(-1)?|i05(-1)?|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|i21)|diamond|dls)(\..+)?))$" searchPathRef="gda_diamond" failOnError="false"/>
   <rm:locator pattern="^(b23-config|uk\.ac\.gda\.(beamline\.b23(\..+)?))$" searchPathRef="gda_dls_beamlines_b23"/>
@@ -1329,86 +1309,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from gda-devices.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_devices_cirrus">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-devices-cirrus=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.devices.cirrus.git.url}"/>
-      <rm:uri format="{0}/gda-devices-cirrus.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices-cirrus=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-devices-cirrus.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_devices_mythen">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-devices-mythen=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.devices.mythen.git.url}"/>
-      <rm:uri format="{0}/gda-devices-mythen.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices-mythen=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-devices-mythen.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_devices_pco">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-devices-pco=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.devices.pco.git.url}"/>
-      <rm:uri format="{0}/gda-devices-pco.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices-pco=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-devices-pco.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_devices_peem">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-devices-peem=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.devices.peem.git.url}"/>
-      <rm:uri format="{0}/gda-devices-peem.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices-peem=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-devices-peem.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="gda_devices_pixium">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(!(disallow.repo.gda-devices-pixium=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${gda.devices.pixium.git.url}"/>
-      <rm:uri format="{0}/gda-devices-pixium.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.gda-devices-pixium=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from gda-devices-pixium.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
