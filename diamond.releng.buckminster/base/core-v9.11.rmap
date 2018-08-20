@@ -47,9 +47,6 @@
   </rm:propertyElement>
   <!-- ***** -->
   <!-- versions of Eclipse Orbit p2 repository that are available -->
-  <rm:propertyElement key="eclipse.orbit.p2.version.mars">
-    <bc:constant value="R20151221205849"/>  <!-- Mars.2 -->
-  </rm:propertyElement>
   <rm:propertyElement key="eclipse.orbit.p2.version.oxygen3">
     <bc:constant value="R20180330011457"/>  <!-- Oxygen.3a -->
   </rm:propertyElement>
@@ -70,9 +67,6 @@
   </rm:propertyElement>
   <!-- ***** -->
   <!-- versions of Eclipse Jetty 9 p2 repositories that are available -->
-  <rm:propertyElement key="eclipse.jetty9.p2.version.mars">
-    <bc:constant value="9.2.13.v20150730"/>  <!-- matches the version that Mars SR2 depends on -->
-  </rm:propertyElement>
   <rm:propertyElement key="eclipse.jetty9.p2.version.oxygen3">
     <bc:constant value="9.4.8.v20171121"/>  <!-- matches the version that Oxygen SR3 depends on -->
   </rm:propertyElement>
@@ -769,10 +763,10 @@
   <!--
        Components to get from Eclipse p2 repositories: Orbit, EclipseLink, Jetty, NatTable
   -->
-  <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2_oxygen3"/>
+  <rm:locator pattern="^com\.fasterxml\.jackson\..+$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^com\.thoughtworks\.xstream$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^javax\.(transaction|xml(\..+)?)$" searchPathRef="eclipse_orbit_p2"/>
-  <rm:locator pattern="^javax\.measure\.unit-api(\..+)?$" searchPathRef="eclipse_orbit_p2_oxygen3"/>  <!-- always get from Orbit oxygen.2+, since not available in mars.2 --> 
+  <rm:locator pattern="^javax\.measure\.unit-api(\..+)?$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.aopalliance$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.derby$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.apache\.httpcomponents\..+$" searchPathRef="eclipse_orbit_p2"/>
@@ -2062,13 +2056,6 @@
       <rm:property key="buckminster.source" value="false"/>
       <rm:property key="buckminster.mutable" value="false"/>
       <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version}/repository/"/>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="eclipse_orbit_p2_oxygen3">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${alfred.url}/sites/download.eclipse.org/tools/orbit/downloads/drops/${eclipse.orbit.p2.version.oxygen3}/repository/"/>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse_eclipselink_p2">
