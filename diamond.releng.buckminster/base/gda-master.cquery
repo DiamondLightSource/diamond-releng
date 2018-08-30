@@ -110,7 +110,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^((core|example)-config|documentation\.gda|org\.apache\.derby\.fragment\.daq\.persistence|uk\.ac\.(diamond\.(daq\.(client\.gui\.rcpcontroller|detectors\.addetector(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|persistence(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api(\.test)?|(client(\.(closeactions|commandinfo|experimentdefinition|feature|live\.stream|test))?)|common\.client|core(\.test)?|edxd\.(calibration|common|detector)|epics\.dxp\.client|eventbus(\.api)?|example(\..+)?|logging\.dependencies\.fragment|phantom.detector|xmleditor\.feature)))$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(devices\.(cirrus|mythen|pco|peem|pixium)(\..+)?|epics\.client\.(mythen|pco|pixium))$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(devices\.(cirrus|excalibur|mythen|pco|peem|pixium)(\..+)?|epics\.client\.(mythen|pco|pixium))$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(all-dls-(configs|clients)|(dls|b07(-1)?|b21|i05(-1)?|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|i21|i22|p45|p99)-config|i21-python|uk\.ac\.(diamond\.daq\.(beamline\.(i15|i15-1|p45|p99)|dls\.controls|ispyb\.scan\.info)(\..+)?|gda\.(beamline\.(b07(-1)?|b21|i05(-1)?|i08|i09(-1|-2)?|i12|i13|i13-1|i14|i15|i15-1|i21|i22)|diamond|dls)(\..+)?))$" useTargetPlatform="false">
@@ -124,9 +124,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     </cq:advisorNode>
     <cq:advisorNode namePattern="^((b18|i18|i20|i20(-1)?)-config||uk\.ac\.diamond\.daq\.beamline\.i18\..+|uk\.ac\.gda\.beamline\.(b18|i18|i20|i20(_1|-1)?)(\..+)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-beamlines-xas.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^(excalibur-config|uk\.ac\.gda\.((client|devices)\.)?excalibur(\..+)?)$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-dls-excalibur.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^(uk\.ac\.gda\.epics(\.(adviewer|client|test))?|org\.epics\.jca\.fragment\.gov\.aps\.jca\.event)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-epics.git repository branch</cq:documentation>
@@ -180,7 +177,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">org.eclipse.launchbar.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.org.eclipse.launchbar" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^org\.py4j\.defaultserver.*$" useTargetPlatform="false" branchTagPath="new-namespace">
+    <cq:advisorNode namePattern="^org\.py4j\.defaultserver.*$" useTargetPlatform="false" branchTagPath="new-namespace2">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">py4j-eclipse.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.eclipse\.richbeans\..+$" allowCircularDependency="true" useTargetPlatform="false">
