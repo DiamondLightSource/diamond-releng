@@ -459,7 +459,7 @@ class PewmaManager(object):
         # (7) if the current directory contains a subdirectory called "workspace", do not set a default
         # (8) if the current directory does not contain a subdirectory called "workspace", use new directory <cwd>/workspace as the default
         # (9) Don't have a default workspace location
-        # Note: all this will be irrelevant if the user explicitly specifies -w/--workspace on the command line
+        # Note: this is not called if the user explicitly specified -w/--workspace on the command line
 
         try:
             candidate = cwd = os.getcwd()
@@ -528,6 +528,8 @@ class PewmaManager(object):
                                help='First completely delete current workspace/ and workspace_git/')
         group.add_option('--recreate', dest='recreate', action='store_true', default=False,
                                help='First completely delete current workspace/, but keep any workspace_git/')
+        group.add_option('--tp-recreate', dest='tp_recreate', action='store_true', default=False,
+                               help='First completely delete current tp/, but keep everything else')
         self.parser.add_option_group(group)
 
         group = optparse.OptionGroup(self.parser, "Materialize options")
@@ -622,27 +624,32 @@ class PewmaManager(object):
 
     def setup_workspace(self):
         # create the workspace if it doesn't exist, initialise the workspace if it is not set up
+        # note: only applies to workspace, not workspace_git
 
         if self.options.delete or self.options.recreate:
             assert self.action in ('setup', 'materialize')
             self.delete_directory(self.workspace_loc, "workspace directory")
             if self.options.delete:
                 self.delete_directory(self.workspace_git_loc, "workspace_git directory")
+        elif self.options.tp_recreate:
+            assert self.action == 'materialize'
+            self.delete_directory(os.path.join(self.workspace_loc, "tp"), "tp directory")
 
-        expand_template_required = True
         if os.path.isdir(self.workspace_loc):
             metadata_exists = os.path.exists( os.path.join(self.workspace_loc, '.metadata'))
             if metadata_exists and not os.path.isdir(os.path.join(self.workspace_loc, '.metadata', '.plugins')):
-                raise PewmaException('Workspace already exists but is corrupt (invalid .metadata/), please delete: "%s"' % (self.workspace_loc,))
+                raise PewmaException('ERROR: Workspace already exists but is corrupt (invalid .metadata/), please delete: "%s"' % (self.workspace_loc,))
             tp_exists = os.path.exists( os.path.join(self.workspace_loc, 'tp'))
             if tp_exists and not os.path.isfile(os.path.join(self.workspace_loc, 'tp', '.project')):
-                raise PewmaException('Workspace already exists but is corrupt (invalid tp/), please delete: "%s"' % (self.workspace_loc,))
-            if metadata_exists != tp_exists:
-                raise PewmaException('Workspace already exists but is corrupt (only one of .metadata/ and tp/ exist), please delete: "%s"' % (self.workspace_loc,))
-            if metadata_exists and tp_exists:
+                raise PewmaException('ERROR: Workspace already exists but is corrupt (invalid tp/), please delete: "%s"' % (self.workspace_loc,))
+
+            if metadata_exists:
+                need_to_recreate_workspace = False
+                if not (tp_exists or self.options.tp_recreate):
+                    raise PewmaException('ERROR: Workspace already exists but tp/ does not exist, and --tp-recreate not specified for: "%s"' % (os.path.join(self.workspace_loc, 'tp'),))
                 self.logger.info('Workspace already exists "%s"' % (self.workspace_loc,))
-                expand_template_required = False
         else:
+            need_to_recreate_workspace = True
             self.logger.info('%sCreating workspace directory "%s"' % (self.log_prefix, self.workspace_loc,))
             if not self.options.dry_run:
                 os.makedirs(self.workspace_loc)
@@ -659,10 +666,13 @@ class PewmaManager(object):
                 os.mkdir(self.workspace_git_loc)
                 self._set_linux_group(self.workspace_git_loc)
 
-        if expand_template_required:
+        if need_to_recreate_workspace or (not tp_exists):
             template_zip = os.path.join( self.workspace_loc, self.template_name )
             self.download_workspace_template(self._get_full_uri('templates/' + self.template_name), template_zip)
-            self.unzip_workspace_template(template_zip, None, self.workspace_loc)
+            if need_to_recreate_workspace:
+                self.unzip_workspace_template(template_zip, None, self.workspace_loc)
+            else:
+                self.unzip_workspace_template(template_zip, 'tp/', self.workspace_loc)
             self.logger.info('%sDeleting "%s"' % (self.log_prefix, template_zip,))
             if not self.options.dry_run:
                 os.remove(template_zip)
@@ -837,7 +847,7 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
-            raise PewmaException('Workspace template download failed (network or proxy error, possibly transient): please retry')
+            raise PewmaException('ERROR: Workspace template download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (small enough to do in one chunk)
         self.logger.info('Downloading %s bytes from "%s" to "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl(), destination))
@@ -848,7 +858,7 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading template workspace (probable network issue)'
                 print(text)
-            raise PewmaException('Workspace template download failed (network or proxy error, possibly transient): please retry')
+            raise PewmaException('ERROR: Workspace template download failed (network or proxy error, possibly transient): please retry')
         finally:
             try:
                 resp.close()
@@ -860,17 +870,19 @@ class PewmaManager(object):
             template.write(templatedata)
 
 
-    def unzip_workspace_template(self, template_zip, member, unzipdir):
-        self.logger.info('%sUnzipping "%s%s" to "%s"' %
-                         (self.log_prefix, template_zip, '/' + member if member else '', unzipdir))
+    def unzip_workspace_template(self, template_zip, member_prefix, unzipdir):
+        self.logger.info('%sUnzipping "%s (%s)" to "%s"' %
+                         (self.log_prefix, template_zip, member_prefix + '*' if member_prefix else '', unzipdir))
         if self.options.dry_run:
             return
         template = zipfile.ZipFile(template_zip, 'r')
         self.logger.debug('Comment in zip file "%s"' % (template.comment,))
-        if not member:
+        if not member_prefix:
             template.extractall(unzipdir)
         else:
-            template.extract(member, unzipdir)
+            members_to_extract = [m for m in template.namelist() if m.startswith(member_prefix)]
+            self.logger.info('Items to extract from template: %s' % (members_to_extract,))
+            template.extractall(unzipdir, members_to_extract)
         template.close()
 
 
@@ -1172,7 +1184,7 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
-            raise PewmaException('CQuery download failed (network or proxy error, possibly transient): please retry')
+            raise PewmaException('ERROR: CQuery download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (it's small enough to do in one chunk)
         self.logger.info('Downloading %s bytes from "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl()))
@@ -1183,7 +1195,7 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading CQuery (probable network issue)'
                 print(text)
-            raise PewmaException('CQuery download failed (network or proxy error, possibly transient): please retry')
+            raise PewmaException('ERROR: CQuery download failed (network or proxy error, possibly transient): please retry')
         finally:
             try:
                 resp.close()
@@ -2551,7 +2563,7 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
-            raise PewmaException('Gerrit commit hook download failed (network or proxy error, possibly transient): please retry')
+            raise PewmaException('ERROR: Gerrit commit hook download failed (network or proxy error, possibly transient): please retry')
 
         # read the data (it's small enough to do in one chunk)
         self.logger.debug('Downloading %s bytes from "%s"' % (resp.info().get('content-length', '<unknown>'), resp.geturl()))
@@ -2562,7 +2574,7 @@ class PewmaManager(object):
             if self.options.prepare_jenkins_build_description_on_error:
                 text = 'append-build-description: Failure downloading Gerrit commit hook (probable network issue)'
                 print(text)
-            raise PewmaException('Gerrit commit hook download failed (network or proxy error, possibly transient): please retry')
+            raise PewmaException('ERROR: Gerrit commit hook download failed (network or proxy error, possibly transient): please retry')
         finally:
             try:
                 resp.close()
@@ -2617,8 +2629,8 @@ class PewmaManager(object):
         # validation of options and action
         self.validate_glob_patterns(self.options.project_includes, self.options.project_excludes, '--include or --exclude')
         self.validate_glob_patterns(self.options.repo_includes, self.options.repo_excludes, '--repo-include or --repo-exclude')
-        if self.options.delete and self.options.recreate:
-            raise PewmaException('ERROR: you can specify at most one of --delete and --recreate')
+        if sum((self.options.delete, self.options.recreate, self.options.tp_recreate)) > 1:
+            raise PewmaException('ERROR: you can specify at most one of --delete, --recreate and --tp-recreate')
         if self.options.gerrit_only and self.options.non_gerrit_only:
             raise PewmaException('ERROR: you can specify at most one of --gerrit-only and --non-gerrit-only')
         if (self.action not in list(self.valid_actions.keys())):
@@ -2627,6 +2639,8 @@ class PewmaManager(object):
             raise PewmaException('ERROR: the --delete option cannot be specified with action "%s"' % (self.action))
         if self.options.recreate and self.action not in ('setup', 'materialize'):
             raise PewmaException('ERROR: the --recreate option cannot be specified with action "%s"' % (self.action))
+        if self.options.tp_recreate and self.action != 'materialize':
+            raise PewmaException('ERROR: the --tp-recreate option cannot be specified with action "%s", only with "materialize"' % (self.action))
         if self.options.system_property:
             if any((keyval.find('=') == -1) for keyval in self.options.system_property):
                 raise PewmaException('ERROR: the -D option must specify a property and value as "key=value"')
@@ -2683,7 +2697,7 @@ class PewmaManager(object):
                     raise PewmaException('ERROR: Linux group ' + self.options.directories_groupname + ' does not exist')
 
         # delete previous workspace as required
-        if self.options.delete or self.options.recreate:
+        if any((self.options.delete, self.options.recreate, self.options.tp_recreate)):
             # Check that the workspace location (specified by the user, or by default) is not obviously wrong.
             # A common mistake is to specify the workspace as a point higher in the directory tree than was actually intended.
             # If we proceed in that case, we would end up deleting files that the user actually expected to be kept.
