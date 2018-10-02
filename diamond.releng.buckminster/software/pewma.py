@@ -97,15 +97,6 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v9.4', 'gda-v9.4.cquery', 'v3.2', ('v9.4', '9.4', '94'), ('1.8.0',)),
     ('gda', 'v9.3', 'gda-v9.3.cquery', 'v3.2', ('v9.3', '9.3', '93'), ('1.8.0',)),
     ('gda', 'v9.2', 'gda-v9.2.cquery', 'v3.1', ('v9.2', '9.2', '92'), ('1.8.0',)),
-    ('gda', '8.master', 'gda-v8.master.cquery', 'v2.13', ('8.master', 'v8.master'), ('1.8.0',)),
-    ('gda', 'v8.62', 'gda-v8.62.cquery', 'v2.13', ('v8.62', '8.62', '862'), ('1.8.0',)),
-    ('gda', 'v8.60', 'gda-v8.60.cquery', 'v2.13', ('v8.60', '8.60', '860'), ('1.8.0',)),
-    ('gda', 'v8.58', 'gda-v8.58.cquery', 'v2.13', ('v8.58', '8.58', '858'), ('1.8.0',)),
-    ('gda', 'v8.56', 'gda-v8.56.cquery', 'v2.12', ('v8.56', '8.56', '856'), ('1.8.0',)),
-    ('gda', 'v8.52', 'gda-v8.52.cquery', 'v2.12', ('v8.52', '8.52', '852'), ('1.8.0',)),
-    ('gda', 'v8.50', 'gda-v8.50.cquery', 'v2.10', ('v8.50', '8.50', '850'), ('1.8.0',)),
-    ('gda', 'v8.44', 'gda-v8.44.cquery', 'v2.9', ('v8.44', '8.44', '844'), ('1.7.0',)),
-    ('gda', 'v8.42', 'gda-v8.42.cquery', 'v2.6', ('v8.42', '8.42', '842'), ('1.7.0',)),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.4', ('master', '2.master', 'v2.master'), ('1.8.0',)),
     ('dawn', 'v2.10', 'dawn-v2.10.cquery', 'v3.4', ('v2.10', '2.10'), ('1.8.0',)),
     ('dawn', 'v2.9', 'dawn-v2.9.cquery', 'v3.3', ('v2.9', '2.9'), ('1.8.0',)),
@@ -116,12 +107,6 @@ COMPONENT_CATEGORIES = (
     ('dawn', 'v2.4', 'dawn-v2.4.cquery', 'v3.2', ('v2.4', '2.4'), ('1.8.0',)),
     ('dawn', 'v2.3', 'dawn-v2.3.cquery', 'v3.0', ('v2.3', '2.3'), ('1.8.0',)),
     ('dawn', 'v2.2', 'dawn-v2.2.cquery', 'v3.0', ('v2.2', '2.2'), ('1.8.0',)),
-    ('dawn', '1.master', 'dawn-v1.master.cquery', 'v2.13', ('1.master', 'v1.master'), ('1.8.0',)),
-    ('dawn', 'v1.16', 'dawn-v1.16.cquery', 'v2.13', ('v1.16', '1.16'), ('1.8.0',)),
-    ('dawn', 'v1.15', 'dawn-v1.15.cquery', 'v2.13', ('v1.15', '1.15'), ('1.8.0',)),
-    ('dawn', 'v1.14', 'dawn-v1.14.cquery', 'v2.13', ('v1.14', '1.14'), ('1.8.0',)),
-    ('dawn', 'v1.13', 'dawn-v1.13.cquery', 'v2.12', ('v1.13', '1.13'), ('1.8.0',)),
-    ('dawn', 'v1.11', 'dawn-v1.11.cquery', 'v2.12', ('v1.11', '1.11'), ('1.8.0',)),
     )
 
 CATEGORIES_AVAILABLE = []  # dedupe COMPONENT_CATEGORIES while preserving order
@@ -158,11 +143,7 @@ INVALID_COMPONENTS = (  # tuple of (component name pattern, (applicable versions
 # For newer CQueries, we specify -Declipse.p2.mirrors=false so that the DLS mirror of eclipse.org p2 sites (alfred.diamond.ac.uk) is used
 # Older CQueries do not use the local DLS mirror, so we should not specify that property
 CQUERY_PATTERNS_TO_SKIP_p2_mirrors_false = (
-    '^dawn-v1\.[0-9]\..*cquery$',
-    '^dawn-v1\.1[0-2]\..*cquery$',
     '^dawn-v2\.[01]\.cquery$',
-    '^gda-v8\.[1-4]\.*\.cquery$',
-    '^gda-v8\.5[0-4]\..*cquery$',
     '^gda-v9\.[01]\..*cquery$',
     )
 
@@ -175,11 +156,8 @@ assert DEFAULT_TEMPLATE   # must have been set
 
 PLATFORMS_AVAILABLE =  (
     # os/ws/arch, acceptable abbreviations
-    ('linux,gtk,x86', ('linux,gtk,x86', 'linux32')),
     ('linux,gtk,x86_64', ('linux,gtk,x86_64', 'linux64')),
-    ('win32,win32,x86', ('win32,win32,x86', 'win32', 'windows32',)),
     ('win32,win32,x86_64', ('win32,win32,x86_64', 'win64', 'windows64',)),
-    ('macosx,cocoa,x86', ('macosx,cocoa,x86', 'macosx32', 'mac32',)),
     ('macosx,cocoa,x86_64', ('macosx,cocoa,x86_64', 'macosx64', 'mac64',)),
     )
 
@@ -1575,7 +1553,7 @@ class PewmaManager(object):
             if all(g not in origin_url for g in ('gerrit.diamond.ac.uk', 'gerritbeta.diamond.ac.uk')):
                 if gerrit_repo_details.get('keep_origin'):
                     if repo_name == 'dawnsci.git':
-                        if current_branch.startswith(('gda-9.8', 'gda-9.7', 'gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-', 'gda-8')):
+                        if current_branch.startswith(('gda-9.8', 'gda-9.7', 'gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-')):
                             self.logger.info('%sSkipped: did not change remote origin to Gerrit, since old branch (%s) can use pre-Gerrit remote: %s' % (self.log_prefix, current_branch, git_dir))
                         else:
                             self.logger.error('%sSkipped: unable to change remote origin to Gerrit, requires a fresh clone: %s' % (self.log_prefix, git_dir))
@@ -2056,42 +2034,12 @@ class PewmaManager(object):
         if platforms:
             platforms = sorted(platforms)
         else:
-            platforms = [{'Linuxi686': 'linux,gtk,x86', 'Linuxx86_64': 'linux,gtk,x86_64', 'Windowsx86': 'win32,win32,x86', 'Windowsx86_64': 'win32,win32,x86_64'}.get('%s%s' % (self.system, platform.machine()))]
-
-        # determine what edition the cspex for the .site project is (newest to oldest):
-        # (5) Removed the 'create.product-macosx.cocoa.x86' and 'create.product.zip-macosx.cocoa.x86' actions (retained x86_64)    [GDA 8.46+]
-        # (4) Added a 'create.product-linux.gtk.x86_64-with.symlink' action                                                        [GDA 8.44+]
-        # (3) a separate action for each platform (create.product-<os>.<ws>.<arch>), and a separate zip action for each platform   [GDA 8.30+]
-        # (2) a separate action for each platform (create.product-<os>.<ws>.<arch>), but no separate zip action for each platform  [GDA 8.30+]
-        # (1) a single action for all platforms (create.product)                                                                   [GDA 8.28-]
-
-        cspex_file_path = os.path.abspath(os.path.join(self.available_sites[self.site_name], 'buckminster.cspex'))
-        mac32_available = False                        # if False, version 5+
-        linux64_with_symlink_action_available = False  # if True, version 4+
-        zip_actions_available = False                  # if True, version 3+
-        per_platform_actions_available = False         # if True, version 2+
-        with open(cspex_file_path, 'r') as cspex_file:
-            for line in cspex_file:
-                if '"create.product-macosx.cocoa.x86"' in line:  # "s so that we don't mactch on create.product-macosx.cocoa.x86_64
-                    mac32_available = True
-                if 'create.product-linux.gtk.x86_64-with.symlink' in line:
-                    linux64_with_symlink_action_available = True
-                if 'create.product-linux.gtk.x86_64' in line:
-                    per_platform_actions_available = True
-                if 'create.product.zip-linux.gtk.x86_64' in line:
-                    zip_actions_available = True
-                if all((mac32_available, linux64_with_symlink_action_available, per_platform_actions_available, zip_actions_available)):
-                    break
-
-        if action_zip and not zip_actions_available:
-            raise PewmaException('ERROR: product.zip is not available for "%s"' % (self.site_name,))
-        if self.options.recreate_symlink and not linux64_with_symlink_action_available:
-            raise PewmaException('ERROR: --recreate-symlink is not available for "%s"' % (self.site_name,))
-        if ('macosx,cocoa,x86' in platforms) and not mac32_available:
-            if all_platforms_specified:
-                platforms.remove('macosx,cocoa,x86')  #  platform "all" was specified, so removed macos 32-bit platform  from the auto-added list  
-            else:
-                raise PewmaException('ERROR: MacOSX 32-bit cannot be build for "%s"' % (self.site_name,))
+            # platforms will be the current platform
+            platforms = [{'Linuxx86_64': 'linux,gtk,x86_64',
+                          'Darwin86_64': 'macosx,cocoa,x86_64',
+                          'Windowsx86_64': 'win32,win32,x86_64',
+                         }
+                         .get('%s%s' % (self.system, platform.machine()))]
 
         self.logger.info('Product "%s" will be built for %d platform%s: %s' % (self.site_name, len(platforms), ('', 's')[bool(len(platforms)>1)], platforms))
 
@@ -2110,20 +2058,13 @@ class PewmaManager(object):
                 script_file.write('build --thorough\n')
             script_file.write('perform ' + properties_text)
             script_file.write('-Dtarget.os=* -Dtarget.ws=* -Dtarget.arch=* ')
-            if per_platform_actions_available:
-                for p in platforms:
-                    perform_options = {'action': 'create.product.zip' if action_zip else 'create.product', 'withsymlink': '', 'site_name': self.site_name,
-                                       'os': p.split(',')[0], 'ws': p.split(',')[1], 'arch': p.split(',')[2]}
-                    if self.options.recreate_symlink and (p == 'linux,gtk,x86_64') and not action_zip:
-                        perform_options['withsymlink'] = '-with.symlink'
-                    script_file.write(' %(site_name)s#%(action)s-%(os)s.%(ws)s.%(arch)s%(withsymlink)s' % perform_options)
-                script_file.write('\n')
-            else:
-                script_file.write('%(site_name)s#site.p2\n' % {'site_name': self.site_name})
-                for p in platforms:
-                    perform_options = {'site_name': self.site_name, 'os': p.split(',')[0], 'ws': p.split(',')[1], 'arch': p.split(',')[2]}
-                    script_file.write('perform ' + properties_text)
-                    script_file.write('-Dtarget.os=%(os)s -Dtarget.ws=%(ws)s -Dtarget.arch=%(arch)s %(site_name)s#create.product\n' % perform_options)
+            for p in platforms:
+                perform_options = {'action': 'create.product.zip' if action_zip else 'create.product', 'withsymlink': '', 'site_name': self.site_name,
+                                   'os': p.split(',')[0], 'ws': p.split(',')[1], 'arch': p.split(',')[2]}
+                if self.options.recreate_symlink and (p == 'linux,gtk,x86_64') and not action_zip:
+                    perform_options['withsymlink'] = '-with.symlink'
+                script_file.write(' %(site_name)s#%(action)s-%(os)s.%(ws)s.%(arch)s%(withsymlink)s' % perform_options)
+            script_file.write('\n')
 
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
@@ -2306,9 +2247,7 @@ class PewmaManager(object):
                 if old_version in self.executable_locations['buckminster']:
                     possibly_bucky_4point5_plus = False
                     break
-        if possibly_bucky_4point5_plus and self.java_version_current and self.java_version_current.startswith('1.7'):
-            vmargs_to_add.append('-XX:-UseSplitVerifier')  # UseSplitVerifier exists in Java 7, but was removed in Java 8
-        else:
+        if possibly_bucky_4point5_plus:
             vmargs_to_add.append('-noverify')
         # if debugging memory allocation, add this parameter: '-XX:+PrintFlagsFinal'
         if not self.isWindows:  # these extra options need to be removed on my Windows XP 32-bit / Java 1.7.0_25 machine
