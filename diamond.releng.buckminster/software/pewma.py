@@ -55,7 +55,9 @@ import StringIO
 import stat
 import subprocess
 import sys
+import tarfile
 import time
+import urllib
 import urllib2
 import xml.etree.ElementTree as ET
 from xml.parsers.expat import ExpatError
@@ -157,8 +159,8 @@ assert DEFAULT_TEMPLATE   # must have been set
 PLATFORMS_AVAILABLE =  (
     # os/ws/arch, acceptable abbreviations
     ('linux,gtk,x86_64', ('linux,gtk,x86_64', 'linux64')),
-    ('win32,win32,x86_64', ('win32,win32,x86_64', 'win64', 'windows64',)),
     ('macosx,cocoa,x86_64', ('macosx,cocoa,x86_64', 'macosx64', 'mac64',)),
+    ('win32,win32,x86_64', ('win32,win32,x86_64', 'win64', 'windows64',)),
     )
 
 DLS_BUCKMINSTER_URI = 'https://alfred.diamond.ac.uk/buckminster/'  # default, can be overidden by --dls-buckminster-uri option (e.g. file:///path)
@@ -293,6 +295,11 @@ class PewmaManager(object):
         self.system = platform.system()
         self.isLinux = self.system == 'Linux'
         self.isWindows = self.system == 'Windows'
+        # string describing the current platform in PLATFORMS_AVAILABLE syntax
+        self.platform = {'Linuxx86_64': 'linux,gtk,x86_64',
+                         'Darwin86_64': 'macosx,cocoa,x86_64',
+                         'Windowsx86_64': 'win32,win32,x86_64',
+                         }['%s%s' % (self.system, platform.machine())]
         self.java_inspected = False
         self.java_default_tmpdir = None
         self.java_version_current = None
@@ -328,6 +335,11 @@ class PewmaManager(object):
                  'Category can be one of "%s"' % '/'.join(CATEGORIES_AVAILABLE),
                  'Version defaults to master',
                  'CQuery is only required if you don\'t want to use Category or Category+Version',
+                 )),
+            ('add-diamond-cpython', None, True,
+                ('add-diamond-cpython {<platform> ...}',
+                 'Add diamond-cpython install files to DAWN\'s uk.ac.diamond.cpython.<platform> project(s)',
+                 'Platform can be something like linux64/mac64/win64/all (defaults to current platform)',
                  )),
             ('print-workspace-path', None, False,
                 ('print-workspace-path',
@@ -1446,6 +1458,85 @@ class PewmaManager(object):
         return [matching_list[0][2], matching_list[0][3], matching_list[0][5]]
 
 
+    def action_add_diamond_cpython(self):
+        """ Processes command: add-diamond-cpython [ <platform> ... ]
+        """
+        platforms = set()
+        for arg in self.arguments:
+            if arg == 'all':
+                for (p, _) in PLATFORMS_AVAILABLE:
+                    platforms.add(p)
+            else:
+                for (p, a) in PLATFORMS_AVAILABLE:
+                    if arg in a:
+                        platforms.add(p)
+                        break
+                else:
+                    raise PewmaException('ERROR: "%s" was not recognised as a platform name' % (arg,))
+        if not platforms:
+            platforms = [self.platform]
+
+        for p in sorted(platforms):
+            self._add_diamond_cpython(p)
+
+    def _add_diamond_cpython(self, pform, must_not_already_exist=True):
+        """ Processes command: add-diamond-cpython <platform>
+            (for a single platform only)
+        """
+        assert pform in [p[0] for p in PLATFORMS_AVAILABLE]
+
+        # workspace_git/diamond-cpython.git should already exist
+        diamond_cpython_git_loc = os.path.join(self.workspace_git_loc, 'diamond-cpython.git')
+        if not os.path.isdir(diamond_cpython_git_loc):
+            raise PewmaException('ERROR: Can\'t "add-diamond-cpython", because "%s" does not exist' % (diamond_cpython_git_loc,))
+
+        cpython_platform_loc = os.path.join(
+            diamond_cpython_git_loc,
+            'uk.ac.diamond.cpython.%s.%s' % tuple(pform.split(',')[0:3:2]))  # transform platform: linux,gtk,x86_64 --> linux.x86_64
+        if not os.path.isdir(cpython_platform_loc):
+            raise PewmaException('ERROR: Can\'t "add-diamond-cpython", because "%s" does not exist' % (cpython_platform_loc,))
+        for item in os.listdir(cpython_platform_loc):
+            if item.startswith('cpython'):  # currently, the directory is called cpython2.7, but the version might change
+                cpython_loc = os.path.join(cpython_platform_loc, item)
+                if must_not_already_exist:
+                    raise PewmaException('ERROR: Attempted "add-diamond-cpython", but "%s" already exists' % (cpython_loc,))
+                else:
+                    self.logger.info('Skipped "add-diamond-cpython": "%s" already exists' % (cpython_loc,))
+                    return
+                break
+
+        # the cpythonn.n directory does not exist, so untar to create it
+        lines = open(os.path.join(cpython_platform_loc, 'install_files_loc.txt'), 'r').read().splitlines()
+        for line in lines:
+            if line.startswith('#'):
+                continue
+            if line.startswith('/'):
+                tarfile_loc = line
+                if not os.path.isfile(tarfile_loc):
+                    continue
+                break
+            elif line.startswith('https://'):
+                self.logger.info('%sDownloading "%s"' % (self.log_prefix, line))
+                if not self.options.dry_run:
+                    tarfile_loc, headers = urllib.urlretrieve(line)
+                    self.logger.info('Downloaded to "%s"' % (tarfile_loc,))
+            else:
+                raise PewmaException('ERROR: Unrecognised syntax in "%s": "%s"' % (install_files_file_loc, line))
+        if self.options.dry_run:
+            return
+        tar_file_size = os.stat(tarfile_loc).st_size
+        if tar_file_size < 400000000:
+            raise PewmaException('ERROR: File to untar too small (possibly corrupt) "%s" (%s bytes)' % (tarfile_loc, '{0:,d}'.format(tar_file_size)))
+
+        self.logger.info('Extracting "%s" (%s bytes) into "%s"' % (tarfile_loc, '{0:,d}'.format(tar_file_size), cpython_platform_loc))
+        with tarfile.open(tarfile_loc, 'r:bz2') as tar_file:
+            # guard against possible path traversal attack if tar file has been compromised 
+            for name in tar_file.getnames():
+                if (not name.startswith('cpython')) or ('..' in name) or ('.\.' in name):
+                    raise PewmaException('ERROR: Possible path traversal attack: found "%s" in %s' % (name, tarfile_loc))
+            tar_file.extractall(cpython_platform_loc)
+
+
     def _get_git_directories(self):
         """ Returns a list of (repo_name, absolute path to repository) of all Git repositories
         """
@@ -2019,7 +2110,7 @@ class PewmaManager(object):
             if (index != 0) or (not hasattr(self, 'site_name')) or (not self.site_name):
                 if arg == 'all':
                     all_platforms_specified = True
-                    for (p, a) in PLATFORMS_AVAILABLE:
+                    for (p, _) in PLATFORMS_AVAILABLE:
                         platforms.add(p)
                 else:
                     for (p, a) in PLATFORMS_AVAILABLE:
@@ -2034,12 +2125,7 @@ class PewmaManager(object):
         if platforms:
             platforms = sorted(platforms)
         else:
-            # platforms will be the current platform
-            platforms = [{'Linuxx86_64': 'linux,gtk,x86_64',
-                          'Darwin86_64': 'macosx,cocoa,x86_64',
-                          'Windowsx86_64': 'win32,win32,x86_64',
-                         }
-                         .get('%s%s' % (self.system, platform.machine()))]
+            platforms = [self.platform]  # platforms will be the current platform
 
         self.logger.info('Product "%s" will be built for %d platform%s: %s' % (self.site_name, len(platforms), ('', 's')[bool(len(platforms)>1)], platforms))
 
