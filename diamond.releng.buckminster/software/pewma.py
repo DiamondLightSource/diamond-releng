@@ -613,6 +613,7 @@ class PewmaManager(object):
             assert self.action == 'materialize'
             self.delete_directory(os.path.join(self.workspace_loc, "tp"), "tp directory")
 
+        need_to_create_workspace = True
         if os.path.isdir(self.workspace_loc):
             metadata_exists = os.path.exists( os.path.join(self.workspace_loc, '.metadata'))
             if metadata_exists and not os.path.isdir(os.path.join(self.workspace_loc, '.metadata', '.plugins')):
@@ -622,12 +623,11 @@ class PewmaManager(object):
                 raise PewmaException('ERROR: Workspace already exists but is corrupt (invalid tp/), please delete: "%s"' % (self.workspace_loc,))
 
             if metadata_exists:
-                need_to_recreate_workspace = False
+                need_to_create_workspace = False
                 if not (tp_exists or self.options.tp_recreate):
                     raise PewmaException('ERROR: Workspace already exists but tp/ does not exist, and --tp-recreate not specified for: "%s"' % (os.path.join(self.workspace_loc, 'tp'),))
                 self.logger.info('Workspace already exists "%s"' % (self.workspace_loc,))
         else:
-            need_to_recreate_workspace = True
             self.logger.info('%sCreating workspace directory "%s"' % (self.log_prefix, self.workspace_loc,))
             if not self.options.dry_run:
                 os.makedirs(self.workspace_loc)
@@ -644,10 +644,10 @@ class PewmaManager(object):
                 os.mkdir(self.workspace_git_loc)
                 self._set_linux_group(self.workspace_git_loc)
 
-        if need_to_recreate_workspace or (not tp_exists):
+        if need_to_create_workspace or (not tp_exists):
             template_zip = os.path.join( self.workspace_loc, self.template_name )
             self.download_workspace_template(self._get_full_uri('templates/' + self.template_name), template_zip)
-            if need_to_recreate_workspace:
+            if need_to_create_workspace:
                 self.unzip_workspace_template(template_zip, None, self.workspace_loc)
             else:
                 self.unzip_workspace_template(template_zip, 'tp/', self.workspace_loc)
