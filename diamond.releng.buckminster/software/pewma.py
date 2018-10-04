@@ -245,6 +245,9 @@ GERRIT_REPOSITORIES = {
     'gda-hrpd.git'               : {'url_part': 'gda/gda-hrpd.git'},
     'gda-imca-cat.git'           : {'url_part': 'gda/gda-imca-cat.git'},
     'gda-legacy.git'             : {'url_part': 'gda/gda-legacy.git'},
+    'gda-mt.git'                 : {'url_part': 'gda/gda-mt.git',
+                                    'must_use_ssh': True,
+                                    'keep_origin': True},
     'gda-mx.git'                 : {'url_part': 'gda/gda-mx.git'},
     'gda-nexus.git'              : {'url_part': 'gda/gda-nexus.git'},
     'gda-pes.git'                : {'url_part': 'gda/gda-pes.git'},
@@ -1643,8 +1646,10 @@ class PewmaManager(object):
             # In that case, change the upstream to point to Gerrit (unless keep_origin == True)
             if all(g not in origin_url for g in ('gerrit.diamond.ac.uk', 'gerritbeta.diamond.ac.uk')):
                 if gerrit_repo_details.get('keep_origin'):
-                    if repo_name == 'dawnsci.git':
-                        if current_branch.startswith(('gda-9.8', 'gda-9.7', 'gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-')):
+                    if repo_name in ('dawnsci.git', 'gda-mt.git'):
+                        if (current_branch.startswith(('gda-9.8', 'gda-9.7', 'gda-9.6', 'gda-9.5', 'gda-9.4', 'gda-9.3', 'gda-9.2', 'gda-9.1', 'gda-9.0', 'dawn-'))
+                            or
+                            ((repo_name == 'gda-mt.git') and current_branch.startswith(('gda-9.9',)))):
                             self.logger.info('%sSkipped: did not change remote origin to Gerrit, since old branch (%s) can use pre-Gerrit remote: %s' % (self.log_prefix, current_branch, git_dir))
                         else:
                             self.logger.error('%sSkipped: unable to change remote origin to Gerrit, requires a fresh clone: %s' % (self.log_prefix, git_dir))
