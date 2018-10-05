@@ -56,6 +56,26 @@ create_p2_site_product_function () {
     fi
 
     ###
+    ### If this product build includes a bundled cpython (SCI-7275), get the python installer files
+    ###
+
+    set +e  # Turn off errexit
+    grep -q "uk.ac.diamond.cpython.feature" ${materialized_info_path}/materialized_project_names.txt
+    RETVAL=$?
+    set -e  # Restore errexit
+    if [[ "${RETVAL}" != "0" ]]; then
+        echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Running add-diamond-cpython ***\n"
+        for platform in linux.x86_64 macosx.x86_64 win32.x86_64; do
+            rm -rf ${WORKSPACE}/workspace_git/diamond-cpython.git/uk.ac.diamond.cpython.${platform}/cpython*
+        done
+        if [ "${platform_list}" != " " ]; then
+            ${pewma_py} --prepare-jenkins-build-description-on-error ${log_level_option} -w ${materialize_workspace_path} add-diamond-cpython ${platform_list}
+        else
+            ${pewma_py} --prepare-jenkins-build-description-on-error ${log_level_option} -w ${materialize_workspace_path} add-diamond-cpython all
+        fi
+    fi
+
+    ###
     ### Create the p2 site, products(s) and zip(s)
     ###
 
