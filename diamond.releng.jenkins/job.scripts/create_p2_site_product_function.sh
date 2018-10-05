@@ -63,7 +63,7 @@ create_p2_site_product_function () {
     grep -q "uk.ac.diamond.cpython.feature" ${materialized_info_path}/materialized_project_names.txt
     RETVAL=$?
     set -e  # Restore errexit
-    if [[ "${RETVAL}" != "0" ]]; then
+    if [[ "${RETVAL}" == "0" ]]; then
         echo -e "\n*** `date +"%a %d/%b/%Y %H:%M:%S %z"` Running add-diamond-cpython ***\n"
         for platform in linux.x86_64 macosx.x86_64 win32.x86_64; do
             rm -rf ${WORKSPACE}/workspace_git/diamond-cpython.git/uk.ac.diamond.cpython.${platform}/cpython*
