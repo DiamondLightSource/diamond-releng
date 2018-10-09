@@ -2134,6 +2134,15 @@ class PewmaManager(object):
 
         self.logger.info('Product "%s" will be built for %d platform%s: %s' % (self.site_name, len(platforms), ('', 's')[bool(len(platforms)>1)], platforms))
 
+        # Special handling for the case where we are building the server product
+        # This is sometimes done in parallel (e.g. someone is setting up multiple GDAs from one machine)
+        # Explicitly set buckminster.root.prefix to a name that will be unique
+        # (If the IDE is used, that continues to use the default from the properties file)
+        # We don't do this for clients, as we don't expect them to have parallel product exports for the same client on the same machine
+        if not self.options.buckminster_root_prefix:
+            if (self.site_name == 'uk.ac.diamond.daq.server.site') and self.isLinux:
+                self.options.buckminster_root_prefix = '/tmp/uk.ac.diamond.daq.server.site_' + self.start_time.strftime('%Y%m%d_%H%M%S.%f')
+
         self.set_buckminster_properties_path(self.site_name)
         self.logger.info('Writing buckminster commands to "%s"' % (self.script_file_path,))
         properties_text = '-P%s ' % (self.buckminster_properties_path,)
@@ -2774,7 +2783,7 @@ class PewmaManager(object):
                self.script_file_path = os.path.abspath(os.path.join(self.workspace_loc, self.script_file_path))
 
         # invoke function to perform the requested action
-        start_time = datetime.datetime.now()
+        self.start_time = datetime.datetime.now()
         (action_handler, attempt_graylog) = self.valid_actions[self.action]
         use_graylog = attempt_graylog and self.setup_graylog_logging()  # returns True if graylog logging actually available 
         if action_handler:
@@ -2784,7 +2793,7 @@ class PewmaManager(object):
 
         if (not self.options.quiet) or use_graylog:
             end_time = datetime.datetime.now()
-            run_time = end_time - start_time
+            run_time = end_time - self.start_time
             seconds = (run_time.days * 86400) + run_time.seconds
             hours, remainder = divmod(seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
