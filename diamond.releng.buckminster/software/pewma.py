@@ -1963,39 +1963,10 @@ class PewmaManager(object):
             else:
                 script_file.write('build\n')
 
-        # if the workspace has a settings file specifically for Eclipse Mars (which is what Buckminster is), use that. See DAQ-1511.
-        # the code below attempts to cope with a previous run having abended at some point
-        need_to_restore_settings = False
-        settings_dir = os.path.join( self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings')
-        if os.path.isdir(settings_dir):
-            pde_settings_default = os.path.join(settings_dir, 'org.eclipse.pde.prefs')
-            pde_settings_MARS = os.path.join(settings_dir, 'org.eclipse.pde.prefs.MARS')
-            pde_settings_original = os.path.join(settings_dir, 'org.eclipse.pde.prefs.ORIGINAL')
-            if os.path.isfile(pde_settings_MARS):
-                # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.ORIGINAL
-                if os.path.isfile(pde_settings_default):
-                    if not os.path.isfile(pde_settings_original):
-                        try:
-                            self.logger.info('Renaming "%s" to "%s"' % (pde_settings_default, pde_settings_original))
-                            os.rename(pde_settings_default, pde_settings_original)
-                        except (OSError) as e:
-                             self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_default, pde_settings_original))
-                             return 2
-                    else:
-                        if filecmp.cmp(pde_settings_default, pde_settings_original, shallow=False):
-                            self.logger.info('Removing "%s"' % (pde_settings_default,))
-                            os.remove(pde_settings_default)
-                        else:
-                            self.logger.critical('Error renaming "%s" to "%s": latter already exists' % (pde_settings_default, pde_settings_original))
-                            return 2
-                # rename org.eclipse.pde.prefs.MARS --> org.eclipse.pde.prefs
-                try:
-                    self.logger.info('Renaming "%s" to "%s"' % (pde_settings_MARS, pde_settings_default))
-                    os.rename(pde_settings_MARS, pde_settings_default)
-                except (OSError) as e:
-                    self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_MARS, pde_settings_default))
-                    return 2
-                need_to_restore_settings = True
+        # if the workspace has a settings file specifically for Eclipse Mars (which is what Buckminster is), use that.
+        mars_settings_file_status = self._switch_mars_settings_file_in()
+        if mars_settings_file_status > 1:
+            return mars_settings_file_status
 
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
@@ -2003,23 +1974,79 @@ class PewmaManager(object):
             script_file_path_to_pass = self.script_file_path
         bm_exit_code =  self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False, scan_compile_messages=True)
 
-        if need_to_restore_settings:
-            # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.MARS
-            try:
-                self.logger.info('Renaming "%s" to "%s"' % (pde_settings_default, pde_settings_MARS))
-                os.rename(pde_settings_default, pde_settings_MARS)
-            except (OSError) as e:
-                 self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_default, pde_settings_MARS))
-                 return 2
-            # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.MARS
-            try:
-                self.logger.info('Renaming "%s" to "%s"' % (pde_settings_original, pde_settings_default))
-                os.rename(pde_settings_original, pde_settings_default)
-            except (OSError) as e:
-                 self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_original, pde_settings_default))
-                 return 2
+        if mars_settings_file_status:
+            return self._switch_mars_settings_file_out() or bm_exit_code
+        else:
+            return bm_exit_code
 
-        return bm_exit_code
+
+    def _switch_mars_settings_file_in(self):
+        """ If the workspace has a settings file specifically for Eclipse Mars (which is what Buckminster is), use that. See DAQ-1511.
+            The code attempts to cope with a previous run having abended at some point.
+            Returns:
+                False  - settings were not switched in
+                True   - settings were switched in (and hence should be switched out after the action is complete)
+                2      - a non-zero return code indicating an error
+        """
+
+        settings_dir = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings')
+        if not os.path.isdir(settings_dir):
+            return False  # don't need to restore settings after action completes
+        pde_settings_default = os.path.join(settings_dir, 'org.eclipse.pde.prefs')
+        pde_settings_MARS = os.path.join(settings_dir, 'org.eclipse.pde.prefs.MARS')
+        pde_settings_original = os.path.join(settings_dir, 'org.eclipse.pde.prefs.ORIGINAL')
+        if not os.path.isfile(pde_settings_MARS):
+            return False  # don't need to restore settings after action completes
+
+        # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.ORIGINAL
+        if os.path.isfile(pde_settings_default):
+            if not os.path.isfile(pde_settings_original):
+                try:
+                    self.logger.info('Renaming "%s" to "%s"' % (pde_settings_default, pde_settings_original))
+                    os.rename(pde_settings_default, pde_settings_original)
+                except (OSError) as e:
+                     self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_default, pde_settings_original))
+                     return 2
+            else:
+                if filecmp.cmp(pde_settings_default, pde_settings_original, shallow=False):
+                    self.logger.info('Removing "%s"' % (pde_settings_default,))
+                    os.remove(pde_settings_default)
+                else:
+                    self.logger.critical('Error renaming "%s" to "%s": latter already exists' % (pde_settings_default, pde_settings_original))
+                    return 2
+        # rename org.eclipse.pde.prefs.MARS --> org.eclipse.pde.prefs
+        try:
+            self.logger.info('Renaming "%s" to "%s"' % (pde_settings_MARS, pde_settings_default))
+            os.rename(pde_settings_MARS, pde_settings_default)
+        except (OSError) as e:
+            self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_MARS, pde_settings_default))
+            return 2
+        return True
+
+
+    def _switch_mars_settings_file_out(self):
+        settings_dir = os.path.join(self.workspace_loc, '.metadata', '.plugins', 'org.eclipse.core.runtime', '.settings')
+        if not os.path.isdir(settings_dir):
+            return 0
+        pde_settings_default = os.path.join(settings_dir, 'org.eclipse.pde.prefs')
+        pde_settings_MARS = os.path.join(settings_dir, 'org.eclipse.pde.prefs.MARS')
+        pde_settings_original = os.path.join(settings_dir, 'org.eclipse.pde.prefs.ORIGINAL')
+
+        # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.MARS
+        try:
+            self.logger.info('Renaming "%s" to "%s"' % (pde_settings_default, pde_settings_MARS))
+            os.rename(pde_settings_default, pde_settings_MARS)
+        except (OSError) as e:
+             self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_default, pde_settings_MARS))
+             return 2
+        # rename org.eclipse.pde.prefs --> org.eclipse.pde.prefs.MARS
+        try:
+            self.logger.info('Renaming "%s" to "%s"' % (pde_settings_original, pde_settings_default))
+            os.rename(pde_settings_original, pde_settings_default)
+        except (OSError) as e:
+             self.logger.critical('Error renaming "%s" to "%s"' % (pde_settings_original, pde_settings_default))
+             return 2
+        return 0
 
 
     def action_target(self):
@@ -2166,11 +2193,22 @@ class PewmaManager(object):
                 script_file.write(' %(site_name)s#%(action)s-%(os)s.%(ws)s.%(arch)s%(withsymlink)s' % perform_options)
             script_file.write('\n')
 
+        # if the workspace has a settings file specifically for Eclipse Mars (which is what Buckminster is), use that.
+        mars_settings_file_status = self._switch_mars_settings_file_in()
+        if mars_settings_file_status > 1:
+            return mars_settings_file_status
+
         if self.isWindows:
             script_file_path_to_pass = '"%s"' % (self.script_file_path,)
         else:
             script_file_path_to_pass = self.script_file_path
-        return self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False)
+
+        bm_exit_code =  self.run_buckminster_in_subprocess(('--scriptfile', script_file_path_to_pass), scan_for_materialize_errors=False)
+
+        if mars_settings_file_status:
+            return self._switch_mars_settings_file_out() or bm_exit_code
+        else:
+            return bm_exit_code
 
 
     def _iterate_ant(self, target):
