@@ -47,7 +47,7 @@ import platform
 try:
     import pwd
 except ImportError:
-    pass  # grp not available on Windows
+    pass  # pwd not available on Windows
 import re
 import shlex
 import socket
@@ -83,7 +83,8 @@ for beamline in ('b07', 'b07-1', 'b16', 'b18', 'b21', 'b24',
                  'i20', 'i20_1', 'i20-1', 'i21', 'i22', 'i23', 'i24', 'lab11',
                  ):
     COMPONENT_ABBREVIATIONS.append((beamline + '-client', 'uk.ac.gda.beamline.' + beamline + '.site', 'gda'))
-COMPONENT_ABBREVIATIONS.append(('gdaserver', 'uk.ac.diamond.daq.server.site', 'gda'))
+for serverabbrev in ('server', 'gdaserver', 'gda-server', 'gdaservers', 'gda-servers'):
+    COMPONENT_ABBREVIATIONS.append((serverabbrev, 'uk.ac.diamond.daq.server.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('all-dls', ('all-dls-configs', 'all-dls-clients', 'uk.ac.diamond.daq.server.site', 'gda-orphan-projects'), 'gda'))
 
 # A category+version is one way of specifying a specific CQuery (version can default to "master")
