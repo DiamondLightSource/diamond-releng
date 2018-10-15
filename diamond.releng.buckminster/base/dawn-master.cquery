@@ -146,7 +146,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mt.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mt" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(mx-gda-tools|(i02-1|i02-2|i03|i04|i04-1|i19-1|i19-2|i19-shared|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.(wf-prototype-devel|astra-wf-devel)|uk\.ac\.(diamond\.(org\.springframework\.fragment\.i19-shared-config|daq\.mx\..+|dna|stac)|gda\.(beamline\.(i02-1|i02-2|i03|i04|i04-1|i19|i19-1|i19-2|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.insitu(\..+)?|mx\.model|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.(attenuator|hutch)|vmxi(\..+)?)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(mx-gda-tools|(i02-1|i02-2|i03|i04|i04-1|i19-1|i19-2|i19-shared|i23|i24|mx)-config|all-mx-(configs|clients)|com\.globalphasing\.(wf-prototype-devel|astra-wf-devel)|uk\.ac\.(diamond\.(connect|datamodel|daq\.mx\..+|dna|org\.springframework\.fragment\.i19-shared-config|stac)|gda\.(beamline\.(i02-1|i02-2|i03|i04|i04-1|i19|i19-1|i19-2|i23|i24)(\..+)?|client\.mx(\..+)?|component\.(beamline(\.common)?|model(\.core)?|samplehandling(\.core)?)|devices\.insitu(\..+)?|mx(\..+)?|px(\..+)?|service\.hutch|services(\.(common|impl|samplemovementservice)(\..+)?)?|stage\.(attenuator|hutch)|vmxi(\..+)?)))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-mx.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-mx" value="true"/>
     </cq:advisorNode>
@@ -225,7 +225,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">scisoft-ws.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|dao|datamodel|dsx|ida|widgets.xviewer)(\..+)?|gda\.mx(\.(api|daq|editor|ispyb|test|ui|view|widget|xviewer)(\..+)?)?|ox\.sgc\.dsx\.beehive)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^uk\.ac\.(diamond\.(connect|datamodel)|gda\.mx(\..+)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">wychwood.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.wychwood" value="true"/>
     </cq:advisorNode>
