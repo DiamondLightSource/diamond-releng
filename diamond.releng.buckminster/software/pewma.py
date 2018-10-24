@@ -354,7 +354,7 @@ class PewmaManager(object):
                  'Determine the CQuery to use, and return from it a list of repositories and branches',
                  )),
             ('gerrit-config', None, False, ('gerrit-config', 'Switch applicable repositories to origin Gerrit and configure for Eclipse',)),
-            ('git', None, True, ('git <command>', 'Issue "git <command>" for all git clones',)),
+            ('git', None, True, ('git <command>', 'Issue "git <command>" for all git clones (escape any quotes in the command with a \\)',)),
             ('clean', None, True, ('clean', 'Clean the workspace',)),
             ('bmclean', None, True, ('bmclean <site>', 'Clean previous buckminster output',)),
             ('build', None, True, ('build', '[alias for buildthorough]',)),
@@ -1804,11 +1804,11 @@ class PewmaManager(object):
         return_code_count = {}  # dictionary with key=return_code, value=repositories it occurred in
         for (repo_name, git_dir) in sorted(git_directories):
             if self.options.non_gerrit_only:
-                if repo_name in [gerrit_repo_name for (gerrit_repo_name, _) in GERRIT_REPOSITORIES]:
+                if repo_name in GERRIT_REPOSITORIES:
                     self.logger.debug('%sSkipped: is Gerrit, but --non-gerrit-only specified: %s' % (self.log_prefix, git_dir))
                     continue
             if self.options.gerrit_only:
-                if repo_name not in [gerrit_repo_name for (gerrit_repo_name, _) in GERRIT_REPOSITORIES]:
+                if repo_name not in GERRIT_REPOSITORIES:
                     self.logger.debug('%sSkipped: is not Gerrit, but --gerrit-only specified: %s' % (self.log_prefix, git_dir))
                     continue
             if repo_name not in selected_repos:
@@ -1816,8 +1816,8 @@ class PewmaManager(object):
                 continue
 
             git_command = 'git ' + ' '.join(self.arguments)
-            if (git_command.strip() == 'git pull') or git_command.startswith('git pull '):
-                # don't attempt a "git pull" if no upstream defined
+            if (git_command.strip() in ('git pull', 'git fetch')) or git_command.startswith(('git pull ', 'git fetch ')):
+                # don't attempt a "git pull" or "git fetch" if no upstream defined
                 has_remote = False
                 config_path = os.path.join(git_dir, '.git', 'config')
                 if os.path.isfile(config_path):
@@ -1827,7 +1827,7 @@ class PewmaManager(object):
                                 has_remote = True
                                 break
                 if not has_remote:
-                    self.logger.info('%sSkipped: %s in %s (NO REMOTE DEFINED)' % (self.log_prefix, git_command, git_dir))
+                    self.logger.warn('%sSkipped: %s in %s (NO REMOTE DEFINED)' % (self.log_prefix, git_command, git_dir))
                     continue
 
             retcode = self._one_git_repo(git_command, git_dir, prefix)
@@ -1840,7 +1840,7 @@ class PewmaManager(object):
 
         log_msg = '%s"%s" got ' % (self.log_prefix, git_command)
         for rc in sorted(return_code_count.keys()):
-            log_msg += 'rc=%d (%s repo%s%s), ' % (
+            log_msg += 'rc=%s (%s repo%s%s), ' % (
                         rc,
                         len(return_code_count[rc]),
                         's' if len(return_code_count[rc]) != 1 else '',
