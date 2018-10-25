@@ -717,7 +717,7 @@
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.peema(\..+)?$" searchPathRef="scisoft_peema"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ptychography(\..+)?$" searchPathRef="scisoft_ptychography"/>
   <rm:locator pattern="^(org\.dawnsci\.ede|uk\.ac\.diamond\.scisoft\.spectroscopy)(\..+)?$" searchPathRef="scisoft_spectroscopy"/>
-  <rm:locator pattern="^uk\.ac\.diamond\.(optid(\..+)?|scisoft(\.(analysis\.(plotclient|polling|powder\.(indexer\.(feature|rcp)|matcher\.ccdc\.(feature|rcp))|rcp(\.(contributions|test))?)|arpes\.calibration|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rixs\.(feature|rcp)|rp|system\.info|ui\.feature|pydev\.rcp(\..+)?))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
+  <rm:locator pattern="^uk\.ac\.diamond\.(optid(\..+)?|scisoft(\.(analysis\.(plotclient|polling|powder\.(indexer\.(feature|rcp)|matcher\.ccdc\.(feature|rcp))|rcp(\.(contributions|test))?)|arpes\.calibration(\..+)?|beamlineexplorer\..+|customprojects\..+|deprecated\.rcp|feedback(\..+)?|imagegrid|mappingexplorer(\..+)?|mrc\.ui|qstatMonitor|rixs\.(feature|rcp)|rp|system\.info|ui\.feature|pydev\.rcp(\..+)?))?|sda\.(meta(\.extended)?|navigator(\.test)?|polling))$" searchPathRef="scisoft_ui"/>
   <rm:locator pattern="^uk\.ac\.diamond\.scisoft\.ws(\..+)?$" searchPathRef="scisoft_ws"/>
   <!--
        GDA components for specific beamlines
