@@ -92,6 +92,7 @@ COMPONENT_ABBREVIATIONS.append(('all-dls', ('all-dls-configs', 'all-dls-clients'
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
     ('gda', 'master', 'gda-master.cquery', 'v3.4', ('master', '9.master', 'v9.master'), ('1.8.0',)),
+    ('gda', 'v9.10', 'gda-v9.10.cquery', 'v3.4', ('v9.10', '9.10', '910'), ('1.8.0',)),
     ('gda', 'v9.9', 'gda-v9.9.cquery', 'v3.4', ('v9.9', '9.9', '99'), ('1.8.0',)),
     ('gda', 'v9.8', 'gda-v9.8.cquery', 'v3.3', ('v9.8', '9.8', '98'), ('1.8.0',)),
     ('gda', 'v9.7', 'gda-v9.7.cquery', 'v3.3', ('v9.7', '9.7', '97'), ('1.8.0',)),
@@ -101,6 +102,7 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v9.3', 'gda-v9.3.cquery', 'v3.2', ('v9.3', '9.3', '93'), ('1.8.0',)),
     ('gda', 'v9.2', 'gda-v9.2.cquery', 'v3.1', ('v9.2', '9.2', '92'), ('1.8.0',)),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.4', ('master', '2.master', 'v2.master'), ('1.8.0',)),
+    ('dawn', 'v2.11', 'dawn-v2.11.cquery', 'v3.4', ('v2.11', '2.11'), ('1.8.0',)),
     ('dawn', 'v2.10', 'dawn-v2.10.cquery', 'v3.4', ('v2.10', '2.10'), ('1.8.0',)),
     ('dawn', 'v2.9', 'dawn-v2.9.cquery', 'v3.3', ('v2.9', '2.9'), ('1.8.0',)),
     ('dawn', 'v2.8', 'dawn-v2.8.cquery', 'v3.3', ('v2.8', '2.8'), ('1.8.0',)),
