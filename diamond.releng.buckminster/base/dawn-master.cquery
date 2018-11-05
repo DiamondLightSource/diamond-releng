@@ -110,7 +110,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-devices.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-devices" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^(all-dls-(configs|clients)|(dls|b07(-1)?|b21|i05(-1)?|i06(-1)?|i08(-1)?|i09(-1|-2)?|i10|i12|i13|i13-1|i14|i15|i15-1|i21|i22|optics|p45|p99)-(config|python|shared)|uk\.ac\.(diamond\.daq\.(beamline\.(i15|i15-1|p45|p99)|dls\.controls|ispyb\.scan\.info)(\..+)?|gda\.(beamline\.(b07(-1)?|b21|i05(-1)?|i06(_1)?|i08(-1)?|i09(-1|-2)?|i10|i12|i13|i13-1|i14|i15|i15-1|i21|i22)|diamond|dls)(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
+    <cq:advisorNode namePattern="^(all-dls-(configs|clients)|(dls|b07(-1)?|b21|i05(-1)?|i06(-1)?|i08(-1)?|i09(-1|-2)?|i10|i12|i13|i13-1|i14|i15|i15-1|i21|i22|k11|optics|p45|p99)-(config|python|shared)|uk\.ac\.(diamond\.daq\.(beamline\.(i15|i15-1|p45|p99)|dls\.controls|ispyb\.scan\.info)(\..+)?|gda\.(beamline\.(b07(-1)?|b21|i05(-1)?|i06(_1)?|i08(-1)?|i09(-1|-2)?|i10|i12|i13|i13-1|i14|i15|i15-1|i21|i22|k11)|diamond|dls)(\..+)?))$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-diamond.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-diamond" value="true"/>
     </cq:advisorNode>

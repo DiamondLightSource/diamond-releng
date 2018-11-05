@@ -80,7 +80,7 @@ for beamline in ('b07', 'b07-1', 'b16', 'b18', 'b21', 'b24',
                  'i02', 'i02-1', 'i02-2', 'i03', 'i04', 'i04-1',
                  'i05', 'i05-1', 'i06', 'i06_1', 'i07', 'i08', 'i08-1', 'i09', 'i09-1', 'i09-2',
                  'i10', 'i11', 'i11-1', 'i12', 'i13', 'i13-1','i13i', 'i13j', 'i14', 'i15', 'i15-1', 'i16', 'i18', 'i19-1', 'i19-2',
-                 'i20', 'i20_1', 'i20-1', 'i21', 'i22', 'i23', 'i24', 'lab11',
+                 'i20', 'i20_1', 'i20-1', 'i21', 'i22', 'i23', 'i24', 'k11', 'lab11',
                  ):
     COMPONENT_ABBREVIATIONS.append((beamline + '-client', 'uk.ac.gda.beamline.' + beamline + '.site', 'gda'))
 for serverabbrev in ('server', 'gdaserver', 'gda-server', 'gdaservers', 'gda-servers'):
