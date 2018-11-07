@@ -156,12 +156,14 @@ def parse_jenkins_jobname(jobname):
         # if this is any publish job, work out the name of the upstream job (the create.product job), and where to publish to
         if '-publish.' in jobname:
             m = re.match('^(?P<prefix>.+)-publish.[a-z]+-(?P<product_name>.+)(?P<suffix>.?)$', jobname)
-            if m.group('product_name') not in ('gdaserver',):
+            product_name = m.group('product_name')
+            if product_name not in ('gdaserver',):
                 parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product.beamline-' + m.group('product_name') + m.group('suffix')))
                 directory_product_name = 'gdaclient'
             else:
                 parse_result.append(('upstream_create_product_job', m.group('prefix') + '-create.product-' + m.group('product_name') + m.group('suffix')))
-                directory_product_name = m.group('product_name')
+                parse_result.append(('non_beamline_product', product_name))
+                directory_product_name = product_name
             # use /dls/science/ (which is not backed up) snapshot builds, and /dls_sw/apps/ for release builds
             if 'master' in jm.group('GDA_release'):
                 publish_parent = '/dls/science/groups/daq/'
@@ -658,6 +660,7 @@ def test_parse_jenkins_jobname():
         ('GDA_release', 'master'),
         ('job_variant', None),
         ('upstream_create_product_job', 'GDA.master-create.product-gdaserver'),
+        ('non_beamline_product', 'gdaserver'),
         ('publish_module_load_directory_parent', '/dls/science/groups/daq/gdaserver/master/'),
         ('platform_windows64', 'false'),
         ('platform_mac64', 'false'),
