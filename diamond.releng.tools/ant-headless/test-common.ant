@@ -73,6 +73,15 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 	</target>
 
 	<!-- Paths useful for compiling javadocs, running tests etc. -->
+	<target name="_set-libsjars-path">
+		<path id="libs.jars.path">
+			<fileset dir="${workspace.git.loc}/gda-common.git/uk.ac.gda.libs" >
+				<include name="*.jar" />
+				<exclude name="*-sources-*" />
+			</fileset>
+		</path>
+	</target>
+
 	<path id="tp.jcl-over-slf4j.path">
 		<first count="1"><sort>
 			<fileset dir="${workspace.loc}/tp/plugins" includes="jcl.over.slf4j_*.jar" />
@@ -238,7 +247,7 @@ Common tasks used in headless testing. Must be imported in all ant test scripts.
 		<pathconvert property="java.library.path.value" refid="java.library.path.value" setonempty="no" />
 	</target>
 
-	<target name="set-test-base-GDA" depends="set-context, _set-jythonjar-loc, _set-library-PATH-VALUE-GDA">
+	<target name="set-test-base-GDA" depends="set-context, _set-jythonjar-loc, _set-libsjars-path, _set-library-PATH-VALUE-GDA">
 		<fail message="Unable to set property &quot;java.library.path.name&quot;, possibly because the platform was not recognised" unless="java.library.path.name" />
 		<fail message="Unable to set property &quot;java.library.path.value&quot;, either because the platform was not recognised, or the native libraries were not found" unless="java.library.path.value" />
 		<property name="set-library-path.done" value="true"/>
