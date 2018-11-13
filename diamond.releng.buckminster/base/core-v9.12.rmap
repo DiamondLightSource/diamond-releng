@@ -745,7 +745,6 @@
   <rm:locator pattern="^org\.quartz$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.xmlpull$" searchPathRef="eclipse_orbit_p2"/>
   <rm:locator pattern="^org\.eclipse\.january.*$" searchPathRef="eclipse_january"/>
-  <rm:locator pattern="^org\.eclipse\.fx\.javafx(\..+)?" searchPathRef="eclipse_mars_always" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.mylyn(\..+)?" searchPathRef="eclipse_mars_always" failOnError="false"/>
   <rm:locator pattern="^org\.eclipse\.persistence\..+$" searchPathRef="eclipse_eclipselink_p2"/>
   <rm:locator pattern="^org\.eclipse\.jetty\..+$" searchPathRef="eclipse_jetty9_p2"/>
