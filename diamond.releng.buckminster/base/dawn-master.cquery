@@ -96,7 +96,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-bimorph.git repository branch</cq:documentation>
         <cq:property key="disallow.repo.gda-bimorph" value="true"/>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^uk\.ac\.gda\.(common(\.test)?|libs|test\.helpers)$" useTargetPlatform="false">
+    <cq:advisorNode namePattern="^uk\.ac\.gda\.(common(\.test)?|test\.helpers)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" useMaterialization="false" useTargetPlatform="false" useWorkspace="false">
