@@ -203,14 +203,8 @@
   <!--
        Authentication Schemes for GitHub organisations
   -->
-  <rm:propertyElement key="githubgphl.github.authentication">
-    <bc:constant value="ssh"/>  <!-- private repository, so ssh must be used -->
-  </rm:propertyElement>
   <rm:propertyElement key="gda.git.location">  <!-- can be "diamond" or "public" -->
     <bc:constant value="${download.location.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="githubgphl.git.location">  <!-- can be "diamond" or "public" -->
-    <bc:constant value="diamond"/>  <!-- always materialize from DLS unless specifically overridden -->
   </rm:propertyElement>
   <!--
        Git repositories
@@ -452,7 +446,7 @@
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-mt.git"/>
   </rm:propertyElement>
   <rm:propertyElement key="gda.mx.git.url">
-    <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-mx.git"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/gda/gda-mx.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <rm:propertyElement key="gda.nexus.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-nexus.git"/>
@@ -500,82 +494,14 @@
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-xas-core.git"/>
   </rm:propertyElement>
   <!-- ** gphl- *** (there are three Global Phasing repositories, gphl-abstract-beamline, gphl-astra, gphl-sdcp-common) -->
-  <rm:propertyElement key="gphl.abstract.beamline.git.location">
-    <bc:constant value="${githubgphl.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.abstract.beamline.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${gphl.abstract.beamline.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.abstract.beamline.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gphl"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.abstract.beamline.github.organization">
-    <bc:constant value="githubgphl"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.abstract.beamline.github.authentication">
-    <bc:constant value="${${gphl.abstract.beamline.github.organization}.github.authentication}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.abstract.beamline.github.url">
-    <bc:constant value="${github.${gphl.abstract.beamline.github.authentication}.url}${gphl.abstract.beamline.github.organization}"/>
-  </rm:propertyElement>
   <rm:propertyElement key="gphl.abstract.beamline.git.url">
-    <bc:constant value="${gphl.abstract.beamline.${gphl.abstract.beamline.git.location.translated}.url}/gphl-abstract-beamline.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="gphl.astra.git.location">
-    <bc:constant value="${githubgphl.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.astra.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${gphl.astra.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.astra.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gphl"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.astra.github.organization">
-    <bc:constant value="githubgphl"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.astra.github.authentication">
-    <bc:constant value="${${gphl.astra.github.organization}.github.authentication}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.astra.github.url">
-    <bc:constant value="${github.${gphl.astra.github.authentication}.url}${gphl.astra.github.organization}"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/gphl/gphl-abstract-beamline.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <rm:propertyElement key="gphl.astra.git.url">
-    <bc:constant value="${gphl.astra.${gphl.astra.git.location.translated}.url}/gphl-astra.git"/>
-  </rm:propertyElement>
-  <!-- -->
-  <rm:propertyElement key="gphl.sdcp.common.git.location">
-    <bc:constant value="${githubgphl.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.sdcp.common.git.location.translated">
-    <bc:replace>
-      <bc:constant value="${gphl.sdcp.common.git.location}"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.sdcp.common.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/gphl"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.sdcp.common.github.organization">
-    <bc:constant value="githubgphl"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.sdcp.common.github.authentication">
-    <bc:constant value="${${gphl.sdcp.common.github.organization}.github.authentication}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="gphl.sdcp.common.github.url">
-    <bc:constant value="${github.${gphl.sdcp.common.github.authentication}.url}${gphl.sdcp.common.github.organization}"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/gphl/gphl-astra.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <rm:propertyElement key="gphl.sdcp.common.git.url">
-    <bc:constant value="${gphl.sdcp.common.${gphl.sdcp.common.git.location.translated}.url}/gphl-sdcp-common.git"/>
+    <bc:constant value="${diamond.dascgerrit.ssh.url}/gphl/gphl-sdcp-common.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <!-- *** org.eclipse.launchbar *** -->
   <rm:propertyElement key="org.eclipse.launchbar.github.organization">
