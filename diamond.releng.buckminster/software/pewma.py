@@ -91,6 +91,7 @@ COMPONENT_ABBREVIATIONS.append(('all-dls', ('all-dls-configs', 'all-dls-clients'
 # Caution: categories must never be the same as any component name or component abbreviation
 COMPONENT_CATEGORIES = (
     # category, version, CQuery, template, version_synonyms, allowable java versions (or None, for not specified) (first in list is preferred)
+    ('gda', 'diad', 'gda-diad.cquery', 'v3.4', ('diad',), ('1.8.0',)),
     ('gda', 'master', 'gda-master.cquery', 'v3.4', ('master', '9.master', 'v9.master'), ('1.8.0',)),
     ('gda', 'v9.10', 'gda-v9.10.cquery', 'v3.4', ('v9.10', '9.10', '910'), ('1.8.0',)),
     ('gda', 'v9.9', 'gda-v9.9.cquery', 'v3.4', ('v9.9', '9.9', '99'), ('1.8.0',)),
