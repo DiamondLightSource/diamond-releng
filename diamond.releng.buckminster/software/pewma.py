@@ -2578,7 +2578,14 @@ class PewmaManager(object):
         ant_command.extend(("-nouserlib",))    # Run ant without using the jar files from ${user.home}/.ant/lib
         ant_command.extend(("-noclasspath",))  # Run ant without using CLASSPATH (avoids putting jars from ANT_HOME/lib on the classpath)
         ant_command.extend(("-logger", "org.apache.tools.ant.NoBannerLogger"))
-        ant_command.extend(('-buildfile', os.path.join(self.workspace_git_loc, 'diamond-releng.git/diamond.releng.tools/ant-headless/ant-driver.ant')))
+        ant_driver_parent_possible = ('gda-core.git/diamond.releng.tools.gda', 'scisoft-core.git/diamond.releng.tools.dawn', 'diamond-releng.git/diamond.releng.tools')
+        for ant_driver_parent in ant_driver_parent_possible:
+            ant_driver_loc = os.path.join(self.workspace_git_loc, ant_driver_parent, 'ant-headless', 'ant-driver.ant')
+            if os.path.isfile(ant_driver_loc):
+                break
+        else:
+            raise PewmaException('ERROR: Could not find ant-headless/ant-driver.ant under any of %s/%s\n' % (self.workspace_git_loc, ant_driver_parent_possible,))
+        ant_command.extend(('-buildfile', ant_driver_loc))
 
         # pass through GDALargeTestFilesLocation
         loc = self.options.GDALargeTestFilesLocation and self.options.GDALargeTestFilesLocation.strip()
