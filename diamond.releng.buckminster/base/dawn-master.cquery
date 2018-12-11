@@ -3,7 +3,6 @@
     <cq:rootRequest name="${component}"/>
     <cq:property key="dascgerrit.authentication" value="Default is 'ssh'. Change this to 'anonymous' if required."/>
     <cq:property key="dascgerrit.username" value="Default is your current username. Change this if required (access control is by SSH key pair)."/>
-    <cq:property key="diamond.releng.git.location" value="public"/>
     <cq:property key="disallow.scisoft.deprecated" value="true"/>
     <cq:property key="download.location" value="Default is 'diamond'. Change this to 'public' if required."/>
     <cq:property key="github.authentication" value="Default is 'anonymous'. Change this to 'ssh' if required."/>
@@ -78,9 +77,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.dawnsci\.miniconda(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-miniconda.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^diamond\.releng\.(buckminster|jenkins|squish|tools)$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-releng.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">diamond-springframework.git repository branch</cq:documentation>
