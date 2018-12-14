@@ -73,6 +73,7 @@ COMPONENT_ABBREVIATIONS.append(('dawnvanilla', 'org.dawnsci.base.site', 'dawn'))
 COMPONENT_ABBREVIATIONS.append(('dawndiamond', 'uk.ac.diamond.dawn.site', 'dawn'))
 
 COMPONENT_ABBREVIATIONS.append(('example-client', 'uk.ac.gda.example.site', 'gda'))
+COMPONENT_ABBREVIATIONS.append(('k11-client', 'uk.ac.diamond.daq.beamline.k11.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('p45-client', 'uk.ac.diamond.daq.beamline.p45.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('p99-client', 'uk.ac.diamond.daq.beamline.p99.site', 'gda'))
 COMPONENT_ABBREVIATIONS.append(('imca-cat-client', 'gov.anl.aps.beamline.imca-cat.site', 'gda'))
