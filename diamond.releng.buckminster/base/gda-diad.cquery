@@ -105,7 +105,7 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(lookuptable\.editor|common\.rcp(\.test)?)$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-common-rcp.git repository branch</cq:documentation>
     </cq:advisorNode>
-    <cq:advisorNode namePattern="^((core|example)-config|diamond\.releng\.tools\.gda|documentation\.gda|org\.apache\.derby\.fragment\.daq\.persistence|uk\.ac\.(diamond\.(daq\.(client\.gui\.(camera|energyfocus.editor|exitslit\.configuration|rcpcontroller)|detectors\.addetector(\..+)?|experiment(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|persistence(\..+)?|remotedataset\.feature)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api(\.test)?|(client(\.(closeactions|commandinfo|experimentdefinition|feature|live\.stream|test))?)|common\.client|core(\.test)?|edxd\.(calibration|common|detector)|epics\.dxp\.client|eventbus(\.api)?|example(\..+)?|logging\.dependencies\.fragment|xmleditor\.feature)))$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="diad-development">
+    <cq:advisorNode namePattern="^((core|example)-config|diamond\.releng\.tools\.gda|documentation\.gda|org\.apache\.derby\.fragment\.daq\.persistence|uk\.ac\.(diamond\.(daq\.(client\.gui\.(camera|energyfocus.editor|exitslit\.configuration|rcpcontroller)|detectors\.addetector(\..+)?|experiment(\..+)?|jython\.api|mapping(\..+)?|msgbus(\..+)?|persistence(\..+)?|remotedataset\.feature|scm\.api)|scisoft\.gda\.feature)|gda\.(analysis(\.test)?|api(\.test)?|(client(\.(closeactions|commandinfo|experimentdefinition|feature|live\.stream|ncd(\.feature)?|test))?)|common\.client|core(\.test)?|edxd\.(calibration|common|detector)|epics\.dxp\.client|eventbus(\.api)?|example(\..+)?|logging\.dependencies\.fragment|server\.ncd(\.epics)?|xmleditor\.feature)))$" allowCircularDependency="true" useTargetPlatform="false" branchTagPath="diad-development">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-core.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^uk\.ac\.gda\.(devices\.(bssc|cirrus|excalibur|hatsaxs|hplc|mythen|pco|peem|pixium)(\..+)?|epics\.client\.(mythen|pco|pixium))$" useTargetPlatform="false">
@@ -146,9 +146,6 @@ at least at version 4.0.6.RELEASE_3 (dependencies find the source bundle first a
     </cq:advisorNode>
     <cq:advisorNode namePattern="^((i05|i05-1)-config|org\.opengda\.detector\.electronanalyser(\..+)?|uk\.ac\.(diamond\.daq\.(detectors\.vgscienta\.electronanalyser|devices\.specs\.phoibos)|gda\.(arpes|beamline\.(i05|i05-1)|devices\.vgscienta))(\..+)?)$" allowCircularDependency="true" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-pes.git repository branch</cq:documentation>
-    </cq:advisorNode>
-    <cq:advisorNode namePattern="^(bm26a?-config|fr\.esrf\.gda\.beamline\.bm26a?(\..+)?|uk\.ac\.(diamond\.(activemq\.fragment\.ncd|daq\.scm\.api)|gda\.(devices\.(bssc|hatsaxs|hplc|lpd)(\..+)?|(server|client)\.ncd(\..+)?)))$" useTargetPlatform="false">
-        <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-scm.git repository branch</cq:documentation>
     </cq:advisorNode>
     <cq:advisorNode namePattern="^org\.gda\.tango(\..+)?$" useTargetPlatform="false">
         <cq:documentation xmlns="http://www.w3.org/1999/xhtml">gda-tango.git repository branch</cq:documentation>
