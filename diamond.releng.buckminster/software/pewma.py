@@ -100,9 +100,6 @@ COMPONENT_CATEGORIES = (
     ('gda', 'v9.7', 'gda-v9.7.cquery', 'v3.3', ('v9.7', '9.7', '97'), ('1.8.0',)),
     ('gda', 'v9.6', 'gda-v9.6.cquery', 'v3.3', ('v9.6', '9.6', '96'), ('1.8.0',)),
     ('gda', 'v9.5', 'gda-v9.5.cquery', 'v3.3', ('v9.5', '9.5', '95'), ('1.8.0',)),
-    ('gda', 'v9.4', 'gda-v9.4.cquery', 'v3.2', ('v9.4', '9.4', '94'), ('1.8.0',)),
-    ('gda', 'v9.3', 'gda-v9.3.cquery', 'v3.2', ('v9.3', '9.3', '93'), ('1.8.0',)),
-    ('gda', 'v9.2', 'gda-v9.2.cquery', 'v3.1', ('v9.2', '9.2', '92'), ('1.8.0',)),
     ('dawn', 'master', 'dawn-master.cquery', 'v3.4', ('master', '2.master', 'v2.master'), ('1.8.0',)),
     ('dawn', 'v2.11', 'dawn-v2.11.cquery', 'v3.4', ('v2.11', '2.11'), ('1.8.0',)),
     ('dawn', 'v2.10', 'dawn-v2.10.cquery', 'v3.4', ('v2.10', '2.10'), ('1.8.0',)),
@@ -110,10 +107,6 @@ COMPONENT_CATEGORIES = (
     ('dawn', 'v2.8', 'dawn-v2.8.cquery', 'v3.3', ('v2.8', '2.8'), ('1.8.0',)),
     ('dawn', 'v2.7', 'dawn-v2.7.cquery', 'v3.3', ('v2.7', '2.7'), ('1.8.0',)),
     ('dawn', 'v2.6', 'dawn-v2.6.cquery', 'v3.3', ('v2.6', '2.6'), ('1.8.0',)),
-    ('dawn', 'v2.5', 'dawn-v2.5.cquery', 'v3.2', ('v2.5', '2.5'), ('1.8.0',)),
-    ('dawn', 'v2.4', 'dawn-v2.4.cquery', 'v3.2', ('v2.4', '2.4'), ('1.8.0',)),
-    ('dawn', 'v2.3', 'dawn-v2.3.cquery', 'v3.0', ('v2.3', '2.3'), ('1.8.0',)),
-    ('dawn', 'v2.2', 'dawn-v2.2.cquery', 'v3.0', ('v2.2', '2.2'), ('1.8.0',)),
     )
 
 CATEGORIES_AVAILABLE = []  # dedupe COMPONENT_CATEGORIES while preserving order
