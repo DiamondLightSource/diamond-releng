@@ -209,10 +209,6 @@
   <!--
        Git repositories
   -->
-  <!-- *** beamlines *** -->
-  <rm:propertyElement key="beamlines.b22.rsync.git.url">
-    <bc:constant value="${diamond.dascgit.url}/beamlines/b22-rsync.git"/>
-  </rm:propertyElement>
   <!-- *** daq- *** -->
   <rm:propertyElement key="daq.platform.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/daq/daq-platform.git"/>
@@ -467,8 +463,6 @@
         Components in Git repositories (note: patterns should match those in the CQuery advisor nodes)
         Please keep locators in sorted order of repository name
   -->
-  <!-- *** beamlines *** -->
-  <rm:locator pattern="^b22-rsync$" searchPathRef="b22_rsync"/>
   <!-- *** daq- *** -->
   <rm:locator pattern="^(gda-orphan-projects|uk\.ac\.diamond\.daq\.((analysis\.server|common|core|crystal|dawnsci\.analysis|deprecated|diffraction\.server|eclipse\.legacy|emf\.edit|hrpd|imaging\.server|lde|mx|pes\.server|scisoftpy|scm|server|thirdparty\..*|vmxi\.server)\.feature|guigenerator(\..+)?|scripting(\..+)?|server(\..+)?|splitpackagesresolver|tomography\.datacollection(\..+)?))$" searchPathRef="daq_platform"/>
   <!-- *** dawn- *** -->
@@ -657,23 +651,6 @@
   <!--######################################################################-->
   <!--# Git Search Paths (keep in sorted order of repository name)         #-->
   <!--######################################################################-->
-  <!--
-       Beamline repositories
-  -->
-  <rm:searchPath name="b22_rsync">
-    <rm:provider componentTypes="buckminster" resolutionFilter="(!(disallow.repo.b22-rsync=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${beamlines.b22.rsync.git.url}"/>
-      <rm:uri format="{0}/b22-rsync.git">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" resolutionFilter="(disallow.repo.b22-rsync=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from b22-rsync.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
   <!--
        DAQ- repositories
   -->
