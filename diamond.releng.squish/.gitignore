@@ -1,4 +1,4 @@
-.project
-.pydevproject
+/.pydevproject
+/.settings
 *~
 *.pyc
