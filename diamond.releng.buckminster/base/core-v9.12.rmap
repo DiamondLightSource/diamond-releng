@@ -279,32 +279,6 @@
     <bc:constant value="${diamond.dascgerrit.ssh.url}/diamond/diamond-miniconda.git"/>  <!-- private repository, so ssh must be used -->
   </rm:propertyElement>
   <!-- -->
-  <rm:propertyElement key="diamond.releng.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.releng.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="diamond.releng.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.releng.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/diamond"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.releng.github.organization">
-    <bc:constant value="DiamondLightSource"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.releng.github.authentication">
-    <bc:constant value="${github.authentication.common}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.releng.github.url">
-    <bc:constant value="${github.${diamond.releng.github.authentication}.url}${diamond.releng.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.releng.git.url">
-    <bc:constant value="${diamond.releng.${diamond.releng.git.location.translated}.url}/diamond-releng.git"/>
-  </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="diamond.springframework.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/diamond/diamond-springframework.git"/>
   </rm:propertyElement>
@@ -540,7 +514,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.org\.jacorb$" searchPathRef="diamond_jacorb"/>
   <rm:locator pattern="^uk\.ac\.diamond\.jython(\..+)?$" searchPathRef="diamond_jython"/>
   <rm:locator pattern="^org\.dawnsci\.miniconda(\..+)?$" searchPathRef="diamond_miniconda"/>
-  <rm:locator pattern="^diamond\.releng\.(buckminster|jenkins|squish)$" searchPathRef="diamond_releng"/>
   <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="diamond_springframework" failOnError="false"/>
   <!-- *** diffcalc *** -->
   <rm:locator pattern="^diffcalc$" searchPathRef="diffcalc"/>
@@ -972,22 +945,6 @@
     </rm:provider>
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.diamond-miniconda=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from diamond-miniconda.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- -->
-  <rm:searchPath name="diamond_releng">
-    <rm:provider componentTypes="buckminster" resolutionFilter="(!(disallow.repo.diamond-releng=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${diamond.releng.git.url}"/>
-      <rm:uri format="{0}/diamond-releng.git,{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.diamond-releng=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from diamond-releng.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
