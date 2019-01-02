@@ -1,6 +1,0 @@
-# only transfer specific directories
-+ /base/
-+ /software/
-+ /templates/
-- /templates/tp/
-- /*
