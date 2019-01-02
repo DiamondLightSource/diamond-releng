@@ -288,32 +288,6 @@
   <rm:propertyElement key="diffcalc.git.url">
     <bc:constant value="${github.${diffcalc.github.authentication}.url}${diffcalc.github.organization}/diffcalc.git"/>
   </rm:propertyElement>
-  <!-- *** epp- *** -->
-  <rm:propertyElement key="epp.usagedata.git.location">
-    <bc:constant value="${gda.git.location}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="epp.usagedata.git.location.translated">
-    <bc:replace>
-      <bc:propertyRef key="epp.usagedata.git.location"/>
-      <bc:match pattern="^diamond$" replacement="dascgit"/>
-      <bc:match pattern="^public$" replacement="github"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="epp.usagedata.dascgit.url">
-    <bc:constant value="${diamond.dascgit.url}/diamond"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="epp.usagedata.github.organization">
-    <bc:constant value="DiamondLightSource"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="epp.usagedata.github.authentication">
-    <bc:constant value="${${epp.usagedata.github.organization}.github.authentication}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="eppusagedata.github.url">
-    <bc:constant value="${github.${epp.usagedata.github.authentication}.url}${epp.usagedata.github.organization}"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="epp.usagedata.git.url">
-    <bc:constant value="${epp.usagedata.${epp.usagedata.git.location.translated}.url}/epp-usagedata.git"/>
-  </rm:propertyElement>
   <!-- *** gda- *** -->
   <rm:propertyElement key="gda.bimorph.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-bimorph.git"/>
@@ -485,8 +459,6 @@
   <rm:locator pattern="^uk\.ac\.diamond\.org\.springframework(\..+)?$" searchPathRef="diamond_springframework" failOnError="false"/>
   <!-- *** diffcalc *** -->
   <rm:locator pattern="^diffcalc$" searchPathRef="diffcalc"/>
-  <!-- *** epp- *** -->
-  <rm:locator pattern="^org\.eclipse\.epp\.usagedata\..+$" searchPathRef="epp_usagedata"/>
   <!-- *** gda- *** -->
   <rm:locator pattern="^uk\.ac\.gda\.bimorph(\..+)?" searchPathRef="gda_bimorph"/>
   <rm:locator pattern="^uk\.ac\.gda\.(common(\.test)?|test\.helpers)$" searchPathRef="gda_common"/>
@@ -928,40 +900,6 @@
     </rm:provider>
     <rm:provider componentTypes="buckminster" resolutionFilter="(disallow.repo.diffcalc=true)" readerType="local">
       <rm:uri format="{0}/*** ERROR a component was requested from diffcalc.git, but the CQuery specified that this repository should not be used ***">
-        <bc:propertyRef key="workspace.root"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!--
-       EPP- repositories
-  -->
-  <rm:searchPath name="epp_usagedata">
-    <rm:provider componentTypes="eclipse.feature" resolutionFilter="(!(disallow.repo.epp-usagedata=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${epp.usagedata.git.url}"/>
-      <rm:uri format="{0}/epp-usagedata.git,features/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.epp-usagedata=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${epp.usagedata.git.url}"/>
-      <rm:uri format="{0}/epp-usagedata.git,plugins/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle" resolutionFilter="(!(disallow.repo.epp-usagedata=true))" readerType="git">
-      <rm:property key="git.auto.fetch" value="true"/>
-      <rm:property key="git.remote.uri" value="${epp.usagedata.git.url}"/>
-      <rm:uri format="{0}/epp-usagedata.git,test/{1}">
-        <bc:propertyRef key="repository.git.checkout.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" resolutionFilter="(disallow.repo.epp-usagedata=true)" readerType="local">
-      <rm:uri format="{0}/*** ERROR a component was requested from epp-usagedata.git, but the CQuery specified that this repository should not be used ***">
         <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
