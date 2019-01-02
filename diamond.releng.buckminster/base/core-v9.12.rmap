@@ -15,24 +15,6 @@
   <rm:propertyElement key="buckminster.download.source">
     <bc:constant value="true"/>
   </rm:propertyElement>
-  <!-- download.location.common can be "diamond" (DLS internal servers) [default] or "public" (internet-visible servers)
-       The shadow property name in the CQuery is "download.location". -->
-  <rm:propertyElement key="download.location">  <!-- defined here in case it is not defined in the CQuery -->
-    <bc:constant value="diamond"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="download.location.from.cquery.translated">
-    <bc:replace>
-      <bc:constant value="${download.location}"/>
-      <bc:match pattern="^ *diamond *$" replacement="diamond"/>
-      <bc:match pattern="^ *public *$" replacement="public"/>
-      <bc:match pattern="^Default is 'diamond'.*$" replacement="diamond"/>
-      <bc:match pattern="^Default is 'public'.*$" replacement="public"/>
-      <bc:match pattern="^(?! *(diamond|public) *$).*$" replacement="unrecognised.download.location"/>
-    </bc:replace>
-  </rm:propertyElement>
-  <rm:propertyElement key="download.location.common">
-    <bc:constant value="${download.location.from.cquery.translated}"/>
-  </rm:propertyElement>
   <!-- ***** -->
   <!--                                    -->
   <!-- Target Platform version properties -->
@@ -95,15 +77,6 @@
     <bc:constant value="7.0.3"/>
   </rm:propertyElement>
   <!-- ***** -->
-  <!--                                                             -->
-  <!-- Properties for Gitolite-managed git repositories at Diamond -->
-  <!--                                                             -->
-  <rm:propertyElement key="diamond.dascgit.host.port">  <!-- if using port forwarding, you will need to set this to "localhost:<port>" -->
-    <bc:constant value="dasc-git.diamond.ac.uk"/>
-  </rm:propertyElement>
-  <rm:propertyElement key="diamond.dascgit.url">
-    <bc:constant value="ssh://dascgitolite@${diamond.dascgit.host.port}"/>
-  </rm:propertyElement>
   <!-- -->
   <!--                                                           -->
   <!-- Properties for Gerrit-managed git repositories at Diamond -->
@@ -198,14 +171,8 @@
   </rm:propertyElement>
   <!--                                                                      -->
   <!--#######################################################################################-->
-  <!--# Git (Gitolite and Gerrit) Repository URLs (keep in sorted order of repository name) #-->
+  <!--# Git (Gerrit) Repository URLs (keep in sorted order of repository name) #-->
   <!--#######################################################################################-->
-  <!--
-       Authentication Schemes for GitHub organisations
-  -->
-  <rm:propertyElement key="gda.git.location">  <!-- can be "diamond" or "public" -->
-    <bc:constant value="${download.location.common}"/>
-  </rm:propertyElement>
   <!--
        Git repositories
   -->
@@ -223,7 +190,6 @@
   <rm:propertyElement key="dawn.doc.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-doc.git"/>
   </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="dawn.hdf.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/scisoft/dawn-hdf.git"/>
   </rm:propertyElement>
@@ -346,7 +312,6 @@
   <rm:propertyElement key="gda.pes.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-pes.git"/>
   </rm:propertyElement>
-  <!-- -->
   <rm:propertyElement key="gda.tango.git.url">
     <bc:constant value="${diamond.dascgerrit.${dascgerrit.authentication.common}.url}/gda/gda-tango.git"/>
   </rm:propertyElement>
@@ -427,7 +392,6 @@
   <!--# Locators                                                           #-->
   <!--######################################################################-->
   <!--                                                                      -->
-  <rm:locator pattern="^tp$" searchPathRef="tp"/>
   <!--
        Components that should not be used
        net.sourceforge.nattable.core is superceded by org.eclipse.nebula.widgets.nattable.core (but the former is still in various p2 sites, even in Eclipse Neon)
@@ -509,7 +473,6 @@
   <!--
        GDA various components
   -->
-  <rm:locator pattern="^(builders\..+|documentation\..+|GDALargeTestFiles)$" searchPathRef="extras"/>
   <rm:locator pattern="^uk\.ac\.diamond\.gda\.hc$" searchPathRef="diamond_gda_hc"/>
   <!--
        Components to get from Eclipse p2 repositories: Orbit, EclipseLink, Jetty, NatTable
@@ -598,14 +561,6 @@
       <rm:uri format="{0}/*** ERROR - some component has a dependency on {1}, but this is has been superceded and should not be used ***">
         <bc:propertyRef key="workspace.root"/>
         <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <!-- ***** -->
-  <rm:searchPath name="tp">
-    <rm:provider componentTypes="buckminster" readerType="local">
-      <rm:uri format="file://{0}/tp">
-        <bc:propertyRef key="workspace.root"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
@@ -1591,17 +1546,6 @@
   <!--######################################################################-->
   <!--# Other Search Paths                                                 #-->
   <!--######################################################################-->
-  <!--
-       Manually checked out (from subversion) prior to materialize, and put at root level of workspace/
-  -->
-  <rm:searchPath name="extras">
-    <rm:provider componentTypes="buckminster" readerType="local">
-      <rm:uri format="file://{0}/{1}">
-        <bc:propertyRef key="workspace.root"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
   <!--
        Target Platform (Diamond, Eclipse, January, PyDev)
   -->
